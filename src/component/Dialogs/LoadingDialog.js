@@ -17,7 +17,7 @@ const styles = theme => ({
     progress: {
       margin: theme.spacing.unit * 2,
       position: 'relative',
-      color:theme.palette.primary.contrastText
+      // color:theme.palette.primary.contrastText
     },
     secondary: {
       color: '#eef3fd',

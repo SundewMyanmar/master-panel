@@ -8,10 +8,14 @@ import {Provider} from 'react-redux';
 import {createStore, combineReducers} from 'redux';
 import MenuReducer from './redux/MenuRedux';
 import UserReducer from './redux/UserRedux';
+import RoleReducer from './redux/RoleRedux';
+import FileReader from './redux/FileRedux';
 
 const reducers = combineReducers({
 	menu: MenuReducer,
-	user:UserReducer
+	user:UserReducer,
+	role: RoleReducer,
+	file: FileReader,
 });
 
 const store = createStore(reducers);

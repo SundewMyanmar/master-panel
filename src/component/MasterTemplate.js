@@ -47,7 +47,7 @@ const styles = theme => ({
         padding:0,
     },
     listLabel:{
-        color:theme.palette.primary.main,
+        // color:theme.palette.primary.main,
         fontSize:'14px',
     },
     defaultMenu:{
@@ -89,7 +89,7 @@ const styles = theme => ({
         display: 'none',
     },
     drawerPaper: {
-        backgroundColor:theme.palette.background.light,
+        // backgroundColor:theme.palette.background.light,
         position: 'relative',
         whiteSpace: 'nowrap',
         transition: theme.transitions.create('width', {
@@ -116,7 +116,8 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'flex-end',
         padding: '0 8px',
-        backgroundImage:'url(/res/bg.png)',
+        // backgroundImage:'url(/res/bg.png)',
+        backgroundColor: theme.palette.primary.main,
         ...theme.mixins.toolbar,
     },
     scrollMenu:{
@@ -132,7 +133,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     menuIcon:{
-        color: theme.palette.primary.main,
+        color: theme.palette.common.white,
     },
     sectionDesktop: {
         display: 'none',
@@ -150,16 +151,16 @@ const styles = theme => ({
         // backgroundColor: theme.palette.primary.main,
         backgroundImage: 'url("/res/info.png")',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'auto',
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
     },
     welcomeText: {
-        color: theme.palette.primary.main,
+        color: theme.palette.common.white,
         borderLeft: '3px solid '+theme.palette.primary.main,
         paddingLeft: theme.spacing.unit,
     },
     welcomeBackground: {
-        background:'rgba(179, 195, 215, 0.91)',
+        background:'rgba(0, 0, 0, 0.5)',
     }
 });
 
@@ -184,7 +185,7 @@ class MasterTemplate extends React.Component{
                         "name":"Profile",
                         "state":"/profile",
                         "icon":"person",
-                        "type":"link"
+                        "type":"link",
                     },{
                         "id":"sys-3",
                         "parent_id":"sys-1",
@@ -192,7 +193,7 @@ class MasterTemplate extends React.Component{
                         "state":"/changePassword",
                         "icon":"security",
                         "type":"link",
-                        "divider":"true"
+                        // "divider":"true"
                     },{
                         "id":"sys-4",
                         "parent_id":"sys-1",
@@ -228,6 +229,8 @@ class MasterTemplate extends React.Component{
         const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
         const menus = JSON.parse(sessionStorage.getItem(MAIN_MENU.MENU));
 
+        console.log("menus", menus);
+
         this.setState({ user: user, menus:menus });
     }
 
@@ -249,17 +252,17 @@ class MasterTemplate extends React.Component{
     renderMenus=(menus)=>{ 
         return menus.map(menu => {
             return (
-                <WithState>
+                <WithState key={menu.id}>
                   {({ anchorEl, updateAnchorEl }) => {
                     const open = Boolean(anchorEl);
                     const handleClose = () => {
                       updateAnchorEl(null);
                     };
                     return (
-                        <List component="nav" className={[this.props.classes.listMenu]}>
+                        <List component="nav" className={this.props.classes.listMenu}>
                             <ListItem style={this.state.active===menu.id?{
                                     borderRight: '4px solid '+this.props.theme.palette.primary.main,
-                                    backgroundColor:this.props.theme.palette.background.dark
+                                    backgroundColor:this.props.theme.palette.background.light
                                 }:{}}
                                 button key={menu.id} onClick={event=>{
                                         if(this.state.hideMenu && menu.type==="folder"){
@@ -272,7 +275,7 @@ class MasterTemplate extends React.Component{
                                 <ListItemIcon>
                                 <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>{menu.icon}</Icon>
                                 </ListItemIcon>
-                                <ListItemText style={this.state.hideMenu?{display:"none"}:{display:"block"}} classes={{ primary: this.props.classes.listLabel }} inset='false' primary={menu.name} />
+                                <ListItemText style={this.state.hideMenu?{display:"none"}:{display:"block"}} classes={{ primary: this.props.classes.listLabel }} inset={false} primary={menu.name} />
                                 <div style={this.state.hideMenu?{display:"none"}:{display:"block"}}>
                                     <div style={this.state.active===menu.id?{marginRight:0}:{marginRight:4}}>
                                     {
@@ -291,7 +294,7 @@ class MasterTemplate extends React.Component{
                                         {
                                             menu.children.map(childMenu => {
                                                 return (
-                                                    <MenuItem className={this.props.classes.defaultMenu} onClick={()=>{
+                                                    <MenuItem key={childMenu.name} className={this.props.classes.defaultMenu} onClick={()=>{
                                                             handleClose();
                                                             this.handleClick(childMenu);
                                                         }}>
@@ -325,8 +328,8 @@ class MasterTemplate extends React.Component{
                 <AppBar position="absolute"
                     className={classes.appBar}>
                     <Toolbar className={classes.toolbar}>
-                        <img src="/res/logo.png" alt="" height="32" className={classes.appBarIcon} />
-                        <Typography variant="h6" component="h1" style={{color:theme.palette.primary.main}} noWrap>
+                        <img src="/res/logo2.png" alt="" height="32" className={classes.appBarIcon} />
+                        <Typography variant="h6" component="h1" style={{ color: this.props.theme.palette.common.white}} noWrap>
                             {APP_NAME}
                         </Typography>
                         <div className={classes.grow} />
@@ -347,7 +350,7 @@ class MasterTemplate extends React.Component{
                                         {
                                             this.state.system_menus[0].children.map(childMenu => {
                                                 return (
-                                                    <MenuItem className={this.props.classes.defaultMenu} onClick={()=>{
+                                                    <MenuItem key={childMenu.name} className={this.props.classes.defaultMenu} onClick={()=>{
                                                             handleClose();
                                                             this.handleClick(childMenu);
                                                         }}>
@@ -379,7 +382,7 @@ class MasterTemplate extends React.Component{
                                 direction="row"
                                 justify="space-between">
                                 <div style={this.state.hideMenu?{display:"none"}:{display:"block"}}>
-                                    <Typography style={{ color: this.props.theme.palette.primary.main}} variant="h6" gutterBottom>
+                                    <Typography style={{ color: this.props.theme.palette.common.white}} variant="h6" gutterBottom>
                                     Welcome!
                                     </Typography>
                                     <Typography className={classes.welcomeText} variant="subtitle1">
@@ -393,9 +396,8 @@ class MasterTemplate extends React.Component{
                         </div>
                     </div>
                     <div className={classes.scrollMenu}>
-                        {this.renderMenus(this.state.menus)}
-
-                        <Divider/>
+                        {this.state.menus ? this.renderMenus(this.state.menus) : ''}
+                        {/* <Divider/> */}
                         {
                             //Default Menus
                             this.renderMenus(this.state.system_menus)

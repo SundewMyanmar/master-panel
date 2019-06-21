@@ -27,7 +27,7 @@ const styles = theme => ({
     },
     searchHeader:{
         flex:1,
-        backgroundColor:theme.palette.primary.main,
+        // backgroundColor:theme.palette.primary.main,
         borderBottom:"1px solid #eff6f7"
     },
     searchHeaderText:{
@@ -46,7 +46,7 @@ const styles = theme => ({
         marginLeft: 12,
         marginTop:6,
         width:'100%',
-        color:theme.palette.primary.main
+        // color:theme.palette.primary.main
     },
     iconButton: {
         padding: 10,
@@ -74,6 +74,7 @@ class UserPage extends React.Component {
 
     componentDidMount(){
         const query = new URLSearchParams(this.props.location.search);
+        console.log("query", query);
         if(query.get('callback')==="success"){
             this.setState({
                 showSnack:true,
@@ -190,25 +191,82 @@ class UserPage extends React.Component {
         });
     }
 
+    handleCheckChange = async(data)=>{
+        if (data){
+            this.setState({showLoading:true});
+            var user={
+                "id":data.id,
+                "display_name":data.display_name.uni ? data.display_name.uni : data.display_name,
+                "user_name":data.user_name,
+                "email":data.email,
+                "password":"PWD123456",
+                "status":data.status,
+                "roles":data.roles,
+                "chat_bot_off":data.chat_bot_off === "On" ? true : false,
+                "facebook_id":data.facebook_id,
+            }
+
+            if(data.profile_image && data.profile_image.id){
+                user.profile_image={
+                    "id":data.profile_image.id
+                }
+            }else{
+                user.profile_image=null;
+            }
+            if(data.extras){
+                user.extras = { 
+                    "address" : data.extras.address ? data.extras.address : null,
+                    "gender" : data.extras.gender ? data.extras.gender : null,
+                    "phone" : data.extras.phone ? data.extras.phone : null
+                };
+            }
+            
+            try{
+                const response = await UserApi.update(data.id, user);
+                this.props.dispatch({
+                    type: USER_ACTIONS.MODIFIED,
+                    id: this.state.id,
+                    user: response
+                });
+                this.paging();
+
+            }catch(error){
+                this.setState({ showLoading : false, showError : true, errorMessage : "Please check your internet connection and try again." });
+            }
+        }
+    }
+
     paging=async()=>{
         try{
+            this.setState({showLoading: true})
             var result=await UserApi.getPaging(this.state.currentPage,this.state.pageSize,null,this.state.searchFilter);
-            console.log('result',result);
-            this.setState({total:result.total,pageCount:result.page_count
-                ,showLoading:false})
+            this.setState({total:result.total,pageCount:result.page_count,showLoading:false})
 
-                for(var i=0;i<result.data.length;i++){
-                    var role="";
-                    if(result.data[i].roles){
-                        for(var j=0;j<result.data[i].roles.length;j++){
-                            if(role!=="")
-                                role+=", "
+            for(var i=0;i<result.data.length;i++){
+                var role="";
+                if(result.data[i].roles){
+                    for(var j=0;j<result.data[i].roles.length;j++){
+                        if(role!=="")
+                            role+=", "
 
-                            role+=result.data[i].roles[j].name;
-                        }
+                        role+=result.data[i].roles[j].name;
                     }
-                    result.data[i].role_data=role;
                 }
+                result.data[i].role_data=role;
+            }
+
+            for(const data of result.data){
+                if(typeof data.display_name === "object"){
+                    data.name = data.display_name.uni 
+                } else {
+                    data.name = data.display_name
+                } 
+                if(data.chat_bot_off === undefined || data.chat_bot_off === ""){
+                   data.chat_bot_off = "Off";
+                } else {
+                    data.chat_bot_off = data.chat_bot_off ? "Off" : "On";
+                }
+            }
 
             if(result.count>0){
                 this.props.dispatch({
@@ -242,14 +300,18 @@ class UserPage extends React.Component {
     render(){
         const { classes } = this.props;
         
-        console.log('props',this.props.mes.user);
         const fields=[{
             name:"id",
             align:"center",
             display_name:"ID"
         },{
+            name:"chat_bot_off",
+            align:"center",
+            display_name:"Chat Bot",
+            type:"CHECK"
+        },{
             name:"profile_image",
-            align:"left",
+            align:"center",
             display_name:"Image",
             type:"IMAGE"
         },{
@@ -257,7 +319,7 @@ class UserPage extends React.Component {
             align:"left",
             display_name:"Roles",
         },{
-            name:"display_name",
+            name:"name",
             align:"left",
             display_name:"Name",
         },{
@@ -270,8 +332,8 @@ class UserPage extends React.Component {
             display_name:"Status"
         },{
             name:"",
-            align:"right",
-            display_name:""
+            align:"center",
+            display_name:"Action"
         }];
         
         return (
@@ -287,7 +349,7 @@ class UserPage extends React.Component {
                     <div className={classes.searchHeader}>
                         <Grid container>
                             <Grid container item xs={4} direction="row" justify="flex-start" alignItems="center">
-                                <Typography className={[classes.searchHeaderText,classes.searchPaper]} variant="h6" component="h1" style={{color:this.props.theme.palette.background.default}} noWrap>
+                                <Typography className={[classes.searchHeaderText,classes.searchPaper].join(" ")} style={{color: this.props.theme.palette.primary.main}} variant="h6" component="h1" noWrap>
                                     User List
                                 </Typography>
                             </Grid>
@@ -296,11 +358,12 @@ class UserPage extends React.Component {
                                     <Grid container>
                                         <Grid item xs={10}>
                                             <InputBase onKeyDown={this.onKeyDown} className={classes.input} value={this.state.searchFilter?this.state.searchFilter:""}
-                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)} placeholder="Search Users.." />
+                                                onChange={(event) => this.onChangeText(event.target.id, event.target.value)} placeholder="Search Users.." 
+                                            />
                                         </Grid>
                                         <Grid container item xs={2} justify="flex-end" alignItems="center">
                                             <IconButton className={classes.iconButton} aria-label="Menu" onClick={()=>this.onSearch()}>
-                                                <Icon color={this.props.theme.palette.primary.main}>search</Icon>
+                                                <Icon>search</Icon>
                                             </IconButton>
                                         </Grid>
                                     </Grid>
@@ -308,19 +371,20 @@ class UserPage extends React.Component {
                             </Grid>
                             
                             <Grid container item xs={4} direction="row" justify="flex-end" alignItems="center">
-                                <Fab onClick={()=>this.addNew()} variant="extended" aria-label="Delete" className={[classes.searchPaper, classes.searchButton]}>
-                                    <Icon className={classes.searchIcon} >add</Icon>
+                                <Fab onClick={()=>this.addNew()} variant="extended" aria-label="Delete" className={[classes.searchPaper, classes.searchButton].join(" ")}>
+                                    <Icon>add</Icon>
                                     New
                                 </Fab>
                             </Grid>
                         </Grid>
                     </div>
                     <MasterTable
-                        items={this.props.mes.user?this.props.mes.user:[]} fields={fields} pageChange={this.pageChange}
+                        items={this.props.lunchbox.user?this.props.lunchbox.user:[]} fields={fields} pageChange={this.pageChange}
                         total={this.state.total} pageSize={this.state.pageSize} currentPage={this.state.currentPage}
                         editButton={this.edit} deleteButton={this.delete}
                         handleChangePage={this.handleChangePage} handleChangeRowsPerPage={this.handleChangeRowsPerPage}
                         _this={this}
+                        handleCheckChange={this.handleCheckChange}
                     />
                 </Paper>
             </div>
@@ -336,7 +400,7 @@ UserPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        mes : state
+        lunchbox : state
     }
 }
 

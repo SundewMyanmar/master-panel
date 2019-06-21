@@ -15,9 +15,12 @@ export default class FormatManager {
     }
 
     static ValidateEmail=(mail) =>{
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
+        if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(mail)){
             return true
         }
+        // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
+        //     return true
+        // }
         
         return false;
     }

@@ -58,6 +58,39 @@ class FileApi extends ApiManager{
         }
         return null;
     }
+
+    async getPaging(page, size, sort, filter){
+        try{
+            var url = "files/?page=" + page + "&size=" + size;
+            if(sort && sort!=="")
+                url+="&sort=" + sort;
+            if(filter && filter!=="")
+                url+="&filter=" + filter;
+
+            const response = await this.get(url, true);
+            if(response.code >= 200 && response.code < 300){
+                return response.content;
+            }
+        }catch(error){
+            console.error(error);
+            throw error;
+        }
+        return null;
+    }
+
+    async delete(id){
+        try {
+            const url = "files/" + id;
+            const response = await this.deleteItem(url, {}, true);
+            if(response.code >= 200 && response.code < 300){
+                return response.content;
+            }
+        } catch (error) {
+            console.error('err',error);
+            throw error;
+        }
+        return null;
+    }
 }
 
 export default new FileApi();

@@ -2,16 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 import {connect} from 'react-redux';
+import { withStyles, Paper,TextField, Icon, Button, Grid, Divider, 
+        Typography, Select, MenuItem, Input, FormControl, FormControlLabel, 
+        FormLabel, InputLabel, Switch, Avatar, IconButton } from '@material-ui/core';
+
 import {primary,action,background} from '../../config/Theme';
-import { withStyles, Paper,TextField, Icon, Button, FormControl, FormControlLabel, RadioGroup, Radio, FormHelperText, Grid, Divider, Typography, Chip, Select, MenuItem, Input, InputLabel, InputAdornment, IconButton } from '@material-ui/core';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import TableDialog from '../../component/Dialogs/TableDialog';
 import UserApi from '../../api/UserApi';
-import FileApi from '../../api/FileApi';
 import RoleApi from '../../api/RoleApi';
-import FormatManager from '../../util/FormatManager';
+import FileApi from '../../api/FileApi';
+import {FILE_ACTIONS} from '../../redux/FileRedux';
 import {USER_ACTIONS} from '../../redux/UserRedux';
+import FormatManager from '../../util/FormatManager';
 import ImageUpload from '../../component/ImageUpload';
+import FileDialog from '../../component/Dialogs/FileDialog';
 
 const styles = theme => ({
     root: {
@@ -41,7 +47,10 @@ const styles = theme => ({
     select:{
         width:'100%',
         marginTop:32
-    }
+    },
+    avatar: {
+        margin: 10,
+    },
   });
 
   class UserSetupPage extends React.Component {
@@ -53,15 +62,33 @@ const styles = theme => ({
                 {"display":"Active","key":"ACTIVE"},
                 {"display":"Inactive","key":"PENDING"}
             ],
+            userGender:[
+                {"display":"Male","key":"male"},
+                {"display":"Female","key":"female"}
+            ],
             status:"ACTIVE",
+            checkBot: false,
             roles:[],
-            roleItems:[]
+            roleItems:[],
+            showLoading: false,
+            showError: false,
+            showTable: false,
+            showFile: false,
+            currentPage:0,
+            pageSize:5,
+            total:0,
+            pageCount:1,
+            fileCurrentPage:0,
+            filePageSize:18,
+            fileTotal:0,
+            filePageCount:1, 
         };
     }
 
     componentDidMount(){
-        console.log('did mount',this.props.match.params.id);
         this._loadRoles();
+        
+        this.paging();
     }
 
     _loadRoles=async()=>{
@@ -112,7 +139,6 @@ const styles = theme => ({
 
                 this.setState({
                     id:data.id,
-                    display_name:data.display_name,
                     user_name:data.user_name,
                     email:data.email,
                     status:data.status,
@@ -120,8 +146,19 @@ const styles = theme => ({
                     password:"PWD123456",
                     showLoading:false,
                     image:image,
-                    previewImage:preview
+                    previewImage:preview,
+                    bot:data.chat_bot_off ? data.chat_bot_off : false,
                 });
+                if (data.extras){
+                    this.setState({
+                        address : data.extras.address ? data.extras.address : "",
+                        gender : data.extras.gender ? data.extras.gender : "",
+                        phone : data.extras.phone ? data.extras.phone : "",
+                    })
+                }
+                if (data.display_name){
+                    this.setState({ display_name : data.display_name.uni ? data.display_name.uni : data.display_name })
+                }
             }
         }catch(error){
             this.setState({showLoading:false,showError:true,errorMessage:"Please check your internet connection and try again!"});
@@ -130,12 +167,17 @@ const styles = theme => ({
 
     validateForm(){
         var user_nameError=false;
+        var display_nameError=false;
         var emailError=false;
         var passwordError=false;
         var confirm_passwordError=false;
         var statusError=false;
 
         if(!this.props.match.params.id){
+            if(!this.state.display_name || this.state.display_name===""){
+                display_nameError=true;
+            }
+
             if(!this.state.user_name || this.state.user_name===""){
                 user_nameError=true;
             }
@@ -157,10 +199,15 @@ const styles = theme => ({
             }
         }
 
+        if(!this.state.display_name || this.state.display_name===""){
+            display_nameError=true;
+        }
+
         if(!this.state.status) 
             statusError=true;
 
         this.setState({
+            display_nameError:display_nameError,
             user_nameError:user_nameError,
             emailError:emailError,
             passwordError:passwordError,
@@ -168,7 +215,7 @@ const styles = theme => ({
             statusError:statusError
         });
 
-        return !user_nameError && !emailError && !passwordError && !confirm_passwordError && !statusError ;
+        return !display_nameError && !user_nameError && !emailError && !passwordError && !confirm_passwordError && !statusError ;
     }
 
     goBack(){
@@ -177,7 +224,6 @@ const styles = theme => ({
 
     onSaveItem=async()=>{
         if(!this.validateForm()){
-            console.log('validate fail')
             return;
         }
 
@@ -188,13 +234,28 @@ const styles = theme => ({
             "email":this.state.email,
             "password":this.state.password,
             "status":this.state.status,
-            "roles":this.state.roles
+            "chat_bot_off":this.state.bot,
+            "extras": { 
+                "address" : this.state.address,
+                "phone" : this.state.phone,
+                "gender" : this.state.gender,
+            }
         }
-        console.log(this.state.image);
-        console.log(user);
         
         try{
-        
+            if(this.state.roles.length){
+                var roles = [];
+                for(const role of this.state.roles){
+                    roles.push({ id : role.id })
+                }
+                user.roles = roles;
+            }
+
+            if(this.state.agent){
+                user.agent={
+                    "id":this.state.agent.id
+                }
+            }
             if(this.state.image && this.state.image.id){
                 user.profile_image={
                     "id":this.state.image.id
@@ -265,6 +326,191 @@ const styles = theme => ({
         });
     }
 
+    switchChange = () => {
+        this.setState({ bot : !this.state.bot });
+    }
+    
+    handleTableDialog = () => {
+        this.setState({ showTable : !this.state.showTable });
+    }
+    
+    onKeyDown=(e)=>{
+        if(e.keyCode === 13){
+            this.onSearch();
+        }
+    }
+
+    onSearch(){
+        this.setState({
+            currentPage:0
+        },()=>{
+            this._loadAgents();
+        })
+    }
+
+    filterTextChange=(key,value)=>{
+        this.setState({
+            searchFilter:value
+        });
+    }
+    
+    handleChangePage(e){
+        console.log('handle change page',e);
+    }
+
+    handleChangeRowsPerPage(e,_this){
+        _this.setState({
+            pageSize:e.target.value
+        },()=>{
+            _this._loadAgents();
+        })
+    }
+
+    pageChange=(pageParam,_this)=>{
+        
+        var currentPage=_this.state.currentPage;
+        if(pageParam==="first"){
+            currentPage=0;
+        }else if(pageParam==="previous"){
+            if(currentPage>0)
+                currentPage-=1;
+            else
+                currentPage=_this.state.pageCount-1;
+        }else if(pageParam==="forward"){
+            if(currentPage===_this.state.pageCount-1)
+                currentPage=0;
+            else
+                currentPage+=1;
+        }else if(pageParam==="last"){
+            currentPage=_this.state.pageCount-1;
+        }
+
+        _this.setState({
+            currentPage:currentPage,
+            showLoading:true
+        },()=>{
+            _this._loadAgents();            
+        });
+    }
+
+    handleRowClick = (event, data) => {
+        this.setState({ showTable : false, agent : data })
+    }
+
+    onUploadImage = async(event) => {
+        try {
+            var reader = new FileReader();
+            var file = event.target.files[0];
+            reader.readAsDataURL(file);
+            if(file){
+                var fileResponse = await FileApi.upload(file);
+                if(fileResponse){
+                    this.paging();
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    handleFileClick = (event, data) => {
+        this.setState({ showFile : false, image : data, previewImage : data.public_url})
+    }
+
+    handleFileClose = () => {
+        this.setState({ showFile : false })
+    }
+
+    handleFileOpen = (_this) => {
+        this.setState({ showFile : true });
+        _this.setState({ showDialog : false });
+    }
+
+    paging=async()=>{
+        this.setState({showLoading: true});
+        try{
+            var result=await FileApi.getPaging(this.state.fileCurrentPage,this.state.filePageSize,"createdAt:DESC",this.state.fileSearchFilter);
+            this.setState({ fileTotal : result.total, filePageCount : result.page_count, showLoading: false})
+
+            if(result.count>0){
+                this.props.dispatch({
+                    type:FILE_ACTIONS.INIT_DATA,
+                    data:result.data
+                })
+            }else{
+                this.props.dispatch({
+                    type:FILE_ACTIONS.INIT_DATA,
+                    data:[]
+                })
+
+                this.setState({ showLoading: false, showError: true, errorMessage: 'There is no data to show.' });
+            }
+        }catch(error){
+            this.props.dispatch({
+                type:FILE_ACTIONS.INIT_DATA,
+                data:[]
+            })
+        }
+    }
+    
+    fileHandleChangePage(e){
+        console.log('handle change page',e);
+    }
+
+    fileHandleChangeRowsPerPage(e,_this){
+        _this.setState({
+            filePageSize:e.target.value
+        },()=>{
+            _this.paging();
+        })
+    }
+
+    filePageChange=(pageParam,_this)=>{
+        var currentPage=_this.state.fileCurrentPage;
+        if(pageParam==="first"){
+            currentPage=0;
+        }else if(pageParam==="previous"){
+            if(currentPage>0)
+                currentPage-=1;
+            else
+                currentPage=_this.state.filePageCount-1;
+        }else if(pageParam==="forward"){
+            if(currentPage===_this.state.filePageCount-1)
+                currentPage=0;
+            else
+                currentPage+=1;
+        }else if(pageParam==="last"){
+            currentPage=_this.state.filePageCount-1;
+        }
+
+        _this.setState({
+            fileCurrentPage:currentPage,
+            showLoading:true
+        },()=>{
+            _this.paging();            
+        });
+    }
+    
+    fileKeyDown=(e)=>{
+        if(e.keyCode === 13){
+            this.fileSearch();
+        }
+    }
+
+    fileSearch(){
+        this.setState({
+            fileCurrentPage:0
+        },()=>{
+            this.paging();
+        })
+    }
+
+    filefilterTextChange=(key,value)=>{
+        this.setState({
+            fileSearchFilter:value
+        });
+    }
+
     render(){
         const { classes } = this.props;
         
@@ -274,14 +520,83 @@ const styles = theme => ({
             })
         };
 
+        const handleGenderChange=event=>{
+            this.setState({
+                gender:event.target.value
+            })
+        };
+
         const handleChange = name => event => {
-            console.log(event.target.value);
             this.setState({status:event.target.value});
         };
+
+        const fields=[{
+            name:"",
+            align:"center",
+            display_name:""
+        },{
+            name:"id",
+            align:"center",
+            display_name:"Id",
+        },{
+            name:"profile_image",
+            align:"center",
+            display_name:"Profile Image",
+            type:"IMAGE"
+        },{
+            name:"name_en",
+            align:"left",
+            display_name:"Name",
+        },{
+            name:"order_available",
+            align:"center",
+            display_name:"Order Available",
+        },{
+            name:"active",
+            align:"center",
+            display_name:"Status",
+        }];
+
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
+                <FileDialog showFile={this.state.showFile}
+                    items={this.props.lunchbox.file}
+                    total={this.state.fileTotal} 
+                    pageSize={this.state.filePageSize} 
+                    currentPage={this.state.fileCurrentPage}
+                    pageChange={this.filePageChange}
+                    handleChangePage={this.fileHandleChangePage}
+                    handleChangeRowsPerPage={this.fileHandleChangeRowsPerPage}
+                    handleFileClick={this.handleFileClick}
+                    handleClose={this.handleFileClose}
+                    searchFilterText={this.state.fileSearchFilter ? this.state.fileSearchFilter : ""}
+                    onSearch={this.fileSearch}
+                    onKeyDown={this.fileKeyDown}
+                    onChangeText={this.filefilterTextChange}
+                    onUploadImage={this.onUploadImage}
+                    _this={this}
+                />
+                <TableDialog tableTitle="Agent List" 
+                    fields={fields}
+                    items={this.props.lunchbox.agent?this.props.lunchbox.agent:[]}
+                    onOpenDialog={this.state.showTable}
+                    onCloseDialog={this.handleTableDialog}
+                    isSelected={this.selected}
+                    handleRowClick={this.handleRowClick}
+                    searchText={this.state.searchFilter}
+                    filterTextChange={this.filterTextChange}
+                    onKeyDown={this.onKeyDown}
+                    pageChange={this.pageChange}
+                    total={this.state.total} 
+                    pageSize={this.state.pageSize}
+                    currentPage={this.state.currentPage}
+                    handleChangePage={this.handleChangePage}
+                    handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    _this={this}
+                    multi={false}
+                />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{textAlign: "center"}} color="primary" variant="h5" component="h3">
                         User Setup
@@ -292,10 +607,52 @@ const styles = theme => ({
                             <form className={classes.form} autoComplete="off">
                                 <Grid container justify="center">
                                     <ImageUpload onImageChange={this.onImageChange} onImageRemove={this.onImageRemove}
-                                        previewImage={this.state.previewImage} _this={this}
+                                        previewImage={this.state.previewImage} _this={this} id="imageUpload"
+                                        handleFileOpen={this.handleFileOpen}
                                     />
                                 </Grid>
                                 <Divider className={classes.divider} light component="h3" />
+
+                                <Grid container spacing={8} style={{ paddingTop : 32}}>
+                                    <Grid container item xs={12} sm={6} md={6} lg={6} justify="center" alignItems="center">
+                                        <FormControl component="fieldset">
+                                            <FormLabel component="legend">
+                                                Agent
+                                            </FormLabel>
+                                            <FormControlLabel
+                                                control={
+                                                    this.state.agent ? (
+                                                        <Avatar onClick={() => this.handleTableDialog()} alt="Agent Profile" src={this.state.agent.profile_image ? this.state.agent.profile_image.public_url : "./res/icon@256.png"} className={classes.avatar} />
+                                                    ) : (
+                                                        <IconButton color="primary" onClick={() => this.handleTableDialog()}>
+                                                            <Icon>add_circle</Icon>
+                                                        </IconButton>
+                                                    )
+                                                }
+                                                label={this.state.agent ? this.state.agent.name_en : "Add Agent" }
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid container item xs={12} sm={6} md={6} lg={6} justify="center">
+                                        <FormControl component="fieldset">
+                                            <FormLabel component="legend">
+                                                Chat Bot
+                                            </FormLabel>
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={!this.state.bot}
+                                                        onChange={this.switchChange}
+                                                        value="bot"
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label={this.state.bot ? "Off" : "On"}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.display_nameError?"error":"primary"}>person_outline</Icon>
@@ -313,11 +670,11 @@ const styles = theme => ({
                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
                                         />
                                         <div className={classes.form_error}>
-                                            {this.state.nameError?"invalid display name field!":""}
+                                            {this.state.display_nameError?"invalid display name field!":""}
                                         </div>
-                                        
                                     </Grid>
                                 </Grid>
+                                
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.user_nameError?"error":"primary"}>person</Icon>
@@ -341,6 +698,7 @@ const styles = theme => ({
                                         
                                     </Grid>
                                 </Grid>
+                                
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.emailError?"error":"primary"}>email</Icon>
@@ -362,6 +720,66 @@ const styles = theme => ({
                                             {this.state.emailError?"invalid email field!":""}
                                         </div>
                                         
+                                    </Grid>
+                                </Grid>
+                                
+                                <Grid container spacing={8} alignItems="flex-start">
+                                    <Grid item>
+                                        <Icon style={{ fontSize: 22, paddingTop:40 }} color="primary">location_on</Icon>
+                                    </Grid>
+                                    <Grid item xs={11} sm={11} md={11} lg={11}>
+                                        <TextField
+                                            id="address"
+                                            color="primary"
+                                            label="Address"
+                                            fullWidth
+                                            className={classes.textField}
+                                            value={this.state.address?this.state.address:""}
+                                            margin="normal"
+                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                
+                                <Grid container spacing={8} alignItems="flex-start">
+                                    <Grid item>
+                                        <Icon style={{ fontSize: 22, paddingTop:40 }} color="primary">local_phone</Icon>
+                                    </Grid>
+                                    <Grid item xs={11} sm={11} md={11} lg={11}>
+                                        <TextField
+                                            id="phone"
+                                            color="primary"
+                                            label="Phone"
+                                            fullWidth
+                                            className={classes.textField}
+                                            value={this.state.phone?this.state.phone:""}
+                                            margin="normal"
+                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                
+                                <Grid container spacing={8} alignItems="flex-end">
+                                    <Grid item>
+                                        <Icon style={{ fontSize: 22, paddingTop:40 }} color="primary">wc</Icon>
+                                    </Grid>
+                                    <Grid item xs={11} sm={11} md={11} lg={11}>
+                                        <FormControl fullWidth className={classes.formControl}>
+                                            <InputLabel htmlFor="gender">Gender</InputLabel>
+                                            <Select
+                                                className={classes.select}
+                                                value={this.state.gender ? this.state.gender : ""}
+                                                onChange={handleGenderChange}
+                                                input={<Input id="gender" />}
+                                                MenuProps={{className: classes.menu}}
+                                            >
+                                            {this.state.userGender.map(option => (
+                                                <MenuItem key={option.key} value={option.key}>
+                                                    {option.display}
+                                                </MenuItem>
+                                            ))}
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
                                 </Grid>
                                 {
@@ -413,7 +831,7 @@ const styles = theme => ({
                                         </Grid>
                                     </Grid></div>
                                 }
-                                
+
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color="primary">whatshot</Icon>
@@ -435,6 +853,7 @@ const styles = theme => ({
                                         </Select>
                                     </Grid>
                                 </Grid>
+                                
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color="primary">code</Icon>
@@ -464,16 +883,17 @@ const styles = theme => ({
                                         </TextField>
                                     </Grid>
                                 </Grid>
+                                
                                 <Grid container spacing={8} alignItems="center" justify="space-evenly">
                                 <Grid xs={12} sm={6} item md={5} lg={5}>
                                         <Button style={{marginTop: '30px', marginBottom: '20px', color: background.default}} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onSaveItem()}>
-                                            <Icon className={classes.iconButton} color="background">save</Icon>
+                                            <Icon className={classes.iconButton}>save</Icon>
                                             Save
                                         </Button>
                                     </Grid>
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
                                         <Button style={{marginTop: '30px', marginBottom: '20px', color: primary.main}} variant="contained" size="large" className={classes.button} onClick={() => this.goBack()}>
-                                            <Icon className={classes.iconButton} color="background">cancel_presentation</Icon>
+                                            <Icon className={classes.iconButton}>cancel_presentation</Icon>
                                             Cancel
                                         </Button>
                                     </Grid>
@@ -495,7 +915,7 @@ UserSetupPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        mes : state
+        lunchbox : state
     }
 }
 

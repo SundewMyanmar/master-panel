@@ -4,9 +4,14 @@ const API_URL = 'menus/';
 
 class MenuApi extends ApiManager{
 
-    async getAll(page, size, sort, filter){
+    async getPaging(page, size, sort, filter){
         try{
-            const url = API_URL + "?page=" + page + "&size=" + size + "&sort=" + sort + "&filter=" + filter;
+            var url = API_URL + "?page=" + page + "&size=" + size;
+            if(sort && sort!=="")
+                url+="&sort=" + sort;
+            if(filter && filter!=="")
+                url+="&filter=" + filter;
+
             const response = await this.get(url, true);
             if(response.code >= 200 && response.code < 300){
                 return response.content;
@@ -32,9 +37,9 @@ class MenuApi extends ApiManager{
         return null;
     }
 
-    async getByRole(){
+    async getByRole(data){
         try {
-            const url = API_URL + "roles";
+            const url = API_URL + "?roles=" + data;
             const response = await this.get(url, true);
             if(response.code >= 200 && response.code < 300){
                 return response.content;

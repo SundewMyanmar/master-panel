@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
+
+import { withStyles, Dialog, IconButton, Icon, Typography, CardContent, CardActions, Button, Divider, Grid } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -13,14 +11,14 @@ const styles = theme => ({
         position: 'absolute',
         top: '0px',
         right: '0px',
-        color: 'white'
+        color: theme.palette.common.red
     },
 });
 
 class AlertDialog extends React.Component {
 
     render() {
-    const { classes, showImage, image, onClose } = this.props;
+    const { classes, showImage, data, onClose, onLoadImage, width, height, deleteButton, _this } = this.props;
 
         return (
             <Dialog
@@ -34,8 +32,55 @@ class AlertDialog extends React.Component {
                     <IconButton onClick={onClose} className={classes.btnClose} aria-label="Close">
                         <Icon fontSize="large">cancel</Icon>
                     </IconButton>
-                    <img width="100%" height="100%" src={image} alt="img" />
+                    <img onLoad={onLoadImage} width="100%" height="100%" src={data ? data.public_url : "/res/default-image.png"} alt="img" />
                 </div>
+                <Divider light />
+                <CardContent>
+                    {data ? (
+                        <div>
+                            <Typography variant="subtitle2" align="center" gutterBottom>{data.name}</Typography>
+                            <Grid container>
+                                <Grid container item xs={12}>
+                                    <Grid item xs={2}>
+                                        <Typography variant="caption" gutterBottom>Dimesions </Typography>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <Typography variant="caption" gutterBottom>: {width} x {height}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container item xs={12}>
+                                    <Grid item xs={2}>
+                                        <Typography variant="caption" gutterBottom>Size </Typography>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <Typography variant="caption" gutterBottom>: {data.size}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container item xs={12}>
+                                    <Grid item xs={2}>
+                                        <Typography variant="caption" gutterBottom>Type </Typography>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <Typography variant="caption" gutterBottom>: {data.type}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container item xs={12}>
+                                    <Grid item xs={2}>
+                                        <Typography variant="caption" gutterBottom>Extension </Typography>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <Typography variant="caption" gutterBottom>: {data.extension}</Typography>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </div>
+                    ) : (
+                        <Typography variant="caption" align="center">There is no image.</Typography>
+                    )}
+                </CardContent>
+                <CardActions style={{ justifyContent : "flex-end"}}>
+                    <Button style={{ color: "red"}} onClick={()=> deleteButton(data.id,data.name,_this)}>Delete</Button>
+                </CardActions>
             </Dialog>
         );
     }

@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router";
-import { Icon, Input,IconButton } from '@material-ui/core';
+import {connect} from 'react-redux';
+import { Icon, Input, IconButton } from '@material-ui/core';
+
+import MenuListDialog from './Dialogs/MenuListDialog';
 
 const styles = theme => ({
     container:{
@@ -18,7 +21,6 @@ const styles = theme => ({
         //position: '-webkit-sticky', /* Safari */
         //position: 'sticky',
         //transform: 'translate(-50%, -50%)',
-        
         backgroundColor: '#dd2c00',
         color:'white',
         padding:0,
@@ -35,7 +37,8 @@ class ImageUpload extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            previewImage:{}            
+            previewImage:{},
+            showDialog:false,
         }
     }
 
@@ -43,13 +46,14 @@ class ImageUpload extends React.Component{
         
     }
 
-    onImageClick(){
-        var upload=document.getElementById("imageUpload");
-        upload.click();
+    onImageClick(id){
+        this.setState({ showDialog : true, id : id });
+        // var upload=document.getElementById(id);
+        // upload.click();
     }
 
-    onImageChange(callback,_this){
-        var files=document.getElementById('imageUpload').files;
+    onImageChange(callback,_this,id){
+        var files=document.getElementById(id).files;
         if(files && files.length>0){
             this.setState({
                 image:files[0]
@@ -79,8 +83,18 @@ class ImageUpload extends React.Component{
         })
     }
 
+    handleMenuListDialog = () => {
+        this.setState({ showDialog : !this.state.showDialog })
+    }
+
+    uploadNew = () => {
+        this.setState({ showDialog : false})
+        var upload=document.getElementById(this.state.id);
+        upload.click();
+    }
+
     render(){
-        const { classes,onImageChange,previewImage,onImageRemove,_this,disableUpload,args,disableRemove} = this.props;
+        const { classes,onImageChange,previewImage,onImageRemove,_this,disableUpload,args,disableRemove,id,handleFileOpen} = this.props;
         var {width,height} =this.props;
 
         var img,visibility;
@@ -103,21 +117,31 @@ class ImageUpload extends React.Component{
         if(!height)
             height=200;
         return(
-            <div className={[classes.container]} style={{width:width,height:height}}>
-                <img onClick={()=>{
-                    if(!disableUpload)
-                        this.onImageClick()
-                }} src={img} alt="" style={{width:"100%",height:"100%"}}/>
-                <IconButton style={{visibility:visibility}} onClick={()=>{
-                    this.onRemove(this);
-                    if(onImageRemove)
-                        onImageRemove(_this,args);
-                    }} className={classes.image_button}> 
-                    <Icon>close</Icon>
-                </IconButton>
-                <Input style={{display:'none'}} id="imageUpload" type="file" value={this.state.uploadFile} onChange={(event)=>{
-                    this.onImageChange(onImageChange,_this);
-                }}/>
+            <div>
+                <MenuListDialog show={this.state.showDialog}
+                    handleMenuListDialog={this.handleMenuListDialog}
+                    uploadNew={this.uploadNew}
+                    openFile={() => handleFileOpen(this)}
+                />
+                <div className={[classes.container]} style={{width:width,height:height}}>
+                    <img onClick={()=>{
+                        if(!disableUpload)
+                            this.onImageClick(id)
+                    }} src={img} alt="" style={{width:"100%",height:"100%",borderRadius:6,}}/>
+                    <IconButton style={{visibility:visibility}} onClick={()=>{
+                        this.onRemove(this);
+                        if(onImageRemove)
+                            onImageRemove(_this,args);
+                        }} className={classes.image_button}> 
+                        <Icon>close</Icon>
+                    </IconButton>
+                    {/* <Input style={{display:'none'}} id="imageUpload" type="file" value={this.state.uploadFile} onChange={(event)=>{
+                        this.onImageChange(onImageChange,_this);
+                    }}/> */}
+                    <Input style={{display:'none'}} id={id} type="file" value={this.state.uploadFile} onChange={(event)=>{
+                        this.onImageChange(onImageChange,_this,id);
+                    }}/>
+                </div>
             </div>
         )
     }
@@ -128,4 +152,10 @@ ImageUpload.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles,{ withTheme: true })(ImageUpload));
+const mapStateToProps = (state) =>{
+    return{
+        lunchbox : state
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(withStyles(styles,{ withTheme: true })(ImageUpload)));

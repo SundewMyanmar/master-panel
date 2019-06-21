@@ -6,7 +6,7 @@ export const common={
     gray: '#648dae',
     red: '#d50000',
     redOnPrimary: '#950000',
-    darkRed: '#801313',
+    darkRed: '#640236',
     green: '#00a152', //'#4caf50',
     blue: '#1976d2', //'#2196f3',
     purple: '#7600b2',
@@ -22,45 +22,46 @@ export const common={
 }
 
 export const action={
-    success:"#00765F",
-    warn:"#E0B139",
-    error:"#99445D",
-    info:"#2774ae"
+    success:"#1b5e20",
+    warn:"#dd2c00",
+    error:"#640236",
+    info:"#006064"
 }
 
 export const primary={
-    dark: '#0077b5',
-    main: '#3b5998',
-    light: '#55acee',
-    contrastText: "#f6f7fa",
+    // dark: '#9e3c15',
+    dark: '#640236',
+    main: '#880e4f',
+    light: '#f8bbd0',
+    contrastText: "#fce4ec",
 }
 
 export const secondary={
-    dark:'#dd4b39',
-    main: '#bd081c',
-    light:'#dd4b39',
-    contrastText: "#f8dedb",
+    dark:'#033d40',
+    main: '#006064',
+    light:'#00bcd4',
+    contrastText: "#e0f7fa",
 }
 
 export const divider='#a4b4ca';
 
 export const background={
-    default: '#f2f2f2',
-    dark:'#a4b4ca',
-    light:'#e1e8f2'
+    default: '#fbebf0',
+    dark:'#640236',
+    light:'#fce4ec'
 }
 
 export const menu={
-    main:'#a4b4ca',
+    main:'#880e4f',
     //dark:'#3b5998',
-    dark:'#98aecc',
-    light:'#f6f7fa'
+    dark:'#2d0319',
+    light:'#f8bbd0'
 }
 
 export const text={
-    main:'#01426a',
-    dark:'#656565',
-    light:'#f5f5f5'
+    main:'#880e4f',
+    dark:'#730d43',
+    light:'#c897b1'
 }
 
 export const DefaultTheme = createMuiTheme({

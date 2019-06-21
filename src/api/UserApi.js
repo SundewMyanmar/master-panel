@@ -6,7 +6,7 @@ class UserApi extends ApiManager{
 
     async getPaging(page, size, sort, filter){
         try{
-            var url = API_URL + "query?page=" + page + "&size=" + size;
+            var url = API_URL + "?page=" + page + "&size=" + size;
             if(sort && sort!=="")
                 url+="&sort=" + sort;
             if(filter && filter!=="")
