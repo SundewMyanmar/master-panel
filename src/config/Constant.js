@@ -1,4 +1,4 @@
-export const APP_NAME = "MeFood Lunch Box";
+export const APP_NAME = "Web Panel";
 export const APP_VERSION = "0.1.0";
 export const API_URL = "http://localhost:8080/";
 export const DATE_FORMAT = "YYYY-MM-DD";
