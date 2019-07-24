@@ -15,7 +15,7 @@ const styles = theme => ({
     },
 });
 
-class AlertDialog extends React.Component {
+class ImageDialog extends React.Component {
 
     render() {
     const { classes, showImage, data, onClose, onLoadImage, width, height, deleteButton, _this } = this.props;
@@ -86,8 +86,8 @@ class AlertDialog extends React.Component {
     }
 }
 
-AlertDialog.propTypes = {
+ImageDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AlertDialog);
+export default withStyles(styles)(ImageDialog);

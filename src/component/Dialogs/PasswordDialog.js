@@ -57,7 +57,7 @@ const DialogActions = withStyles(theme => ({
   },
 }))(MuiDialogActions);
 
-class CustomizedDialogDemo extends React.Component {
+class PasswordDialog extends React.Component {
 
   render() {
 
@@ -138,4 +138,4 @@ class CustomizedDialogDemo extends React.Component {
   }
 }
 
-export default CustomizedDialogDemo;
+export default PasswordDialog;

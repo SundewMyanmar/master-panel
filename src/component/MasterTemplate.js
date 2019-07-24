@@ -37,7 +37,7 @@ const styles = theme => ({
         right: 0,
     },
     nestedMenu: {
-        paddingLeft: theme.spacing.unit * 6,
+        paddingLeft: theme.spacing.unit * 4,
         paddingTop:8,
         paddingBottom:8,
         borderRadius:1,
@@ -49,6 +49,7 @@ const styles = theme => ({
     listLabel:{
         // color:theme.palette.primary.main,
         fontSize:'14px',
+        padding:0
     },
     defaultMenu:{
         paddingTop:8,
@@ -149,7 +150,6 @@ const styles = theme => ({
     },
     welcomeImage: {
         // backgroundColor: theme.palette.primary.main,
-        backgroundImage: 'url("/res/info.png")',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -229,7 +229,7 @@ class MasterTemplate extends React.Component{
         const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
         const menus = JSON.parse(sessionStorage.getItem(MAIN_MENU.MENU));
 
-        console.log("menus", menus);
+        console.log(user);
 
         this.setState({ user: user, menus:menus });
     }
@@ -275,7 +275,7 @@ class MasterTemplate extends React.Component{
                                 <ListItemIcon>
                                 <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>{menu.icon}</Icon>
                                 </ListItemIcon>
-                                <ListItemText style={this.state.hideMenu?{display:"none"}:{display:"block"}} classes={{ primary: this.props.classes.listLabel }} inset={false} primary={menu.name} />
+                                <ListItemText style={this.state.hideMenu?{display:"none"}:{display:"block",padding:0}} classes={{ primary: this.props.classes.listLabel }} inset={false} primary={menu.name} />
                                 <div style={this.state.hideMenu?{display:"none"}:{display:"block"}}>
                                     <div style={this.state.active===menu.id?{marginRight:0}:{marginRight:4}}>
                                     {
@@ -344,7 +344,12 @@ class MasterTemplate extends React.Component{
                                         <IconButton onClick={event => {
                                             updateAnchorEl(event.currentTarget);
                                         }}> 
+
+                                        {
+                                            this.state.user.profile_image && this.state.user.profile_image.public_url?
+                                            <img src={this.state.user.profile_image.public_url} style={{width:30}}/>:
                                             <Icon className={classes.menuIcon}>account_circle</Icon>
+                                        }
                                         </IconButton>
                                         <Menu id="render-props-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
                                         {
@@ -373,7 +378,7 @@ class MasterTemplate extends React.Component{
                         paper: classes.drawerPaper,
                     }}>
                     <div className={classes.toolbar} />
-                    <div className={classes.welcomeImage}>
+                    <div className={classes.welcomeImage} style={{backgroundImage:this.state.user.profile_image && this.state.user.profile_image.public_url?'url("'+this.state.user.profile_image.public_url+'")':'url("/res/info.png")'}}>
                         <div className={classes.welcomeBackground} style={this.state.hideMenu?{padding: theme.spacing.unit+3}:{padding: theme.spacing.unit * 3}}>
                             <Grid
                                 container
@@ -420,7 +425,7 @@ MasterTemplate.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        million : state
+        masterpanel : state
     }
 }
   

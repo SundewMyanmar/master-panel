@@ -11,6 +11,11 @@ import MenuApi from '../../api/MenuApi';
 import {MENU_ACTIONS} from '../../redux/MenuRedux';
 import {primary,action,background} from '../../config/Theme';
 import TableDialog from '../../component/Dialogs/TableDialog';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 const styles = theme => ({
     root: {
@@ -22,6 +27,9 @@ const styles = theme => ({
     divider: {
         marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 2,
+    },
+    radio:{
+        paddingTop:27
     },
     button: {
         width: 'calc(100%)',
@@ -92,7 +100,8 @@ const styles = theme => ({
             currentPage:0,
             pageSize:10,
             total:0,
-            pageCount:1
+            pageCount:1,
+            selectedValue:'folder'
         };
     }
 
@@ -198,7 +207,8 @@ const styles = theme => ({
                     name:data.name,
                     icon:data.icon,
                     state:data.state,
-                    type:data.type,
+                    parent_id:data.parent_id,
+                    selectedValue:data.type,
                     roles:roles,
                     menus:data.children,
                     showLoading:false,
@@ -224,7 +234,7 @@ const styles = theme => ({
         if(!this.state.state)
             stateError=true;
 
-        if(!this.state.type)
+        if(!this.state.selectedValue)
             typeError=true
 
         this.setState({
@@ -253,9 +263,10 @@ const styles = theme => ({
             "name":this.state.name,
             "icon":this.state.icon,
             "state":this.state.state,
-            "type":this.state.type,
+            "type":this.state.selectedValue,
             "roles":this.state.roles,
             "children":childMenus,
+            "parent_id":this.state.parent_id
         }
 
         try{
@@ -384,6 +395,12 @@ const styles = theme => ({
         });
     }
 
+    radioHandleChange(_this,event){
+        _this.setState({
+            selectedValue:event.target.value
+        })
+    }
+
     render(){
         const { classes } = this.props;
         
@@ -437,7 +454,7 @@ const styles = theme => ({
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
                 <TableDialog tableTitle="Menu List" 
                     fields={fields}
-                    items={this.props.lunchbox.menu}
+                    items={this.props.masterpanel.menu}
                     searchText={this.state.searchFilter}
                     filterTextChange={this.filterTextChange}
                     onKeyDown={this.onKeyDown}
@@ -530,23 +547,28 @@ const styles = theme => ({
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.typeError?"error":"primary"}>code</Icon>
+                                    
+                                    <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.typeError?"error":"primary"}>code</Icon>
+                                     
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <TextField
-                                            id="type"
-                                            color="primary"
-                                            label="Type*"
-                                            error={this.state.typeError?true:false}
-                                            fullWidth
-                                            className={classes.textField}
-                                            value={this.state.type?this.state.type:""}
-                                            margin="normal"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
-                                        />
-                                        <div className={classes.form_error}>
-                                            {this.state.typeError?"invalid state field!":""}
-                                        </div>
+                                        <FormControl className={classes.radio} component="fieldset">
+                                            <RadioGroup aria-label="position" name="position" value={this.state.selectedValue} onChange={(event)=>this.radioHandleChange(this,event)} row>
+                                                <FormControlLabel
+                                                value="folder"
+                                                control={<Radio color="primary" />}
+                                                label="Folder"
+                                                labelPlacement="right"
+                                                />
+                                                <FormControlLabel
+                                                value="link"
+                                                control={<Radio color="primary" />}
+                                                label="Link"
+                                                labelPlacement="right"
+                                                />
+                                            </RadioGroup>
+                                        </FormControl>
+                                        
                                         
                                     </Grid>
                                 </Grid>
@@ -632,7 +654,7 @@ MenuSetupPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 

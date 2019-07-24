@@ -39,7 +39,7 @@ class MenuApi extends ApiManager{
 
     async getByRole(data){
         try {
-            const url = API_URL + "?roles=" + data;
+            const url = API_URL + "roles?ids=" + data;
             const response = await this.get(url, true);
             if(response.code >= 200 && response.code < 300){
                 return response.content;

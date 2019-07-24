@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const styles = theme => ({
 });
 
-class AlertDialog extends React.Component {
+class ConfirmDialog extends React.Component {
 
     render() {
     const { title, description, onClickOk, showDialog } = this.props;
@@ -42,8 +42,8 @@ class AlertDialog extends React.Component {
     }
 }
 
-AlertDialog.propTypes = {
+ConfirmDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AlertDialog);
+export default withStyles(styles)(ConfirmDialog);

@@ -11,7 +11,7 @@ const styles = theme => ({
     }
 });
 
-class AlertDialog extends React.Component {
+class ListDialog extends React.Component {
 
     render() {
     const { classes, title, onClose, showDialog, itemList } = this.props;
@@ -53,8 +53,8 @@ class AlertDialog extends React.Component {
     }
 }
 
-AlertDialog.propTypes = {
+ListDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AlertDialog);
+export default withStyles(styles)(ListDialog);

@@ -182,7 +182,7 @@ const styles = theme => ({
                 user_nameError=true;
             }
             
-            if(!FormatManager.validateUser(this.state.user_name)){
+            if(!FormatManager.ValidateUser(this.state.user_name)){
                 user_nameError=true;
             }
 
@@ -562,7 +562,7 @@ const styles = theme => ({
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
                 <FileDialog showFile={this.state.showFile}
-                    items={this.props.lunchbox.file}
+                    items={this.props.masterpanel.file}
                     total={this.state.fileTotal} 
                     pageSize={this.state.filePageSize} 
                     currentPage={this.state.fileCurrentPage}
@@ -580,7 +580,7 @@ const styles = theme => ({
                 />
                 <TableDialog tableTitle="Agent List" 
                     fields={fields}
-                    items={this.props.lunchbox.agent?this.props.lunchbox.agent:[]}
+                    items={this.props.masterpanel.agent?this.props.masterpanel.agent:[]}
                     onOpenDialog={this.state.showTable}
                     onCloseDialog={this.handleTableDialog}
                     isSelected={this.selected}
@@ -915,7 +915,7 @@ UserSetupPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 

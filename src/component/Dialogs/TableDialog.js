@@ -13,7 +13,7 @@ import MasterTable from '../MasterModalTable';
 const styles = theme => ({
 });
 
-class AlertDialog extends React.Component {
+class TableDialog extends React.Component {
 
     render() {
         const { items, fields, multi, onOpenDialog, onCloseDialog, tableTitle, isSelected, handleRowClick, filterTextChange, onKeyDown, searchText, pageChange, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, _this  } = this.props;
@@ -54,14 +54,14 @@ class AlertDialog extends React.Component {
     }
 }
 
-AlertDialog.propTypes = {
+TableDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(AlertDialog));
+export default connect(mapStateToProps)(withStyles(styles)(TableDialog));

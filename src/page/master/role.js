@@ -244,7 +244,7 @@ class RolePage extends React.Component {
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
-                <Snackbar vertical="bottom" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
+                <Snackbar vertical="top" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
                 <QuestionDialog itemName={this.state.itemName} 
                     showQuestion={this.state.showQuestion} 
                     handleQuestionDialog={this.handleQuestionDialog} 
@@ -282,7 +282,7 @@ class RolePage extends React.Component {
                         </Grid>
                     </div>
                     <MasterTable
-                        items={this.props.lunchbox.role?this.props.lunchbox.role:[]} fields={fields} pageChange={this.pageChange}
+                        items={this.props.masterpanel.role?this.props.masterpanel.role:[]} fields={fields} pageChange={this.pageChange}
                         total={this.state.total} pageSize={this.state.pageSize} currentPage={this.state.currentPage}
                         editButton={this.edit} deleteButton={this.delete}
                         handleChangePage={this.handleChangePage} handleChangeRowsPerPage={this.handleChangeRowsPerPage}
@@ -302,7 +302,7 @@ RolePage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 

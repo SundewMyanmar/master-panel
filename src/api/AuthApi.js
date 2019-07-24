@@ -10,16 +10,18 @@ class AuthApi extends APIManager{
                 return response.content;
             }
         } catch (error) {
-            console.error(error);
             throw error;
         }
-        return null;
     }
 
     async register(request) {
-        const reg_url = AUTH_URL + 'register/';
-        const response = await this.post(reg_url, request, false);
-        return response.data.content;
+        try{
+            const reg_url = AUTH_URL + 'register/';
+            const response = await this.post(reg_url, request, false);
+            return response.content;
+        }catch(error){
+            throw error;
+        }
     }
 }
 

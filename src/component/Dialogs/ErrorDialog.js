@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const styles = theme => ({
 });
 
-class AlertDialog extends React.Component {
+class ErrorDialog extends React.Component {
 
     render() {
     const { title, description, handleError, showError } = this.props;
@@ -43,8 +43,8 @@ class AlertDialog extends React.Component {
     }
 }
 
-AlertDialog.propTypes = {
+ErrorDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AlertDialog);
+export default withStyles(styles)(ErrorDialog);

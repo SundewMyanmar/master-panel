@@ -11,7 +11,9 @@ import { MENU_ACTIONS } from '../../redux/MenuRedux';
 import { STORAGE_KEYS,MAIN_MENU } from '../../config/Constant';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import Snackbar from '../../component/Snackbar';
 import { USER_ROLES } from '../../config/Constant';
+import * as DeviceDetect from 'react-device-detect';
 
 const styles = theme => ({
     root: {
@@ -84,6 +86,9 @@ const styles = theme => ({
         paddingTop:0,
         paddingBottom:0
     },
+    iconLabel:{
+        marginTop:4
+    },
     divider: {
         backgroundColor: theme.palette.primary.main,
         width: 1,
@@ -96,11 +101,11 @@ const styles = theme => ({
         boxShadow: '0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)'
     },
     errorTxt: {
-        color: action.error,
+        color: action.warn,
         paddingLeft: '4px'
     },
     errorIcon: {
-        color: action.error,
+        color: action.warn,
         fontSize: '16px'
     },
     img: {
@@ -113,7 +118,15 @@ const styles = theme => ({
 class LoginPage extends React.Component{
     constructor(props){
         super(props);
-        
+        var showSnack=false;
+        var snackMessage="";
+        const query=new URLSearchParams(this.props.location.search);
+        var response=query.get("callback");
+        if(response=="success"){
+            showSnack=true;
+            snackMessage="Register success! Please log in to continue."
+        }
+
         this.state={
             user: '',
             password: '',
@@ -122,6 +135,8 @@ class LoginPage extends React.Component{
             userError: false,
             passwordError: false,
             errorMessage: '',
+            showSnack:showSnack,
+            snackMessage:snackMessage
         }
     }
 
@@ -175,7 +190,7 @@ class LoginPage extends React.Component{
             user: this.state.user,
             password : this.state.password,
             device_id : deviceId,
-            device_os : "WINDOW 7",
+            device_os : DeviceDetect.osName+DeviceDetect.osVersion,
         }
 
         try {
@@ -196,7 +211,7 @@ class LoginPage extends React.Component{
             }
         } catch (error) {
             if (error){
-                this.setState({ showLoading : false, errorMessage : "Request email or password is something worng." });
+                this.setState({ showLoading : false, errorMessage : error.response.data.content.message });
                 this.handleError();
             } else {
                 this.setState({showLoading: false, errorMessage: 'Please check your internet connection and try again.'});
@@ -247,6 +262,10 @@ class LoginPage extends React.Component{
         return false;
     }
 
+    onCloseSnackbar = () => {
+        this.setState({ showSnack: false });
+    }
+
     render(){
         const {classes } = this.props;
 
@@ -254,6 +273,7 @@ class LoginPage extends React.Component{
             <div className={classes.root}>
                 <ErrorDialog title="Oops!" description={this.state.errorMessage} showError={this.state.showError} handleError={this.handleError} />
                 <LoadingDialog showLoading={this.state.showLoading} message="Please wait logging in!" />
+                <Snackbar vertical="top" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
                 <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
                     <Grid style={{padding:'22px'}} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
                     <Grid container justify="center">
@@ -318,11 +338,19 @@ class LoginPage extends React.Component{
                             <Typography variant="caption">
                             </Typography>
                         )}
-                        <Button style={{marginTop: '30px', marginBottom: '20px'}} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onLoginButtonClick()}>
+                        
+                        <Button style={{marginTop: '30px', marginBottom: '0'}} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onLoginButtonClick()}>
                             <Icon className={classes.iconButton} >lock_open</Icon>
                             Login
                         </Button>
-                        <Typography style={{ color: text.main, textAlign: 'center', margin: '0px 0px 8px 0px'}} variant="subtitle1">
+                        
+                        <Typography style={{ color: text.main, textAlign: 'left', margin: '4px 0 12px 10px',fontSize:'14px'}} variant="subtitle1">
+                            Not register yet, <a style={{color:secondary.light, textDecoration: 'none'}} rel="noopener noreferrer" href="#/register">create new account</a>?
+                        </Typography>  
+                        
+                        <Divider style={{ margin: '20px 0'}} />
+                    
+                        <Typography style={{ color: text.main, textAlign: 'center', margin: '0px 0px 8px 0px',fontSize:'14px'}} variant="subtitle1">
                             Copyright © 2019 {new Date().getFullYear()<=2019?"":"-" + new Date().getFullYear()} by <a style={{color:secondary.light, textDecoration: 'none'}} rel="noopener noreferrer" target="_blank" href="http://www.sundewmyanmar.com/">SUNDEW MYANMAR</a>. <br/>
                             All rights reserved.
                         </Typography>

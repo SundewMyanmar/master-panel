@@ -121,7 +121,11 @@ class ImageUpload extends React.Component{
                 <MenuListDialog show={this.state.showDialog}
                     handleMenuListDialog={this.handleMenuListDialog}
                     uploadNew={this.uploadNew}
-                    openFile={() => handleFileOpen(this)}
+                    openFile={() =>{
+                        if(handleFileOpen){
+                            handleFileOpen(this)
+                        }
+                    }}
                 />
                 <div className={[classes.container]} style={{width:width,height:height}}>
                     <img onClick={()=>{
@@ -154,7 +158,7 @@ ImageUpload.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 

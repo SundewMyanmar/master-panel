@@ -224,7 +224,7 @@ FileSetupPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 

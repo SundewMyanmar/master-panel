@@ -23,7 +23,7 @@ export const common={
 
 export const action={
     success:"#1b5e20",
-    warn:"#dd2c00",
+    warn:"#b79e0e",
     error:"#640236",
     info:"#006064"
 }

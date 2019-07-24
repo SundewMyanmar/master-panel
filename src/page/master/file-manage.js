@@ -319,7 +319,7 @@ class FileManagePage extends React.Component{
                             spacing={16}
                             className={this.props.classes.imageContainer}
                         >
-                        {this.props.lunchbox.file.map(row => {
+                        {this.props.masterpanel.file.map(row => {
                             return (
                                 <Grid justify="center" container key={row.id} item lg={2} md={4} sm={6} xs={12}>
                                     <Card className={this.props.classes.card}>
@@ -372,7 +372,7 @@ FileManagePage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        lunchbox : state
+        masterpanel : state
     }
 }
 

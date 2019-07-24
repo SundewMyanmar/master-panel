@@ -29,7 +29,7 @@ const styles = theme => ({
     },
 });
 
-class AlertDialog extends React.Component {
+class LoadingDialog extends React.Component {
 
   render() {
     const { classes, showLoading, message} = this.props;
@@ -69,8 +69,8 @@ class AlertDialog extends React.Component {
   }
 }
 
-AlertDialog.propTypes = {
+LoadingDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AlertDialog);
+export default withStyles(styles)(LoadingDialog);

@@ -10,7 +10,7 @@ const styles = theme => ({
     },
 });
 
-class AlertDialog extends React.Component {
+class MenuListDialog extends React.Component {
 
     render() {
     const { classes, handleMenuListDialog, show, uploadNew, openFile } = this.props;
@@ -51,8 +51,8 @@ class AlertDialog extends React.Component {
     }
 }
 
-AlertDialog.propTypes = {
+MenuListDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AlertDialog);
+export default withStyles(styles)(MenuListDialog);

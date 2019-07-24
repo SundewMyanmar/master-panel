@@ -128,7 +128,7 @@ DashboardPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        million : state
+        masterpanel : state
     }
 }
 

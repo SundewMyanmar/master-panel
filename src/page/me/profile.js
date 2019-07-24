@@ -11,6 +11,8 @@ import ProfileApi from '../../api/ProfileApi';
 import ImageUpload from '../../component/ImageUpload';
 import { STORAGE_KEYS} from '../../config/Constant';
 import Snackbar from '../../component/Snackbar';
+import FileDialog from '../../component/Dialogs/FileDialog';
+import {FILE_ACTIONS} from '../../redux/FileRedux';
 
 const styles = theme => ({
     root: {
@@ -43,7 +45,11 @@ class ProfilePage extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            
+            showFile: false,
+            fileCurrentPage:0,
+            filePageSize:18,
+            fileTotal:0,
+            filePageCount:1, 
         };
     }
 
@@ -62,10 +68,11 @@ class ProfilePage extends React.Component {
             previewImage:preview,
             roles:user.roles,
             status:user.status,
-            user_name:user.user_name
+            user_name:user.user_name,
         },()=>{
             
         })
+        this.paging();
     }
 
     onSaveItem=async()=>{
@@ -151,6 +158,123 @@ class ProfilePage extends React.Component {
         this.setState({ showError : false });
     }
 
+    handleFileOpen = (_this) => {
+        this.setState({ showFile : true });
+        _this.setState({ showDialog : false });
+    }
+
+    fileHandleChangePage(e){
+        console.log('handle change page',e);
+    }
+
+    fileHandleChangeRowsPerPage(e,_this){
+        _this.setState({
+            filePageSize:e.target.value
+        },()=>{
+            _this.paging();
+        })
+    }
+
+    paging=async()=>{
+        this.setState({showLoading: true});
+        try{
+            var result=await FileApi.getPaging(this.state.fileCurrentPage,this.state.filePageSize,"createdAt:DESC",this.state.fileSearchFilter);
+            this.setState({ fileTotal : result.total, filePageCount : result.page_count, showLoading: false})
+
+            if(result.count>0){
+                this.props.dispatch({
+                    type:FILE_ACTIONS.INIT_DATA,
+                    data:result.data
+                })
+            }else{
+                this.props.dispatch({
+                    type:FILE_ACTIONS.INIT_DATA,
+                    data:[]
+                })
+
+                this.setState({ showLoading: false, showError: true, errorMessage: 'There is no data to show.' });
+            }
+        }catch(error){
+            this.props.dispatch({
+                type:FILE_ACTIONS.INIT_DATA,
+                data:[]
+            })
+        }
+    }
+
+    filePageChange=(pageParam,_this)=>{
+        var currentPage=_this.state.fileCurrentPage;
+        if(pageParam==="first"){
+            currentPage=0;
+        }else if(pageParam==="previous"){
+            if(currentPage>0)
+                currentPage-=1;
+            else
+                currentPage=_this.state.filePageCount-1;
+        }else if(pageParam==="forward"){
+            if(currentPage===_this.state.filePageCount-1)
+                currentPage=0;
+            else
+                currentPage+=1;
+        }else if(pageParam==="last"){
+            currentPage=_this.state.filePageCount-1;
+        }
+
+        _this.setState({
+            fileCurrentPage:currentPage,
+            showLoading:true
+        },()=>{
+            _this.paging();            
+        });
+    }
+    
+    fileKeyDown=(e)=>{
+        if(e.keyCode === 13){
+            this.fileSearch();
+        }
+    }
+
+    fileSearch(){
+        this.setState({
+            fileCurrentPage:0
+        },()=>{
+            this.paging();
+        })
+    }
+
+    filefilterTextChange=(key,value)=>{
+        this.setState({
+            fileSearchFilter:value
+        });
+    }
+
+    onUploadImage = async(event) => {
+        try {
+            var reader = new FileReader();
+            var file = event.target.files[0];
+            reader.readAsDataURL(file);
+            if(file){
+                this.setState({ showLoading : true });
+                var fileResponse = await FileApi.upload(file);
+                if(fileResponse){
+                    this.paging();
+                }
+                this.setState({ showLoading : false });
+            }
+        } catch (error) {
+            this.setState({ showLoading : false });
+            console.log(error);
+        }
+    }
+
+    handleFileClick = (event, data) => {
+        this.setState({ showFile : false, image : data, previewImage : data.public_url})
+    }
+
+    handleFileClose = () => {
+        this.setState({ showFile : false })
+    }
+
     render(){
         const { classes } = this.props;
 
@@ -158,7 +282,24 @@ class ProfilePage extends React.Component {
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
-                <Snackbar vertical="bottom" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
+                <Snackbar vertical="top" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
+                <FileDialog showFile={this.state.showFile}
+                    items={this.props.masterpanel.file}
+                    total={this.state.fileTotal} 
+                    pageSize={this.state.filePageSize} 
+                    currentPage={this.state.fileCurrentPage}
+                    pageChange={this.filePageChange}
+                    handleChangePage={this.fileHandleChangePage}
+                    handleChangeRowsPerPage={this.fileHandleChangeRowsPerPage}
+                    handleFileClick={this.handleFileClick}
+                    handleClose={this.handleFileClose}
+                    searchFilterText={this.state.fileSearchFilter ? this.state.fileSearchFilter : ""}
+                    onSearch={this.fileSearch}
+                    onKeyDown={this.fileKeyDown}
+                    onChangeText={this.filefilterTextChange}
+                    onUploadImage={this.onUploadImage}
+                    _this={this}
+                />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{textAlign: "center"}} color="primary" variant="h5" component="h3">
                         My Profile
@@ -169,7 +310,7 @@ class ProfilePage extends React.Component {
                             <form className={classes.form} autoComplete="off">
                                 <Grid container justify="center">
                                     <ImageUpload onImageChange={this.onImageChange} onImageRemove={this.onImageRemove}
-                                        previewImage={this.state.previewImage} _this={this}
+                                        previewImage={this.state.previewImage} _this={this} handleFileOpen={this.handleFileOpen} id="imageUpload"
                                     />
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
@@ -217,7 +358,7 @@ ProfilePage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        mes : state
+        masterpanel : state
     }
 }
 

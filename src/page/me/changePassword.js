@@ -220,7 +220,7 @@ class ChangePasswordPage extends React.Component {
                                         <TextField
                                             id="old_password"
                                             color="primary"
-                                            label="Old Password*"
+                                            label="old Password*"
                                             error={this.state.old_passwordError?true:false}
                                             fullWidth
                                             type="password"
@@ -243,7 +243,7 @@ class ChangePasswordPage extends React.Component {
                                         <TextField
                                             id="password"
                                             color="primary"
-                                            label="Password*"
+                                            label="password*"
                                             error={this.state.passwordError?true:false}
                                             fullWidth
                                             type="password"
@@ -266,7 +266,7 @@ class ChangePasswordPage extends React.Component {
                                         <TextField
                                             id="confirm_password"
                                             color="primary"
-                                            label="confirm_password*"
+                                            label="confirm password*"
                                             error={this.state.confirm_passwordError?true:false}
                                             fullWidth
                                             type="password"
@@ -304,7 +304,7 @@ ChangePasswordPage.propTypes = {
 
 const mapStateToProps = (state) =>{
     return{
-        mes : state
+        masterpanel : state
     }
 }
 
