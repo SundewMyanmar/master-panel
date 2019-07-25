@@ -117,7 +117,7 @@ const styles = theme => ({
         this.setState({showLoading:true});
         try{
             const data=await UserApi.getById(this.props.match.params.id);
-            console.log('data',data);
+            
             if(data){
                 var image,preview;
                 if(data.profile_image)
@@ -264,13 +264,12 @@ const styles = theme => ({
                 var fileResponse;
                 
                 fileResponse=await FileApi.upload(this.state.image);
-                console.log(fileResponse);
+                
                 if(fileResponse)
                     user.profile_image={
                         "id":fileResponse.id
                     }
             }else{
-                console.log('flo img null');
                 user.profile_image=null;
             }
             
@@ -286,7 +285,7 @@ const styles = theme => ({
                 this.props.history.push("/user/setup?callback=success");
             }else{
                 const response = await UserApi.insert(user);
-                console.log(response);
+                
                 this.props.dispatch({
                     type: USER_ACTIONS.CREATE_NEW,
                     user: response,
@@ -295,7 +294,7 @@ const styles = theme => ({
                 this.props.history.push("/user/setup?callback=success");
             }
         }catch(error){
-            console.log(error);
+            console.error(error);
             this.setState({ showLoading : false, showError : true, errorMessage : "Please check your internet connection and try again." });
         }
     }
@@ -355,7 +354,7 @@ const styles = theme => ({
     }
     
     handleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     handleChangeRowsPerPage(e,_this){
@@ -409,7 +408,7 @@ const styles = theme => ({
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -454,7 +453,7 @@ const styles = theme => ({
     }
     
     fileHandleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     fileHandleChangeRowsPerPage(e,_this){

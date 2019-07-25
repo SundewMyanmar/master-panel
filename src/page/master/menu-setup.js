@@ -188,7 +188,7 @@ const styles = theme => ({
         this.setState({showLoading:true});
         try{
             const data=await MenuApi.getById(this.props.match.params.id);
-            console.log('data',data);
+            
             if(data){
                 var roles=[];
                 if(data.roles && data.roles.length>0){
@@ -290,7 +290,7 @@ const styles = theme => ({
                 this.props.history.push("/menu/setup?callback=success");
             }
         }catch(error){
-            console.log(error);
+            console.error(error);
             this.setState({ showLoading : false, showError : true, errorMessage : "Please check your internet connection and try again." });
         }
     }
@@ -338,7 +338,7 @@ const styles = theme => ({
     }
     
     handleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     handleChangeRowsPerPage(e,_this){

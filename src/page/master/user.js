@@ -74,7 +74,7 @@ class UserPage extends React.Component {
 
     componentDidMount(){
         const query = new URLSearchParams(this.props.location.search);
-        console.log("query", query);
+        
         if(query.get('callback')==="success"){
             this.setState({
                 showSnack:true,
@@ -104,8 +104,6 @@ class UserPage extends React.Component {
     }
 
     handleQuestionDialog = (isDelete) => {
-        console.log(isDelete);
-        
         if (isDelete){
             this.onDeleteItem(this.state.itemToDelete);
         }
@@ -131,7 +129,7 @@ class UserPage extends React.Component {
     }
     
     handleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     handleChangeRowsPerPage(e,_this){
@@ -143,9 +141,6 @@ class UserPage extends React.Component {
     }
 
     pageChange=(pageParam,_this)=>{
-        console.log(pageParam);
-        console.log('cp',_this.state.currentPage,'ps',_this.state.pageSize,'t',_this.state.total);
-        
         var currentPage=_this.state.currentPage;
         if(pageParam==="first"){
             currentPage=0;

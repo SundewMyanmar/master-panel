@@ -127,7 +127,7 @@ class RolePage extends React.Component {
     }
     
     handleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     handleChangeRowsPerPage(e,_this){

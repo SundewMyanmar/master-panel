@@ -122,7 +122,7 @@ const styles = theme => ({
                 this.props.history.push("/role/setup?callback=success");
             }
         }catch(error){
-            console.log(error);
+            console.error(error);
             this.setState({ showLoading : false, showError : true, errorMessage : "Please check your internet connection and try again." });
         }
     }

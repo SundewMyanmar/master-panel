@@ -164,10 +164,11 @@ class RoutePermissionPage extends React.Component{
                     roles:[],
                     checked:item.checked
                 };
+                
                 if(item.data) {
                     data.id=item.data.id;
                     data.roles=[];
-
+                    
                     if(item.data.roles){
                         for(var i=0;i<item.data.roles.length;i++){
                             if(item.data.roles[i].id!=this.state.role.id){
@@ -186,7 +187,7 @@ class RoutePermissionPage extends React.Component{
                     datas.push(data);
                 }
             });
-
+            
             var result=await PermissionApi.insertMulti(datas);
             this.setState({
                 snackMessage:"Permissions saved successful.",
@@ -230,7 +231,7 @@ class RoutePermissionPage extends React.Component{
             //Go a long way to not override all data
             item.routes.map(i=>{
                 modified_routes=this.overrideModify(i.method+":"+i.pattern,i,modified_routes);
-                console.log(modified_routes);
+                
                 modified_routes[i.method+":"+i.pattern].checked=checked;    
             });
         }
@@ -248,8 +249,6 @@ class RoutePermissionPage extends React.Component{
 
         this.setState({
             modified_routes:modified_routes
-        },()=>{
-            console.log(this.state.modified_routes);
         })
     }
 

@@ -117,7 +117,7 @@ class FileManagePage extends React.Component{
 
     loadSelectedItem = async() =>{
         const data = await FileUploadApi.getById(this.props.match.params.id);
-        console.log("Edit : ", data);
+        //console.log("Edit : ", data);
         // this.setState({id:data.id, name:data.name, description:data.description});
     }
 
@@ -240,7 +240,7 @@ class FileManagePage extends React.Component{
                 }
             } else if (this.state.file && !this.state.file.id){
                 var fileResponse = await FileApi.upload(this.state.file);
-                console.log("here is response : ", fileResponse);
+                
                 this.props.dispatch({
                     type: FILE_ACTIONS.CREATE_NEW,
                     file: fileResponse
@@ -252,7 +252,7 @@ class FileManagePage extends React.Component{
                 // }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
         // if(this.props.match.params.id){

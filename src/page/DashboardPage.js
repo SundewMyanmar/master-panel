@@ -99,7 +99,6 @@ class DashboardPage extends React.Component {
     }
 
     goto(url){
-        console.log('goto',url);
         this.props.history.push(url);
     }
 

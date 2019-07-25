@@ -13,18 +13,14 @@ class FileApi extends ApiManager{
 
         try {
             const url = API_URL + "files/upload/";
-            console.log("Upload url => ", url);
-            console.log('form data =>',formData);
-
             const response = await Axios.post(url, formData, { headers: headers });
-            console.log("Response => ", response);
-
+            
             const responseJson = response.data;
             if (responseJson.content && (responseJson.code >= 200 && responseJson.code <= 300)) {
                 return responseJson.content;
             }
         } catch (error) {
-            console.log("Upload Error => ", error);
+            console.error("Upload Error => ", error);
             throw error;
         }
         return null;
@@ -43,17 +39,14 @@ class FileApi extends ApiManager{
         
         try {
             const url = API_URL + "files/multi/upload/";
-            console.log("Upload url => ", url);
-            console.log('form data =>',formData);
             const response = await Axios.post(url, formData, { headers: headers });
-            console.log("Response => ", response);
-
+            
             const responseJson = response.data;
             if (responseJson.content && (responseJson.code >= 200 && responseJson.code <= 300)) {
                 return responseJson.content;
             }
         } catch (error) {
-            console.log("Upload Error => ", error);
+            console.error("Upload Error => ", error);
             throw error;
         }
         return null;

@@ -52,7 +52,6 @@ class UserApi extends ApiManager{
 
     async update(id, data){
         try {
-            console.log('update',id,data);
             const url = API_URL + id;
             const response = await this.put(url, data, true);
             if(response.code >= 200 && response.code < 300){

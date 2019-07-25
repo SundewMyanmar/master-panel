@@ -128,7 +128,7 @@ class MenuPage extends React.Component {
     }
     
     handleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     handleChangeRowsPerPage(e,_this){
@@ -140,9 +140,6 @@ class MenuPage extends React.Component {
     }
 
     pageChange=(pageParam,_this)=>{
-        console.log(pageParam);
-        console.log('cp',_this.state.currentPage,'ps',_this.state.pageSize,'t',_this.state.total);
-        
         var currentPage=_this.state.currentPage;
         if(pageParam==="first"){
             currentPage=0;

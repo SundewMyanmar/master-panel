@@ -17,9 +17,7 @@ import * as DeviceDetect from 'react-device-detect';
 
 const styles = theme => ({
     root: {
-        backgroundColor:background.light,
-        // background:'linear-gradient(to bottom, #3b5998, 2%, #f6f7fa)',
-        background: 'linear-gradient(to top, #fff, #fce4ec)',
+        background: 'linear-gradient(to top, #fff,'+background.light+')',        
         height: '100vh',
         overflowY: 'auto',
         overflowX: 'hidden'
@@ -277,7 +275,7 @@ class LoginPage extends React.Component{
                 <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
                     <Grid style={{padding:'22px'}} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
                     <Grid container justify="center">
-                        <img src="/res/logo2.png" alt="MeFood" title="MeFood" className={classes.img} />
+                        <img src="/res/logo.png" alt="MeFood" title="MeFood" className={classes.img} />
                     </Grid>
                     <Grid item xs={12}>
                         <Divider style={{ margin: '20px 0'}} />
@@ -345,13 +343,13 @@ class LoginPage extends React.Component{
                         </Button>
                         
                         <Typography style={{ color: text.main, textAlign: 'left', margin: '4px 0 12px 10px',fontSize:'14px'}} variant="subtitle1">
-                            Not register yet, <a style={{color:secondary.light, textDecoration: 'none'}} rel="noopener noreferrer" href="#/register">create new account</a>?
+                            Not register yet, <a style={{color:secondary.main, textDecoration: 'none'}} rel="noopener noreferrer" href="#/register">create new account</a>?
                         </Typography>  
                         
                         <Divider style={{ margin: '20px 0'}} />
                     
                         <Typography style={{ color: text.main, textAlign: 'center', margin: '0px 0px 8px 0px',fontSize:'14px'}} variant="subtitle1">
-                            Copyright © 2019 {new Date().getFullYear()<=2019?"":"-" + new Date().getFullYear()} by <a style={{color:secondary.light, textDecoration: 'none'}} rel="noopener noreferrer" target="_blank" href="http://www.sundewmyanmar.com/">SUNDEW MYANMAR</a>. <br/>
+                            Copyright © 2019 {new Date().getFullYear()<=2019?"":"-" + new Date().getFullYear()} by <a style={{color:secondary.main, textDecoration: 'none'}} rel="noopener noreferrer" target="_blank" href="http://www.sundewmyanmar.com/">SUNDEW MYANMAR</a>. <br/>
                             All rights reserved.
                         </Typography>
                         

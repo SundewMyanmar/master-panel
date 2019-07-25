@@ -47,9 +47,6 @@ class GridView extends React.Component{
 
     TablePaginationActions=()=>{
         const { classes,theme,pageChange,total,pageSize,currentPage,_this} = this.props;
-        console.log('current page',currentPage);
-        console.log('total',total);
-        console.log('page size',pageSize);
         
         return (<div className={[classes.pager]}>
             <IconButton onClick={()=>pageChange("first",_this)} aria-label="First Page">

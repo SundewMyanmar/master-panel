@@ -75,9 +75,6 @@ class MasterTable extends React.Component{
 
     TablePaginationActions=()=>{
         const { classes,theme,pageChange,total,pageSize,currentPage,_this} = this.props;
-        console.log('current page',currentPage);
-        console.log('total',total);
-        console.log('page size',pageSize);
         
         return (<div className={[classes.pager]}>
             <IconButton onClick={()=>pageChange("first",_this)} aria-label="First Page">
@@ -193,7 +190,7 @@ class MasterTable extends React.Component{
                             return(
                                 <CustomTableCell key="action" align="center">
                                     <Tooltip style={hideEdit?{display:'none'}:{}} title={editTitle} placement="top">
-                                        <IconButton  onClick={() => editButton(row.id,_this,row)} color="secondary" className={classes.button} aria-label="Edit">
+                                        <IconButton  onClick={() => editButton(row.id,_this,row)} color="primary" className={classes.button} aria-label="Edit">
                                             <Icon fontSize="small">{editIcon}</Icon>
                                         </IconButton>
                                     </Tooltip>

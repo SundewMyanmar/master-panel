@@ -144,7 +144,6 @@ class ChangePasswordPage extends React.Component {
 
     onSaveItem=async()=>{
         if(!this.validateForm()){
-            console.log('validate fail')
             return;
         }
 
@@ -162,7 +161,7 @@ class ChangePasswordPage extends React.Component {
                 openGoto:true
             })
         }catch(error){
-            console.log(error);
+            console.error(error);
             this.setState({ showLoading : false, showError : true, errorMessage : error.data.content.message });
         }
     }

@@ -123,7 +123,7 @@ class ProfilePage extends React.Component {
                 snackMessage:"Save success.",
             })
         }catch(error){
-            console.log(error);
+            console.error(error);
             this.setState({ showLoading : false, showError : true, errorMessage : "Please check your internet connection and try again." });
         }
     }
@@ -164,7 +164,7 @@ class ProfilePage extends React.Component {
     }
 
     fileHandleChangePage(e){
-        console.log('handle change page',e);
+        
     }
 
     fileHandleChangeRowsPerPage(e,_this){
@@ -263,7 +263,7 @@ class ProfilePage extends React.Component {
             }
         } catch (error) {
             this.setState({ showLoading : false });
-            console.log(error);
+            console.error(error);
         }
     }
 
