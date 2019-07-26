@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 import {connect} from 'react-redux';
-import { withStyles, Paper,TextField, Icon, Button, Tooltip, Grid, Divider, Typography, Chip, Select, MenuItem, Input, IconButton } from '@material-ui/core';
+import { withStyles,InputLabel,InputAdornment, Paper,TextField, Icon, Button, Tooltip, Grid, Divider, Typography, Chip, Select, MenuItem, Input, IconButton } from '@material-ui/core';
 
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import ErrorDialog from '../../component/Dialogs/ErrorDialog';
@@ -14,8 +14,8 @@ import TableDialog from '../../component/Dialogs/TableDialog';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import MaterialIconDialog from '../../component/Dialogs/MaterialIconDialog';
 
 const styles = theme => ({
     root: {
@@ -23,6 +23,18 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
         borderRadius: 0,
+    },
+    inputContainer:{
+        marginTop:18,
+        marginLeft:-8,
+        width:'100%',
+    },
+    inputLabel:{
+        paddingLeft:11
+    },
+    input: {
+        marginLeft: 8,
+        flex: 1,
     },
     divider: {
         marginTop: theme.spacing.unit * 2,
@@ -101,7 +113,8 @@ const styles = theme => ({
             pageSize:10,
             total:0,
             pageCount:1,
-            selectedValue:'folder'
+            selectedValue:'folder',
+            showIconDialog:false
         };
     }
 
@@ -401,6 +414,23 @@ const styles = theme => ({
         })
     }
 
+    loadIconDialog(){
+        console.log('load')
+        this.setState({
+            showIconDialog:true
+        })
+    }
+
+    closeIconDialog(result,_this){
+        if(!result){
+            result=_this.state.icon
+        }
+        _this.setState({
+            showIconDialog:false,
+            icon:result,
+        })
+    }
+
     render(){
         const { classes } = this.props;
         
@@ -452,6 +482,7 @@ const styles = theme => ({
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
+                <MaterialIconDialog showDialog={this.state.showIconDialog} onIconClick={this.closeIconDialog} _this={this}/>
                 <TableDialog tableTitle="Menu List" 
                     fields={fields}
                     items={this.props.masterpanel.menu}
@@ -503,24 +534,33 @@ const styles = theme => ({
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.iconError?"error":"primary"}>toys</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.iconError?"error":"primary"}>{this.state.icon?this.state.icon:'toys'}</Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <TextField
+                                    <FormControl className={classes.inputContainer}>
+                                        <InputLabel className={classes.inputLabel} htmlFor="iconInput">Icon*</InputLabel>
+                                        <Input
                                             id="icon"
                                             color="primary"
                                             label="Icon*"
                                             error={this.state.iconError?true:false}
                                             fullWidth
-                                            className={classes.textField}
+                                            className={classes.input}
                                             value={this.state.icon?this.state.icon:""}
                                             margin="normal"
                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={()=>this.loadIconDialog()}>
+                                                        <Icon style={{ fontSize: 22 }} color={this.state.iconError?"error":"primary"}>games</Icon>
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
                                         />
+                                        </FormControl>
                                         <div className={classes.form_error}>
                                             {this.state.iconError?"invalid icon field!":""}
                                         </div>
-                                        
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">

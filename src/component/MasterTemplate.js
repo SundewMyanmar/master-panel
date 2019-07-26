@@ -160,7 +160,7 @@ const styles = theme => ({
         paddingLeft: theme.spacing.unit,
     },
     welcomeBackground: {
-        background:'rgba(0, 0, 0, 0.5)',
+        background:'rgba(82, 100, 87, 0.61)',
     }
 });
 

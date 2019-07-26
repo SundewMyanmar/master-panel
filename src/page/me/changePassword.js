@@ -2,20 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 import {connect} from 'react-redux';
-import {primary,action,background} from '../../config/Theme';
-import { withStyles, Paper,TextField, Icon, Button, FormControl, FormControlLabel, RadioGroup, Radio, FormHelperText, Grid, Divider, Typography, Chip, Select, MenuItem, Input, InputLabel, InputAdornment, IconButton } from '@material-ui/core';
+import {action,background} from '../../config/Theme';
+import { withStyles, Paper, Icon, Button,FormControl, FormControlLabel, RadioGroup, Radio, FormHelperText, Grid, Divider, Typography, Chip, Select, MenuItem, Input, InputLabel, InputAdornment, IconButton } from '@material-ui/core';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import ErrorDialog from '../../component/Dialogs/ErrorDialog';
 import FileApi from '../../api/FileApi';
 import ProfileApi from '../../api/ProfileApi';
-import ImageUpload from '../../component/ImageUpload';
 import { STORAGE_KEYS} from '../../config/Constant';
-import Snackbar from '../../component/Snackbar';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
     root: {
@@ -27,6 +24,18 @@ const styles = theme => ({
     divider: {
         marginTop: theme.spacing.unit * 2,
         marginBottom: theme.spacing.unit * 2,
+    },
+    inputContainer:{
+        marginTop:18,
+        marginLeft:0,
+        width:'100%',
+    },
+    inputLabel:{
+        paddingLeft:11
+    },
+    input: {
+        marginLeft: 8,
+        flex: 1,
     },
     button: {
         width: 'calc(100%)',
@@ -110,6 +119,12 @@ class ChangePasswordPage extends React.Component {
         }catch(error){
 
         }
+    }
+
+    handleClickShowPassword=(key)=>{
+        this.setState({
+            [key]:!this.state[key]
+        })
     }
 
     onChangeText = (key,value) => {
@@ -216,18 +231,28 @@ class ChangePasswordPage extends React.Component {
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.old_passwordError?"error":"primary"}>lock</Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <TextField
+                                        <FormControl className={classes.inputContainer}>
+                                        <InputLabel className={classes.inputLabel} htmlFor="old_password">old password*</InputLabel>
+                                        <Input
                                             id="old_password"
                                             color="primary"
                                             label="old Password*"
                                             error={this.state.old_passwordError?true:false}
                                             fullWidth
-                                            type="password"
+                                            type={this.state.showOldPassword ? 'text' : 'password'}
                                             className={classes.textField}
                                             value={this.state.old_password?this.state.old_password:""}
                                             margin="normal"
                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton className={classes.iconButton} aria-label="password" onClick={()=>this.handleClickShowPassword('showOldPassword')}>
+                                                        {this.state.showOldPassword ? <Icon color="primary">visibility</Icon> : <Icon color="primary">visibility_off</Icon>}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
                                         />
+                                        </FormControl>
                                         <div className={classes.form_error}>
                                             {this.state.old_passwordError?"invalid old password field!":""}
                                         </div>
@@ -239,18 +264,28 @@ class ChangePasswordPage extends React.Component {
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.passwordError?"error":"primary"}>lock</Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <TextField
+                                        <FormControl className={classes.inputContainer}>
+                                        <InputLabel className={classes.inputLabel} htmlFor="password">password*</InputLabel>
+                                        <Input
                                             id="password"
                                             color="primary"
                                             label="password*"
                                             error={this.state.passwordError?true:false}
                                             fullWidth
-                                            type="password"
+                                            type={this.state.showPassword ? 'text' : 'password'}
                                             className={classes.textField}
                                             value={this.state.password?this.state.password:""}
                                             margin="normal"
                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton className={classes.iconButton} aria-label="password" onClick={()=>this.handleClickShowPassword('showPassword')}>
+                                                        {this.state.showPassword ? <Icon color="primary">visibility</Icon> : <Icon color="primary">visibility_off</Icon>}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
                                         />
+                                        </FormControl>
                                         <div className={classes.form_error}>
                                             {this.state.passwordError?"invalid password field!":""}
                                         </div>
@@ -262,22 +297,31 @@ class ChangePasswordPage extends React.Component {
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.confirm_passwordError?"error":"primary"}>lock</Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <TextField
+                                        <FormControl className={classes.inputContainer}>
+                                        <InputLabel className={classes.inputLabel} htmlFor="confirm_password">confirm password*</InputLabel>
+                                        <Input
                                             id="confirm_password"
                                             color="primary"
                                             label="confirm password*"
                                             error={this.state.confirm_passwordError?true:false}
                                             fullWidth
-                                            type="password"
+                                            type={this.state.showConfirmPassword ? 'text' : 'password'}
                                             className={classes.textField}
                                             value={this.state.confirm_password?this.state.confirm_password:""}
                                             margin="normal"
                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton className={classes.iconButton} aria-label="password" onClick={()=>this.handleClickShowPassword('showConfirmPassword')}>
+                                                        {this.state.showConfirmPassword ? <Icon color="primary">visibility</Icon> : <Icon color="primary">visibility_off</Icon>}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
                                         />
+                                        </FormControl>
                                         <div className={classes.form_error}>
                                             {this.state.confirm_passwordError?"password doesn't match!":""}
                                         </div>
-                                        
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start" justify="space-evenly">

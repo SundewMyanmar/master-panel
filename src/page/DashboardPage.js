@@ -1,18 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider,Icon } from '@material-ui/core';
+import { Divider} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router";
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Calendar from 'react-calendar';
 import {connect} from 'react-redux';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
 
 const styles = theme => ({
     root: {
@@ -113,7 +106,6 @@ class DashboardPage extends React.Component {
                         Dashboard
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
-                    
                 </Paper>
             </div>
         );
