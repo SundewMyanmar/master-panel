@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import {TextField,InputAdornment} from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,6 +22,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import withState from 'recompose/withState';
 import toRenderProps from 'recompose/toRenderProps';
 import { APP_NAME, STORAGE_KEYS,MAIN_MENU } from '../config/Constant';
+import cloneDeep from 'lodash/cloneDeep';
+
 const WithState = toRenderProps(withState('anchorEl', 'updateAnchorEl', null));
 const drawerWidth = 255;
 
@@ -161,6 +164,14 @@ const styles = theme => ({
     },
     welcomeBackground: {
         background:'rgba(82, 100, 87, 0.61)',
+    },
+    title:{
+        textAlign: "center",
+        padding:12,
+        color:theme.palette.primary.main
+    },
+    searchInput:{
+        width:"100%"
     }
 });
 
@@ -247,6 +258,43 @@ class MasterTemplate extends React.Component{
         this.props.history.push('/login');
     }
     
+    clearSearch=()=>{
+        this.setState({search:""});
+    }
+
+    handleMouseDown=event=>{
+        event.preventDefault();
+    };
+
+    onChangeText = (value) => {
+        this.setState({search : value});
+    }
+
+    getFilter=(stateMenus)=>{
+        var search=this.state.search;
+        var menus=cloneDeep(stateMenus);
+
+        if(!search){
+            return menus;
+        }
+        else{
+            return menus.filter(function(menu){
+                const filterMenu=menu.type==='link' || menu.type==='function'?menu.name.toLowerCase().search(
+                    search.toLowerCase()
+                )!==-1:menu;
+                
+                if(filterMenu.type==='folder'){
+                    filterMenu.children=filterMenu.children.filter(function(child){
+                        return child.name.toLowerCase().search(
+                            search.toLowerCase()
+                        )!==-1
+                    })
+                }
+                return filterMenu;
+            });
+        }
+    }
+
     renderMenus=(menus)=>{ 
         return menus.map(menu => {
             return (
@@ -258,6 +306,8 @@ class MasterTemplate extends React.Component{
                     };
                     return (
                         <List component="nav" className={this.props.classes.listMenu}>
+                            {menu.type==='folder' && menu.children<=0?'':
+                            
                             <ListItem style={this.state.active===menu.id?{
                                     borderRight: '4px solid '+this.props.theme.palette.primary.main,
                                     backgroundColor:this.props.theme.palette.background.light
@@ -285,6 +335,7 @@ class MasterTemplate extends React.Component{
                                     </div>
                                 </div>
                             </ListItem>
+                            }
                             <Divider style={ menu.divider ? {display : "block"} : {display: "none"}} />
                             {
                                 (menu.children && menu.children.length>0)?
@@ -399,8 +450,40 @@ class MasterTemplate extends React.Component{
                         </div>
                     </div>
                     <div className={classes.scrollMenu}>
-                        {this.state.menus ? this.renderMenus(this.state.menus) : ''}
-                        {/* <Divider/> */}
+                        <div className={classes.title} style={this.state.hideMenu?{display:"none"}:{display:"block"}}>
+                            <TextField
+                                className={classes.searchInput}
+                                id="input-with-icon-textfield"
+                                
+                                value={this.state.search}
+                                onChange={(event) => this.onChangeText(event.target.value)}
+                                InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Icon color="primary">search</Icon>
+                                    </InputAdornment>
+                                ),
+                                endAdornment:(
+                                    <InputAdornment position="end">
+                                        {
+                                        this.state.search?
+                                        <IconButton
+                                            edge="end"
+                                            aria-label="toggle password visibility"
+                                            onClick={this.clearSearch}
+                                            onMouseDown={this.handleMouseDown}
+                                        >
+                                            <Icon color="primary">close</Icon>
+                                        </IconButton>:""
+                                        }
+                                    </InputAdornment>
+                                )
+                                }}
+                            />
+                        </div>
+                        <Divider className={classes.divider} />
+                        {
+                            this.state.menus ? this.renderMenus(this.getFilter(this.state.menus)) : ''}
                         {
                             //Default Menus
                             this.renderMenus(this.state.system_menus)
