@@ -67,16 +67,11 @@ const styles = theme => ({
                 {"display":"Female","key":"female"}
             ],
             status:"ACTIVE",
-            checkBot: false,
             roles:[],
             roleItems:[],
             showLoading: false,
             showError: false,
-            showTable: false,
             showFile: false,
-            currentPage:0,
-            pageSize:5,
-            total:0,
             pageCount:1,
             fileCurrentPage:0,
             filePageSize:18,
@@ -147,7 +142,7 @@ const styles = theme => ({
                     showLoading:false,
                     image:image,
                     previewImage:preview,
-                    bot:data.chat_bot_off ? data.chat_bot_off : false,
+                    
                 });
                 if (data.extras){
                     this.setState({
@@ -234,7 +229,6 @@ const styles = theme => ({
             "email":this.state.email,
             "password":this.state.password,
             "status":this.state.status,
-            "chat_bot_off":this.state.bot,
             "extras": { 
                 "address" : this.state.address,
                 "phone" : this.state.phone,
@@ -251,11 +245,6 @@ const styles = theme => ({
                 user.roles = roles;
             }
 
-            if(this.state.agent){
-                user.agent={
-                    "id":this.state.agent.id
-                }
-            }
             if(this.state.image && this.state.image.id){
                 user.profile_image={
                     "id":this.state.image.id
@@ -325,77 +314,6 @@ const styles = theme => ({
         });
     }
 
-    switchChange = () => {
-        this.setState({ bot : !this.state.bot });
-    }
-    
-    handleTableDialog = () => {
-        this.setState({ showTable : !this.state.showTable });
-    }
-    
-    onKeyDown=(e)=>{
-        if(e.keyCode === 13){
-            this.onSearch();
-        }
-    }
-
-    onSearch(){
-        this.setState({
-            currentPage:0
-        },()=>{
-            this._loadAgents();
-        })
-    }
-
-    filterTextChange=(key,value)=>{
-        this.setState({
-            searchFilter:value
-        });
-    }
-    
-    handleChangePage(e){
-        
-    }
-
-    handleChangeRowsPerPage(e,_this){
-        _this.setState({
-            pageSize:e.target.value
-        },()=>{
-            _this._loadAgents();
-        })
-    }
-
-    pageChange=(pageParam,_this)=>{
-        
-        var currentPage=_this.state.currentPage;
-        if(pageParam==="first"){
-            currentPage=0;
-        }else if(pageParam==="previous"){
-            if(currentPage>0)
-                currentPage-=1;
-            else
-                currentPage=_this.state.pageCount-1;
-        }else if(pageParam==="forward"){
-            if(currentPage===_this.state.pageCount-1)
-                currentPage=0;
-            else
-                currentPage+=1;
-        }else if(pageParam==="last"){
-            currentPage=_this.state.pageCount-1;
-        }
-
-        _this.setState({
-            currentPage:currentPage,
-            showLoading:true
-        },()=>{
-            _this._loadAgents();            
-        });
-    }
-
-    handleRowClick = (event, data) => {
-        this.setState({ showTable : false, agent : data })
-    }
-
     onUploadImage = async(event) => {
         try {
             var reader = new FileReader();
@@ -442,7 +360,7 @@ const styles = theme => ({
                     data:[]
                 })
 
-                this.setState({ showLoading: false, showError: true, errorMessage: 'There is no data to show.' });
+                this.setState({ showLoading: false });
             }
         }catch(error){
             this.props.dispatch({
@@ -577,25 +495,7 @@ const styles = theme => ({
                     onUploadImage={this.onUploadImage}
                     _this={this}
                 />
-                <TableDialog tableTitle="Agent List" 
-                    fields={fields}
-                    items={this.props.masterpanel.agent?this.props.masterpanel.agent:[]}
-                    onOpenDialog={this.state.showTable}
-                    onCloseDialog={this.handleTableDialog}
-                    isSelected={this.selected}
-                    handleRowClick={this.handleRowClick}
-                    searchText={this.state.searchFilter}
-                    filterTextChange={this.filterTextChange}
-                    onKeyDown={this.onKeyDown}
-                    pageChange={this.pageChange}
-                    total={this.state.total} 
-                    pageSize={this.state.pageSize}
-                    currentPage={this.state.currentPage}
-                    handleChangePage={this.handleChangePage}
-                    handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    _this={this}
-                    multi={false}
-                />
+                
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{textAlign: "center"}} color="primary" variant="h5" component="h3">
                         User Setup
@@ -611,47 +511,6 @@ const styles = theme => ({
                                     />
                                 </Grid>
                                 <Divider className={classes.divider} light component="h3" />
-
-                                <Grid container spacing={8} style={{ paddingTop : 32}}>
-                                    <Grid container item xs={12} sm={6} md={6} lg={6} justify="center" alignItems="center">
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend">
-                                                Agent
-                                            </FormLabel>
-                                            <FormControlLabel
-                                                control={
-                                                    this.state.agent ? (
-                                                        <Avatar onClick={() => this.handleTableDialog()} alt="Agent Profile" src={this.state.agent.profile_image ? this.state.agent.profile_image.public_url : "./res/icon@256.png"} className={classes.avatar} />
-                                                    ) : (
-                                                        <IconButton color="primary" onClick={() => this.handleTableDialog()}>
-                                                            <Icon>add_circle</Icon>
-                                                        </IconButton>
-                                                    )
-                                                }
-                                                label={this.state.agent ? this.state.agent.name_en : "Add Agent" }
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid container item xs={12} sm={6} md={6} lg={6} justify="center">
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend">
-                                                Chat Bot
-                                            </FormLabel>
-                                            <FormControlLabel
-                                                control={
-                                                    <Switch
-                                                        checked={!this.state.bot}
-                                                        onChange={this.switchChange}
-                                                        value="bot"
-                                                        color="primary"
-                                                    />
-                                                }
-                                                label={this.state.bot ? "Off" : "On"}
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop:40 }} color={this.state.display_nameError?"error":"primary"}>person_outline</Icon>
