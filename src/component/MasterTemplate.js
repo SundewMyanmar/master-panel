@@ -377,7 +377,7 @@ class MasterTemplate extends React.Component {
                 <AppBar position="absolute"
                     className={classes.appBar}>
                     <Toolbar className={classes.toolbar}>
-                        <img src="/res/logo.png" alt="" height="32" className={classes.appBarIcon} />
+                        <img src="res/logo.png" alt="" height="32" className={classes.appBarIcon} />
                         <Typography variant="h6" component="h1" style={{ color: this.props.theme.palette.common.white }} noWrap>
                             {APP_NAME}
                         </Typography>

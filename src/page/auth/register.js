@@ -260,7 +260,7 @@ class RegisterPage extends React.Component {
                 <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
                     <Grid style={{ padding: '22px' }} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
                         <Grid container justify="center">
-                            <img src="/res/logo.png" alt="SUNDEW MYANMAR" title="SUNDEW MYANMAR" className={classes.img} />
+                            <img src="res/logo.png" alt="SUNDEW MYANMAR" title="SUNDEW MYANMAR" className={classes.img} />
                         </Grid>
                         <Grid item xs={12}>
                             <Divider light style={{ margin: '20px 0' }} />
