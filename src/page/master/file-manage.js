@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Grid, Card, CardActionArea, CardContent, CardMedia, Typography, Paper, withStyles, Dialog, DialogTitle, DialogActions, Button, IconButton, Icon } from '@material-ui/core';
 
 import MasterTemplate from '../../component/MasterTemplate';
@@ -19,7 +19,7 @@ import MasterIcon from '../../component/MasterIcon';
 
 const styles = theme => ({
     root: {
-        borderRadius :0,
+        borderRadius: 0,
     },
     flex: {
         width: '100%',
@@ -38,18 +38,18 @@ const styles = theme => ({
     media: {
         height: 140,
     },
-    pagination:{
+    pagination: {
         overflow: 'hidden',
         display: 'flex',
         justifyContent: 'flex-end',
     },
-    toolbar:{
+    toolbar: {
         display: 'flex',
         borderBottom: '0.5px solid #ccc',
         alignItems: 'center',
-        padding:'10px 0px',
+        padding: '10px 0px',
     },
-    search:{
+    search: {
         width: 'calc(25%)',
         display: 'flex',
         marginLeft: '25px'
@@ -58,22 +58,22 @@ const styles = theme => ({
         margin: '0px 10px',
         padding: '5px 5px',
     },
-    title:{
+    title: {
         width: 'calc(40%)',
         fontSize: '1.5em',
         margin: '0 auto',
         textAlign: 'center',
     },
-    buttonField:{
+    buttonField: {
         display: 'flex',
         width: 'calc(35%)',
         justifyContent: 'flex-end'
     },
 });
 
-class FileManagePage extends React.Component{
+class FileManagePage extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             id: '',
@@ -95,54 +95,54 @@ class FileManagePage extends React.Component{
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this._loadData();
-        if(this.props.match.params.id){
+        if (this.props.match.params.id) {
             this.loadSelectedItem();
         }
     }
 
-    componentDidUpdate(prevProps,prevState){
-        if(this.props.match.params.id !== prevProps.match.params.id){
-            if(this.props.match.params.id != null){
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.match.params.id !== prevProps.match.params.id) {
+            if (this.props.match.params.id != null) {
                 this.loadSelectedItem();
-            }else{
-                this.setState({id:'', name:'', description:''});
+            } else {
+                this.setState({ id: '', name: '', description: '' });
             }
         }
-        if(this.state.page !== prevState.page || this.state.rowsPerPage !== prevState.rowsPerPage || this.state.orderBy !== prevState.orderBy || this.state.order !== prevState.order){
+        if (this.state.page !== prevState.page || this.state.rowsPerPage !== prevState.rowsPerPage || this.state.orderBy !== prevState.orderBy || this.state.order !== prevState.order) {
             this._loadData();
         }
     }
 
-    loadSelectedItem = async() =>{
+    loadSelectedItem = async () => {
         const data = await FileUploadApi.getById(this.props.match.params.id);
         //console.log("Edit : ", data);
         // this.setState({id:data.id, name:data.name, description:data.description});
     }
 
-    _loadData = async() =>{
+    _loadData = async () => {
         const file = await FileUploadApi.getAll(this.state.page, this.state.rowsPerPage, 'id:ASC');
-        this.setState({total: file.total})
+        this.setState({ total: file.total })
         this.props.dispatch({
             type: FILE_ACTIONS.INIT_DATA,
             data: file.data
         })
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
     }
 
-    onKeyPress = (key) =>{
-        if(key === 'Enter'){
+    onKeyPress = (key) => {
+        if (key === 'Enter') {
             this._loadData();
         }
     }
 
-    sortHandler = (orderBy) =>{
+    sortHandler = (orderBy) => {
         let order = 'desc';
-        if(this.state.orderBy === orderBy && this.state.order === "desc"){
+        if (this.state.orderBy === orderBy && this.state.order === "desc") {
             order = 'asc';
         }
-        this.setState({order,orderBy, isLoading: true});
+        this.setState({ order, orderBy, isLoading: true });
     }
 
     onChangeImage = (event) => {
@@ -151,8 +151,8 @@ class FileManagePage extends React.Component{
 
         reader.onload = () => {
             this.setState({
-                file : file,
-                previewImage : reader.result
+                file: file,
+                previewImage: reader.result
             })
         }
 
@@ -164,68 +164,68 @@ class FileManagePage extends React.Component{
     };
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({ rowsPerPage: event.target.value, isLoading: true});
+        this.setState({ rowsPerPage: event.target.value, isLoading: true });
     };
 
-    addNewButton = () =>{
+    addNewButton = () => {
         this.props.match.params.id = null;
         this.props.history.push("/files");
-        this.setState({open : true});
+        this.setState({ open: true });
     }
 
     handleRowClick = (data) => {
-        this.setState({open: true});
+        this.setState({ open: true });
         this.props.history.push('/files/' + data.id);
     }
-     
+
     handleClose = () => {
-        this.setState({ open: false, previewImage : '/imgs/camera.png' });
+        this.setState({ open: false, previewImage: '/imgs/camera.png' });
     }
 
-    handleDeleteDialogOpen = (data) =>{
-        this.setState({deleteDialog: true, deleteItemName: data.name, deleteItemId: data.id});
+    handleDeleteDialogOpen = (data) => {
+        this.setState({ deleteDialog: true, deleteItemName: data.name, deleteItemId: data.id });
     }
 
-    handleWarningClose = () =>{
-        this.setState({deleteDialog: false});
+    handleWarningClose = () => {
+        this.setState({ deleteDialog: false });
     }
 
-    handleDelete = async(id) =>{
-       try{
+    handleDelete = async (id) => {
+        try {
             await RoleApi.delete(id);
             this.props.dispatch({
-            type: ROLE_ACTIONS.REMOVE,
-            id: id,
-        })
-        this.setState({deleteDialog: false});
-        }catch(error){
-            if(error && error.data.content.message.includes("a foreign key constraint fails")){
-                this.setState({deleteErrorDialog: true})
+                type: ROLE_ACTIONS.REMOVE,
+                id: id,
+            })
+            this.setState({ deleteDialog: false });
+        } catch (error) {
+            if (error && error.data.content.message.includes("a foreign key constraint fails")) {
+                this.setState({ deleteErrorDialog: true })
             }
         }
-        this.setState({deleteDialog: false}); 
+        this.setState({ deleteDialog: false });
     }
 
-    deleteError = () =>{
-        return(
-            <ErrorDialog showError={this.state.deleteErrorDialog} title="Delete Error" description="Cannot delete in-use item" handleError={this.deleteErrorDialogClose}/>
+    deleteError = () => {
+        return (
+            <ErrorDialog showError={this.state.deleteErrorDialog} title="Delete Error" description="Cannot delete in-use item" handleError={this.deleteErrorDialogClose} />
         );
     }
 
-    deleteErrorDialogClose = () =>{
-        this.setState({deleteErrorDialog: !this.state.deleteErrorDialog});
+    deleteErrorDialogClose = () => {
+        this.setState({ deleteErrorDialog: !this.state.deleteErrorDialog });
     }
 
     validating = () => {
-        if (this.state.name === '' ) {
-            this.state.name === '' ? this.setState({ nameError : true }) : this.setState({ nameError : false });
+        if (this.state.name === '') {
+            this.state.name === '' ? this.setState({ nameError: true }) : this.setState({ nameError: false });
             return true;
         }
-        this.setState({ nameError : false});
+        this.setState({ nameError: false });
         return false;
     }
 
-    onSaveItem = async() =>{
+    onSaveItem = async () => {
         // if (this.validating()){
         //     return;
         // }
@@ -234,13 +234,13 @@ class FileManagePage extends React.Component{
         var fileUpload;
 
         try {
-            if (this.state.file && this.state.file.id){
+            if (this.state.file && this.state.file.id) {
                 fileUpload = {
-                    id : this.state.file.id
+                    id: this.state.file.id
                 }
-            } else if (this.state.file && !this.state.file.id){
+            } else if (this.state.file && !this.state.file.id) {
                 var fileResponse = await FileApi.upload(this.state.file);
-                
+
                 this.props.dispatch({
                     type: FILE_ACTIONS.CREATE_NEW,
                     file: fileResponse
@@ -277,11 +277,11 @@ class FileManagePage extends React.Component{
         // this.setState({open: false});
     }
 
-    onChangeText = (key,value) => {
-        this.setState({[key] : value});
+    onChangeText = (key, value) => {
+        this.setState({ [key]: value });
     }
 
-    render(){
+    render() {
         const { classes } = this.props;
 
         const DrawerList = [
@@ -294,70 +294,70 @@ class FileManagePage extends React.Component{
                 onChangeImage: this.onChangeImage,
             },
         ];
-        const warningTitle = "Are you sure to delete "+ this.state.deleteItemName +" Role ?";
-        return(
+        const warningTitle = "Are you sure to delete " + this.state.deleteItemName + " Role ?";
+        return (
             <MasterTemplate>
                 {this.deleteError()}
                 <LoadingDialog isLoading={this.state.isLoading} label="Loading Data Please Wait..." />
                 <LoadingDialog isLoading={this.state.isSaving} label="Saving Data Please Wait..." />
-                <div className ={classes.flex}>
+                <div className={classes.flex}>
                     <Paper className={classes.root}>
                         <div className={classes.toolbar}>
                             <div className={classes.search}>
                                 <Icon fontSize='small'>search</Icon>
-                                <input style={{border: 'none', outlineWidth: '0'}} type="text" name="filter" placeholder="Search" onChange={(event) => this.onChangeText(event.target.name, event.target.value)} onKeyPress={(event) => this.onKeyPress(event.key)}/>
+                                <input style={{ border: 'none', outlineWidth: '0' }} type="text" name="filter" placeholder="Search" onChange={(event) => this.onChangeText(event.target.name, event.target.value)} onKeyPress={(event) => this.onKeyPress(event.key)} />
                             </div>
                             <div className={classes.title}>
                                 <span>File Management</span>
                             </div>
                             <div className={classes.buttonField}>
-                                <MasterIcon label="Add" icon="add_box" onClick={this.addNewButton} type="IconButton"/>
+                                <MasterIcon label="Add" icon="add_box" onClick={this.addNewButton} type="IconButton" />
                             </div>
                         </div>
-                        <Grid 
+                        <Grid
                             container
                             spacing={16}
                             className={this.props.classes.imageContainer}
                         >
-                        {this.props.masterpanel.file.map(row => {
-                            return (
-                                <Grid justify="center" container key={row.id} item lg={2} md={4} sm={6} xs={12}>
-                                    <Card className={this.props.classes.card}>
-                                        <CardActionArea onClick={this.handleRowClick(row.id)}>
-                                            <CardMedia
-                                                className={this.props.classes.media}
-                                                image={row.public_url}
-                                                title={row.name}
-                                            />
-                                        </CardActionArea>
-                                        <CardContent>
-                                            {/* <Typography gutterBottom variant="h6" component="h2">
+                            {this.props.masterpanel.file.map(row => {
+                                return (
+                                    <Grid justify="center" container key={row.id} item lg={2} md={4} sm={6} xs={12}>
+                                        <Card className={this.props.classes.card}>
+                                            <CardActionArea onClick={this.handleRowClick(row.id)}>
+                                                <CardMedia
+                                                    className={this.props.classes.media}
+                                                    image={row.public_url}
+                                                    title={row.name}
+                                                />
+                                            </CardActionArea>
+                                            <CardContent>
+                                                {/* <Typography gutterBottom variant="h6" component="h2">
                                                 {row.name}
                                             </Typography> */}
-                                            <Typography component="p" style={{textAlign: "center"}} >
-                                                {row.size}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            );
-                        })}
+                                                <Typography component="p" style={{ textAlign: "center" }} >
+                                                    {row.size}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                );
+                            })}
                         </Grid>
                         <div className={classes.pagination}>
-                            <FilePaginationAction page={this.state.page} rowsPerPage={this.state.rowsPerPage} changeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} total={this.state.total}/>
+                            <FilePaginationAction page={this.state.page} rowsPerPage={this.state.rowsPerPage} changeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} total={this.state.total} />
                         </div>
                     </Paper>
                     <div className={classes.drawer}>
-                        <MasterDrawer title="Add New File" open={this.state.open} onSaveItem={() => this.onSaveItem()} handleClose={this.handleClose} list={DrawerList}/>
+                        <MasterDrawer title="Add New File" open={this.state.open} onSaveItem={() => this.onSaveItem()} handleClose={this.handleClose} list={DrawerList} />
                     </div>
-                    <Dialog open={this.state.deleteDialog} onClose={this.handleWarningClose} aria-labelledby="form-dialog-title"  BackdropProps={{classes: {root: classes.dialogroot}}} PaperProps ={{classes: {root: classes.paper}}}>
+                    <Dialog open={this.state.deleteDialog} onClose={this.handleWarningClose} aria-labelledby="form-dialog-title" BackdropProps={{ classes: { root: classes.dialogroot } }} PaperProps={{ classes: { root: classes.paper } }}>
                         <DialogTitle id="form-dialog-title">{warningTitle}</DialogTitle>
                         <DialogActions>
                             <Button onClick={() => this.handleDelete(this.state.deleteItemId)} color="primary">
-                            Yes
+                                Yes
                             </Button>
                             <Button onClick={this.handleWarningClose} color="primary" autoFocus>
-                            No
+                                No
                             </Button>
                         </DialogActions>
                     </Dialog>
@@ -370,9 +370,9 @@ FileManagePage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) =>{
-    return{
-        masterpanel : state
+const mapStateToProps = (state) => {
+    return {
+        masterpanel: state
     }
 }
 

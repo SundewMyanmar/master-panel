@@ -2,46 +2,46 @@ import ApiManager from '../util/APIManager';
 
 const API_URL = 'roles/';
 
-class RoleApi extends ApiManager{
+class RoleApi extends ApiManager {
 
-    async getAll(){
-        try{
+    async getAll() {
+        try {
             var url = API_URL + "list";
             const response = await this.get(url, true);
-            if(response.code >= 200 && response.code < 300){
+            if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
-        }catch(error){
+        } catch (error) {
             console.error(error);
             throw error;
         }
         return null;
     }
 
-    async getPaging(page, size, sort, filter){
-        try{
+    async getPaging(page, size, sort, filter) {
+        try {
             var url = API_URL + "?page=" + page + "&size=" + size;
-            if(sort && sort!=="")
-                url+="&sort=" + sort;
-            if(filter && filter!=="")
-                url+="&filter=" + filter;
+            if (sort && sort !== "")
+                url += "&sort=" + sort;
+            if (filter && filter !== "")
+                url += "&filter=" + filter;
 
             const response = await this.get(url, true);
-            if(response.code >= 200 && response.code < 300){
+            if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
-        }catch(error){
+        } catch (error) {
             console.error(error);
             throw error;
         }
         return null;
     }
 
-    async getById(id){
+    async getById(id) {
         try {
             const url = API_URL + id;
             const response = await this.get(url, true);
-            if(response.code >= 200 && response.code < 300){
+            if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
         } catch (error) {
@@ -51,10 +51,10 @@ class RoleApi extends ApiManager{
         return null;
     }
 
-    async insert(data){
+    async insert(data) {
         try {
             const response = await this.post(API_URL, data, true);
-            if(response.code >= 200 && response.code < 300){
+            if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
         } catch (error) {
@@ -64,11 +64,11 @@ class RoleApi extends ApiManager{
         return null;
     }
 
-    async update(id, data){
+    async update(id, data) {
         try {
             const url = API_URL + id;
             const response = await this.put(url, data, true);
-            if(response.code >= 200 && response.code < 300){
+            if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
         } catch (error) {
@@ -78,11 +78,11 @@ class RoleApi extends ApiManager{
         return null;
     }
 
-    async delete(id){
+    async delete(id) {
         try {
             const url = API_URL + id;
             const response = await this.deleteItem(url, {}, true);
-            if(response.code >= 200 && response.code < 300){
+            if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
         } catch (error) {

@@ -95,3 +95,4 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+yarn.lock

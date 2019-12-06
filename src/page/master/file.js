@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router";
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -21,195 +21,195 @@ import { FILE_ACTIONS } from '../../redux/FileRedux';
 import GridView from '../../component/FileGridView';
 
 const styles = theme => ({
-    searchPaper:{
-        marginLeft:16,
-        marginTop:16,
-        marginBottom:10,
-        marginRight:5
+    searchPaper: {
+        marginLeft: 16,
+        marginTop: 16,
+        marginBottom: 10,
+        marginRight: 5
     },
-    searchHeader:{
-        flex:1,
+    searchHeader: {
+        flex: 1,
         // backgroundColor:theme.palette.primary.main,
-        borderBottom:"1px solid #eff6f7"
+        borderBottom: "1px solid #eff6f7"
     },
-    searchHeaderText:{
-        marginLeft:24
+    searchHeaderText: {
+        marginLeft: 24
     },
-    searchButton:{
-        backgroundColor:theme.palette.background.default,
-        color:theme.palette.primary.main,
-        marginRight:5
+    searchButton: {
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.primary.main,
+        marginRight: 5
     },
-    searchIcon:{
+    searchIcon: {
         color: theme.palette.primary.main,
     },
     input: {
-        flex:1,
+        flex: 1,
         marginLeft: 12,
-        marginTop:6,
-        width:'100%',
+        marginTop: 6,
+        width: '100%',
     },
     iconButton: {
         padding: 10,
-        color:theme.palette.primary.main
+        color: theme.palette.primary.main
     },
 });
 
 class FilePage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            currentPage:0,
-            pageSize:18,
-            total:0,
-            pageCount:1,
+            currentPage: 0,
+            pageSize: 18,
+            total: 0,
+            pageCount: 1,
             showLoading: false,
             showQuestion: false,
             showSnack: false,
-            snackMessage:"",
+            snackMessage: "",
             showError: false,
             errorMessage: '',
             showImage: false,
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         const query = new URLSearchParams(this.props.location.search);
-        if(query.get('callback')==="success"){
+        if (query.get('callback') === "success") {
             this.setState({
-                showSnack:true,
-                snackMessage:"Save success.",
+                showSnack: true,
+                snackMessage: "Save success.",
             })
         }
 
         this._loadData();
     }
 
-    addNew(){
+    addNew() {
         this.props.match.params.id = null;
         this.props.history.push('/file/setup/detail');
     }
 
-    delete(id,name,_this){
+    delete(id, name, _this) {
         _this.setState({
-            itemName:name,
-            itemToDelete:id,
-            showQuestion:true
+            itemName: name,
+            itemToDelete: id,
+            showQuestion: true
         })
     }
 
     handleQuestionDialog = (isDelete) => {
-        if (isDelete){
+        if (isDelete) {
             this.onDeleteItem(this.state.itemToDelete);
         }
         this.setState({ showQuestion: !this.state.showQuestion });
     };
 
-    onDeleteItem = async(id) => {
-        this.setState({ showLoading : true });
+    onDeleteItem = async (id) => {
+        this.setState({ showLoading: true });
         try {
             await FileApi.delete(id);
             this.props.dispatch({
                 type: FILE_ACTIONS.REMOVE,
                 id: id,
             })
-            this.setState({ showLoading: false, showSnack: true, snackMessage:"Delete success.", showImage : false});
-        } catch (error){
-            this.setState({ showLoading : false, showError: true, errorMessage: 'Please try again. Something wrong!' });
+            this.setState({ showLoading: false, showSnack: true, snackMessage: "Delete success.", showImage: false });
+        } catch (error) {
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please try again. Something wrong!' });
         }
     }
 
-    _loadData = () =>{
+    _loadData = () => {
         this.paging();
     }
-    
-    handleChangePage(e){
-        
+
+    handleChangePage(e) {
+
     }
 
-    handleChangeRowsPerPage(e,_this){
+    handleChangeRowsPerPage(e, _this) {
         _this.setState({
-            pageSize:e.target.value
-        },()=>{
+            pageSize: e.target.value
+        }, () => {
             _this.paging();
         })
     }
 
-    pageChange=(pageParam,_this)=>{
-        var currentPage=_this.state.currentPage;
-        if(pageParam==="first"){
-            currentPage=0;
-        }else if(pageParam==="previous"){
-            if(currentPage>0)
-                currentPage-=1;
+    pageChange = (pageParam, _this) => {
+        var currentPage = _this.state.currentPage;
+        if (pageParam === "first") {
+            currentPage = 0;
+        } else if (pageParam === "previous") {
+            if (currentPage > 0)
+                currentPage -= 1;
             else
-                currentPage=_this.state.pageCount-1;
-        }else if(pageParam==="forward"){
-            if(currentPage===_this.state.pageCount-1)
-                currentPage=0;
+                currentPage = _this.state.pageCount - 1;
+        } else if (pageParam === "forward") {
+            if (currentPage === _this.state.pageCount - 1)
+                currentPage = 0;
             else
-                currentPage+=1;
-        }else if(pageParam==="last"){
-            currentPage=_this.state.pageCount-1;
+                currentPage += 1;
+        } else if (pageParam === "last") {
+            currentPage = _this.state.pageCount - 1;
         }
 
         _this.setState({
-            currentPage:currentPage,
-            showLoading:true
-        },()=>{
-            _this.paging();            
+            currentPage: currentPage,
+            showLoading: true
+        }, () => {
+            _this.paging();
         });
     }
-    
-    onKeyDown=(e)=>{
-        if(e.keyCode === 13){
+
+    onKeyDown = (e) => {
+        if (e.keyCode === 13) {
             this.onSearch();
         }
     }
 
-    onSearch(){
+    onSearch() {
         this.setState({
-            currentPage:0
-        },()=>{
+            currentPage: 0
+        }, () => {
             this.paging();
         })
     }
 
-    onChangeText=(key,value)=>{
+    onChangeText = (key, value) => {
         this.setState({
-            searchFilter:value
+            searchFilter: value
         });
     }
 
-    paging=async()=>{
-        this.setState({showLoading: true});
-        try{
-            var result=await FileApi.getPaging(this.state.currentPage,this.state.pageSize,"createdAt:DESC",this.state.searchFilter);
-            this.setState({total:result.total,pageCount:result.page_count,showLoading:false})
+    paging = async () => {
+        this.setState({ showLoading: true });
+        try {
+            var result = await FileApi.getPaging(this.state.currentPage, this.state.pageSize, "createdAt:DESC", this.state.searchFilter);
+            this.setState({ total: result.total, pageCount: result.page_count, showLoading: false })
 
-            if(result.count>0){
+            if (result.count > 0) {
                 this.props.dispatch({
-                    type:FILE_ACTIONS.INIT_DATA,
-                    data:result.data
+                    type: FILE_ACTIONS.INIT_DATA,
+                    data: result.data
                 })
-            }else{
+            } else {
                 this.props.dispatch({
-                    type:FILE_ACTIONS.INIT_DATA,
-                    data:[]
+                    type: FILE_ACTIONS.INIT_DATA,
+                    data: []
                 })
 
                 this.setState({ showLoading: false, showError: true, errorMessage: 'There is no data to show.' });
             }
-        }catch(error){
+        } catch (error) {
             this.props.dispatch({
-                type:FILE_ACTIONS.INIT_DATA,
-                data:[]
+                type: FILE_ACTIONS.INIT_DATA,
+                data: []
             })
         }
     }
 
     handleError = () => {
-        this.setState({ showError : false });
+        this.setState({ showError: false });
     }
 
     onCloseSnackbar = () => {
@@ -217,30 +217,30 @@ class FilePage extends React.Component {
     }
 
     onClickCard = (data) => {
-        this.setState({ showImage : true, file : data })
+        this.setState({ showImage: true, file: data })
     }
 
     handleImageDialog = () => {
-        this.setState({ showImage : !this.state.showImage })
+        this.setState({ showImage: !this.state.showImage })
     }
 
-    onLoadImage = ({target:img}) => {
-        this.setState({ height : img.offsetHeight, width : img.offsetWidth })
+    onLoadImage = ({ target: img }) => {
+        this.setState({ height: img.offsetHeight, width: img.offsetWidth })
     }
 
-    render(){
+    render() {
         const { classes } = this.props;
-        
+
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
                 <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
                 <Snackbar vertical="top" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
-                <QuestionDialog itemName={this.state.itemName} 
-                    showQuestion={this.state.showQuestion} 
-                    handleQuestionDialog={this.handleQuestionDialog} 
+                <QuestionDialog itemName={this.state.itemName}
+                    showQuestion={this.state.showQuestion}
+                    handleQuestionDialog={this.handleQuestionDialog}
                 />
-                <ImageDialog 
+                <ImageDialog
                     showImage={this.state.showImage}
                     onClose={this.handleImageDialog}
                     data={this.state.file}
@@ -255,7 +255,7 @@ class FilePage extends React.Component {
                     <div className={classes.searchHeader}>
                         <Grid container>
                             <Grid container item xs={4} direction="row" justify="flex-start" alignItems="center">
-                                <Typography className={[classes.searchHeaderText,classes.searchPaper].join(" ")} style={{color: this.props.theme.palette.primary.main}} variant="h6" component="h1" noWrap>
+                                <Typography className={[classes.searchHeaderText, classes.searchPaper].join(" ")} style={{ color: this.props.theme.palette.primary.main }} variant="h6" component="h1" noWrap>
                                     File List
                                 </Typography>
                             </Grid>
@@ -263,29 +263,29 @@ class FilePage extends React.Component {
                                 <Paper className={classes.searchPaper}>
                                     <Grid container>
                                         <Grid item xs={10}>
-                                            <InputBase onKeyDown={this.onKeyDown} className={classes.input} value={this.state.searchFilter?this.state.searchFilter:""}
-                                             onChange={(event) => this.onChangeText(event.target.id, event.target.value)} placeholder="Search Files.." />
+                                            <InputBase onKeyDown={this.onKeyDown} className={classes.input} value={this.state.searchFilter ? this.state.searchFilter : ""}
+                                                onChange={(event) => this.onChangeText(event.target.id, event.target.value)} placeholder="Search Files.." />
                                         </Grid>
                                         <Grid container item xs={2} justify="flex-end" alignItems="center">
-                                            <IconButton className={classes.iconButton} aria-label="Menu" onClick={()=>this.onSearch()}>
+                                            <IconButton className={classes.iconButton} aria-label="Menu" onClick={() => this.onSearch()}>
                                                 <Icon>search</Icon>
                                             </IconButton>
                                         </Grid>
                                     </Grid>
                                 </Paper>
                             </Grid>
-                            
+
                             <Grid container item xs={4} direction="row" justify="flex-end" alignItems="center">
-                                <Fab onClick={()=>this.addNew()} variant="extended" aria-label="Delete" className={[classes.searchPaper, classes.searchButton].join(" ")}>
+                                <Fab onClick={() => this.addNew()} variant="extended" aria-label="Delete" className={[classes.searchPaper, classes.searchButton].join(" ")}>
                                     <Icon className={classes.searchIcon} >add</Icon>
                                     New
                                 </Fab>
                             </Grid>
                         </Grid>
                     </div>
-                    <GridView items={this.props.masterpanel.file} 
-                        total={this.state.total} 
-                        pageSize={this.state.pageSize} 
+                    <GridView items={this.props.masterpanel.file}
+                        total={this.state.total}
+                        pageSize={this.state.pageSize}
                         currentPage={this.state.currentPage}
                         pageChange={this.pageChange}
                         handleChangePage={this.handleChangePage}
@@ -308,10 +308,10 @@ FilePage.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) =>{
-    return{
-        masterpanel : state
+const mapStateToProps = (state) => {
+    return {
+        masterpanel: state
     }
 }
 
-export default withRouter(connect(mapStateToProps)(withStyles(styles,{ withTheme: true })(FilePage)));
+export default withRouter(connect(mapStateToProps)(withStyles(styles, { withTheme: true })(FilePage)));

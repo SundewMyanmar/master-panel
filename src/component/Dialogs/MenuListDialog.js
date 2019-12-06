@@ -13,40 +13,40 @@ const styles = theme => ({
 class MenuListDialog extends React.Component {
 
     render() {
-    const { classes, handleMenuListDialog, show, uploadNew, openFile } = this.props;
+        const { classes, handleMenuListDialog, show, uploadNew, openFile } = this.props;
 
         return (
-        <div>
-            <Dialog
-                open={show}
-                onClose={handleMenuListDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <List component="nav"
-                    aria-labelledby="nested-list-subheader"
-                    subheader={
-                        <ListSubheader component="div" id="nested-list-subheader">
-                            Image Upload
+            <div>
+                <Dialog
+                    open={show}
+                    onClose={handleMenuListDialog}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <List component="nav"
+                        aria-labelledby="nested-list-subheader"
+                        subheader={
+                            <ListSubheader component="div" id="nested-list-subheader">
+                                Image Upload
                         </ListSubheader>
-                    }
-                    className={classes.root}
-                > 
-                    <ListItem button onClick={openFile}>
-                        <ListItemIcon>
-                            <Icon color="primary">photo</Icon>
-                        </ListItemIcon>
-                        <ListItemText primary="Choose From Gallery" />
-                    </ListItem>
-                    <ListItem button onClick={uploadNew}>
-                        <ListItemIcon>
-                            <Icon color="primary">cloud_upload</Icon>
-                        </ListItemIcon>
-                        <ListItemText primary="Upload New Image" />
-                    </ListItem>
-                </List>
-            </Dialog>
-        </div>
+                        }
+                        className={classes.root}
+                    >
+                        <ListItem button onClick={openFile}>
+                            <ListItemIcon>
+                                <Icon color="primary">photo</Icon>
+                            </ListItemIcon>
+                            <ListItemText primary="Choose From Gallery" />
+                        </ListItem>
+                        <ListItem button onClick={uploadNew}>
+                            <ListItemIcon>
+                                <Icon color="primary">cloud_upload</Icon>
+                            </ListItemIcon>
+                            <ListItemText primary="Upload New Image" />
+                        </ListItem>
+                    </List>
+                </Dialog>
+            </div>
         );
     }
 }

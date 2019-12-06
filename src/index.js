@@ -20,6 +20,14 @@ const reducers = combineReducers({
 
 const store = createStore(reducers);
 
+function nolog() {}
+
+if(process.env.NODE_ENV !== 'development'){
+	console.log = nolog;
+	console.warn = nolog;
+	console.error = nolog;
+}
+
 ReactDOM.render(<Provider store = {store}><App /></Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

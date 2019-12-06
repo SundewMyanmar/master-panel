@@ -30,22 +30,22 @@ const styles = theme => ({
     table: {
         minWidth: 700,
     },
-    toolbar:{
+    toolbar: {
         display: 'flex',
         borderBottom: '0.5px solid #ccc',
         alignItems: 'center',
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
     },
-    tableWrapper:{
+    tableWrapper: {
         overflowX: 'auto',
     },
-    search:{
+    search: {
         width: 'calc(25%)',
         display: 'flex',
         marginLeft: '25px'
     },
-    pagination:{
+    pagination: {
         overflow: 'hidden',
         display: 'flex',
     },
@@ -53,13 +53,13 @@ const styles = theme => ({
         margin: '0px 10px',
         padding: '5px 5px',
     },
-    title:{
+    title: {
         width: 'calc(50%)',
         fontSize: '1.5em',
         margin: '0 auto',
         textAlign: 'center',
     },
-    buttonField:{
+    buttonField: {
         display: 'flex',
         width: 'calc(25%)',
         justifyContent: 'flex-end'
@@ -69,39 +69,39 @@ const styles = theme => ({
     },
 });
 
-const StyledPager = withStyles(theme=>({
-    root:{
-        color:theme.palette.primary.main,
-        flex:1,
-        
+const StyledPager = withStyles(theme => ({
+    root: {
+        color: theme.palette.primary.main,
+        flex: 1,
+
     },
     selectRoot: {
-      width:50,
+        width: 50,
     },
-    selectIcon:{
-        color:theme.palette.primary.main
+    selectIcon: {
+        color: theme.palette.primary.main
     }
 }))(TablePagination);
 
 const CustomTableCell = withStyles(theme => ({
     head: {
-        paddingLeft:0,
-        paddingRight:5,
+        paddingLeft: 0,
+        paddingRight: 5,
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.background.default,
     },
     body: {
-        paddingLeft:0,
-        paddingRight:5,
+        paddingLeft: 0,
+        paddingRight: 5,
         // color:theme.palette.primary.main
     },
 }))(TableCell);
 
 class MasterModalTable extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        
+
         // var fields=this.props.fields;
         // fields.push({
         //     name:"",
@@ -109,41 +109,41 @@ class MasterModalTable extends React.Component {
         //     display_name:""
         // })
 
-        this.state={
+        this.state = {
         }
     }
 
-    TablePaginationActions=()=>{
-        const { classes, theme, pageChange, total, pageSize, currentPage, _this} = this.props;
-        
+    TablePaginationActions = () => {
+        const { classes, theme, pageChange, total, pageSize, currentPage, _this } = this.props;
+
         return (<div className={[classes.pager]}>
-            <IconButton onClick={()=>pageChange("first",_this)} aria-label="First Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon> : 
-                    <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>}
+            <IconButton onClick={() => pageChange("first", _this)} aria-label="First Page">
+                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon> :
+                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>}
             </IconButton>
-            <IconButton onClick={()=>pageChange("previous",_this)} aria-label="Previous Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon> : 
-                <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>}
+            <IconButton onClick={() => pageChange("previous", _this)} aria-label="Previous Page">
+                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon> :
+                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>}
             </IconButton>
-            <IconButton onClick={()=>pageChange("forward",_this)} aria-label="Next Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon> : 
-                <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>}
+            <IconButton onClick={() => pageChange("forward", _this)} aria-label="Next Page">
+                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon> :
+                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>}
             </IconButton>
-            <IconButton onClick={()=>pageChange("last",_this)} aria-label="Last Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon> : 
-                <Icon style={{ color:this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>}
+            <IconButton onClick={() => pageChange("last", _this)} aria-label="Last Page">
+                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon> :
+                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>}
             </IconButton>
         </div>);
     }
 
-    handleSortBy(sortBy){
-        const {items}=this.props;
-        var sortOrder=this.state.sortOrder;
-        if(this.state.sortBy===sortBy){
-            sortOrder=!this.state.sortOrder;
+    handleSortBy(sortBy) {
+        const { items } = this.props;
+        var sortOrder = this.state.sortOrder;
+        if (this.state.sortBy === sortBy) {
+            sortOrder = !this.state.sortOrder;
         }
-        else{
-            sortOrder=true;
+        else {
+            sortOrder = true;
         }
 
         const result =
@@ -152,14 +152,14 @@ class MasterModalTable extends React.Component {
                 items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
 
         this.setState({
-            sortBy:sortBy,
-            sortOrder:sortOrder,
-            items:result
+            sortBy: sortBy,
+            sortOrder: sortOrder,
+            items: result
         });
     }
 
     render() {
-        const { classes, multi, items, fields, tableTitle, filterTextChange, onKeyDown, searchText, handleRowClick, onCloseDialog, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage,_this  } = this.props;
+        const { classes, multi, items, fields, tableTitle, filterTextChange, onKeyDown, searchText, handleRowClick, onCloseDialog, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, _this } = this.props;
 
         return (
             <div className={classes.root}>
@@ -197,26 +197,26 @@ class MasterModalTable extends React.Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                {fields.map(field=>{
+                                {fields.map(field => {
                                     return (
                                         <CustomTableCell key={field.display_name} align={field.align}>
-                                            {field.name!==""?
-                                            <Button size="small" style={{color:this.props.theme.palette.background.default}} onClick={()=>this.handleSortBy(field.name)}>
-                                                <Icon style={{ color:this.props.theme.palette.background.default, fontSize: 22, display:this.state.sortBy===field.name?'block':'none' }}>{this.state.sortBy===field.name && this.state.sortOrder? 'arrow_drop_down':'arrow_drop_up'}</Icon>
-                                                {field.display_name}
-                                            </Button> 
-                                            :  
-                                            <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default}}>{field.display_name}</Typography>}
-                                        </CustomTableCell>        
+                                            {field.name !== "" ?
+                                                <Button size="small" style={{ color: this.props.theme.palette.background.default }} onClick={() => this.handleSortBy(field.name)}>
+                                                    <Icon style={{ color: this.props.theme.palette.background.default, fontSize: 22, display: this.state.sortBy === field.name ? 'block' : 'none' }}>{this.state.sortBy === field.name && this.state.sortOrder ? 'arrow_drop_down' : 'arrow_drop_up'}</Icon>
+                                                    {field.display_name}
+                                                </Button>
+                                                :
+                                                <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default }}>{field.display_name}</Typography>}
+                                        </CustomTableCell>
                                     );
                                 })}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {items.map(row => {
-                                if(multi){
+                                if (multi) {
                                     const isSelected = this.props.isSelected(row.id);
-                                    return(
+                                    return (
                                         <TableRow hover
                                             className={classes.row}
                                             key={row.id}
@@ -226,59 +226,58 @@ class MasterModalTable extends React.Component {
                                             tabIndex={-1}
                                             selected={isSelected}
                                         >
-                                        {fields.map(field=>{
-                                            if(field.name!==""){
-                                                if(field.type==="IMAGE"){
-                                                    return(
-                                                        <CustomTableCell key={field.name} align={field.align}>
-                                                            {
-                                                                row[field.name]?<img alt="" width={40} src={row[field.name].public_url}/>:''
-                                                            }
+                                            {fields.map(field => {
+                                                if (field.name !== "") {
+                                                    if (field.type === "IMAGE") {
+                                                        return (
+                                                            <CustomTableCell key={field.name} align={field.align}>
+                                                                {
+                                                                    row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : ''
+                                                                }
+                                                            </CustomTableCell>
+                                                        );
+                                                    } else
+                                                        return (
+                                                            <CustomTableCell key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
+                                                        );
+                                                } else {
+                                                    return (
+                                                        <CustomTableCell key="Action" align={field.align} padding="checkbox">
+                                                            <Checkbox checked={isSelected} />
                                                         </CustomTableCell>
-                                                    );
-                                                }else
-                                                    return(
-                                                        <CustomTableCell key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
-                                                    );
-                                            } else {
-                                                return(
-                                                    <CustomTableCell key="Action" align={field.align} padding="checkbox">
-                                                        <Checkbox checked={isSelected} />
-                                                    </CustomTableCell>
-                                                )
-                                            }
-                                        })}
+                                                    )
+                                                }
+                                            })}
                                         </TableRow>
                                     )
                                 } else {
-                                    return(
+                                    return (
                                         <TableRow hover
                                             className={classes.row}
                                             key={row.id}
                                             onClick={event => handleRowClick(event, row)}
                                             tabIndex={-1}
                                         >
-                                        {fields.map(field=>{
-                                            if(field.name!==""){
-                                                if(field.type==="IMAGE"){
-                                                    return(
-                                                        <CustomTableCell key={field.name} align={field.align}>
-                                                            {
-                                                                row[field.name]?<img alt="" width={40} src={row[field.name].public_url}/>:''
-                                                            }
-                                                        </CustomTableCell>
-                                                    );
-                                                }else
-                                                    return(
-                                                        <CustomTableCell key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
-                                                    );
-                                            } else {
-                                                return(
-                                                    <CustomTableCell key="Action" align={field.align} padding="checkbox">
-                                                    </CustomTableCell>
-                                                )
-                                            }
-                                        })}
+                                            {fields.map(field => {
+                                                if (field.name !== "") {
+                                                    if (field.type === "IMAGE") {
+                                                        return (
+                                                            <CustomTableCell key={field.name} align={field.align}>
+                                                                {
+                                                                    row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : ''
+                                                                }
+                                                            </CustomTableCell>
+                                                        );
+                                                    } else
+                                                        return (
+                                                            <CustomTableCell key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
+                                                        );
+                                                } else {
+                                                    return (
+                                                        <CustomTableCell key="Action" align={field.align} padding="checkbox"></CustomTableCell>
+                                                    )
+                                                }
+                                            })}
                                         </TableRow>
                                     )
                                 }
@@ -297,8 +296,8 @@ class MasterModalTable extends React.Component {
                                         native: true,
                                     }}
                                     onChangePage={handleChangePage}
-                                    onChangeRowsPerPage={(event)=>{
-                                        handleChangeRowsPerPage(event,_this)
+                                    onChangeRowsPerPage={(event) => {
+                                        handleChangeRowsPerPage(event, _this)
                                     }}
                                     ActionsComponent={this.TablePaginationActions}
                                 />
@@ -318,4 +317,4 @@ MasterModalTable.propTypes = {
     fields: PropTypes.array.isRequired
 };
 
-export default withRouter(withStyles(styles,{ withTheme: true })(MasterModalTable));
+export default withRouter(withStyles(styles, { withTheme: true })(MasterModalTable));

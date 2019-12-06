@@ -12,33 +12,36 @@ const styles = theme => ({
 });
 
 class ErrorDialog extends React.Component {
+    static defaultProps = {
+        showError: false
+    };
 
     render() {
-    const { title, description, handleError, showError } = this.props;
+        const { title, description, handleError, showError } = this.props;
 
         return (
-        <div>
-            <Dialog
-                fullWidth
-                maxWidth="sm"
-                open={showError}
-                onClose={handleError}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {description}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleError} color="primary">
-                        Ok
+            <div>
+                <Dialog
+                    fullWidth
+                    maxWidth="sm"
+                    open={showError}
+                    onClose={handleError}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {description}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleError} color="primary">
+                            Ok
                     </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 }

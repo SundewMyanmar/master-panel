@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,7 +16,7 @@ const styles = theme => ({
 class TableDialog extends React.Component {
 
     render() {
-        const { items, fields, multi, onOpenDialog, onCloseDialog, tableTitle, isSelected, handleRowClick, filterTextChange, onKeyDown, searchText, pageChange, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, _this  } = this.props;
+        const { items, fields, multi, onOpenDialog, onCloseDialog, tableTitle, isSelected, handleRowClick, filterTextChange, onKeyDown, searchText, pageChange, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, _this } = this.props;
 
         return (
             <Dialog aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description"
@@ -24,7 +24,7 @@ class TableDialog extends React.Component {
                 maxWidth="md"
                 open={onOpenDialog}
             >
-                <DialogContent style={{ padding: '0px'}}>
+                <DialogContent style={{ padding: '0px' }}>
                     <MasterTable tableTitle={tableTitle}
                         total={total}
                         items={items}
@@ -58,9 +58,9 @@ TableDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) =>{
-    return{
-        masterpanel : state
+const mapStateToProps = (state) => {
+    return {
+        masterpanel: state
     }
 }
 

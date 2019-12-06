@@ -1,6 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
-export const common={
+export const common = {
     white: '#FFF',
     black: '#000',
     gray: '#648dae',
@@ -12,56 +12,54 @@ export const common={
     purple: '#7600b2',
     pink: '#f50057',
     yellow: '#ffee33',
-    lime:'#d1ff33',
-    teal:'#14a37f',
-    cyan:'#00e5ff',
+    lime: '#d1ff33',
+    teal: '#14a37f',
+    cyan: '#00e5ff',
     orange: '#f57c00',
     brown: '#5d4037',
     google: '#DC4E41',
     facebook: '#3b5998',
 }
 
-export const action={
-    success:"#1b5e20",
-    warn:"#b79e0e",
-    error:"#640236",
-    info:"#006064"
+export const action = {
+    success: "#1b5e20",
+    warn: "#b79e0e",
+    error: "#640236",
+    info: "#006064"
 }
 
-export const primary={
-    // dark: '#9e3c15',
-    dark: '#053509',
+export const primary = {
+    dark: '#2f4484',
+    main: '#606fb4',
+    light: '#919de6',
+    contrastText: "#f1f1f1",
+}
+
+export const secondary = {
+    dark: '#8c367a',
+    main: '#be65a9',
+    light: '#f295db',
+    contrastText: "#f1f1f1",
+}
+
+export const divider = '#000000';
+
+export const background = {
+    default: '#f1f1f1',
+    dark: '#606fb4',
+    light: '#c4ccfb'
+}
+
+export const menu = {
     main: '#1b5e20',
-    light: '#43a047',
-    contrastText: "#e8f5e9",
+    dark: '#053509',
+    light: '#a5d6a7'
 }
 
-export const secondary={
-    dark:'#736808',
-    main: '#827717',
-    light:'#cddc39',
-    contrastText: "#f9fbe7",
-}
-
-export const divider='#a4b4ca';
-
-export const background={
-    default: '#e8f5e9',
-    dark:'#1b5e20',
-    light:'#b9f6ca'
-}
-
-export const menu={
-    main:'#1b5e20',
-    //dark:'#3b5998',
-    dark:'#053509',
-    light:'#a5d6a7'
-}
-
-export const text={
-    main:'#053509',
-    dark:'#011302',
-    light:'#c8e6c9'
+export const text = {
+    main: '#606fb4',
+    dark: '#2f4484',
+    light: '#919de6'
 }
 
 export const DefaultTheme = createMuiTheme({
@@ -71,12 +69,12 @@ export const DefaultTheme = createMuiTheme({
     palette: {
         type: "light",
         common: common,
-        action:action,
+        action: action,
         primary: primary,
         secondary: secondary,
         divider: divider,
         background: background,
-        menu:menu,
-        text:text
+        menu: menu,
+        text: text
     },
 });

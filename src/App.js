@@ -10,7 +10,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import { DefaultTheme } from "./config/Theme";
 import LoginPage from './page/auth/login';
 import RegisterPage from './page/auth/register';
-import DashboardPage from './page/DashboardPage';
+import DashboardPage from './page/dashboard';
 import ProfilePage from './page/me/profile';
 import ChangePasswordPage from './page/me/changePassword';
 import UserPage from './page/master/user';

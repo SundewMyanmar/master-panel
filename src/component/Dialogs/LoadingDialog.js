@@ -15,62 +15,67 @@ const styles = theme => ({
         flex: 2,
     },
     progress: {
-      margin: theme.spacing.unit * 2,
-      position: 'relative',
-      // color:theme.palette.primary.contrastText
+        margin: theme.spacing.unit * 2,
+        position: 'relative',
+        // color:theme.palette.primary.contrastText
     },
     secondary: {
-      color: '#eef3fd',
+        color: '#eef3fd',
     },
     main: {
-      animationDuration: '550ms',
-      position: 'absolute',
-      left: 0,
+        animationDuration: '550ms',
+        position: 'absolute',
+        left: 0,
     },
 });
 
 class LoadingDialog extends React.Component {
 
-  render() {
-    const { classes, showLoading, message} = this.props;
+    static defaultProps = {
+        showLoading: false
+    };
 
-    return (
-      <div>
-        <Dialog
-          maxWidth="sm"
-          open={showLoading}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <div className={classes.flex}>
-            <div className={classes.progress}>
-              <CircularProgress
-                variant="determinate"
-                value={100}
-                className={classes.secondary}
-                size={40}
-                thickness={4}
-              />
-              <CircularProgress
-                variant="indeterminate"
-                disableShrink
-                className={classes.main}
-                size={40}
-                thickness={4}
-              />
+    render() {
+        const { classes, showLoading, message } = this.props;
+
+        return (
+            <div>
+                <Dialog
+                    maxWidth="sm"
+                    open={showLoading}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <div className={classes.flex}>
+                        <div className={classes.progress}>
+                            <CircularProgress
+                                variant="determinate"
+                                value={100}
+                                className={classes.secondary}
+                                size={40}
+                                thickness={4}
+                            />
+                            <CircularProgress
+                                variant="indeterminate"
+                                disableShrink
+                                className={classes.main}
+                                size={40}
+                                thickness={4}
+                            />
+                        </div>
+                        <DialogContentText id="alert-dialog-description" className={classes.progress} >
+                            {message}
+                        </DialogContentText>
+                    </div>
+                </Dialog>
             </div>
-            <DialogContentText id="alert-dialog-description" className={classes.progress} >
-                {message}
-            </DialogContentText>
-          </div>
-        </Dialog>
-      </div>
-    );
-  }
+        );
+    }
 }
 
 LoadingDialog.propTypes = {
     classes: PropTypes.object.isRequired,
+    showLoading: PropTypes.bool
 };
 
 export default withStyles(styles)(LoadingDialog);

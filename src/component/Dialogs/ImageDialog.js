@@ -18,7 +18,7 @@ const styles = theme => ({
 class ImageDialog extends React.Component {
 
     render() {
-    const { classes, showImage, data, onClose, onLoadImage, width, height, deleteButton, _this } = this.props;
+        const { classes, showImage, data, onClose, onLoadImage, width, height, deleteButton, _this } = this.props;
 
         return (
             <Dialog
@@ -27,7 +27,7 @@ class ImageDialog extends React.Component {
                 onClose={onClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-            >   
+            >
                 <div className={classes.root}>
                     <IconButton onClick={onClose} className={classes.btnClose} aria-label="Close">
                         <Icon fontSize="large">cancel</Icon>
@@ -75,11 +75,11 @@ class ImageDialog extends React.Component {
                             </Grid>
                         </div>
                     ) : (
-                        <Typography variant="caption" align="center">There is no image.</Typography>
-                    )}
+                            <Typography variant="caption" align="center">There is no image.</Typography>
+                        )}
                 </CardContent>
-                <CardActions style={{ justifyContent : "flex-end"}}>
-                    <Button style={{ color: "red"}} onClick={()=> deleteButton(data.id,data.name,_this)}>Delete</Button>
+                <CardActions style={{ justifyContent: "flex-end" }}>
+                    <Button style={{ color: "red" }} onClick={() => deleteButton(data.id, data.name, _this)}>Delete</Button>
                 </CardActions>
             </Dialog>
         );
