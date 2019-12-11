@@ -10,6 +10,7 @@ class AuthApi extends APIManager {
                 return response.content;
             }
         } catch (error) {
+            console.error(error);
             throw error;
         }
     }
@@ -20,6 +21,7 @@ class AuthApi extends APIManager {
             const response = await this.post(reg_url, request, false);
             return response.content;
         } catch (error) {
+            console.error(error);
             throw error;
         }
     }

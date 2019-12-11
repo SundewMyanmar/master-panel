@@ -31,9 +31,9 @@ const styles = theme => ({
     },
     textField:{
         width: 'calc(100% - 8px)',
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-        marginLeft: theme.spacing.unit, 
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+        marginLeft: theme.spacing(1), 
     },
     cardBox:{
         // backgroundImage:'url(/res/bg.png)',
@@ -61,11 +61,11 @@ const styles = theme => ({
     },
     button: {
         width: 'calc(100%)',
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     margin: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
     },
     inputContainer: {
         margin: '30px 0 0 0',
@@ -272,7 +272,7 @@ class LoginPage extends React.Component{
                 <ErrorDialog title="Oops!" description={this.state.errorMessage} showError={this.state.showError} handleError={this.handleError} />
                 <LoadingDialog showLoading={this.state.showLoading} message="Please wait logging in!" />
                 <Snackbar vertical="top" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
-                <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
+                <Grid className={classes.container} container spacing={10} alignItems="center" justify="center">
                     <Grid style={{padding:'22px'}} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
                     <Grid container justify="center">
                         <img src="res/logo.png" alt="MeFood" title="MeFood" className={classes.img} />

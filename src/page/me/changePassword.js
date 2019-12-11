@@ -17,13 +17,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
         borderRadius: 0,
     },
     divider: {
-        marginTop: theme.spacing.unit * 2,
-        marginBottom: theme.spacing.unit * 2,
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
     inputContainer: {
         marginTop: 18,
@@ -39,8 +39,8 @@ const styles = theme => ({
     },
     button: {
         width: 'calc(100%)',
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     iconButton: {
         paddingRight: 10,
@@ -115,9 +115,10 @@ class ChangePasswordPage extends React.Component {
             this.setState({
                 showSnack: true,
                 snackMessage: "Save success.",
-            })
+            });
         } catch (error) {
-
+            console.error(error);
+            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again." });
         }
     }
 
@@ -181,13 +182,13 @@ class ChangePasswordPage extends React.Component {
         }
     }
 
-    gotoLogin(_this) {
-        _this.setState({
+    gotoLogin = () => {
+        this.setState({
             openGoto: false
         });
 
         sessionStorage.clear();
-        _this.props.history.push('/login');
+        this.props.history.push('/login');
     }
 
     handleError = () => {
@@ -202,7 +203,7 @@ class ChangePasswordPage extends React.Component {
                 <Dialog
                     open={this.state.openGoto}
                     keepMounted
-                    onClose={() => this.gotoLogin(this)}
+                    onClose={this.gotoLogin}
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description">
                     <DialogContent>
@@ -326,7 +327,7 @@ class ChangePasswordPage extends React.Component {
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: background.default }} color="primary" 
+                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: background.default }} color="primary"
                                             variant="contained" size="large" className={classes.button} onClick={() => this.onSaveItem()}>
                                             <Icon className={classes.iconButton} color="inherit">save</Icon>
                                             Save

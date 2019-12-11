@@ -27,9 +27,9 @@ const styles = theme => ({
     },
     textField: {
         width: 'calc(100% - 8px)',
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-        marginLeft: theme.spacing.unit,
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+        marginLeft: theme.spacing(1),
     },
     cardBox: {
         backgroundColor: primary.contrastText,
@@ -56,11 +56,11 @@ const styles = theme => ({
     },
     button: {
         width: 'calc(100%)',
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     margin: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
     },
     inputContainer: {
         margin: '30px 0 0 0',

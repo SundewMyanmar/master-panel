@@ -2,21 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
-import Checkbox from '@material-ui/core/Checkbox';
-import TablePagination from '@material-ui/core/TablePagination';
-import { Button, Typography } from '@material-ui/core';
+import {
+    Button,
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TableFooter,
+    Icon,
+    IconButton,
+    Input,
+    InputAdornment,
+    FormControl,
+    Tooltip,
+    Checkbox,
+    TablePagination,
+} from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -34,8 +37,8 @@ const styles = theme => ({
         display: 'flex',
         borderBottom: '0.5px solid #ccc',
         alignItems: 'center',
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
     },
     tableWrapper: {
         overflowX: 'auto',

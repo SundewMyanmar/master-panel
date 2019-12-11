@@ -3,13 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Icon from '@material-ui/core/Icon';
-import InputBase from '@material-ui/core/InputBase';
-import Fab from '@material-ui/core/Fab';
-import Grid from '@material-ui/core/Grid';
 
 import QuestionDialog from '../../component/Dialogs/QuestionDialog';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
@@ -19,6 +12,8 @@ import Snackbar from '../../component/Snackbar';
 import FileApi from '../../api/FileApi';
 import { FILE_ACTIONS } from '../../redux/FileRedux';
 import GridView from '../../component/FileGridView';
+
+import { Paper, IconButton, Typography, Icon, InputBase, Fab, Grid } from '@material-ui/core';
 
 const styles = theme => ({
     searchPaper: {

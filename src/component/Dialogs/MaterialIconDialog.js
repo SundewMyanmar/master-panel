@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
 import MaterialIconView from '../MaterialIconView';
-import Toolbar from '@material-ui/core/Toolbar';
 import { primary} from '../../config/Theme';
-import { Icon, IconButton, Typography } from '@material-ui/core';
+import { Icon, IconButton, Typography, Dialog, DialogContent, Toolbar } from '@material-ui/core';
 
 const styles = theme => ({
     toolbar: {
@@ -18,7 +15,7 @@ const styles = theme => ({
     },
     closeButton: {
         position: 'absolute',
-        right: theme.spacing.unit * 2,
+        right: theme.spacing(2),
         color: primary.contrastText,
     },
 })

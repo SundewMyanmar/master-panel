@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import green from '@material-ui/core/colors/green';
-import amber from '@material-ui/core/colors/amber';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { withStyles } from '@material-ui/core/styles';
+
+import { green, amber } from '@material-ui/core/colors';
+
+import { Icon, IconButton, Snackbar, SnackbarContent } from '@material-ui/core';
 
 const variantIcon = {
     success: "check_circle",
@@ -34,7 +32,7 @@ const styles1 = theme => ({
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit,
+        marginRight: theme.spacing(1),
     },
     message: {
         display: 'flex',

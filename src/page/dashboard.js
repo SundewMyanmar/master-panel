@@ -1,22 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider } from '@material-ui/core';
+import { Divider, Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router";
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
         borderRadius: 0,
     },
     flex: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
     },
     divider: {
         marginBottom: 5
@@ -56,7 +54,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
     },
     nested: {
-        paddingLeft: theme.spacing.unit * 4,
+        paddingLeft: theme.spacing(4),
     },
 });
 

@@ -1,20 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Paper, Typography, Divider, Grid, Button } from '@material-ui/core';
+import {
+    withStyles,
+    Paper,
+    Typography,
+    Divider,
+    Grid,
+    Button,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Icon,
+    Collapse,
+    ListItemSecondaryAction,
+    Checkbox,
+    Select,
+    InputLabel,
+    MenuItem,
+    FormControl,
+} from '@material-ui/core';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Icon from '@material-ui/core/Icon';
-import Collapse from '@material-ui/core/Collapse';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Checkbox from '@material-ui/core/Checkbox';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import ErrorDialog from '../../component/Dialogs/ErrorDialog';
 import { background } from '../../config/Theme';
@@ -25,13 +32,13 @@ import Snackbar from '../../component/Snackbar';
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
         borderRadius: 0,
     },
     divider: {
-        marginTop: theme.spacing.unit * 2,
-        marginBottom: theme.spacing.unit * 2,
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
     formControl: {
         width: '100%'
@@ -256,9 +263,9 @@ class RoutePermissionPage extends React.Component {
         const { classes } = this.props;
 
         return (
-            items.map(item => {
+            items.map((item, index) => {
                 return (
-                    <ListItem button className={classes.nestedListItem}>
+                    <ListItem button className={classes.nestedListItem} key={item.id ? item.id : index}>
                         <ListItemIcon>
                             <Icon color="primary">language</Icon>
                         </ListItemIcon>
@@ -275,14 +282,14 @@ class RoutePermissionPage extends React.Component {
                     </ListItem>
                 )
             })
-        )
+        );
     }
 
     renderDefaultRoutes() {
         const { classes } = this.props;
 
         const routes = Object.keys(this.state.default_routes).map(key =>
-            <div>
+            <div key={key}>
                 <ListItem className={classes.listItem} button onClick={() => this.handleClick(this.state.default_routes[key])}>
                     <ListItemIcon>
                         {this.state['open' + this.state.default_routes[key].name] ? <Icon color="primary">remove_circle</Icon> : <Icon color="primary">add_circle</Icon>}
@@ -354,8 +361,8 @@ class RoutePermissionPage extends React.Component {
                                             onChange={this.handleSelectChange}
                                         >
                                             {
-                                                this.state.roles.map(r => {
-                                                    return (<MenuItem value={r}>{r.name}</MenuItem>)
+                                                this.state.roles.map((r, index) => {
+                                                    return (<MenuItem key={r.id ? r.id : index} value={r}>{r.name}</MenuItem>)
                                                 })
                                             }
                                         </Select>

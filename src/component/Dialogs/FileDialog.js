@@ -12,7 +12,7 @@ const styles = theme => ({
         position: 'relative',
     },
     title: {
-        marginLeft: theme.spacing.unit * 2,
+        marginLeft: theme.spacing(2),
         flex: 1,
         color: 'white',
     },

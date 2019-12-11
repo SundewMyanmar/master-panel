@@ -3,22 +3,25 @@ import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, InputAdornment } from '@material-ui/core';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Collapse from '@material-ui/core/Collapse';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import {
+    TextField,
+    InputAdornment,
+    Drawer,
+    AppBar,
+    Toolbar,
+    List,
+    ListItem,
+    ListItemText,
+    ListItemIcon,
+    Collapse,
+    Grid,
+    Typography,
+    Divider,
+    Icon,
+    IconButton,
+    Menu,
+    MenuItem,
+} from '@material-ui/core';
 import withState from 'recompose/withState';
 import toRenderProps from 'recompose/toRenderProps';
 import { APP_NAME, STORAGE_KEYS, MAIN_MENU } from '../config/Constant';
@@ -40,7 +43,7 @@ const styles = theme => ({
         right: 0,
     },
     nestedMenu: {
-        paddingLeft: theme.spacing.unit * 4,
+        paddingLeft: theme.spacing(4),
         paddingTop: 8,
         paddingBottom: 8,
         borderRadius: 1,
@@ -110,9 +113,9 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        width: theme.spacing.unit * 7,
+        width: theme.spacing(7),
         [theme.breakpoints.up('sm')]: {
-            width: theme.spacing.unit * 9,
+            width: theme.spacing(9),
         },
     },
     toolbar: {
@@ -160,7 +163,7 @@ const styles = theme => ({
     welcomeText: {
         color: theme.palette.common.white,
         borderLeft: '3px solid ' + theme.palette.primary.main,
-        paddingLeft: theme.spacing.unit,
+        paddingLeft: theme.spacing(1),
     },
     welcomeBackground: {
         background: 'rgba(82, 100, 87, 0.61)',
@@ -428,10 +431,10 @@ class MasterTemplate extends React.Component {
                 }}>
                     <div className={classes.toolbar} />
                     <div className={classes.welcomeImage} style={{ backgroundImage: this.state.user.profile_image && this.state.user.profile_image.public_url ? 'url("' + this.state.user.profile_image.public_url + '")' : 'url("/res/info.png")' }}>
-                        <div className={classes.welcomeBackground} style={this.state.hideMenu ? { padding: theme.spacing.unit + 3 } : { padding: theme.spacing.unit * 3 }}>
+                        <div className={classes.welcomeBackground} style={this.state.hideMenu ? { padding: theme.spacing(3) } : { padding: theme.spacing(3) }}>
                             <Grid
                                 container
-                                spacing={16}
+                                spacing={6}
                                 alignItems="center"
                                 direction="row"
                                 justify="space-between">

@@ -6,11 +6,11 @@ import { MATERIAL_ICONS } from '../config/MaterialIcon';
 
 const styles = theme => ({
     rootContainer: {
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
     },
     root: {
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit,
+        paddingTop: theme.spacing(1),
         paddingBottom: 0,
         borderRadius: 0,
     },

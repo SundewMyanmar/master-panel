@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import { CircularProgress, Dialog, DialogContentText } from '@material-ui/core';
 
 const styles = theme => ({
     flex: {
@@ -15,7 +13,7 @@ const styles = theme => ({
         flex: 2,
     },
     progress: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing(2),
         position: 'relative',
         // color:theme.palette.primary.contrastText
     },

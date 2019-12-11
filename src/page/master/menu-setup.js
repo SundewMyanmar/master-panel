@@ -2,7 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
-import { withStyles, InputLabel, InputAdornment, Paper, TextField, Icon, Button, Tooltip, Grid, Divider, Typography, Chip, Select, MenuItem, Input, IconButton } from '@material-ui/core';
+import {
+    withStyles,
+    InputLabel,
+    InputAdornment,
+    Paper,
+    TextField,
+    Icon,
+    Button,
+    Tooltip,
+    Grid,
+    Divider,
+    Typography,
+    Chip,
+    Select,
+    MenuItem,
+    Input,
+    IconButton,
+    Radio,
+    FormControlLabel,
+    FormControl,
+    RadioGroup,
+} from '@material-ui/core';
 
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import ErrorDialog from '../../component/Dialogs/ErrorDialog';
@@ -11,17 +32,13 @@ import MenuApi from '../../api/MenuApi';
 import { MENU_ACTIONS } from '../../redux/MenuRedux';
 import { primary, action, background } from '../../config/Theme';
 import TableDialog from '../../component/Dialogs/TableDialog';
-import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import MaterialIconDialog from '../../component/Dialogs/MaterialIconDialog';
 
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
         borderRadius: 0,
     },
     inputContainer: {
@@ -37,16 +54,16 @@ const styles = theme => ({
         flex: 1,
     },
     divider: {
-        marginTop: theme.spacing.unit * 2,
-        marginBottom: theme.spacing.unit * 2,
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
     radio: {
         paddingTop: 27
     },
     button: {
         width: 'calc(100%)',
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     iconButton: {
         paddingRight: 10,
@@ -66,7 +83,7 @@ const styles = theme => ({
         flexWrap: 'wrap',
     },
     chip: {
-        margin: theme.spacing.unit / 2,
+        margin: theme.spacing(0.5),
     },
     chipContainer: {
         display: 'flex',
@@ -74,8 +91,8 @@ const styles = theme => ({
         flexWrap: 'wrap',
     },
     chipPaper: {
-        marginTop: theme.spacing.unit * 4,
-        padding: theme.spacing.unit,
+        marginTop: theme.spacing(4),
+        padding: theme.spacing(1),
         width: '100%',
     },
     paperHeader: {
@@ -90,10 +107,10 @@ const styles = theme => ({
     chipLabel: {
         width: 'calc(50%)',
         textAlign: 'start',
-        paddingLeft: theme.spacing.unit,
+        paddingLeft: theme.spacing(1),
     },
     chipDivider: {
-        marginBottom: theme.spacing.unit,
+        marginBottom: theme.spacing(1),
     },
 });
 

@@ -1,31 +1,34 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon'
-import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
+
+import {
+    Button,
+    Dialog,
+    DialogTitle as MuiDialogTitle,
+    DialogContent as MuiDialogContent,
+    DialogActions as MuiDialogActions,
+    IconButton,
+    Icon,
+    Typography,
+    Input,
+    InputLabel,
+    InputAdornment,
+    FormControl,
+    FormHelperText,
+} from '@material-ui/core';
 
 
 const DialogTitle = withStyles(theme => ({
     root: {
         // borderBottom: `1px solid ${theme.palette.divider}`,
         margin: 0,
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         backgroundColor: '#31376b',
     },
     closeButton: {
         position: 'absolute',
-        right: theme.spacing.unit,
-        top: theme.spacing.unit,
+        right: theme.spacing(1),
+        top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
 }))(props => {
@@ -45,7 +48,7 @@ const DialogTitle = withStyles(theme => ({
 const DialogContent = withStyles(theme => ({
     root: {
         margin: 0,
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
 
@@ -53,7 +56,7 @@ const DialogActions = withStyles(theme => ({
     root: {
         // borderTop: `1px solid ${theme.palette.divider}`,
         margin: 0,
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
     },
 }))(MuiDialogActions);
 
