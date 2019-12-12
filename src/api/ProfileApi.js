@@ -3,7 +3,6 @@ import ApiManager from '../util/APIManager';
 const API_URL = 'me/';
 
 class ProfileApi extends ApiManager {
-
     async getAll() {
         try {
             const url = API_URL;
@@ -12,7 +11,7 @@ class ProfileApi extends ApiManager {
                 return response.content;
             }
         } catch (error) {
-            console.error(error.response);
+            console.error(error);
             throw error;
         }
         return null;
@@ -26,22 +25,22 @@ class ProfileApi extends ApiManager {
                 return response.content;
             }
         } catch (error) {
-            console.error(error.response);
-            throw error.response;
+            console.error(error);
+            throw error;
         }
         return null;
     }
 
     async changePassword(data) {
         try {
-            const url = API_URL + "changePassword";
+            const url = API_URL + 'changePassword';
             const response = await this.post(url, data, true);
             if (response.code >= 200 && response.code < 300) {
                 return response.content;
             }
         } catch (error) {
-            console.error(error.response);
-            throw error.response;
+            console.error(error);
+            throw error;
         }
         return null;
     }

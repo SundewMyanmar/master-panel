@@ -3,7 +3,7 @@ export const ROLE_ACTIONS = {
     CREATE_NEW: 'ROLE_CREATE_NEW',
     MODIFIED: 'ROLE_MODIFIED',
     REMOVE: 'ROLE_REMOVE',
-}
+};
 
 const RoleReducer = (state = [], action) => {
     switch (action.type) {
@@ -12,10 +12,11 @@ const RoleReducer = (state = [], action) => {
         case ROLE_ACTIONS.CREATE_NEW:
             return [action.role, state];
         case ROLE_ACTIONS.MODIFIED:
-            return state.map(t => (t.id === action.id) ? action.role : t);
+            return state.map(t => (t.id === action.id ? action.role : t));
         case ROLE_ACTIONS.REMOVE:
             return state.filter(t => t.id !== action.id);
-        default: return state;
+        default:
+            return state;
     }
-}
+};
 export default RoleReducer;

@@ -3,7 +3,7 @@ export const ROUTE_ACTIONS = {
     CREATE_NEW: 'ROUTE_CREATE_NEW',
     MODIFIED: 'ROUTE_MODIFIED',
     REMOVE: 'ROUTE_REMOVE',
-}
+};
 
 const RouteReducer = (state = [], action) => {
     switch (action.type) {
@@ -12,10 +12,11 @@ const RouteReducer = (state = [], action) => {
         case ROUTE_ACTIONS.CREATE_NEW:
             return [action.route, ...state];
         case ROUTE_ACTIONS.MODIFIED:
-            return state.map(t => (t.id === action.id) ? action.route : t);
+            return state.map(t => (t.id === action.id ? action.route : t));
         case ROUTE_ACTIONS.REMOVE:
             return state.filter(t => t.id !== action.id);
-        default: return state;
+        default:
+            return state;
     }
-}
+};
 export default RouteReducer;

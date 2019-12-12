@@ -8,10 +8,10 @@ import { green, amber } from '@material-ui/core/colors';
 import { Icon, IconButton, Snackbar, SnackbarContent } from '@material-ui/core';
 
 const variantIcon = {
-    success: "check_circle",
-    warning: "warning",
-    error: "info",
-    info: "info",
+    success: 'check_circle',
+    warning: 'warning',
+    error: 'info',
+    info: 'info',
 };
 
 const styles1 = theme => ({
@@ -50,18 +50,12 @@ function MySnackbarContent(props) {
             aria-describedby="client-snackbar"
             message={
                 <span id="client-snackbar" className={classes.message}>
-                    <Icon className={classNames(classes.icon, classes.iconVariant)} >{icon}</Icon>
+                    <Icon className={classNames(classes.icon, classes.iconVariant)}>{icon}</Icon>
                     {message}
                 </span>
             }
             action={[
-                <IconButton
-                    key="close"
-                    aria-label="Close"
-                    color="inherit"
-                    className={classes.close}
-                    onClick={onClose}
-                >
+                <IconButton key="close" aria-label="Close" color="inherit" className={classes.close} onClick={onClose}>
                     <Icon className={classes.icon}>close</Icon>
                 </IconButton>,
             ]}
@@ -80,11 +74,9 @@ MySnackbarContent.propTypes = {
 
 const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
 
-const styles2 = theme => ({
-});
+const styles2 = theme => ({});
 
 class CustomizedSnackbars extends React.Component {
-
     render() {
         const { type, message, showSnack, onCloseSnackbar, vertical, horizontal } = this.props;
 
@@ -98,11 +90,7 @@ class CustomizedSnackbars extends React.Component {
                 autoHideDuration={6000}
                 onClose={onCloseSnackbar}
             >
-                <MySnackbarContentWrapper
-                    onClose={onCloseSnackbar}
-                    variant={type}
-                    message={message}
-                />
+                <MySnackbarContentWrapper onClose={onCloseSnackbar} variant={type} message={message} />
             </Snackbar>
         );
     }

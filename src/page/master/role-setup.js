@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { withStyles, Paper, TextField, Icon, Button, Grid, Divider, Typography } from '@material-ui/core';
 
 import { primary, action, background } from '../../config/Theme';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
-import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import AlertDialog from '../../component/Dialogs/AlertDialog';
 import RoleApi from '../../api/RoleApi';
 import { ROLE_ACTIONS } from '../../redux/RoleRedux';
 
@@ -30,19 +30,18 @@ const styles = theme => ({
         paddingRight: 10,
         paddingLeft: 10,
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
     },
     form_error: {
-        color: action.error
+        color: action.error,
     },
     select: {
         width: '100%',
-        marginTop: 32
-    }
+        marginTop: 32,
+    },
 });
 
 class RoleSetupPage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -52,8 +51,7 @@ class RoleSetupPage extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.match.params.id)
-            this._loadData();
+        if (this.props.match.params.id) this._loadData();
     }
 
     _loadData = async () => {
@@ -69,15 +67,14 @@ class RoleSetupPage extends React.Component {
                 });
             }
         } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again!" });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
         }
-    }
+    };
 
     validateForm() {
         var nameError = false;
 
-        if (!this.state.name)
-            nameError = true;
+        if (!this.state.name) nameError = true;
 
         this.setState({
             nameError: nameError,
@@ -87,7 +84,7 @@ class RoleSetupPage extends React.Component {
     }
 
     goBack() {
-        this.props.history.push("/role/setup")
+        this.props.history.push('/role/setup');
     }
 
     onSaveItem = async () => {
@@ -97,9 +94,9 @@ class RoleSetupPage extends React.Component {
 
         this.setState({ showLoading: true });
         var role = {
-            "name": this.state.name,
-            "description": this.state.description,
-        }
+            name: this.state.name,
+            description: this.state.description,
+        };
 
         try {
             if (this.props.match.params.id) {
@@ -108,10 +105,10 @@ class RoleSetupPage extends React.Component {
                 this.props.dispatch({
                     type: ROLE_ACTIONS.MODIFIED,
                     id: this.state.id,
-                    role: response
+                    role: response,
                 });
                 this.props.match.params.id = null;
-                this.props.history.push("/role/setup?callback=success");
+                this.props.history.push('/role/setup?callback=success');
             } else {
                 const response = await RoleApi.insert(role);
                 this.props.dispatch({
@@ -119,21 +116,21 @@ class RoleSetupPage extends React.Component {
                     role: response,
                 });
                 this.props.match.params.id = null;
-                this.props.history.push("/role/setup?callback=success");
+                this.props.history.push('/role/setup?callback=success');
             }
         } catch (error) {
             console.error(error);
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again." });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again.' });
         }
-    }
+    };
 
     onChangeText = (key, value) => {
         this.setState({ [key]: value });
-    }
+    };
 
     handleError = () => {
         this.setState({ showError: false });
-    }
+    };
 
     render() {
         const { classes } = this.props;
@@ -141,9 +138,9 @@ class RoleSetupPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
+                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
                 <Paper className={classes.root} elevation={1}>
-                    <Typography style={{ textAlign: "center" }} color="primary" variant="h5" component="h3">
+                    <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         Role Setup
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
@@ -152,7 +149,9 @@ class RoleSetupPage extends React.Component {
                             <form className={classes.form} autoComplete="off">
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.nameError ? "error" : "primary"}>verified_user</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.nameError ? 'error' : 'primary'}>
+                                            verified_user
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -162,18 +161,18 @@ class RoleSetupPage extends React.Component {
                                             error={this.state.nameError ? true : false}
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.name ? this.state.name : ""}
+                                            value={this.state.name ? this.state.name : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
-                                        <div className={classes.form_error}>
-                                            {this.state.nameError ? "invalid Name field!" : ""}
-                                        </div>
+                                        <div className={classes.form_error}>{this.state.nameError ? 'invalid Name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">sms</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">
+                                            sms
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -184,26 +183,38 @@ class RoleSetupPage extends React.Component {
                                             multiline
                                             rows="3"
                                             className={classes.textField}
-                                            value={this.state.description ? this.state.description : ""}
+                                            value={this.state.description ? this.state.description : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="center" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: background.default }} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onSaveItem()}>
+                                        <Button
+                                            style={{ marginTop: '30px', marginBottom: '20px', color: background.default }}
+                                            color="primary"
+                                            variant="contained"
+                                            size="large"
+                                            className={classes.button}
+                                            onClick={() => this.onSaveItem()}
+                                        >
                                             <Icon className={classes.iconButton}>save</Icon>
                                             Save
                                         </Button>
                                     </Grid>
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: primary.main }} variant="contained" size="large" className={classes.button} onClick={() => this.goBack()}>
+                                        <Button
+                                            style={{ marginTop: '30px', marginBottom: '20px', color: primary.main }}
+                                            variant="contained"
+                                            size="large"
+                                            className={classes.button}
+                                            onClick={() => this.goBack()}
+                                        >
                                             <Icon className={classes.iconButton}>cancel_presentation</Icon>
                                             Cancel
                                         </Button>
                                     </Grid>
-
                                 </Grid>
                             </form>
                         </Grid>
@@ -211,7 +222,6 @@ class RoleSetupPage extends React.Component {
                 </Paper>
             </div>
         );
-
     }
 }
 
@@ -219,10 +229,10 @@ RoleSetupPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(RoleSetupPage)));

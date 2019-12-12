@@ -20,10 +20,10 @@ import {
     MenuItem,
     FormControl,
 } from '@material-ui/core';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
-import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import AlertDialog from '../../component/Dialogs/AlertDialog';
 import { background } from '../../config/Theme';
 import PermissionApi from '../../api/PermissionApi';
 import RoleApi from '../../api/RoleApi';
@@ -41,18 +41,18 @@ const styles = theme => ({
         marginBottom: theme.spacing(2),
     },
     formControl: {
-        width: '100%'
+        width: '100%',
     },
     list: {
         border: '1px solid #f8f9fb',
     },
     listItem: {
         borderBottom: '1px solid #f8f9fb',
-        padding: 12
+        padding: 12,
     },
     nestedListItem: {
-        paddingLeft: 48
-    }
+        paddingLeft: 48,
+    },
 });
 
 class RoutePermissionPage extends React.Component {
@@ -66,16 +66,16 @@ class RoutePermissionPage extends React.Component {
             role: {},
             showLoading: false,
             showError: false,
-            errorMessage: "",
+            errorMessage: '',
             showSnack: false,
-            snackMessage: ""
+            snackMessage: '',
         };
     }
 
     componentDidMount() {
         this.setState({
-            showLoading: true
-        })
+            showLoading: true,
+        });
         this.loadDefaultRoutes();
         this.loadRoles();
     }
@@ -84,39 +84,38 @@ class RoutePermissionPage extends React.Component {
         try {
             var result = await RoleApi.getAll();
             this.setState({
-                roles: result.data
+                roles: result.data,
             });
         } catch (error) {
             this.setState({
-                roles: []
+                roles: [],
             });
         }
-    }
+    };
 
     loadDefaultRoutes = async () => {
         try {
             var result = await PermissionApi.getAvailableRoutes();
             this.setState({
-                default_routes: result
-            })
+                default_routes: result,
+            });
         } catch (error) {
             this.setState({
-                default_routes: []
-            })
+                default_routes: [],
+            });
         }
 
         this.setState({
-            showLoading: false
+            showLoading: false,
         });
-    }
+    };
 
     loadRoutesByRoles = async () => {
-        if (!this.state.role)
-            return;
+        if (!this.state.role) return;
 
         this.setState({
-            showLoading: true
-        })
+            showLoading: true,
+        });
 
         try {
             var result = await PermissionApi.getPermissionByRoles(this.state.role.id);
@@ -133,7 +132,7 @@ class RoutePermissionPage extends React.Component {
                                 var route = routes[i];
                                 route.data = result[j];
                                 route.checked = true;
-                                modified_routes[routes[i].method + ":" + routes[i].pattern] = route;
+                                modified_routes[routes[i].method + ':' + routes[i].pattern] = route;
                             }
                         }
                     }
@@ -146,22 +145,22 @@ class RoutePermissionPage extends React.Component {
                 }
             });
             this.setState({
-                modified_routes: modified_routes
-            })
+                modified_routes: modified_routes,
+            });
         } catch (error) {
             this.setState({
-                modified_routes: {}
-            })
+                modified_routes: {},
+            });
         }
         this.setState({
-            showLoading: false
-        })
-    }
+            showLoading: false,
+        });
+    };
 
     onSaveItem = async () => {
         this.setState({
-            showLoading: true
-        })
+            showLoading: true,
+        });
         try {
             var datas = [];
             await Object.keys(this.state.modified_routes).map(key => {
@@ -169,7 +168,7 @@ class RoutePermissionPage extends React.Component {
 
                 var data = {
                     roles: [],
-                    checked: item.checked
+                    checked: item.checked,
                 };
 
                 if (item.data) {
@@ -197,26 +196,25 @@ class RoutePermissionPage extends React.Component {
 
             await PermissionApi.insertMulti(datas);
             this.setState({
-                snackMessage: "Permissions saved successful.",
-                showSnack: true
-            })
+                snackMessage: 'Permissions saved successful.',
+                showSnack: true,
+            });
         } catch (error) {
             console.error(error);
         }
         this.setState({
-            showLoading: false
-        })
-    }
+            showLoading: false,
+        });
+    };
 
-    handleClick = (route) => {
+    handleClick = route => {
         var obj = {};
         obj['open' + route.name] = !this.state['open' + route.name];
         this.setState(obj);
-    }
+    };
 
     overrideModify = (key, item, modifyData) => {
-        if (!modifyData[key])
-            modifyData[key] = item;
+        if (!modifyData[key]) modifyData[key] = item;
         else {
             modifyData[key].method = item.method;
             modifyData[key].name = item.name;
@@ -224,29 +222,28 @@ class RoutePermissionPage extends React.Component {
         }
 
         return modifyData;
-    }
+    };
 
     handleToggle = (item, key) => {
         var modified_routes = this.state.modified_routes;
         var checkKey = key;
 
-        if (!key) checkKey = item.method + ":" + item.pattern;
+        if (!key) checkKey = item.method + ':' + item.pattern;
 
         var checked = !modified_routes[checkKey] || !modified_routes[checkKey].checked;
 
         if (item.routes) {
             //Go a long way to not override all data
             item.routes.map(i => {
-                modified_routes = this.overrideModify(i.method + ":" + i.pattern, i, modified_routes);
+                modified_routes = this.overrideModify(i.method + ':' + i.pattern, i, modified_routes);
 
-                modified_routes[i.method + ":" + i.pattern].checked = checked;
+                modified_routes[i.method + ':' + i.pattern].checked = checked;
             });
         }
 
         if (!key) {
             modified_routes = this.overrideModify(checkKey, item, modified_routes);
-        } else
-            modified_routes[checkKey] = item;
+        } else modified_routes[checkKey] = item;
 
         modified_routes[checkKey].checked = checked;
 
@@ -255,44 +252,51 @@ class RoutePermissionPage extends React.Component {
         }
 
         this.setState({
-            modified_routes: modified_routes
-        })
-    }
+            modified_routes: modified_routes,
+        });
+    };
 
-    renderDefaultRouteItems = (items) => {
+    renderDefaultRouteItems = items => {
         const { classes } = this.props;
 
-        return (
-            items.map((item, index) => {
-                return (
-                    <ListItem button className={classes.nestedListItem} key={item.id ? item.id : index}>
-                        <ListItemIcon>
-                            <Icon color="primary">language</Icon>
-                        </ListItemIcon>
-                        <ListItemText primary={item.name} secondary={item.method + " : " + item.pattern} />
-                        <ListItemSecondaryAction>
-                            <Checkbox
-                                edge="end"
-                                color="primary"
-                                onChange={() => this.handleToggle(item)}
-                                checked={this.state.modified_routes[item.method + ":" + item.pattern] &&
-                                    this.state.modified_routes[item.method + ":" + item.pattern].checked && this.state.modified_routes[item.method + ":" + item.pattern].method === item.method ? true : false}
-                            />
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                )
-            })
-        );
-    }
+        return items.map((item, index) => {
+            return (
+                <ListItem button className={classes.nestedListItem} key={item.id ? item.id : index}>
+                    <ListItemIcon>
+                        <Icon color="primary">language</Icon>
+                    </ListItemIcon>
+                    <ListItemText primary={item.name} secondary={item.method + ' : ' + item.pattern} />
+                    <ListItemSecondaryAction>
+                        <Checkbox
+                            edge="end"
+                            color="primary"
+                            onChange={() => this.handleToggle(item)}
+                            checked={
+                                this.state.modified_routes[item.method + ':' + item.pattern] &&
+                                this.state.modified_routes[item.method + ':' + item.pattern].checked &&
+                                this.state.modified_routes[item.method + ':' + item.pattern].method === item.method
+                                    ? true
+                                    : false
+                            }
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+            );
+        });
+    };
 
     renderDefaultRoutes() {
         const { classes } = this.props;
 
-        const routes = Object.keys(this.state.default_routes).map(key =>
+        const routes = Object.keys(this.state.default_routes).map(key => (
             <div key={key}>
                 <ListItem className={classes.listItem} button onClick={() => this.handleClick(this.state.default_routes[key])}>
                     <ListItemIcon>
-                        {this.state['open' + this.state.default_routes[key].name] ? <Icon color="primary">remove_circle</Icon> : <Icon color="primary">add_circle</Icon>}
+                        {this.state['open' + this.state.default_routes[key].name] ? (
+                            <Icon color="primary">remove_circle</Icon>
+                        ) : (
+                            <Icon color="primary">add_circle</Icon>
+                        )}
                     </ListItemIcon>
                     <ListItemText primary={this.state.default_routes[key].name} />
                     <ListItemSecondaryAction>
@@ -300,8 +304,7 @@ class RoutePermissionPage extends React.Component {
                             edge="end"
                             color="primary"
                             onChange={() => this.handleToggle(this.state.default_routes[key], key)}
-                            checked={this.state.modified_routes[key] &&
-                                this.state.modified_routes[key].checked ? true : false}
+                            checked={this.state.modified_routes[key] && this.state.modified_routes[key].checked ? true : false}
                         />
                     </ListItemSecondaryAction>
                 </ListItem>
@@ -311,28 +314,28 @@ class RoutePermissionPage extends React.Component {
                     </List>
                 </Collapse>
             </div>
-        )
+        ));
         return (
-            <List
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-                className={classes.list}>
+            <List component="nav" aria-labelledby="nested-list-subheader" className={classes.list}>
                 {routes}
             </List>
         );
     }
 
-    handleSelectChange = (event) => {
-        this.setState({
-            role: event.target.value,
-        }, () => {
-            this.loadRoutesByRoles();
-        });
-    }
+    handleSelectChange = event => {
+        this.setState(
+            {
+                role: event.target.value,
+            },
+            () => {
+                this.loadRoutesByRoles();
+            },
+        );
+    };
 
     onCloseSnackbar = () => {
         this.setState({ showSnack: false });
-    }
+    };
 
     render() {
         const { classes } = this.props;
@@ -340,10 +343,17 @@ class RoutePermissionPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
-                <Snackbar vertical="top" horizontal="right" showSnack={this.state.showSnack} type="success" message={this.state.snackMessage} onCloseSnackbar={this.onCloseSnackbar} />
+                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <Snackbar
+                    vertical="top"
+                    horizontal="right"
+                    showSnack={this.state.showSnack}
+                    type="success"
+                    message={this.state.snackMessage}
+                    onCloseSnackbar={this.onCloseSnackbar}
+                />
                 <Paper className={classes.root} elevation={1}>
-                    <Typography style={{ textAlign: "center" }} color="primary" variant="h5" component="h3">
+                    <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         Route Permission
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
@@ -351,27 +361,35 @@ class RoutePermissionPage extends React.Component {
                         <Grid item xs={12} sm={12} md={7} lg={7}>
                             <Grid container justify="center">
                                 <Grid item>
-                                    <Icon style={{ fontSize: 22, paddingTop: 18, paddingRight: 5 }} color="primary">wc</Icon>
+                                    <Icon style={{ fontSize: 22, paddingTop: 18, paddingRight: 5 }} color="primary">
+                                        wc
+                                    </Icon>
                                 </Grid>
                                 <Grid item xs={11} sm={11} md={11} lg={11}>
                                     <FormControl className={classes.formControl}>
                                         <InputLabel htmlFor="role">Role</InputLabel>
-                                        <Select
-                                            value={this.state.role}
-                                            onChange={this.handleSelectChange}
-                                        >
-                                            {
-                                                this.state.roles.map((r, index) => {
-                                                    return (<MenuItem key={r.id ? r.id : index} value={r}>{r.name}</MenuItem>)
-                                                })
-                                            }
+                                        <Select value={this.state.role} onChange={this.handleSelectChange}>
+                                            {this.state.roles.map((r, index) => {
+                                                return (
+                                                    <MenuItem key={r.id ? r.id : index} value={r}>
+                                                        {r.name}
+                                                    </MenuItem>
+                                                );
+                                            })}
                                         </Select>
                                     </FormControl>
                                 </Grid>
                             </Grid>
                             <Grid container justify="flex-end">
                                 <Grid item>
-                                    <Button style={{ marginTop: '30px', marginBottom: '20px', marginRight: '30px', color: background.default }} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onSaveItem()}>
+                                    <Button
+                                        style={{ marginTop: '30px', marginBottom: '20px', marginRight: '30px', color: background.default }}
+                                        color="primary"
+                                        variant="contained"
+                                        size="large"
+                                        className={classes.button}
+                                        onClick={() => this.onSaveItem()}
+                                    >
                                         <Icon className={classes.iconButton}>save</Icon>
                                         Save
                                     </Button>
@@ -391,12 +409,12 @@ class RoutePermissionPage extends React.Component {
 RoutePermissionPage.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-}
+};
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(withStyles(styles, { withTheme: true })(RoutePermissionPage)));

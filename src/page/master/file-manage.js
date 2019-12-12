@@ -1,8 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Grid, Card, CardActionArea, CardContent, CardMedia, Typography, Paper, withStyles, Dialog, DialogTitle, DialogActions, Button, IconButton, Icon } from '@material-ui/core';
+import {
+    Grid,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Typography,
+    Paper,
+    withStyles,
+    Dialog,
+    DialogTitle,
+    DialogActions,
+    Button,
+    IconButton,
+    Icon,
+} from '@material-ui/core';
 
 import MasterTemplate from '../../component/MasterTemplate';
 import { ROLE_ACTIONS } from '../../redux/RoleRedux';
@@ -11,11 +26,10 @@ import FileApi from '../../api/FileUploadApi';
 import { FILE_ACTIONS } from '../../redux/FileRedux';
 import MasterDrawer from '../../component/MasterDrawer';
 import LoadingDialog from '../../component/LoadingDialog';
-import ErrorDialog from '../../component/ErrorDialog';
+import AlertDialog from '../../componentAlertDialog';
 import FileUploadApi from '../../api/FileUploadApi';
 import FilePaginationAction from '../../component/FilePaginationAction';
 import MasterIcon from '../../component/MasterIcon';
-
 
 const styles = theme => ({
     root: {
@@ -52,7 +66,7 @@ const styles = theme => ({
     search: {
         width: 'calc(25%)',
         display: 'flex',
-        marginLeft: '25px'
+        marginLeft: '25px',
     },
     button: {
         margin: '0px 10px',
@@ -67,12 +81,11 @@ const styles = theme => ({
     buttonField: {
         display: 'flex',
         width: 'calc(35%)',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
 });
 
 class FileManagePage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -87,8 +100,8 @@ class FileManagePage extends React.Component {
             rowsPerPage: 12,
             total: 0,
             deleteDialog: false,
-            orderBy: "id",
-            order: "desc",
+            orderBy: 'id',
+            order: 'desc',
             isLoading: true,
             isSaving: false,
             deleteErrorDialog: false,
@@ -110,7 +123,12 @@ class FileManagePage extends React.Component {
                 this.setState({ id: '', name: '', description: '' });
             }
         }
-        if (this.state.page !== prevState.page || this.state.rowsPerPage !== prevState.rowsPerPage || this.state.orderBy !== prevState.orderBy || this.state.order !== prevState.order) {
+        if (
+            this.state.page !== prevState.page ||
+            this.state.rowsPerPage !== prevState.rowsPerPage ||
+            this.state.orderBy !== prevState.orderBy ||
+            this.state.order !== prevState.order
+        ) {
             this._loadData();
         }
     }
@@ -119,102 +137,107 @@ class FileManagePage extends React.Component {
         const data = await FileUploadApi.getById(this.props.match.params.id);
         //console.log("Edit : ", data);
         // this.setState({id:data.id, name:data.name, description:data.description});
-    }
+    };
 
     _loadData = async () => {
         const file = await FileUploadApi.getAll(this.state.page, this.state.rowsPerPage, 'id:ASC');
-        this.setState({ total: file.total })
+        this.setState({ total: file.total });
         this.props.dispatch({
             type: FILE_ACTIONS.INIT_DATA,
-            data: file.data
-        })
+            data: file.data,
+        });
         this.setState({ isLoading: false });
-    }
+    };
 
-    onKeyPress = (key) => {
+    onKeyPress = key => {
         if (key === 'Enter') {
             this._loadData();
         }
-    }
+    };
 
-    sortHandler = (orderBy) => {
+    sortHandler = orderBy => {
         let order = 'desc';
-        if (this.state.orderBy === orderBy && this.state.order === "desc") {
+        if (this.state.orderBy === orderBy && this.state.order === 'desc') {
             order = 'asc';
         }
         this.setState({ order, orderBy, isLoading: true });
-    }
+    };
 
-    onChangeImage = (event) => {
+    onChangeImage = event => {
         var reader = new FileReader();
         var file = event.target.files[0];
 
         reader.onload = () => {
             this.setState({
                 file: file,
-                previewImage: reader.result
-            })
-        }
+                previewImage: reader.result,
+            });
+        };
 
         reader.readAsDataURL(file);
-    }
+    };
 
-    handleChangePage = (page) => {
+    handleChangePage = page => {
         this.setState({ page, isLoading: true });
     };
 
-    handleChangeRowsPerPage = (event) => {
+    handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value, isLoading: true });
     };
 
     addNewButton = () => {
         this.props.match.params.id = null;
-        this.props.history.push("/files");
+        this.props.history.push('/files');
         this.setState({ open: true });
-    }
+    };
 
-    handleRowClick = (data) => {
+    handleRowClick = data => {
         this.setState({ open: true });
         this.props.history.push('/files/' + data.id);
-    }
+    };
 
     handleClose = () => {
         this.setState({ open: false, previewImage: '/imgs/camera.png' });
-    }
+    };
 
-    handleDeleteDialogOpen = (data) => {
+    handleDeleteDialogOpen = data => {
         this.setState({ deleteDialog: true, deleteItemName: data.name, deleteItemId: data.id });
-    }
+    };
 
     handleWarningClose = () => {
         this.setState({ deleteDialog: false });
-    }
+    };
 
-    handleDelete = async (id) => {
+    handleDelete = async id => {
         try {
             await RoleApi.delete(id);
             this.props.dispatch({
                 type: ROLE_ACTIONS.REMOVE,
                 id: id,
-            })
+            });
             this.setState({ deleteDialog: false });
         } catch (error) {
-            if (error && error.data.content.message.includes("a foreign key constraint fails")) {
-                this.setState({ deleteErrorDialog: true })
+            if (error && error.data.content.message.includes('a foreign key constraint fails')) {
+                this.setState({ deleteErrorDialog: true });
             }
         }
         this.setState({ deleteDialog: false });
-    }
+    };
 
     deleteError = () => {
         return (
-            <ErrorDialog showError={this.state.deleteErrorDialog} title="Delete Error" description="Cannot delete in-use item" handleError={this.deleteErrorDialogClose} />
+            <AlertDialog
+                showDialog={this.state.deleteErrorDialog}
+                title="Delete Error"
+                description="Cannot delete in-use item"
+                onClickOk={this.deleteErrorDialogClose}
+            />
         );
-    }
+    };
 
     deleteErrorDialogClose = () => {
         this.setState({ deleteErrorDialog: !this.state.deleteErrorDialog });
-    }
+    };
 
     validating = () => {
         if (this.state.name === '') {
@@ -223,7 +246,7 @@ class FileManagePage extends React.Component {
         }
         this.setState({ nameError: false });
         return false;
-    }
+    };
 
     onSaveItem = async () => {
         // if (this.validating()){
@@ -236,15 +259,15 @@ class FileManagePage extends React.Component {
         try {
             if (this.state.file && this.state.file.id) {
                 fileUpload = {
-                    id: this.state.file.id
-                }
+                    id: this.state.file.id,
+                };
             } else if (this.state.file && !this.state.file.id) {
                 var fileResponse = await FileApi.upload(this.state.file);
 
                 this.props.dispatch({
                     type: FILE_ACTIONS.CREATE_NEW,
-                    file: fileResponse
-                })
+                    file: fileResponse,
+                });
                 // if (fileResponse){
                 //     fileUpload = {
                 //         id : fileResponse.id
@@ -275,11 +298,11 @@ class FileManagePage extends React.Component {
         // this.props.match.params.id = null;
         // this.props.history.push("/roles");
         // this.setState({open: false});
-    }
+    };
 
     onChangeText = (key, value) => {
         this.setState({ [key]: value });
-    }
+    };
 
     render() {
         const { classes } = this.props;
@@ -294,7 +317,7 @@ class FileManagePage extends React.Component {
                 onChangeImage: this.onChangeImage,
             },
         ];
-        const warningTitle = "Are you sure to delete " + this.state.deleteItemName + " Role ?";
+        const warningTitle = 'Are you sure to delete ' + this.state.deleteItemName + ' Role ?';
         return (
             <MasterTemplate>
                 {this.deleteError()}
@@ -304,8 +327,15 @@ class FileManagePage extends React.Component {
                     <Paper className={classes.root}>
                         <div className={classes.toolbar}>
                             <div className={classes.search}>
-                                <Icon fontSize='small'>search</Icon>
-                                <input style={{ border: 'none', outlineWidth: '0' }} type="text" name="filter" placeholder="Search" onChange={(event) => this.onChangeText(event.target.name, event.target.value)} onKeyPress={(event) => this.onKeyPress(event.key)} />
+                                <Icon fontSize="small">search</Icon>
+                                <input
+                                    style={{ border: 'none', outlineWidth: '0' }}
+                                    type="text"
+                                    name="filter"
+                                    placeholder="Search"
+                                    onChange={event => this.onChangeText(event.target.name, event.target.value)}
+                                    onKeyPress={event => this.onKeyPress(event.key)}
+                                />
                             </div>
                             <div className={classes.title}>
                                 <span>File Management</span>
@@ -314,27 +344,19 @@ class FileManagePage extends React.Component {
                                 <MasterIcon label="Add" icon="add_box" onClick={this.addNewButton} type="IconButton" />
                             </div>
                         </div>
-                        <Grid
-                            container
-                            spacing={16}
-                            className={this.props.classes.imageContainer}
-                        >
+                        <Grid container spacing={16} className={this.props.classes.imageContainer}>
                             {this.props.masterpanel.file.map(row => {
                                 return (
                                     <Grid justify="center" container key={row.id} item lg={2} md={4} sm={6} xs={12}>
                                         <Card className={this.props.classes.card}>
                                             <CardActionArea onClick={this.handleRowClick(row.id)}>
-                                                <CardMedia
-                                                    className={this.props.classes.media}
-                                                    image={row.public_url}
-                                                    title={row.name}
-                                                />
+                                                <CardMedia className={this.props.classes.media} image={row.public_url} title={row.name} />
                                             </CardActionArea>
                                             <CardContent>
                                                 {/* <Typography gutterBottom variant="h6" component="h2">
                                                 {row.name}
                                             </Typography> */}
-                                                <Typography component="p" style={{ textAlign: "center" }} >
+                                                <Typography component="p" style={{ textAlign: 'center' }}>
                                                     {row.size}
                                                 </Typography>
                                             </CardContent>
@@ -344,13 +366,31 @@ class FileManagePage extends React.Component {
                             })}
                         </Grid>
                         <div className={classes.pagination}>
-                            <FilePaginationAction page={this.state.page} rowsPerPage={this.state.rowsPerPage} changeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} total={this.state.total} />
+                            <FilePaginationAction
+                                page={this.state.page}
+                                rowsPerPage={this.state.rowsPerPage}
+                                changeRowsPerPage={this.handleChangeRowsPerPage}
+                                onChangePage={this.handleChangePage}
+                                total={this.state.total}
+                            />
                         </div>
                     </Paper>
                     <div className={classes.drawer}>
-                        <MasterDrawer title="Add New File" open={this.state.open} onSaveItem={() => this.onSaveItem()} handleClose={this.handleClose} list={DrawerList} />
+                        <MasterDrawer
+                            title="Add New File"
+                            open={this.state.open}
+                            onSaveItem={() => this.onSaveItem()}
+                            handleClose={this.handleClose}
+                            list={DrawerList}
+                        />
                     </div>
-                    <Dialog open={this.state.deleteDialog} onClose={this.handleWarningClose} aria-labelledby="form-dialog-title" BackdropProps={{ classes: { root: classes.dialogroot } }} PaperProps={{ classes: { root: classes.paper } }}>
+                    <Dialog
+                        open={this.state.deleteDialog}
+                        onClose={this.handleWarningClose}
+                        aria-labelledby="form-dialog-title"
+                        BackdropProps={{ classes: { root: classes.dialogroot } }}
+                        PaperProps={{ classes: { root: classes.paper } }}
+                    >
                         <DialogTitle id="form-dialog-title">{warningTitle}</DialogTitle>
                         <DialogActions>
                             <Button onClick={() => this.handleDelete(this.state.deleteItemId)} color="primary">
@@ -370,10 +410,10 @@ FileManagePage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(FileManagePage)));

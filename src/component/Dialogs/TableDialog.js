@@ -7,22 +7,36 @@ import MasterTable from '../MasterModalTable';
 
 import { Button, Dialog, DialogActions, DialogContent, Divider } from '@material-ui/core';
 
-const styles = theme => ({
-});
+const styles = theme => ({});
 
 class TableDialog extends React.Component {
-
     render() {
-        const { items, fields, multi, onOpenDialog, onCloseDialog, tableTitle, isSelected, handleRowClick, filterTextChange, onKeyDown, searchText, pageChange, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, _this } = this.props;
+        const {
+            items,
+            fields,
+            multi,
+            onOpenDialog,
+            onCloseDialog,
+            tableTitle,
+            isSelected,
+            handleRowClick,
+            filterTextChange,
+            onKeyDown,
+            searchText,
+            pageChange,
+            total,
+            pageSize,
+            currentPage,
+            handleChangePage,
+            handleChangeRowsPerPage,
+            _this,
+        } = this.props;
 
         return (
-            <Dialog aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description"
-                fullWidth
-                maxWidth="md"
-                open={onOpenDialog}
-            >
+            <Dialog aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description" fullWidth maxWidth="md" open={onOpenDialog}>
                 <DialogContent style={{ padding: '0px' }}>
-                    <MasterTable tableTitle={tableTitle}
+                    <MasterTable
+                        tableTitle={tableTitle}
                         total={total}
                         items={items}
                         fields={fields}
@@ -55,10 +69,10 @@ TableDialog.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default connect(mapStateToProps)(withStyles(styles)(TableDialog));

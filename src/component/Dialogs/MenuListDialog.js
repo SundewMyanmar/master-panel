@@ -11,24 +11,19 @@ const styles = theme => ({
 });
 
 class MenuListDialog extends React.Component {
-
     render() {
         const { classes, handleMenuListDialog, show, uploadNew, openFile } = this.props;
 
         return (
             <div>
-                <Dialog
-                    open={show}
-                    onClose={handleMenuListDialog}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <List component="nav"
+                <Dialog open={show} onClose={handleMenuListDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+                    <List
+                        component="nav"
                         aria-labelledby="nested-list-subheader"
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
                                 Image Upload
-                        </ListSubheader>
+                            </ListSubheader>
                         }
                         className={classes.root}
                     >

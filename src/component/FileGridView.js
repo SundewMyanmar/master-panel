@@ -1,10 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import {
-    Card, CardActionArea, CardContent, CardMedia, Table, TableFooter, TableRow,
-    Grid, Typography, Icon, IconButton, TablePagination, Divider
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Table,
+    TableFooter,
+    TableRow,
+    Grid,
+    Typography,
+    Icon,
+    IconButton,
+    TablePagination,
+    Divider,
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -25,65 +36,73 @@ const StyledPager = withStyles(theme => ({
     root: {
         color: theme.palette.primary.main,
         flex: 1,
-
     },
     selectRoot: {
         width: 50,
     },
     selectIcon: {
-        color: theme.palette.primary.main
-    }
+        color: theme.palette.primary.main,
+    },
 }))(TablePagination);
 
 class GridView extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+        this.state = {};
     }
 
     TablePaginationActions = () => {
         const { classes, theme, pageChange, _this } = this.props;
 
-        return (<div className={[classes.pager]}>
-            <IconButton onClick={() => pageChange("first", _this)} aria-label="First Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("previous", _this)} aria-label="Previous Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("forward", _this)} aria-label="Next Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("last", _this)} aria-label="Last Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>}
-            </IconButton>
-        </div>);
-    }
+        return (
+            <div className={[classes.pager]}>
+                <IconButton onClick={() => pageChange('first', _this)} aria-label="First Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>
+                    )}
+                </IconButton>
+                <IconButton onClick={() => pageChange('previous', _this)} aria-label="Previous Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>
+                    )}
+                </IconButton>
+                <IconButton onClick={() => pageChange('forward', _this)} aria-label="Next Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>
+                    )}
+                </IconButton>
+                <IconButton onClick={() => pageChange('last', _this)} aria-label="Last Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>
+                    )}
+                </IconButton>
+            </div>
+        );
+    };
 
     handleSortBy(sortBy) {
         const { items } = this.props;
         var sortOrder = this.state.sortOrder;
         if (this.state.sortBy === sortBy) {
             sortOrder = !this.state.sortOrder;
-        }
-        else {
+        } else {
             sortOrder = true;
         }
 
-        const result =
-            !sortOrder
-                ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) :
-                items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
+        const result = !sortOrder ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) : items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
 
         this.setState({
             sortBy: sortBy,
             sortOrder: sortOrder,
-            items: result
+            items: result,
         });
     }
 
@@ -100,18 +119,22 @@ class GridView extends React.Component {
                                     <CardActionArea>
                                         <CardMedia
                                             className={classes.media}
-                                            image={item.public_url ? item.public_url : "/res/default-image.png"}
-                                            title={item.name ? item.name : "No Image"}
+                                            image={item.public_url ? item.public_url : '/res/default-image.png'}
+                                            title={item.name ? item.name : 'No Image'}
                                         />
                                         <Divider light />
-                                        <CardContent style={{ padding: "4px 8px 8px 8px" }}>
-                                            <Typography style={{ marginBottom: 4 }} variant="subtitle2" align="center" noWrap >{item.name}</Typography>
+                                        <CardContent style={{ padding: '4px 8px 8px 8px' }}>
+                                            <Typography style={{ marginBottom: 4 }} variant="subtitle2" align="center" noWrap>
+                                                {item.name}
+                                            </Typography>
                                             <Grid container>
                                                 <Grid item xs={6}>
                                                     <Typography variant="caption">{item.size}</Typography>
                                                 </Grid>
                                                 <Grid item xs={6}>
-                                                    <Typography variant="caption" align="right">{item.extension}</Typography>
+                                                    <Typography variant="caption" align="right">
+                                                        {item.extension}
+                                                    </Typography>
                                                 </Grid>
                                             </Grid>
                                         </CardContent>
@@ -127,7 +150,7 @@ class GridView extends React.Component {
                                     </CardActionArea>
                                 </Card>
                             </Grid>
-                        )
+                        );
                     })}
                 </Grid>
                 <Table className={classes.table}>
@@ -144,8 +167,8 @@ class GridView extends React.Component {
                                     native: true,
                                 }}
                                 onChangePage={handleChangePage}
-                                onChangeRowsPerPage={(event) => {
-                                    handleChangeRowsPerPage(event, _this)
+                                onChangeRowsPerPage={event => {
+                                    handleChangeRowsPerPage(event, _this);
                                 }}
                                 ActionsComponent={this.TablePaginationActions}
                             />
@@ -160,7 +183,7 @@ class GridView extends React.Component {
 GridView.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    items: PropTypes.array.isRequired
+    items: PropTypes.array.isRequired,
 };
 
 export default withRouter(withStyles(styles, { withTheme: true })(GridView));

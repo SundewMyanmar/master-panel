@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import {
-    HashRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-} from "react-router-dom";
+import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-import { DefaultTheme } from "./config/Theme";
+import { DefaultTheme } from './config/Theme';
 import LoginPage from './page/auth/login';
 import RegisterPage from './page/auth/register';
 import DashboardPage from './page/dashboard';
@@ -30,26 +25,22 @@ class App extends Component {
         super(props);
         this.state = {
             isAuth: false,
-        }
+        };
     }
 
     PrivateRoute = ({ component: Component, ...rest }) => {
         const currentUser = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
-        return (
-            <Route {...rest} render={props => currentUser.length > 0 ? (<Component {...props} />) : (<Redirect to="/login" />)} />
-        );
-    }
+        return <Route {...rest} render={props => (currentUser.length > 0 ? <Component {...props} /> : <Redirect to="/login" />)} />;
+    };
 
     render() {
         return (
             <MuiThemeProvider theme={DefaultTheme}>
                 <Router>
-
                     <Switch>
                         <Route path="/login" component={LoginPage} />
                         <Route path="/register" component={RegisterPage} />
                         <MasterTemplate>
-
                             <this.PrivateRoute exact path="/" component={DashboardPage} />
                             {/* Master Modules */}
                             <this.PrivateRoute exact path="/user/setup" component={UserPage} />
@@ -67,10 +58,8 @@ class App extends Component {
                             <this.PrivateRoute exact path="/menu/setup" component={MenuPage} />
                             <this.PrivateRoute path="/menu/setup/detail/:id?" component={MenuSetupPage} />
                             <this.PrivateRoute exact path="/route/setup" component={RoutePermissionPage} />
-
                         </MasterTemplate>
                     </Switch>
-
                 </Router>
             </MuiThemeProvider>
         );

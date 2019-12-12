@@ -28,9 +28,8 @@ const styles = theme => ({
 });
 
 class LoadingDialog extends React.Component {
-
     static defaultProps = {
-        showLoading: false
+        showLoading: false,
     };
 
     render() {
@@ -38,30 +37,13 @@ class LoadingDialog extends React.Component {
 
         return (
             <div>
-                <Dialog
-                    maxWidth="sm"
-                    open={showLoading}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
+                <Dialog maxWidth="sm" open={showLoading} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
                     <div className={classes.flex}>
                         <div className={classes.progress}>
-                            <CircularProgress
-                                variant="determinate"
-                                value={100}
-                                className={classes.secondary}
-                                size={40}
-                                thickness={4}
-                            />
-                            <CircularProgress
-                                variant="indeterminate"
-                                disableShrink
-                                className={classes.main}
-                                size={40}
-                                thickness={4}
-                            />
+                            <CircularProgress variant="determinate" value={100} className={classes.secondary} size={40} thickness={4} />
+                            <CircularProgress variant="indeterminate" disableShrink className={classes.main} size={40} thickness={4} />
                         </div>
-                        <DialogContentText id="alert-dialog-description" className={classes.progress} >
+                        <DialogContentText id="alert-dialog-description" className={classes.progress}>
                             {message}
                         </DialogContentText>
                     </div>
@@ -73,7 +55,7 @@ class LoadingDialog extends React.Component {
 
 LoadingDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    showLoading: PropTypes.bool
+    showLoading: PropTypes.bool,
 };
 
 export default withStyles(styles)(LoadingDialog);

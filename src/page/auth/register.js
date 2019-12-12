@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Icon, Button, IconButton, Divider, Grid, Typography, InputBase, Paper } from '@material-ui/core';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import uuid from 'uuid/v5';
 import { primary, secondary, action, background, text } from '../../config/Theme';
 import AuthApi from '../../api/AuthApi';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
-import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import AlertDialog from '../../component/Dialogs/AlertDialog';
 import FormatManager from '../../util/FormatManager';
 import * as DeviceDetect from 'react-device-detect';
 
@@ -16,7 +16,7 @@ const styles = theme => ({
         background: primary.light,
         height: '100vh',
         overflowY: 'auto',
-        overflowX: 'hidden'
+        overflowX: 'hidden',
     },
     container: {
         padding: 5,
@@ -52,7 +52,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     button: {
         width: 'calc(100%)',
@@ -77,10 +77,10 @@ const styles = theme => ({
         paddingRight: 10,
         paddingLeft: 10,
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
     },
     iconLabel: {
-        marginTop: 4
+        marginTop: 4,
     },
     divider: {
         backgroundColor: theme.palette.primary.main,
@@ -91,21 +91,21 @@ const styles = theme => ({
     logo: {
         width: 120,
         height: 120,
-        boxShadow: '0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)'
+        boxShadow: '0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)',
     },
     errorTxt: {
         color: action.warn,
-        paddingLeft: '4px'
+        paddingLeft: '4px',
     },
     errorIcon: {
         color: action.warn,
-        fontSize: '16px'
+        fontSize: '16px',
     },
     img: {
         width: '150px',
         height: '150px',
         borderRadius: '15px',
-    }
+    },
 });
 
 class RegisterPage extends React.Component {
@@ -127,37 +127,40 @@ class RegisterPage extends React.Component {
             passwordError: false,
             confirmPasswordError: false,
             displayNameError: false,
-            errorMessage: ''
-        }
+            errorMessage: '',
+        };
     }
 
     onChangeText = (key, value, password) => {
         var emailError = false;
         var userError = false;
-        if (key === "email") {
+        if (key === 'email') {
             emailError = !FormatManager.ValidateEmail(value);
         }
 
-        if (key === "user") {
+        if (key === 'user') {
             userError = !FormatManager.ValidateUser(value);
         }
 
-        this.setState({
-            [key]: value,
-            emailError: emailError,
-            userError: userError
-        }, () => {
-            var confirmPasswordError = false;
-            if (password) {
-                if (value !== this.state.password) {
-                    confirmPasswordError = true;
+        this.setState(
+            {
+                [key]: value,
+                emailError: emailError,
+                userError: userError,
+            },
+            () => {
+                var confirmPasswordError = false;
+                if (password) {
+                    if (value !== this.state.password) {
+                        confirmPasswordError = true;
+                    }
                 }
-            }
-            this.setState({
-                confirmPasswordError: confirmPasswordError
-            })
-        });
-    }
+                this.setState({
+                    confirmPasswordError: confirmPasswordError,
+                });
+            },
+        );
+    };
 
     validating = () => {
         var emailError, userError, displayNameError, passwordError, confirmPasswordError;
@@ -197,11 +200,11 @@ class RegisterPage extends React.Component {
             userError: userError,
             displayNameError: displayNameError,
             passwordError: passwordError,
-            confirmPasswordError: confirmPasswordError
-        })
+            confirmPasswordError: confirmPasswordError,
+        });
 
         return false;
-    }
+    };
 
     onRegisterButtonClick = async () => {
         if (this.validating()) return;
@@ -215,8 +218,8 @@ class RegisterPage extends React.Component {
             display_name: this.state.displayName,
             password: this.state.password,
             device_id: deviceId,
-            device_os: DeviceDetect.osName + DeviceDetect.osVersion
-        }
+            device_os: DeviceDetect.osName + DeviceDetect.osVersion,
+        };
 
         try {
             const data = await AuthApi.register(userData);
@@ -234,9 +237,9 @@ class RegisterPage extends React.Component {
                 this.handleError();
             }
         }
-    }
+    };
 
-    handleClickShowPassword = (name) => {
+    handleClickShowPassword = name => {
         this.setState({ [name]: !this.state[name] });
     };
 
@@ -244,7 +247,7 @@ class RegisterPage extends React.Component {
         this.setState({ showError: !this.state.showError });
     };
 
-    handleKeyPress = (e) => {
+    handleKeyPress = e => {
         if (e.key === 'Enter') {
             this.onRegisterButtonClick();
         }
@@ -255,7 +258,7 @@ class RegisterPage extends React.Component {
 
         return (
             <div className={classes.root}>
-                <ErrorDialog title="Oops!" description={this.state.errorMessage} showError={this.state.showError} handleError={this.handleError} />
+                <AlertDialog title="Oops!" description={this.state.errorMessage} showDialog={this.state.showError} onClickOk={this.handleError} />
                 <LoadingDialog showLoading={this.state.showLoading} message="Please wait registering!" />
                 <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
                     <Grid style={{ padding: '22px' }} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
@@ -267,7 +270,9 @@ class RegisterPage extends React.Component {
                         </Grid>
                         <Grid item>
                             <Paper className={classes.inputContainer} elevation={1}>
-                                <Icon className={classes.iconButton} color="primary">mail</Icon>
+                                <Icon className={classes.iconButton} color="primary">
+                                    mail
+                                </Icon>
                                 <Divider className={classes.divider} />
                                 <InputBase
                                     autoFocus
@@ -275,7 +280,7 @@ class RegisterPage extends React.Component {
                                     style={{ color: text.dark }}
                                     className={classes.input}
                                     placeholder="email address"
-                                    onChange={(event) => this.onChangeText(event.target.name, event.target.value)}
+                                    onChange={event => this.onChangeText(event.target.name, event.target.value)}
                                 />
                             </Paper>
                             {this.state.emailError ? (
@@ -283,15 +288,16 @@ class RegisterPage extends React.Component {
                                     <Icon className={classes.errorIcon}>warning</Icon>
                                     <Typography className={classes.errorTxt} variant="caption">
                                         invalid email address.
-                                </Typography>
+                                    </Typography>
                                 </div>
                             ) : (
-                                    <Typography variant="caption">
-                                    </Typography>
-                                )}
+                                <Typography variant="caption"></Typography>
+                            )}
 
                             <Paper className={classes.inputContainer} elevation={1}>
-                                <Icon className={classes.iconButton} color="primary">person</Icon>
+                                <Icon className={classes.iconButton} color="primary">
+                                    person
+                                </Icon>
                                 <Divider className={classes.divider} />
                                 <InputBase
                                     autoFocus
@@ -299,7 +305,7 @@ class RegisterPage extends React.Component {
                                     style={{ color: text.dark }}
                                     className={classes.input}
                                     placeholder="user name, eg. mgmg123"
-                                    onChange={(event) => this.onChangeText(event.target.name, event.target.value)}
+                                    onChange={event => this.onChangeText(event.target.name, event.target.value)}
                                 />
                             </Paper>
                             {this.state.userError ? (
@@ -307,15 +313,16 @@ class RegisterPage extends React.Component {
                                     <Icon className={classes.errorIcon}>warning</Icon>
                                     <Typography className={classes.errorTxt} variant="caption">
                                         invalid user name.
-                                </Typography>
+                                    </Typography>
                                 </div>
                             ) : (
-                                    <Typography variant="caption">
-                                    </Typography>
-                                )}
+                                <Typography variant="caption"></Typography>
+                            )}
 
                             <Paper className={classes.inputContainer} elevation={1}>
-                                <Icon className={classes.iconButton} color="primary">label</Icon>
+                                <Icon className={classes.iconButton} color="primary">
+                                    label
+                                </Icon>
                                 <Divider className={classes.divider} />
                                 <InputBase
                                     autoFocus
@@ -323,7 +330,7 @@ class RegisterPage extends React.Component {
                                     style={{ color: text.dark }}
                                     className={classes.input}
                                     placeholder="display name"
-                                    onChange={(event) => this.onChangeText(event.target.name, event.target.value)}
+                                    onChange={event => this.onChangeText(event.target.name, event.target.value)}
                                 />
                             </Paper>
                             {this.state.displayNameError ? (
@@ -331,17 +338,18 @@ class RegisterPage extends React.Component {
                                     <Icon className={classes.errorIcon}>warning</Icon>
                                     <Typography className={classes.errorTxt} variant="caption">
                                         invalid display name.
-                                </Typography>
+                                    </Typography>
                                 </div>
                             ) : (
-                                    <Typography variant="caption">
-                                    </Typography>
-                                )}
+                                <Typography variant="caption"></Typography>
+                            )}
 
                             <Divider light style={{ margin: '30px 0' }} />
 
                             <Paper className={classes.inputContainer} elevation={1}>
-                                <Icon className={classes.iconButton} color="primary">lock</Icon>
+                                <Icon className={classes.iconButton} color="primary">
+                                    lock
+                                </Icon>
                                 <Divider className={classes.divider} />
                                 <InputBase
                                     name="password"
@@ -350,9 +358,13 @@ class RegisterPage extends React.Component {
                                     className={classes.input}
                                     placeholder="password"
                                     onKeyPress={this.handleKeyPress}
-                                    onChange={(event) => this.onChangeText(event.target.name, event.target.value, true)}
+                                    onChange={event => this.onChangeText(event.target.name, event.target.value, true)}
                                 />
-                                <IconButton className={classes.iconButton} aria-label="password" onClick={() => this.handleClickShowPassword("showPassword")}>
+                                <IconButton
+                                    className={classes.iconButton}
+                                    aria-label="password"
+                                    onClick={() => this.handleClickShowPassword('showPassword')}
+                                >
                                     {this.state.showPassword ? <Icon color="primary">visibility</Icon> : <Icon color="primary">visibility_off</Icon>}
                                 </IconButton>
                             </Paper>
@@ -361,15 +373,16 @@ class RegisterPage extends React.Component {
                                     <Icon className={classes.errorIcon}>warning</Icon>
                                     <Typography className={classes.errorTxt} variant="caption">
                                         invalid password.
-                                </Typography>
+                                    </Typography>
                                 </div>
                             ) : (
-                                    <Typography variant="caption">
-                                    </Typography>
-                                )}
+                                <Typography variant="caption"></Typography>
+                            )}
 
                             <Paper className={classes.inputContainer} elevation={1}>
-                                <Icon className={classes.iconButton} color="primary">lock</Icon>
+                                <Icon className={classes.iconButton} color="primary">
+                                    lock
+                                </Icon>
                                 <Divider className={classes.divider} />
                                 <InputBase
                                     name="confirmPassword"
@@ -378,10 +391,18 @@ class RegisterPage extends React.Component {
                                     className={classes.input}
                                     placeholder="confirm password"
                                     onKeyPress={this.handleKeyPress}
-                                    onChange={(event) => this.onChangeText(event.target.name, event.target.value, true)}
+                                    onChange={event => this.onChangeText(event.target.name, event.target.value, true)}
                                 />
-                                <IconButton className={classes.iconButton} aria-label="password" onClick={() => this.handleClickShowPassword("confirmShowPassword")}>
-                                    {this.state.confirmShowPassword ? <Icon color="primary">visibility</Icon> : <Icon color="primary">visibility_off</Icon>}
+                                <IconButton
+                                    className={classes.iconButton}
+                                    aria-label="password"
+                                    onClick={() => this.handleClickShowPassword('confirmShowPassword')}
+                                >
+                                    {this.state.confirmShowPassword ? (
+                                        <Icon color="primary">visibility</Icon>
+                                    ) : (
+                                        <Icon color="primary">visibility_off</Icon>
+                                    )}
                                 </IconButton>
                             </Paper>
                             {this.state.confirmPasswordError ? (
@@ -389,25 +410,39 @@ class RegisterPage extends React.Component {
                                     <Icon className={classes.errorIcon}>warning</Icon>
                                     <Typography className={classes.errorTxt} variant="caption">
                                         invalid confirm password.
-                                </Typography>
+                                    </Typography>
                                 </div>
                             ) : (
-                                    <Typography variant="caption">
-                                    </Typography>
-                                )}
+                                <Typography variant="caption"></Typography>
+                            )}
 
-                            <Button style={{ marginTop: '30px', marginBottom: '0' }} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onRegisterButtonClick()}>
-                                <Icon className={classes.iconButton} >assignment_turned_in</Icon>
+                            <Button
+                                style={{ marginTop: '30px', marginBottom: '0' }}
+                                color="primary"
+                                variant="contained"
+                                size="large"
+                                className={classes.button}
+                                onClick={() => this.onRegisterButtonClick()}
+                            >
+                                <Icon className={classes.iconButton}>assignment_turned_in</Icon>
                                 Register
-                        </Button>
+                            </Button>
 
                             <Divider light style={{ margin: '20px 0' }} />
 
                             <Typography style={{ textAlign: 'center', margin: '0px 0px 8px 0px', fontSize: '14px' }} variant="subtitle1">
-                                Copyright © 2019 {new Date().getFullYear() <= 2019 ? "" : "-" + new Date().getFullYear()} by <a style={{ color: secondary.main, textDecoration: 'none' }} rel="noopener noreferrer" target="_blank" href="http://www.sundewmyanmar.com/">SUNDEW MYANMAR</a>. <br />
+                                Copyright © 2019 {new Date().getFullYear() <= 2019 ? '' : '-' + new Date().getFullYear()} by{' '}
+                                <a
+                                    style={{ color: secondary.main, textDecoration: 'none' }}
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    href="http://www.sundewmyanmar.com/"
+                                >
+                                    SUNDEW MYANMAR
+                                </a>
+                                . <br />
                                 All rights reserved.
-                        </Typography>
-
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -417,7 +452,7 @@ class RegisterPage extends React.Component {
 }
 
 RegisterPage.propTypes = {
-    classes: PropTypes.object.isRequired
-}
+    classes: PropTypes.object.isRequired,
+};
 
 export default withRouter(connect()(withStyles(styles)(RegisterPage)));

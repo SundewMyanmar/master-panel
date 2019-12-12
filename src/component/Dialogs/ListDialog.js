@@ -8,11 +8,10 @@ const styles = theme => ({
         margin: 0,
         padding: '24px 24px 20px',
         backgroundColor: theme.palette.primary.main,
-    }
+    },
 });
 
 class ListDialog extends React.Component {
-
     render() {
         const { classes, title, onClose, showDialog, itemList } = this.props;
 
@@ -26,7 +25,9 @@ class ListDialog extends React.Component {
                     aria-describedby="alert-dialog-description"
                 >
                     <div className={classes.title}>
-                        <Typography style={{ color: 'white' }} variant="h6" gutterBottom>{title}</Typography>
+                        <Typography style={{ color: 'white' }} variant="h6" gutterBottom>
+                            {title}
+                        </Typography>
                     </div>
                     <div style={{ width: '280px', padding: '0px 8px' }}>
                         <List>
@@ -45,7 +46,7 @@ class ListDialog extends React.Component {
                     <DialogActions>
                         <Button onClick={onClose} color="primary">
                             Ok
-                    </Button>
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>

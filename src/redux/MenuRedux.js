@@ -4,7 +4,7 @@ export const MENU_ACTIONS = {
     MODIFIED: 'MENU_MODIFIED',
     REMOVE: 'MENU_REMOVE',
     BY_ROLE: 'MENU_BY_ROLE',
-}
+};
 
 const MenuReducer = (state = [], action) => {
     switch (action.type) {
@@ -13,12 +13,13 @@ const MenuReducer = (state = [], action) => {
         case MENU_ACTIONS.CREATE_NEW:
             return [action.menu, state];
         case MENU_ACTIONS.MODIFIED:
-            return state.map(t => (t.id === action.id) ? action.menu : t);
+            return state.map(t => (t.id === action.id ? action.menu : t));
         case MENU_ACTIONS.REMOVE:
             return state.filter(t => t.id !== action.id);
         case MENU_ACTIONS.BY_ROLE:
             return action.data;
-        default: return state;
+        default:
+            return state;
     }
-}
+};
 export default MenuReducer;

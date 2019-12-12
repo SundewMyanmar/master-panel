@@ -1,4 +1,4 @@
-import { API_URL, STORAGE_KEYS } from "../config/Constant";
+import { API_URL, STORAGE_KEYS } from '../config/Constant';
 import Axios from 'axios';
 
 export default class APIManager {
@@ -8,10 +8,10 @@ export default class APIManager {
         };
         if (isAuth) {
             try {
-                const userData = await sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || 'public-token';
+                const userData = (await sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || 'public-token';
                 const jsonUserData = JSON.parse(userData);
                 if (jsonUserData && jsonUserData.current_token) {
-                    result['Authorization'] = "Bearer " + jsonUserData.current_token;
+                    result['Authorization'] = 'Bearer ' + jsonUserData.current_token;
                 }
             } catch (error) {
                 console.warn(error.response);
@@ -25,9 +25,9 @@ export default class APIManager {
         try {
             const headers = await this.getHeaders(isAuth);
             console.log('Headers =>', headers);
-            console.log("GET => " + API_URL + url);
+            console.log('GET => ' + API_URL + url);
             const response = await Axios.get(API_URL + url, { headers });
-            console.log("Response => ", response);
+            console.log('Response => ', response);
             return response.data;
         } catch (error) {
             console.warn(error);
@@ -39,10 +39,10 @@ export default class APIManager {
         try {
             const headers = await this.getHeaders(isAuth);
             console.log('Headers =>', headers);
-            console.log("POST => ", API_URL + url);
-            console.log("BODY => ", data);
+            console.log('POST => ', API_URL + url);
+            console.log('BODY => ', data);
             const response = await Axios.post(API_URL + url, data, { headers });
-            console.log("Response => ", response);
+            console.log('Response => ', response);
             return response.data;
         } catch (error) {
             console.warn(error.response);
@@ -54,10 +54,10 @@ export default class APIManager {
         try {
             const headers = await this.getHeaders(isAuth);
             console.log('Headers =>', headers);
-            console.log("PUT => " + API_URL + url);
-            console.log("BODY => ", data);
+            console.log('PUT => ' + API_URL + url);
+            console.log('BODY => ', data);
             const response = await Axios.put(API_URL + url, data, { headers });
-            console.log("Response => ", response);
+            console.log('Response => ', response);
             return response.data;
         } catch (error) {
             console.warn(error);
@@ -69,15 +69,14 @@ export default class APIManager {
         try {
             const headers = await this.getHeaders(isAuth);
             console.log('Headers =>', headers);
-            console.log("DELETE => " + API_URL + url);
-            console.log("BODY => ", data);
+            console.log('DELETE => ' + API_URL + url);
+            console.log('BODY => ', data);
             const response = await Axios.delete(API_URL + url, { headers, data });
-            console.log("Response => ", response);
+            console.log('Response => ', response);
             return response.data;
         } catch (error) {
             console.warn(error.response);
             throw error.response.data;
         }
     }
-
 }

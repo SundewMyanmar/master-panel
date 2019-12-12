@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 
 import {
     Table,
@@ -18,32 +18,28 @@ import {
     Typography,
     Checkbox,
 } from '@material-ui/core';
-
-// import { common } from '@material-ui/core/colors';
-// import {action,primary, secondary} from '../config/Theme';
-// import ColumnResizer from 'column-resizer';
+import MasterPaginationBar from './MasterPaginationBar';
 
 const styles = theme => ({
     pager: {
         flexShrink: 0,
     },
     tableHead: {
-        border: '1px solid ' + theme.palette.primary.dark
-    }
+        border: '1px solid ' + theme.palette.primary.dark,
+    },
 });
 
 const StyledPager = withStyles(theme => ({
     root: {
         color: theme.palette.primary.main,
         flex: 1,
-
     },
     selectRoot: {
         width: 50,
     },
     selectIcon: {
-        color: theme.palette.primary.main
-    }
+        color: theme.palette.primary.main,
+    },
 }))(TablePagination);
 
 const CustomTableCell = withStyles(theme => ({
@@ -71,32 +67,7 @@ class MasterTable extends React.Component {
         //     display_name:""
         // })
 
-        this.state = {
-
-        };
-    }
-
-    TablePaginationActions = () => {
-        const { classes, theme, pageChange, total, pageSize, currentPage, _this } = this.props;
-
-        return (<div className={[classes.pager]}>
-            <IconButton onClick={() => pageChange("first", _this)} aria-label="First Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("previous", _this)} aria-label="Previous Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("forward", _this)} aria-label="Next Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("last", _this)} aria-label="Last Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>}
-            </IconButton>
-        </div>);
+        this.state = {};
     }
 
     handleSortBy(sortBy) {
@@ -104,38 +75,48 @@ class MasterTable extends React.Component {
         var sortOrder = this.state.sortOrder;
         if (this.state.sortBy === sortBy) {
             sortOrder = !this.state.sortOrder;
-        }
-        else {
+        } else {
             sortOrder = true;
         }
 
-        const result =
-            !sortOrder
-                ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) :
-                items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
+        const result = !sortOrder ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) : items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
 
         this.setState({
             sortBy: sortBy,
             sortOrder: sortOrder,
-            items: result
+            items: result,
         });
     }
 
     render() {
-        const { classes, items, fields, editButton, deleteButton, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, handleCheckChange, handleRowClick, _this } = this.props;
+        const {
+            classes,
+            items,
+            fields,
+            editButton,
+            deleteButton,
+            total,
+            pageSize,
+            currentPage,
+            handleChangePage,
+            handleChangeRowsPerPage,
+            handleCheckChange,
+            handleRowClick,
+            _this,
+        } = this.props;
         var { editTitle, deleteTitle, editIcon, deleteIcon, hideEdit, hideDelete } = this.props;
 
         if (!editTitle) {
-            editTitle = "Edit";
+            editTitle = 'Edit';
         }
         if (!deleteTitle) {
-            deleteTitle = "Delete";
+            deleteTitle = 'Delete';
         }
         if (!editIcon) {
-            editIcon = "edit";
+            editIcon = 'edit';
         }
         if (!deleteIcon) {
-            deleteIcon = "delete"
+            deleteIcon = 'delete';
         }
 
         return (
@@ -145,67 +126,96 @@ class MasterTable extends React.Component {
                         {fields.map(field => {
                             return (
                                 <CustomTableCell key={field.display_name} align={field.align}>
-                                    {field.name !== "" ?
-                                        <Button size="small" style={{ color: this.props.theme.palette.background.default }} onClick={() => this.handleSortBy(field.name)}>
-                                            <Icon style={{ color: this.props.theme.palette.background.default, fontSize: 22, display: this.state.sortBy === field.name ? 'block' : 'none' }}>{this.state.sortBy === field.name && this.state.sortOrder ? 'arrow_drop_down' : 'arrow_drop_up'}</Icon>
+                                    {field.name !== '' ? (
+                                        <Button
+                                            size="small"
+                                            style={{ color: this.props.theme.palette.background.default }}
+                                            onClick={() => this.handleSortBy(field.name)}
+                                        >
+                                            <Icon
+                                                style={{
+                                                    color: this.props.theme.palette.background.default,
+                                                    fontSize: 22,
+                                                    display: this.state.sortBy === field.name ? 'block' : 'none',
+                                                }}
+                                            >
+                                                {this.state.sortBy === field.name && this.state.sortOrder ? 'arrow_drop_down' : 'arrow_drop_up'}
+                                            </Icon>
                                             {field.display_name}
                                         </Button>
-                                        :
-                                        <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default }}>{field.display_name}</Typography>}
+                                    ) : (
+                                        <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default }}>
+                                            {field.display_name}
+                                        </Typography>
+                                    )}
                                 </CustomTableCell>
                             );
                         })}
                     </TableRow>
-
                 </TableHead>
                 <TableBody>
                     {items.map(row => (
-                        <TableRow className={classes.row} key={row.id} onClick={handleRowClick ? () => handleRowClick(row) : console.log("Handle Row Click => ", row)} 
-                            hover={handleRowClick ? true : false}>
+                        <TableRow
+                            className={classes.row}
+                            key={row.id}
+                            onClick={handleRowClick ? () => handleRowClick(row) : console.log('Handle Row Click => ', row)}
+                            hover={handleRowClick ? true : false}
+                        >
                             {fields.map(field => {
-                                if (field.name !== "") {
-                                    if (field.type === "IMAGE") {
+                                if (field.name !== '') {
+                                    if (field.type === 'IMAGE') {
                                         return (
                                             <CustomTableCell key={field.name} align={field.align}>
-                                                {
-                                                    row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : <img alt="Default" width={40} src="/res/default-image.png" />
-                                                }
+                                                {row[field.name] ? (
+                                                    <img alt="" width={40} src={row[field.name].public_url} />
+                                                ) : (
+                                                    <img alt="Default" width={40} src="/res/default-image.png" />
+                                                )}
                                             </CustomTableCell>
                                         );
-                                    }
-                                    else if (field.type === "CHECK") {
+                                    } else if (field.type === 'CHECK') {
                                         return (
                                             <CustomTableCell key={field.name} align={field.align}>
                                                 <Checkbox
-                                                    checked={row[field.name] === "On" ? true : false}
+                                                    checked={row[field.name] === 'On' ? true : false}
                                                     onChange={() => handleCheckChange(row)}
                                                     value={field.name}
                                                     color="primary"
                                                 />
                                             </CustomTableCell>
                                         );
-                                    }
-                                    else
+                                    } else
                                         return (
-                                            <CustomTableCell style={{ width: field.width ? field.width : "" }} key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
+                                            <CustomTableCell style={{ width: field.width ? field.width : '' }} key={field.name} align={field.align}>
+                                                {row[field.name]}
+                                            </CustomTableCell>
                                         );
-                                }
-                                else {
+                                } else {
                                     return (
                                         <CustomTableCell key="action" align="center">
                                             <Tooltip style={hideEdit ? { display: 'none' } : {}} title={editTitle} placement="top">
-                                                <IconButton onClick={() => editButton(row.id, _this, row)} color="primary" className={classes.button} aria-label="Edit">
+                                                <IconButton
+                                                    onClick={() => editButton(row.id, _this, row)}
+                                                    color="primary"
+                                                    className={classes.button}
+                                                    aria-label="Edit"
+                                                >
                                                     <Icon fontSize="small">{editIcon}</Icon>
                                                 </IconButton>
                                             </Tooltip>
 
                                             <Tooltip style={hideDelete ? { display: 'none' } : {}} title={deleteTitle} placement="top">
-                                                <IconButton style={{ color: this.props.theme.palette.common.darkRed }} onClick={() => deleteButton(row.id, row.name ? row.name : row.display_name, _this, row)} className={classes.button} aria-label="Delete">
+                                                <IconButton
+                                                    style={{ color: this.props.theme.palette.common.darkRed }}
+                                                    onClick={() => deleteButton(row.id, row.name ? row.name : row.display_name, _this, row)}
+                                                    className={classes.button}
+                                                    aria-label="Delete"
+                                                >
                                                     <Icon fontSize="small">{deleteIcon}</Icon>
                                                 </IconButton>
                                             </Tooltip>
                                         </CustomTableCell>
-                                    )
+                                    );
                                 }
                             })}
                         </TableRow>
@@ -213,21 +223,14 @@ class MasterTable extends React.Component {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <StyledPager
-                            rowsPerPageOptions={[5, 10, 25]}
-                            colSpan={fields.length + 1}
-                            count={total}
-                            rowsPerPage={pageSize}
-                            labelRowsPerPage="Page Size :"
-                            page={currentPage}
-                            SelectProps={{
-                                native: true,
-                            }}
+                        <MasterPaginationBar
+                            total={total}
+                            pageSize={pageSize}
+                            currentPage={currentPage}
                             onChangePage={handleChangePage}
-                            onChangeRowsPerPage={(event) => {
-                                handleChangeRowsPerPage(event, _this)
+                            onChangeRowsPerPage={event => {
+                                handleChangeRowsPerPage(event, _this);
                             }}
-                            ActionsComponent={this.TablePaginationActions}
                         />
                     </TableRow>
                 </TableFooter>
@@ -241,7 +244,7 @@ MasterTable.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     items: PropTypes.array.isRequired,
-    fields: PropTypes.array.isRequired
+    fields: PropTypes.array.isRequired,
 };
 
 export default withRouter(withStyles(styles, { withTheme: true })(MasterTable));

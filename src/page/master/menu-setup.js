@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
     withStyles,
@@ -26,7 +26,7 @@ import {
 } from '@material-ui/core';
 
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
-import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import AlertDialog from '../../component/Dialogs/AlertDialog';
 import RoleApi from '../../api/RoleApi';
 import MenuApi from '../../api/MenuApi';
 import { MENU_ACTIONS } from '../../redux/MenuRedux';
@@ -47,7 +47,7 @@ const styles = theme => ({
         width: '100%',
     },
     inputLabel: {
-        paddingLeft: 11
+        paddingLeft: 11,
     },
     input: {
         marginLeft: 8,
@@ -58,7 +58,7 @@ const styles = theme => ({
         marginBottom: theme.spacing(2),
     },
     radio: {
-        paddingTop: 27
+        paddingTop: 27,
     },
     button: {
         width: 'calc(100%)',
@@ -69,14 +69,14 @@ const styles = theme => ({
         paddingRight: 10,
         paddingLeft: 10,
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
     },
     form_error: {
-        color: action.error
+        color: action.error,
     },
     select: {
         width: '100%',
-        marginTop: 32
+        marginTop: 32,
     },
     chips: {
         display: 'flex',
@@ -102,7 +102,7 @@ const styles = theme => ({
     chipButton: {
         width: 'calc(50%)',
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     chipLabel: {
         width: 'calc(50%)',
@@ -115,11 +115,10 @@ const styles = theme => ({
 });
 
 class MenuSetupPage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            status: "ACTIVE",
+            status: 'ACTIVE',
             roles: [],
             roleItems: [],
             menus: [],
@@ -131,7 +130,7 @@ class MenuSetupPage extends React.Component {
             total: 0,
             pageCount: 1,
             selectedValue: 'folder',
-            showIconDialog: false
+            showIconDialog: false,
         };
     }
 
@@ -145,34 +144,34 @@ class MenuSetupPage extends React.Component {
         try {
             const response = await RoleApi.getAll();
             if (response.data && response.data.length > 0) {
-                this.setState({
-                    roleItems: response.data,
-                    showLoading: false,
-                    roles: []
-                }, () => {
-                    if (this.props.match.params.id)
-                        this._loadData();
-                })
+                this.setState(
+                    {
+                        roleItems: response.data,
+                        showLoading: false,
+                        roles: [],
+                    },
+                    () => {
+                        if (this.props.match.params.id) this._loadData();
+                    },
+                );
             } else {
-                if (this.props.match.params.id)
-                    this._loadData();
+                if (this.props.match.params.id) this._loadData();
             }
         } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again!" });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
         }
-    }
+    };
 
     paging = async () => {
         try {
-            var result = await MenuApi.getPaging(this.state.currentPage, this.state.pageSize, "id:ASC", this.state.searchFilter);
-            this.setState({ total: result.total, pageCount: result.page_count, showLoading: false })
+            var result = await MenuApi.getPaging(this.state.currentPage, this.state.pageSize, 'id:ASC', this.state.searchFilter);
+            this.setState({ total: result.total, pageCount: result.page_count, showLoading: false });
 
             for (var i = 0; i < result.data.length; i++) {
-                var role = "";
+                var role = '';
                 if (result.data[i].roles) {
                     for (var j = 0; j < result.data[i].roles.length; j++) {
-                        if (role !== "")
-                            role += ", "
+                        if (role !== '') role += ', ';
 
                         role += result.data[i].roles[j].name;
                     }
@@ -181,11 +180,10 @@ class MenuSetupPage extends React.Component {
             }
 
             for (var k = 0; k < result.data.length; k++) {
-                var menu = "";
+                var menu = '';
                 if (result.data[k].children) {
                     for (var l = 0; l < result.data[k].children.length; l++) {
-                        if (menu !== "")
-                            menu += ", "
+                        if (menu !== '') menu += ', ';
 
                         menu += result.data[k].children[l].name;
                     }
@@ -196,23 +194,23 @@ class MenuSetupPage extends React.Component {
             if (result.count > 0) {
                 this.props.dispatch({
                     type: MENU_ACTIONS.INIT_DATA,
-                    data: result.data
-                })
+                    data: result.data,
+                });
             } else {
                 this.props.dispatch({
                     type: MENU_ACTIONS.INIT_DATA,
-                    data: []
-                })
+                    data: [],
+                });
 
                 this.setState({ showLoading: false, showError: true, errorMessage: 'There is no data to show.' });
             }
         } catch (error) {
             this.props.dispatch({
                 type: MENU_ACTIONS.INIT_DATA,
-                data: []
-            })
+                data: [],
+            });
         }
-    }
+    };
 
     _loadData = async () => {
         this.setState({ showLoading: true });
@@ -245,9 +243,9 @@ class MenuSetupPage extends React.Component {
                 });
             }
         } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again!" });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
         }
-    }
+    };
 
     validateForm() {
         var nameError = false;
@@ -255,30 +253,26 @@ class MenuSetupPage extends React.Component {
         var stateError = false;
         var typeError = false;
 
-        if (!this.state.name)
-            nameError = true;
+        if (!this.state.name) nameError = true;
 
-        if (!this.state.icon)
-            iconError = true
+        if (!this.state.icon) iconError = true;
 
-        if (!this.state.state)
-            stateError = true;
+        if (!this.state.state) stateError = true;
 
-        if (!this.state.selectedValue)
-            typeError = true
+        if (!this.state.selectedValue) typeError = true;
 
         this.setState({
             nameError: nameError,
             iconError: iconError,
             stateError: stateError,
-            typeError: typeError
+            typeError: typeError,
         });
 
         return !nameError && !iconError && !stateError && !typeError;
     }
 
     goBack() {
-        this.props.history.push("/menu/setup")
+        this.props.history.push('/menu/setup');
     }
 
     onSaveItem = async () => {
@@ -290,14 +284,14 @@ class MenuSetupPage extends React.Component {
 
         this.setState({ showLoading: true });
         var menu = {
-            "name": this.state.name,
-            "icon": this.state.icon,
-            "state": this.state.state,
-            "type": this.state.selectedValue,
-            "roles": this.state.roles,
-            "children": childMenus,
-            "parent_id": this.state.parent_id
-        }
+            name: this.state.name,
+            icon: this.state.icon,
+            state: this.state.state,
+            type: this.state.selectedValue,
+            roles: this.state.roles,
+            children: childMenus,
+            parent_id: this.state.parent_id,
+        };
 
         try {
             if (this.props.match.params.id) {
@@ -306,10 +300,10 @@ class MenuSetupPage extends React.Component {
                 this.props.dispatch({
                     type: MENU_ACTIONS.MODIFIED,
                     id: this.state.id,
-                    menu: response
+                    menu: response,
                 });
                 this.props.match.params.id = null;
-                this.props.history.push("/menu/setup?callback=success");
+                this.props.history.push('/menu/setup?callback=success');
             } else {
                 const response = await MenuApi.insert(menu);
                 this.props.dispatch({
@@ -317,37 +311,36 @@ class MenuSetupPage extends React.Component {
                     menu: response,
                 });
                 this.props.match.params.id = null;
-                this.props.history.push("/menu/setup?callback=success");
+                this.props.history.push('/menu/setup?callback=success');
             }
         } catch (error) {
             console.error(error);
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again." });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again.' });
         }
-    }
+    };
 
     onChangeText = (key, value) => {
         this.setState({ [key]: value });
-    }
+    };
 
     handleError = () => {
         this.setState({ showError: false });
-    }
+    };
 
     handleTableDialog = () => {
         this.setState({ showTable: !this.state.showTable });
-    }
+    };
 
-    selected = (id) => this.state.menus.map(t => t.id).indexOf(id) !== -1;
+    selected = id => this.state.menus.map(t => t.id).indexOf(id) !== -1;
 
-    chipDelete = (data) => {
+    chipDelete = data => {
         const chipData = [...this.state.menus];
         const chipToDelete = chipData.indexOf(data);
         chipData.splice(chipToDelete, 1);
         this.setState({ menus: chipData });
-    }
+    };
 
     handleRowClick = (event, data) => {
-
         const { menus } = this.state;
         const selectedIndex = menus.map(t => t.id).indexOf(data.id);
 
@@ -359,93 +352,93 @@ class MenuSetupPage extends React.Component {
         } else if (selectedIndex === menus.length - 1) {
             newSelected = newSelected.concat(menus.slice(0, -1));
         } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                menus.slice(0, selectedIndex),
-                menus.slice(selectedIndex + 1),
-            )
+            newSelected = newSelected.concat(menus.slice(0, selectedIndex), menus.slice(selectedIndex + 1));
         }
         this.setState({ menus: newSelected });
-    }
+    };
 
-    handleChangePage(e) {
-
-    }
+    handleChangePage(e) {}
 
     handleChangeRowsPerPage(e, _this) {
-        _this.setState({
-            pageSize: e.target.value
-        }, () => {
-            _this.paging();
-        })
+        _this.setState(
+            {
+                pageSize: e.target.value,
+            },
+            () => {
+                _this.paging();
+            },
+        );
     }
 
     pageChange = (pageParam, _this) => {
         var currentPage = _this.state.currentPage;
-        if (pageParam === "first") {
+        if (pageParam === 'first') {
             currentPage = 0;
-        } else if (pageParam === "previous") {
-            if (currentPage > 0)
-                currentPage -= 1;
-            else
-                currentPage = _this.state.pageCount - 1;
-        } else if (pageParam === "forward") {
-            if (currentPage === _this.state.pageCount - 1)
-                currentPage = 0;
-            else
-                currentPage += 1;
-        } else if (pageParam === "last") {
+        } else if (pageParam === 'previous') {
+            if (currentPage > 0) currentPage -= 1;
+            else currentPage = _this.state.pageCount - 1;
+        } else if (pageParam === 'forward') {
+            if (currentPage === _this.state.pageCount - 1) currentPage = 0;
+            else currentPage += 1;
+        } else if (pageParam === 'last') {
             currentPage = _this.state.pageCount - 1;
         }
 
-        _this.setState({
-            currentPage: currentPage,
-            showLoading: true
-        }, () => {
-            _this.paging();
-        });
-    }
+        _this.setState(
+            {
+                currentPage: currentPage,
+                showLoading: true,
+            },
+            () => {
+                _this.paging();
+            },
+        );
+    };
 
-    onKeyDown = (e) => {
+    onKeyDown = e => {
         if (e.keyCode === 13) {
             this.onSearch();
         }
-    }
+    };
 
     onSearch() {
-        this.setState({
-            currentPage: 0
-        }, () => {
-            this.paging();
-        })
+        this.setState(
+            {
+                currentPage: 0,
+            },
+            () => {
+                this.paging();
+            },
+        );
     }
 
     filterTextChange = (key, value) => {
         this.setState({
-            searchFilter: value
+            searchFilter: value,
         });
-    }
+    };
 
     radioHandleChange(_this, event) {
         _this.setState({
-            selectedValue: event.target.value
-        })
+            selectedValue: event.target.value,
+        });
     }
 
     loadIconDialog() {
-        console.log('load')
+        console.log('load');
         this.setState({
-            showIconDialog: true
-        })
+            showIconDialog: true,
+        });
     }
 
     closeIconDialog(result, _this) {
         if (!result) {
-            result = _this.state.icon
+            result = _this.state.icon;
         }
         _this.setState({
             showIconDialog: false,
             icon: result,
-        })
+        });
     }
 
     render() {
@@ -453,54 +446,65 @@ class MenuSetupPage extends React.Component {
 
         const handleRoleChange = event => {
             this.setState({
-                roles: event.target.value
-            })
+                roles: event.target.value,
+            });
         };
 
-        const fields = [{
-            name: "",
-            align: "center",
-            display_name: ""
-        }, {
-            name: "id",
-            align: "center",
-            display_name: "Id",
-        }, {
-            name: "name",
-            align: "left",
-            display_name: "Name",
-        }, {
-            name: "icon",
-            align: "left",
-            display_name: "Icon",
-        }, {
-            name: "state",
-            align: "left",
-            display_name: "State"
-        }, {
-            name: "type",
-            align: "left",
-            display_name: "Type"
-        }, {
-            name: "role_data",
-            align: "left",
-            display_name: "Roles",
-        }, {
-            name: "child_menu",
-            align: "left",
-            display_name: "Child Menu"
-        }, {
-            name: "is_divider",
-            align: "center",
-            display_name: "Divider"
-        }];
+        const fields = [
+            {
+                name: '',
+                align: 'center',
+                display_name: '',
+            },
+            {
+                name: 'id',
+                align: 'center',
+                display_name: 'Id',
+            },
+            {
+                name: 'name',
+                align: 'left',
+                display_name: 'Name',
+            },
+            {
+                name: 'icon',
+                align: 'left',
+                display_name: 'Icon',
+            },
+            {
+                name: 'state',
+                align: 'left',
+                display_name: 'State',
+            },
+            {
+                name: 'type',
+                align: 'left',
+                display_name: 'Type',
+            },
+            {
+                name: 'role_data',
+                align: 'left',
+                display_name: 'Roles',
+            },
+            {
+                name: 'child_menu',
+                align: 'left',
+                display_name: 'Child Menu',
+            },
+            {
+                name: 'is_divider',
+                align: 'center',
+                display_name: 'Divider',
+            },
+        ];
 
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
+                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
                 <MaterialIconDialog showDialog={this.state.showIconDialog} onIconClick={this.closeIconDialog} _this={this} />
-                <TableDialog tableTitle="Menu List"
+                <TableDialog
+                    tableTitle="Menu List"
                     fields={fields}
                     items={this.props.masterpanel.menu}
                     searchText={this.state.searchFilter}
@@ -520,7 +524,7 @@ class MenuSetupPage extends React.Component {
                     multi={true}
                 />
                 <Paper className={classes.root} elevation={1}>
-                    <Typography style={{ textAlign: "center" }} color="primary" variant="h5" component="h3">
+                    <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         Menu Setup
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
@@ -529,7 +533,9 @@ class MenuSetupPage extends React.Component {
                             <form className={classes.form} autoComplete="off">
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.nameError ? "error" : "primary"}>menu</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.nameError ? 'error' : 'primary'}>
+                                            menu
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -539,23 +545,24 @@ class MenuSetupPage extends React.Component {
                                             error={this.state.nameError ? true : false}
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.name ? this.state.name : ""}
+                                            value={this.state.name ? this.state.name : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
-                                        <div className={classes.form_error}>
-                                            {this.state.nameError ? "invalid name field!" : ""}
-                                        </div>
-
+                                        <div className={classes.form_error}>{this.state.nameError ? 'invalid name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.iconError ? "error" : "primary"}>{this.state.icon ? this.state.icon : 'toys'}</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.iconError ? 'error' : 'primary'}>
+                                            {this.state.icon ? this.state.icon : 'toys'}
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <FormControl className={classes.inputContainer}>
-                                            <InputLabel className={classes.inputLabel} htmlFor="iconInput">Icon*</InputLabel>
+                                            <InputLabel className={classes.inputLabel} htmlFor="iconInput">
+                                                Icon*
+                                            </InputLabel>
                                             <Input
                                                 id="icon"
                                                 color="primary"
@@ -563,26 +570,28 @@ class MenuSetupPage extends React.Component {
                                                 error={this.state.iconError ? true : false}
                                                 fullWidth
                                                 className={classes.input}
-                                                value={this.state.icon ? this.state.icon : ""}
+                                                value={this.state.icon ? this.state.icon : ''}
                                                 margin="dense"
-                                                onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                                onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                                 endAdornment={
                                                     <InputAdornment position="end">
                                                         <IconButton onClick={() => this.loadIconDialog()}>
-                                                            <Icon style={{ fontSize: 22 }} color={this.state.iconError ? "error" : "primary"}>games</Icon>
+                                                            <Icon style={{ fontSize: 22 }} color={this.state.iconError ? 'error' : 'primary'}>
+                                                                games
+                                                            </Icon>
                                                         </IconButton>
                                                     </InputAdornment>
                                                 }
                                             />
                                         </FormControl>
-                                        <div className={classes.form_error}>
-                                            {this.state.iconError ? "invalid icon field!" : ""}
-                                        </div>
+                                        <div className={classes.form_error}>{this.state.iconError ? 'invalid icon field!' : ''}</div>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.stateError ? "error" : "primary"}>toc</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.stateError ? 'error' : 'primary'}>
+                                            toc
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -592,25 +601,28 @@ class MenuSetupPage extends React.Component {
                                             error={this.state.stateError ? true : false}
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.state ? this.state.state : ""}
+                                            value={this.state.state ? this.state.state : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
-                                        <div className={classes.form_error}>
-                                            {this.state.stateError ? "invalid state field!" : ""}
-                                        </div>
-
+                                        <div className={classes.form_error}>{this.state.stateError ? 'invalid state field!' : ''}</div>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.typeError ? "error" : "primary"}>code</Icon>
-
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.typeError ? 'error' : 'primary'}>
+                                            code
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <FormControl className={classes.radio} component="fieldset">
-                                            <RadioGroup aria-label="position" name="position" value={this.state.selectedValue} onChange={(event) => this.radioHandleChange(this, event)} row>
+                                            <RadioGroup
+                                                aria-label="position"
+                                                name="position"
+                                                value={this.state.selectedValue}
+                                                onChange={event => this.radioHandleChange(this, event)}
+                                                row
+                                            >
                                                 <FormControlLabel
                                                     value="folder"
                                                     control={<Radio color="primary" />}
@@ -625,13 +637,13 @@ class MenuSetupPage extends React.Component {
                                                 />
                                             </RadioGroup>
                                         </FormControl>
-
-
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">star</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">
+                                            star
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <Select
@@ -654,7 +666,13 @@ class MenuSetupPage extends React.Component {
                                     <Paper className={classes.chipPaper}>
                                         <div className={classes.paperHeader}>
                                             <div className={classes.chipLabel}>
-                                                <Typography style={this.state.clientError ? { color: '#f44336' } : { color: 'rgba(0, 0, 0, 0.87)' }} variant="subtitle1" gutterBottom>Child Menu</Typography>
+                                                <Typography
+                                                    style={this.state.clientError ? { color: '#f44336' } : { color: 'rgba(0, 0, 0, 0.87)' }}
+                                                    variant="subtitle1"
+                                                    gutterBottom
+                                                >
+                                                    Child Menu
+                                                </Typography>
                                             </div>
                                             <div className={classes.chipButton}>
                                                 <Tooltip title="Add Child" placement="left">
@@ -667,7 +685,6 @@ class MenuSetupPage extends React.Component {
                                         <Divider light className={classes.chipDivider} />
                                         <div className={classes.chipContainer}>
                                             {this.state.menus.map(data => {
-
                                                 return (
                                                     <Chip
                                                         key={data.id}
@@ -683,13 +700,26 @@ class MenuSetupPage extends React.Component {
                                 </Grid>
                                 <Grid container spacing={8} alignItems="center" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: background.default }} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onSaveItem()}>
+                                        <Button
+                                            style={{ marginTop: '30px', marginBottom: '20px', color: background.default }}
+                                            color="primary"
+                                            variant="contained"
+                                            size="large"
+                                            className={classes.button}
+                                            onClick={() => this.onSaveItem()}
+                                        >
                                             <Icon className={classes.iconButton}>save</Icon>
                                             Save
                                         </Button>
                                     </Grid>
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: primary.main }} variant="contained" size="large" className={classes.button} onClick={() => this.goBack()}>
+                                        <Button
+                                            style={{ marginTop: '30px', marginBottom: '20px', color: primary.main }}
+                                            variant="contained"
+                                            size="large"
+                                            className={classes.button}
+                                            onClick={() => this.goBack()}
+                                        >
                                             <Icon className={classes.iconButton}>cancel_presentation</Icon>
                                             Cancel
                                         </Button>
@@ -701,7 +731,6 @@ class MenuSetupPage extends React.Component {
                 </Paper>
             </div>
         );
-
     }
 }
 
@@ -709,10 +738,10 @@ MenuSetupPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(MenuSetupPage)));

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider, Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 const styles = theme => ({
@@ -17,24 +17,23 @@ const styles = theme => ({
         padding: theme.spacing(2),
     },
     divider: {
-        marginBottom: 5
+        marginBottom: 5,
     },
-    card: {
-    },
+    card: {},
     media: {
         objectFit: 'cover',
     },
     map: {
         height: '250px',
         width: '100%',
-        position: 'relative'
+        position: 'relative',
     },
     calendar: {
         width: '100%',
-        border: '1px solid #eff6f7'
+        border: '1px solid #eff6f7',
     },
     calendarTile: {
-        height: 80
+        height: 80,
     },
     list: {
         paddingTop: 0,
@@ -59,7 +58,6 @@ const styles = theme => ({
 });
 
 class DashboardPage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -67,7 +65,7 @@ class DashboardPage extends React.Component {
             showLoading: false,
             books: [],
             confirms: [],
-            rejects: []
+            rejects: [],
         };
     }
 
@@ -75,17 +73,16 @@ class DashboardPage extends React.Component {
         this._loadData();
     }
 
-    _loadData = async () => {
+    _loadData = async () => {};
 
-    }
-
-    onChange = date => this.setState({ date }, () => {
-        this._loadData();
-    })
+    onChange = date =>
+        this.setState({ date }, () => {
+            this._loadData();
+        });
 
     handleListClick(type) {
         this.setState({
-            [type]: !this.state[type]
+            [type]: !this.state[type],
         });
     }
 
@@ -100,14 +97,13 @@ class DashboardPage extends React.Component {
         return (
             <div>
                 <Paper className={classes.root} elevation={1}>
-                    <Typography style={{ textAlign: "center" }} color="primary" variant="h5" component="h3">
+                    <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         Dashboard
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
                 </Paper>
             </div>
         );
-
     }
 }
 
@@ -115,10 +111,10 @@ DashboardPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(DashboardPage)));

@@ -5,7 +5,7 @@ const API_URL = 'permissions/';
 class PermissionApi extends ApiManager {
     async insertMulti(datas) {
         try {
-            var url = API_URL + "create";
+            var url = API_URL + 'create';
             const response = await this.post(url, datas, true);
 
             if (response.code >= 200 && response.code < 300) {
@@ -21,7 +21,7 @@ class PermissionApi extends ApiManager {
 
     async getAvailableRoutes() {
         try {
-            var url = API_URL + "routes";
+            var url = API_URL + 'routes';
 
             const response = await this.get(url, true);
 
@@ -38,7 +38,7 @@ class PermissionApi extends ApiManager {
 
     async getPermissionByRoles(role) {
         try {
-            var url = API_URL + role + "/role/";
+            var url = API_URL + role + '/role/';
 
             const response = await this.get(url, true);
 

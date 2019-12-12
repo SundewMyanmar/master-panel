@@ -1,16 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
-    withStyles, Paper, TextField, Icon, Button, Grid, Divider,
-    Typography, Select, MenuItem, Input, FormControl, FormControlLabel,
-    FormLabel, InputLabel, Switch, Avatar, IconButton
+    withStyles,
+    Paper,
+    TextField,
+    Icon,
+    Button,
+    Grid,
+    Divider,
+    Typography,
+    Select,
+    MenuItem,
+    Input,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    InputLabel,
+    Switch,
+    Avatar,
+    IconButton,
 } from '@material-ui/core';
 
 import { primary, action, background } from '../../config/Theme';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
-import ErrorDialog from '../../component/Dialogs/ErrorDialog';
+import AlertDialog from '../../component/Dialogs/AlertDialog';
 import TableDialog from '../../component/Dialogs/TableDialog';
 import UserApi from '../../api/UserApi';
 import RoleApi from '../../api/RoleApi';
@@ -41,14 +56,14 @@ const styles = theme => ({
         paddingRight: 10,
         paddingLeft: 10,
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
     },
     form_error: {
-        color: action.error
+        color: action.error,
     },
     select: {
         width: '100%',
-        marginTop: 32
+        marginTop: 32,
     },
     avatar: {
         margin: 10,
@@ -56,19 +71,18 @@ const styles = theme => ({
 });
 
 class UserSetupPage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             userStatus: [
-                { "display": "Active", "key": "ACTIVE" },
-                { "display": "Inactive", "key": "PENDING" }
+                { display: 'Active', key: 'ACTIVE' },
+                { display: 'Inactive', key: 'PENDING' },
             ],
             userGender: [
-                { "display": "Male", "key": "male" },
-                { "display": "Female", "key": "female" }
+                { display: 'Male', key: 'male' },
+                { display: 'Female', key: 'female' },
             ],
-            status: "ACTIVE",
+            status: 'ACTIVE',
             roles: [],
             roleItems: [],
             showLoading: false,
@@ -93,22 +107,23 @@ class UserSetupPage extends React.Component {
         try {
             const response = await RoleApi.getAll();
             if (response.data && response.data.length > 0) {
-                this.setState({
-                    roleItems: response.data,
-                    showLoading: false,
-                    roles: []
-                }, () => {
-                    if (this.props.match.params.id)
-                        this._loadData();
-                })
+                this.setState(
+                    {
+                        roleItems: response.data,
+                        showLoading: false,
+                        roles: [],
+                    },
+                    () => {
+                        if (this.props.match.params.id) this._loadData();
+                    },
+                );
             } else {
-                if (this.props.match.params.id)
-                    this._loadData();
+                if (this.props.match.params.id) this._loadData();
             }
         } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again!" });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
         }
-    }
+    };
 
     _loadData = async () => {
         this.setState({ showLoading: true });
@@ -117,10 +132,8 @@ class UserSetupPage extends React.Component {
 
             if (data) {
                 var image, preview;
-                if (data.profile_image)
-                    image = data.profile_image;
-                if (data.profile_image && data.profile_image.public_url)
-                    preview = data.profile_image.public_url;
+                if (data.profile_image) image = data.profile_image;
+                if (data.profile_image && data.profile_image.public_url) preview = data.profile_image.public_url;
 
                 var roles = [];
                 if (data.roles && data.roles.length > 0) {
@@ -140,27 +153,26 @@ class UserSetupPage extends React.Component {
                     email: data.email,
                     status: data.status,
                     roles: roles,
-                    password: "PWD123456",
+                    password: 'PWD123456',
                     showLoading: false,
                     image: image,
                     previewImage: preview,
-
                 });
                 if (data.extras) {
                     this.setState({
-                        address: data.extras.address ? data.extras.address : "",
-                        gender: data.extras.gender ? data.extras.gender : "",
-                        phone: data.extras.phone ? data.extras.phone : "",
-                    })
+                        address: data.extras.address ? data.extras.address : '',
+                        gender: data.extras.gender ? data.extras.gender : '',
+                        phone: data.extras.phone ? data.extras.phone : '',
+                    });
                 }
                 if (data.display_name) {
-                    this.setState({ display_name: data.display_name.uni ? data.display_name.uni : data.display_name })
+                    this.setState({ display_name: data.display_name.uni ? data.display_name.uni : data.display_name });
                 }
             }
         } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again!" });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
         }
-    }
+    };
 
     validateForm() {
         var user_nameError = false;
@@ -171,11 +183,11 @@ class UserSetupPage extends React.Component {
         var statusError = false;
 
         if (!this.props.match.params.id) {
-            if (!this.state.display_name || this.state.display_name === "") {
+            if (!this.state.display_name || this.state.display_name === '') {
                 display_nameError = true;
             }
 
-            if (!this.state.user_name || this.state.user_name === "") {
+            if (!this.state.user_name || this.state.user_name === '') {
                 user_nameError = true;
             }
 
@@ -187,7 +199,7 @@ class UserSetupPage extends React.Component {
                 emailError = true;
             }
 
-            if (!this.state.password || this.state.password === "" || this.state.password.length <= 6) {
+            if (!this.state.password || this.state.password === '' || this.state.password.length <= 6) {
                 passwordError = true;
             }
 
@@ -196,12 +208,11 @@ class UserSetupPage extends React.Component {
             }
         }
 
-        if (!this.state.display_name || this.state.display_name === "") {
+        if (!this.state.display_name || this.state.display_name === '') {
             display_nameError = true;
         }
 
-        if (!this.state.status)
-            statusError = true;
+        if (!this.state.status) statusError = true;
 
         this.setState({
             display_nameError: display_nameError,
@@ -209,14 +220,14 @@ class UserSetupPage extends React.Component {
             emailError: emailError,
             passwordError: passwordError,
             confirm_passwordError: confirm_passwordError,
-            statusError: statusError
+            statusError: statusError,
         });
 
         return !display_nameError && !user_nameError && !emailError && !passwordError && !confirm_passwordError && !statusError;
     }
 
     goBack() {
-        this.props.history.push("/user/setup")
+        this.props.history.push('/user/setup');
     }
 
     onSaveItem = async () => {
@@ -226,31 +237,31 @@ class UserSetupPage extends React.Component {
 
         this.setState({ showLoading: true });
         var user = {
-            "display_name": this.state.display_name,
-            "user_name": this.state.user_name,
-            "email": this.state.email,
-            "password": this.state.password,
-            "status": this.state.status,
-            "extras": {
-                "address": this.state.address,
-                "phone": this.state.phone,
-                "gender": this.state.gender,
-            }
-        }
+            display_name: this.state.display_name,
+            user_name: this.state.user_name,
+            email: this.state.email,
+            password: this.state.password,
+            status: this.state.status,
+            extras: {
+                address: this.state.address,
+                phone: this.state.phone,
+                gender: this.state.gender,
+            },
+        };
 
         try {
             if (this.state.roles.length) {
                 var roles = [];
                 for (const role of this.state.roles) {
-                    roles.push({ id: role.id })
+                    roles.push({ id: role.id });
                 }
                 user.roles = roles;
             }
 
             if (this.state.image && this.state.image.id) {
                 user.profile_image = {
-                    "id": this.state.image.id
-                }
+                    id: this.state.image.id,
+                };
             } else if (this.state.image && !this.state.image.id) {
                 var fileResponse;
 
@@ -258,8 +269,8 @@ class UserSetupPage extends React.Component {
 
                 if (fileResponse)
                     user.profile_image = {
-                        "id": fileResponse.id
-                    }
+                        id: fileResponse.id,
+                    };
             } else {
                 user.profile_image = null;
             }
@@ -270,10 +281,10 @@ class UserSetupPage extends React.Component {
                 this.props.dispatch({
                     type: USER_ACTIONS.MODIFIED,
                     id: this.state.id,
-                    user: response
+                    user: response,
                 });
                 this.props.match.params.id = null;
-                this.props.history.push("/user/setup?callback=success");
+                this.props.history.push('/user/setup?callback=success');
             } else {
                 const response = await UserApi.insert(user);
 
@@ -282,41 +293,41 @@ class UserSetupPage extends React.Component {
                     user: response,
                 });
                 this.props.match.params.id = null;
-                this.props.history.push("/user/setup?callback=success");
+                this.props.history.push('/user/setup?callback=success');
             }
         } catch (error) {
             console.error(error);
-            this.setState({ showLoading: false, showError: true, errorMessage: "Please check your internet connection and try again." });
+            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again.' });
         }
-    }
+    };
 
     onChangeText = (key, value) => {
         this.setState({ [key]: value });
-    }
+    };
 
     handleError = () => {
         this.setState({ showError: false });
-    }
+    };
 
     onImageChange(file, _this) {
         var fr = new FileReader();
-        fr.onload = function () {
+        fr.onload = function() {
             _this.setState({
                 previewImage: fr.result,
-                image: file
-            })
-        }
+                image: file,
+            });
+        };
         fr.readAsDataURL(file);
     }
 
     onImageRemove(_this) {
         _this.setState({
             previewImage: null,
-            image: null
+            image: null,
         });
     }
 
-    onUploadImage = async (event) => {
+    onUploadImage = async event => {
         try {
             var reader = new FileReader();
             var file = event.target.files[0];
@@ -330,167 +341,176 @@ class UserSetupPage extends React.Component {
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     handleFileClick = (event, data) => {
-        this.setState({ showFile: false, image: data, previewImage: data.public_url })
-    }
+        this.setState({ showFile: false, image: data, previewImage: data.public_url });
+    };
 
     handleFileClose = () => {
-        this.setState({ showFile: false })
-    }
+        this.setState({ showFile: false });
+    };
 
-    handleFileOpen = (_this) => {
+    handleFileOpen = _this => {
         this.setState({ showFile: true });
         _this.setState({ showDialog: false });
-    }
+    };
 
     paging = async () => {
         this.setState({ showLoading: true });
         try {
-            var result = await FileApi.getPaging(this.state.fileCurrentPage, this.state.filePageSize, "createdAt:DESC", this.state.fileSearchFilter);
-            this.setState({ fileTotal: result.total, filePageCount: result.page_count, showLoading: false })
+            var result = await FileApi.getPaging(this.state.fileCurrentPage, this.state.filePageSize, 'createdAt:DESC', this.state.fileSearchFilter);
+            this.setState({ fileTotal: result.total, filePageCount: result.page_count, showLoading: false });
 
             if (result.count > 0) {
                 this.props.dispatch({
                     type: FILE_ACTIONS.INIT_DATA,
-                    data: result.data
-                })
+                    data: result.data,
+                });
             } else {
                 this.props.dispatch({
                     type: FILE_ACTIONS.INIT_DATA,
-                    data: []
-                })
+                    data: [],
+                });
 
                 this.setState({ showLoading: false });
             }
         } catch (error) {
             this.props.dispatch({
                 type: FILE_ACTIONS.INIT_DATA,
-                data: []
-            })
+                data: [],
+            });
         }
-    }
-
-    fileHandleChangePage(e) {
-
-    }
+    };
 
     fileHandleChangeRowsPerPage(e, _this) {
-        _this.setState({
-            filePageSize: e.target.value
-        }, () => {
-            _this.paging();
-        })
+        _this.setState(
+            {
+                filePageSize: e.target.value,
+            },
+            () => {
+                _this.paging();
+            },
+        );
     }
 
     filePageChange = (pageParam, _this) => {
         var currentPage = _this.state.fileCurrentPage;
-        if (pageParam === "first") {
+        if (pageParam === 'first') {
             currentPage = 0;
-        } else if (pageParam === "previous") {
-            if (currentPage > 0)
-                currentPage -= 1;
-            else
-                currentPage = _this.state.filePageCount - 1;
-        } else if (pageParam === "forward") {
-            if (currentPage === _this.state.filePageCount - 1)
-                currentPage = 0;
-            else
-                currentPage += 1;
-        } else if (pageParam === "last") {
+        } else if (pageParam === 'previous') {
+            if (currentPage > 0) currentPage -= 1;
+            else currentPage = _this.state.filePageCount - 1;
+        } else if (pageParam === 'forward') {
+            if (currentPage === _this.state.filePageCount - 1) currentPage = 0;
+            else currentPage += 1;
+        } else if (pageParam === 'last') {
             currentPage = _this.state.filePageCount - 1;
         }
 
-        _this.setState({
-            fileCurrentPage: currentPage,
-            showLoading: true
-        }, () => {
-            _this.paging();
-        });
-    }
+        _this.setState(
+            {
+                fileCurrentPage: currentPage,
+                showLoading: true,
+            },
+            () => {
+                _this.paging();
+            },
+        );
+    };
 
-    fileKeyDown = (e) => {
+    fileKeyDown = e => {
         if (e.keyCode === 13) {
             this.fileSearch();
         }
-    }
+    };
 
     fileSearch() {
-        this.setState({
-            fileCurrentPage: 0
-        }, () => {
-            this.paging();
-        })
+        this.setState(
+            {
+                fileCurrentPage: 0,
+            },
+            () => {
+                this.paging();
+            },
+        );
     }
 
     filefilterTextChange = (key, value) => {
         this.setState({
-            fileSearchFilter: value
+            fileSearchFilter: value,
         });
-    }
+    };
 
     render() {
         const { classes } = this.props;
 
         const handleRoleChange = event => {
             this.setState({
-                roles: event.target.value
-            })
+                roles: event.target.value,
+            });
         };
 
         const handleGenderChange = event => {
             this.setState({
-                gender: event.target.value
-            })
+                gender: event.target.value,
+            });
         };
 
         const handleChange = name => event => {
             this.setState({ status: event.target.value });
         };
 
-        const fields = [{
-            name: "",
-            align: "center",
-            display_name: ""
-        }, {
-            name: "id",
-            align: "center",
-            display_name: "Id",
-        }, {
-            name: "profile_image",
-            align: "center",
-            display_name: "Profile Image",
-            type: "IMAGE"
-        }, {
-            name: "name_en",
-            align: "left",
-            display_name: "Name",
-        }, {
-            name: "order_available",
-            align: "center",
-            display_name: "Order Available",
-        }, {
-            name: "active",
-            align: "center",
-            display_name: "Status",
-        }];
+        const fields = [
+            {
+                name: '',
+                align: 'center',
+                display_name: '',
+            },
+            {
+                name: 'id',
+                align: 'center',
+                display_name: 'Id',
+            },
+            {
+                name: 'profile_image',
+                align: 'center',
+                display_name: 'Profile Image',
+                type: 'IMAGE',
+            },
+            {
+                name: 'name_en',
+                align: 'left',
+                display_name: 'Name',
+            },
+            {
+                name: 'order_available',
+                align: 'center',
+                display_name: 'Order Available',
+            },
+            {
+                name: 'active',
+                align: 'center',
+                display_name: 'Status',
+            },
+        ];
 
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <ErrorDialog showError={this.state.showError} title="Oops!" description={this.state.errorMessage} handleError={this.handleError} />
-                <FileDialog showFile={this.state.showFile}
+                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <FileDialog
+                    showFile={this.state.showFile}
                     items={this.props.masterpanel.file}
                     total={this.state.fileTotal}
                     pageSize={this.state.filePageSize}
                     currentPage={this.state.fileCurrentPage}
-                    pageChange={this.filePageChange}
+                    onPaginationButtonClick={this.filePageChange}
                     handleChangePage={this.fileHandleChangePage}
                     handleChangeRowsPerPage={this.fileHandleChangeRowsPerPage}
                     handleFileClick={this.handleFileClick}
                     handleClose={this.handleFileClose}
-                    searchFilterText={this.state.fileSearchFilter ? this.state.fileSearchFilter : ""}
+                    searchFilterText={this.state.fileSearchFilter ? this.state.fileSearchFilter : ''}
                     onSearch={this.fileSearch}
                     onKeyDown={this.fileKeyDown}
                     onChangeText={this.filefilterTextChange}
@@ -499,7 +519,7 @@ class UserSetupPage extends React.Component {
                 />
 
                 <Paper className={classes.root} elevation={1}>
-                    <Typography style={{ textAlign: "center" }} color="primary" variant="h5" component="h3">
+                    <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         User Setup
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
@@ -507,15 +527,21 @@ class UserSetupPage extends React.Component {
                         <Grid item xs={12} sm={12} md={8} lg={6}>
                             <form className={classes.form} autoComplete="off">
                                 <Grid container justify="center">
-                                    <ImageUpload onImageChange={this.onImageChange} onImageRemove={this.onImageRemove}
-                                        previewImage={this.state.previewImage} _this={this} id="imageUpload"
+                                    <ImageUpload
+                                        onImageChange={this.onImageChange}
+                                        onImageRemove={this.onImageRemove}
+                                        previewImage={this.state.previewImage}
+                                        _this={this}
+                                        id="imageUpload"
                                         handleFileOpen={this.handleFileOpen}
                                     />
                                 </Grid>
                                 <Divider className={classes.divider} light component="h3" />
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.display_nameError ? "error" : "primary"}>person_outline</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.display_nameError ? 'error' : 'primary'}>
+                                            person_outline
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -525,19 +551,19 @@ class UserSetupPage extends React.Component {
                                             error={this.state.display_nameError ? true : false}
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.display_name ? this.state.display_name : ""}
+                                            value={this.state.display_name ? this.state.display_name : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
-                                        <div className={classes.form_error}>
-                                            {this.state.display_nameError ? "invalid display name field!" : ""}
-                                        </div>
+                                        <div className={classes.form_error}>{this.state.display_nameError ? 'invalid display name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.user_nameError ? "error" : "primary"}>person</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.user_nameError ? 'error' : 'primary'}>
+                                            person
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -548,20 +574,19 @@ class UserSetupPage extends React.Component {
                                             error={this.state.user_nameError ? true : false}
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.user_name ? this.state.user_name : ""}
+                                            value={this.state.user_name ? this.state.user_name : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
-                                        <div className={classes.form_error}>
-                                            {this.state.user_nameError ? "invalid user name field!" : ""}
-                                        </div>
-
+                                        <div className={classes.form_error}>{this.state.user_nameError ? 'invalid user name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.emailError ? "error" : "primary"}>email</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.emailError ? 'error' : 'primary'}>
+                                            email
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -572,20 +597,19 @@ class UserSetupPage extends React.Component {
                                             error={this.state.emailError ? true : false}
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.email ? this.state.email : ""}
+                                            value={this.state.email ? this.state.email : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
-                                        <div className={classes.form_error}>
-                                            {this.state.emailError ? "invalid email field!" : ""}
-                                        </div>
-
+                                        <div className={classes.form_error}>{this.state.emailError ? 'invalid email field!' : ''}</div>
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">location_on</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color="primary">
+                                            location_on
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -594,16 +618,18 @@ class UserSetupPage extends React.Component {
                                             label="Address"
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.address ? this.state.address : ""}
+                                            value={this.state.address ? this.state.address : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">local_phone</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color="primary">
+                                            local_phone
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -612,23 +638,25 @@ class UserSetupPage extends React.Component {
                                             label="Phone"
                                             fullWidth
                                             className={classes.textField}
-                                            value={this.state.phone ? this.state.phone : ""}
+                                            value={this.state.phone ? this.state.phone : ''}
                                             margin="dense"
-                                            onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                            onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                         />
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="flex-end">
+                                <Grid container spacing={2} alignItems="flex-end">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">wc</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color="primary">
+                                            wc
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <FormControl fullWidth className={classes.formControl}>
                                             <InputLabel htmlFor="gender">Gender</InputLabel>
                                             <Select
                                                 className={classes.select}
-                                                value={this.state.gender ? this.state.gender : ""}
+                                                value={this.state.gender ? this.state.gender : ''}
                                                 onChange={handleGenderChange}
                                                 input={<Input id="gender" />}
                                                 MenuProps={{ className: classes.menu }}
@@ -642,11 +670,15 @@ class UserSetupPage extends React.Component {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                {
-                                    (this.props.match.params.id) ? "" : <div>
-                                        <Grid container spacing={8} alignItems="flex-start">
+                                {this.props.match.params.id ? (
+                                    ''
+                                ) : (
+                                    <div>
+                                        <Grid container spacing={2} alignItems="flex-start">
                                             <Grid item>
-                                                <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.passwordError ? "error" : "primary"}>lock</Icon>
+                                                <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.passwordError ? 'error' : 'primary'}>
+                                                    lock
+                                                </Icon>
                                             </Grid>
                                             <Grid item xs={11} sm={11} md={11} lg={11}>
                                                 <TextField
@@ -657,19 +689,21 @@ class UserSetupPage extends React.Component {
                                                     fullWidth
                                                     type="password"
                                                     className={classes.textField}
-                                                    value={this.state.password ? this.state.password : ""}
+                                                    value={this.state.password ? this.state.password : ''}
                                                     margin="dense"
-                                                    onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                                    onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                                 />
-                                                <div className={classes.form_error}>
-                                                    {this.state.passwordError ? "invalid password field!" : ""}
-                                                </div>
-
+                                                <div className={classes.form_error}>{this.state.passwordError ? 'invalid password field!' : ''}</div>
                                             </Grid>
                                         </Grid>
-                                        <Grid container spacing={8} alignItems="flex-start">
+                                        <Grid container spacing={2} alignItems="flex-start">
                                             <Grid item>
-                                                <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.confirm_passwordError ? "error" : "primary"}>lock</Icon>
+                                                <Icon
+                                                    style={{ fontSize: 22, paddingTop: 25 }}
+                                                    color={this.state.confirm_passwordError ? 'error' : 'primary'}
+                                                >
+                                                    lock
+                                                </Icon>
                                             </Grid>
                                             <Grid item xs={11} sm={11} md={11} lg={11}>
                                                 <TextField
@@ -680,21 +714,23 @@ class UserSetupPage extends React.Component {
                                                     fullWidth
                                                     type="password"
                                                     className={classes.textField}
-                                                    value={this.state.confirm_password ? this.state.confirm_password : ""}
+                                                    value={this.state.confirm_password ? this.state.confirm_password : ''}
                                                     margin="dense"
-                                                    onChange={(event) => this.onChangeText(event.target.id, event.target.value)}
+                                                    onChange={event => this.onChangeText(event.target.id, event.target.value)}
                                                 />
                                                 <div className={classes.form_error}>
-                                                    {this.state.confirm_passwordError ? "password doesn't match!" : ""}
+                                                    {this.state.confirm_passwordError ? "password doesn't match!" : ''}
                                                 </div>
-
                                             </Grid>
-                                        </Grid></div>
-                                }
+                                        </Grid>
+                                    </div>
+                                )}
 
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">whatshot</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color="primary">
+                                            whatshot
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <Select
@@ -714,9 +750,11 @@ class UserSetupPage extends React.Component {
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">code</Icon>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color="primary">
+                                            code
+                                        </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
                                         <TextField
@@ -734,7 +772,8 @@ class UserSetupPage extends React.Component {
                                                     className: classes.menu,
                                                 },
                                             }}
-                                            margin="dense">
+                                            margin="dense"
+                                        >
                                             {this.state.userStatus.map(option => (
                                                 <option key={option.key} value={option.key}>
                                                     {option.display}
@@ -744,20 +783,32 @@ class UserSetupPage extends React.Component {
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={8} alignItems="center" justify="space-evenly">
+                                <Grid container spacing={2} alignItems="center" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: background.default }} color="primary" variant="contained" size="large" className={classes.button} onClick={() => this.onSaveItem()}>
+                                        <Button
+                                            style={{ marginTop: '30px', marginBottom: '20px', color: background.default }}
+                                            color="primary"
+                                            variant="contained"
+                                            size="large"
+                                            className={classes.button}
+                                            onClick={() => this.onSaveItem()}
+                                        >
                                             <Icon className={classes.iconButton}>save</Icon>
                                             Save
                                         </Button>
                                     </Grid>
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
-                                        <Button style={{ marginTop: '30px', marginBottom: '20px', color: primary.main }} variant="contained" size="large" className={classes.button} onClick={() => this.goBack()}>
+                                        <Button
+                                            style={{ marginTop: '30px', marginBottom: '20px', color: primary.main }}
+                                            variant="contained"
+                                            size="large"
+                                            className={classes.button}
+                                            onClick={() => this.goBack()}
+                                        >
                                             <Icon className={classes.iconButton}>cancel_presentation</Icon>
                                             Cancel
                                         </Button>
                                     </Grid>
-
                                 </Grid>
                             </form>
                         </Grid>
@@ -765,7 +816,6 @@ class UserSetupPage extends React.Component {
                 </Paper>
             </div>
         );
-
     }
 }
 
@@ -773,10 +823,10 @@ UserSetupPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        masterpanel: state
-    }
-}
+        masterpanel: state,
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(UserSetupPage)));

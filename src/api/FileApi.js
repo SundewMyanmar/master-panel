@@ -1,5 +1,5 @@
 import ApiManager from '../util/APIManager';
-import { API_URL } from "../config/Constant";
+import { API_URL } from '../config/Constant';
 import Axios from 'axios';
 
 class FileApi extends ApiManager {
@@ -12,15 +12,15 @@ class FileApi extends ApiManager {
         formData.append('isPublic', true);
 
         try {
-            const url = API_URL + "files/upload/";
+            const url = API_URL + 'files/upload/';
             const response = await Axios.post(url, formData, { headers: headers });
 
             const responseJson = response.data;
-            if (responseJson.content && (responseJson.code >= 200 && responseJson.code <= 300)) {
+            if (responseJson.content && responseJson.code >= 200 && responseJson.code <= 300) {
                 return responseJson.content;
             }
         } catch (error) {
-            console.error("Upload Error => ", error);
+            console.error('Upload Error => ', error);
             throw error;
         }
         return null;
@@ -38,15 +38,15 @@ class FileApi extends ApiManager {
         formData.append('isPublic', true);
 
         try {
-            const url = API_URL + "files/multi/upload/";
+            const url = API_URL + 'files/multi/upload/';
             const response = await Axios.post(url, formData, { headers: headers });
 
             const responseJson = response.data;
-            if (responseJson.content && (responseJson.code >= 200 && responseJson.code <= 300)) {
+            if (responseJson.content && responseJson.code >= 200 && responseJson.code <= 300) {
                 return responseJson.content;
             }
         } catch (error) {
-            console.error("Upload Error => ", error);
+            console.error('Upload Error => ', error);
             throw error;
         }
         return null;
@@ -54,11 +54,9 @@ class FileApi extends ApiManager {
 
     async getPaging(page, size, sort, filter) {
         try {
-            var url = "files/?page=" + page + "&size=" + size;
-            if (sort && sort !== "")
-                url += "&sort=" + sort;
-            if (filter && filter !== "")
-                url += "&filter=" + filter;
+            var url = 'files/?page=' + page + '&size=' + size;
+            if (sort && sort !== '') url += '&sort=' + sort;
+            if (filter && filter !== '') url += '&filter=' + filter;
 
             const response = await this.get(url, true);
             if (response.code >= 200 && response.code < 300) {
@@ -73,7 +71,7 @@ class FileApi extends ApiManager {
 
     async delete(id) {
         try {
-            const url = "files/" + id;
+            const url = 'files/' + id;
             const response = await this.deleteItem(url, {}, true);
             if (response.code >= 200 && response.code < 300) {
                 return response.content;

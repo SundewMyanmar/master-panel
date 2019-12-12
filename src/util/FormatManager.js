@@ -8,20 +8,20 @@ export default class FormatManager {
     static formatDate = (date, format) => {
         const unixTS = parseInt(date / 1000);
         return moment.unix(unixTS).format(format);
-    }
+    };
 
-    static toTimestamp = (date) => {
+    static toTimestamp = date => {
         return moment(date).valueOf();
-    }
+    };
 
-    static ValidateEmail = (mail) => {
+    static ValidateEmail = mail => {
         var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(mail);
-    }
+    };
 
-    static ValidateUser = (user) => {
+    static ValidateUser = user => {
         return /^[a-zA-Z0-9\\.]*$/.test(user);
-    }
+    };
 
     static DateDiff = (date1, date2) => {
         //Get 1 day in milliseconds
@@ -36,9 +36,9 @@ export default class FormatManager {
 
         // Convert back to days and return
         return Math.round(difference_ms / one_day);
-    }
+    };
 
     static TimeDiff = (date1, date2) => {
         return Math.abs(date1 - date2) / 36e5;
-    }
+    };
 }

@@ -19,55 +19,55 @@ export const common = {
     brown: '#5d4037',
     google: '#DC4E41',
     facebook: '#3b5998',
-}
+};
 
 export const action = {
-    success: "#1b5e20",
-    warn: "#b79e0e",
-    error: "#640236",
-    info: "#006064"
-}
+    success: '#1b5e20',
+    warn: '#b79e0e',
+    error: '#640236',
+    info: '#006064',
+};
 
 export const primary = {
     dark: '#2f4484',
     main: '#606fb4',
     light: '#919de6',
-    contrastText: "#f1f1f1",
-}
+    contrastText: '#f1f1f1',
+};
 
 export const secondary = {
     dark: '#8c367a',
     main: '#be65a9',
     light: '#f295db',
-    contrastText: "#f1f1f1",
-}
+    contrastText: '#f1f1f1',
+};
 
 export const divider = '#000000';
 
 export const background = {
     default: '#f1f1f1',
     dark: '#606fb4',
-    light: '#c4ccfb'
-}
+    light: '#c4ccfb',
+};
 
 export const menu = {
     main: '#1b5e20',
     dark: '#053509',
-    light: '#a5d6a7'
-}
+    light: '#a5d6a7',
+};
 
 export const text = {
     main: '#606fb4',
     dark: '#2f4484',
-    light: '#919de6'
-}
+    light: '#919de6',
+};
 
 export const DefaultTheme = createMuiTheme({
     typography: {
         useNextVariants: true,
     },
     palette: {
-        type: "light",
+        type: 'light',
         common: common,
         action: action,
         primary: primary,
@@ -75,6 +75,6 @@ export const DefaultTheme = createMuiTheme({
         divider: divider,
         background: background,
         menu: menu,
-        text: text
+        text: text,
     },
 });

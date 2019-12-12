@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 import {
     Button,
     Typography,
@@ -28,7 +28,7 @@ const styles = theme => ({
         fontSize: '0.75rem',
         fontWeight: '400',
         lineHeight: '1.375em',
-        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     },
     table: {
         minWidth: 700,
@@ -46,7 +46,7 @@ const styles = theme => ({
     search: {
         width: 'calc(25%)',
         display: 'flex',
-        marginLeft: '25px'
+        marginLeft: '25px',
     },
     pagination: {
         overflow: 'hidden',
@@ -65,7 +65,7 @@ const styles = theme => ({
     buttonField: {
         display: 'flex',
         width: 'calc(25%)',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     pager: {
         flexShrink: 0,
@@ -76,14 +76,13 @@ const StyledPager = withStyles(theme => ({
     root: {
         color: theme.palette.primary.main,
         flex: 1,
-
     },
     selectRoot: {
         width: 50,
     },
     selectIcon: {
-        color: theme.palette.primary.main
-    }
+        color: theme.palette.primary.main,
+    },
 }))(TablePagination);
 
 const CustomTableCell = withStyles(theme => ({
@@ -101,7 +100,6 @@ const CustomTableCell = withStyles(theme => ({
 }))(TableCell);
 
 class MasterModalTable extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -112,57 +110,83 @@ class MasterModalTable extends React.Component {
         //     display_name:""
         // })
 
-        this.state = {
-        }
+        this.state = {};
     }
 
     TablePaginationActions = () => {
         const { classes, theme, pageChange, total, pageSize, currentPage, _this } = this.props;
 
-        return (<div className={[classes.pager]}>
-            <IconButton onClick={() => pageChange("first", _this)} aria-label="First Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("previous", _this)} aria-label="Previous Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("forward", _this)} aria-label="Next Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>}
-            </IconButton>
-            <IconButton onClick={() => pageChange("last", _this)} aria-label="Last Page">
-                {theme.direction === 'rtl' ? <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon> :
-                    <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>}
-            </IconButton>
-        </div>);
-    }
+        return (
+            <div className={[classes.pager]}>
+                <IconButton onClick={() => pageChange('first', _this)} aria-label="First Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>
+                    )}
+                </IconButton>
+                <IconButton onClick={() => pageChange('previous', _this)} aria-label="Previous Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>
+                    )}
+                </IconButton>
+                <IconButton onClick={() => pageChange('forward', _this)} aria-label="Next Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>
+                    )}
+                </IconButton>
+                <IconButton onClick={() => pageChange('last', _this)} aria-label="Last Page">
+                    {theme.direction === 'rtl' ? (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>
+                    ) : (
+                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>
+                    )}
+                </IconButton>
+            </div>
+        );
+    };
 
     handleSortBy(sortBy) {
         const { items } = this.props;
         var sortOrder = this.state.sortOrder;
         if (this.state.sortBy === sortBy) {
             sortOrder = !this.state.sortOrder;
-        }
-        else {
+        } else {
             sortOrder = true;
         }
 
-        const result =
-            !sortOrder
-                ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) :
-                items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
+        const result = !sortOrder ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) : items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
 
         this.setState({
             sortBy: sortBy,
             sortOrder: sortOrder,
-            items: result
+            items: result,
         });
     }
 
     render() {
-        const { classes, multi, items, fields, tableTitle, filterTextChange, onKeyDown, searchText, handleRowClick, onCloseDialog, total, pageSize, currentPage, handleChangePage, handleChangeRowsPerPage, _this } = this.props;
+        const {
+            classes,
+            multi,
+            items,
+            fields,
+            tableTitle,
+            filterTextChange,
+            onKeyDown,
+            searchText,
+            handleRowClick,
+            onCloseDialog,
+            total,
+            pageSize,
+            currentPage,
+            handleChangePage,
+            handleChangeRowsPerPage,
+            _this,
+        } = this.props;
 
         return (
             <div className={classes.root}>
@@ -172,7 +196,7 @@ class MasterModalTable extends React.Component {
                             <Input
                                 autoFocus={searchText ? false : true}
                                 onKeyDown={onKeyDown}
-                                onChange={(event) => filterTextChange(event.target.id, event.target.value)}
+                                onChange={event => filterTextChange(event.target.id, event.target.value)}
                                 value={searchText}
                                 placeholder="Search"
                                 id="search"
@@ -203,13 +227,30 @@ class MasterModalTable extends React.Component {
                                 {fields.map(field => {
                                     return (
                                         <CustomTableCell key={field.display_name} align={field.align}>
-                                            {field.name !== "" ?
-                                                <Button size="small" style={{ color: this.props.theme.palette.background.default }} onClick={() => this.handleSortBy(field.name)}>
-                                                    <Icon style={{ color: this.props.theme.palette.background.default, fontSize: 22, display: this.state.sortBy === field.name ? 'block' : 'none' }}>{this.state.sortBy === field.name && this.state.sortOrder ? 'arrow_drop_down' : 'arrow_drop_up'}</Icon>
+                                            {field.name !== '' ? (
+                                                <Button
+                                                    size="small"
+                                                    style={{ color: this.props.theme.palette.background.default }}
+                                                    onClick={() => this.handleSortBy(field.name)}
+                                                >
+                                                    <Icon
+                                                        style={{
+                                                            color: this.props.theme.palette.background.default,
+                                                            fontSize: 22,
+                                                            display: this.state.sortBy === field.name ? 'block' : 'none',
+                                                        }}
+                                                    >
+                                                        {this.state.sortBy === field.name && this.state.sortOrder
+                                                            ? 'arrow_drop_down'
+                                                            : 'arrow_drop_up'}
+                                                    </Icon>
                                                     {field.display_name}
                                                 </Button>
-                                                :
-                                                <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default }}>{field.display_name}</Typography>}
+                                            ) : (
+                                                <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default }}>
+                                                    {field.display_name}
+                                                </Typography>
+                                            )}
                                         </CustomTableCell>
                                     );
                                 })}
@@ -220,7 +261,8 @@ class MasterModalTable extends React.Component {
                                 if (multi) {
                                     const isSelected = this.props.isSelected(row.id);
                                     return (
-                                        <TableRow hover
+                                        <TableRow
+                                            hover
                                             className={classes.row}
                                             key={row.id}
                                             onClick={event => handleRowClick(event, row)}
@@ -230,59 +272,58 @@ class MasterModalTable extends React.Component {
                                             selected={isSelected}
                                         >
                                             {fields.map(field => {
-                                                if (field.name !== "") {
-                                                    if (field.type === "IMAGE") {
+                                                if (field.name !== '') {
+                                                    if (field.type === 'IMAGE') {
                                                         return (
                                                             <CustomTableCell key={field.name} align={field.align}>
-                                                                {
-                                                                    row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : ''
-                                                                }
+                                                                {row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : ''}
                                                             </CustomTableCell>
                                                         );
                                                     } else
                                                         return (
-                                                            <CustomTableCell key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
+                                                            <CustomTableCell key={field.name} align={field.align}>
+                                                                {row[field.name]}
+                                                            </CustomTableCell>
                                                         );
                                                 } else {
                                                     return (
                                                         <CustomTableCell key="Action" align={field.align} padding="checkbox">
                                                             <Checkbox checked={isSelected} />
                                                         </CustomTableCell>
-                                                    )
+                                                    );
                                                 }
                                             })}
                                         </TableRow>
-                                    )
+                                    );
                                 } else {
                                     return (
-                                        <TableRow hover
+                                        <TableRow
+                                            hover
                                             className={classes.row}
                                             key={row.id}
                                             onClick={event => handleRowClick(event, row)}
                                             tabIndex={-1}
                                         >
                                             {fields.map(field => {
-                                                if (field.name !== "") {
-                                                    if (field.type === "IMAGE") {
+                                                if (field.name !== '') {
+                                                    if (field.type === 'IMAGE') {
                                                         return (
                                                             <CustomTableCell key={field.name} align={field.align}>
-                                                                {
-                                                                    row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : ''
-                                                                }
+                                                                {row[field.name] ? <img alt="" width={40} src={row[field.name].public_url} /> : ''}
                                                             </CustomTableCell>
                                                         );
                                                     } else
                                                         return (
-                                                            <CustomTableCell key={field.name} align={field.align}>{row[field.name]}</CustomTableCell>
+                                                            <CustomTableCell key={field.name} align={field.align}>
+                                                                {row[field.name]}
+                                                            </CustomTableCell>
                                                         );
                                                 } else {
-                                                    return (
-                                                        <CustomTableCell key="Action" align={field.align} padding="checkbox"></CustomTableCell>
-                                                    )
+                                                    return <CustomTableCell key="Action" align={field.align} padding="checkbox"></CustomTableCell>;
                                                 }
                                             })}
                                         </TableRow>
-                                    )
+                                    );
                                 }
                             })}
                         </TableBody>
@@ -299,8 +340,8 @@ class MasterModalTable extends React.Component {
                                         native: true,
                                     }}
                                     onChangePage={handleChangePage}
-                                    onChangeRowsPerPage={(event) => {
-                                        handleChangeRowsPerPage(event, _this)
+                                    onChangeRowsPerPage={event => {
+                                        handleChangeRowsPerPage(event, _this);
                                     }}
                                     ActionsComponent={this.TablePaginationActions}
                                 />
@@ -317,7 +358,7 @@ MasterModalTable.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     items: PropTypes.array.isRequired,
-    fields: PropTypes.array.isRequired
+    fields: PropTypes.array.isRequired,
 };
 
 export default withRouter(withStyles(styles, { withTheme: true })(MasterModalTable));
