@@ -45,16 +45,58 @@ const PAGINATION_BUTTONS = [
 class MasterPaginationBar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
     }
+
+    handlePaginationAction = button => {
+        const pageCount = Math.ceil(this.props.total / this.props.pageSize);
+        let currentPage = this.props.currentPage;
+        if (button === 'first') {
+            currentPage = 0;
+        } else if (button === 'last') {
+            currentPage = pageCount - 1;
+        } else if (button === 'next') {
+            currentPage = currentPage < pageCount - 1 ? currentPage + 1 : 0;
+        } else if (button === 'previous') {
+            currentPage = currentPage > 0 ? currentPage - 1 : pageCount - 1;
+        }
+        if (this.props.onPageChange) {
+            this.props.onPageChange(currentPage);
+        }
+    };
+
+    handleDisabled = button => {
+        const pageCount = Math.ceil(this.props.total / this.props.pageSize);
+        if (button === 'first' || button === 'previous') {
+            return this.props.currentPage <= 0;
+        } else if (button === 'last' || button === 'next') {
+            return this.props.currentPage >= pageCount - 1;
+        }
+        return false;
+    };
+
+    handleChangePage = (e, page) => {
+        console.log('New Page => ', page);
+    };
+
+    handleRowsPerPageChange = e => {
+        if (this.props.onPageSizeChange) {
+            this.props.onPageSizeChange(parseInt(e.target.value));
+        }
+    };
 
     renderActions = () => {
         return (
             <div className={[this.props.classes.pager]}>
                 {PAGINATION_BUTTONS.map((item, index) => {
                     return (
-                        <IconButton key={index} onClick={() => this.props.onChangePage(item.name)} aria-label={item.label}>
-                            <Icon color="primary">{item.icon}</Icon>
+                        <IconButton
+                            disabled={this.handleDisabled(item.name)}
+                            color="primary"
+                            key={index}
+                            onClick={() => this.handlePaginationAction(item.name)}
+                            aria-label={item.label}
+                        >
+                            <Icon>{item.icon}</Icon>
                         </IconButton>
                     );
                 })}
@@ -72,8 +114,8 @@ class MasterPaginationBar extends React.Component {
                 labelRowsPerPage="Page Size :"
                 page={this.props.currentPage}
                 SelectProps={{ native: true }}
-                onChangePage={this.props.onChangePage}
-                onChangeRowsPerPage={this.props.onChangeRowsPerPage}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleRowsPerPageChange}
                 ActionsComponent={this.renderActions}
             />
         );
@@ -85,8 +127,6 @@ MasterPaginationBar.defaultProps = {
     total: 0,
     pageSize: 5,
     currentPage: 1,
-    onChangePage: () => console.log('Page Change'),
-    onChangeRowsPerPage: () => console.log('Page Change'),
 };
 
 MasterPaginationBar.propTypes = {
@@ -94,8 +134,8 @@ MasterPaginationBar.propTypes = {
     total: PropTypes.number,
     pageSize: PropTypes.number,
     currentPage: PropTypes.number,
-    onChangePage: PropTypes.func,
-    onChangeRowsPerPage: PropTypes.func,
+    onPageChange: PropTypes.func,
+    onPageSizeChange: PropTypes.func,
 };
 
 export default withStyles(styles, { withTheme: true })(MasterPaginationBar);

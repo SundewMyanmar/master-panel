@@ -10,7 +10,6 @@ import {
     TableHead,
     TableRow,
     TableFooter,
-    TablePagination,
     IconButton,
     Icon,
     Tooltip,
@@ -19,6 +18,7 @@ import {
     Checkbox,
 } from '@material-ui/core';
 import MasterPaginationBar from './MasterPaginationBar';
+import FormatManager from '../util/FormatManager';
 
 const styles = theme => ({
     pager: {
@@ -28,19 +28,6 @@ const styles = theme => ({
         border: '1px solid ' + theme.palette.primary.dark,
     },
 });
-
-const StyledPager = withStyles(theme => ({
-    root: {
-        color: theme.palette.primary.main,
-        flex: 1,
-    },
-    selectRoot: {
-        width: 50,
-    },
-    selectIcon: {
-        color: theme.palette.primary.main,
-    },
-}))(TablePagination);
 
 const CustomTableCell = withStyles(theme => ({
     head: {
@@ -59,52 +46,103 @@ const CustomTableCell = withStyles(theme => ({
 class MasterTable extends React.Component {
     constructor(props) {
         super(props);
-
-        // var fields=this.props.fields;
-        // fields.push({
-        //     name:"",
-        //     align:"right",
-        //     display_name:""
-        // })
-
-        this.state = {};
+        this.state = { sortBy: '', sortOrder: 'ASC' };
     }
 
-    handleSortBy(sortBy) {
-        const { items } = this.props;
-        var sortOrder = this.state.sortOrder;
-        if (this.state.sortBy === sortBy) {
-            sortOrder = !this.state.sortOrder;
+    componentDidMount() {
+        this.prepareSortString();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.sortBy != this.props.sortBy) {
+            this.prepareSortString();
+        }
+    }
+
+    prepareSortString = () => {
+        if (!this.props.sortBy) {
+            return;
+        }
+        const sortParams = this.props.sortBy.split(':', 2);
+
+        const sortBy = FormatManager.camelToSnake(sortParams[0]);
+        if (sortParams.length >= 2 && sortParams[1].toUpperCase() === 'DESC') {
+            this.setState({
+                sortBy: sortBy,
+                sortOrder: 'DESC',
+            });
         } else {
-            sortOrder = true;
+            this.setState({ sortBy: sortBy, sortOrder: 'ASC' });
+        }
+    };
+
+    handlePageChange = page => {
+        this.props.onPageChange({
+            page: page,
+            pageSize: this.props.pageSize,
+            sortBy: this.props.sortParams,
+        });
+    };
+
+    handlePageSizeChange = pageSize => {
+        this.props.onPageChange({
+            page: 0,
+            pageSize: pageSize,
+            sortBy: this.props.sortParams,
+        });
+    };
+
+    handleSortChange = sortBy => {
+        let sortOrder = 'ASC';
+        if (this.state.sortBy === sortBy) {
+            sortOrder = this.state.sortOrder === 'ASC' ? 'DESC' : 'ASC';
         }
 
-        const result = !sortOrder ? items.sort((a, b) => (b[sortBy] < a[sortBy] ? -1 : 1)) : items.sort((a, b) => (a[sortBy] < b[sortBy] ? -1 : 1));
-
-        this.setState({
-            sortBy: sortBy,
-            sortOrder: sortOrder,
-            items: result,
+        this.props.onPageChange({
+            page: this.props.currentPage,
+            pageSize: this.props.pageSize,
+            sort: FormatManager.snakeToCamel(sortBy) + ':' + sortOrder,
         });
-    }
+    };
 
-    render() {
-        const {
-            classes,
-            items,
-            fields,
-            editButton,
-            deleteButton,
-            total,
-            pageSize,
-            currentPage,
-            handleChangePage,
-            handleChangeRowsPerPage,
-            handleCheckChange,
-            handleRowClick,
-            _this,
-        } = this.props;
-        var { editTitle, deleteTitle, editIcon, deleteIcon, hideEdit, hideDelete } = this.props;
+    renderImageCell = (field, row) => {
+        return (
+            <CustomTableCell key={field.name} align={field.align}>
+                {row[field.name] ? (
+                    <img alt="" width={40} src={row[field.name].public_url} />
+                ) : (
+                    <img alt="Default" width={40} src="/res/default-image.png" />
+                )}
+            </CustomTableCell>
+        );
+    };
+
+    renderCheckCell = (field, row) => {
+        return (
+            <CustomTableCell key={field.name} align={field.align}>
+                <Checkbox
+                    checked={row[field.name] === 'On' ? true : false}
+                    disabled={field.read_only}
+                    onChange={() => {
+                        if (this.props.onCheckChange && !field.read_only) this.props.onCheckChange(row);
+                    }}
+                    value={field.name}
+                    color="primary"
+                />
+            </CustomTableCell>
+        );
+    };
+
+    renderTextCell = (field, row) => {
+        return (
+            <CustomTableCell style={{ width: field.width ? field.width : '' }} key={field.name} align={field.align}>
+                {row[field.name]}
+            </CustomTableCell>
+        );
+    };
+
+    renderActionCell = row => {
+        let { classes, editTitle, deleteTitle, editIcon, deleteIcon, hideEdit, hideDelete } = this.props;
 
         if (!editTitle) {
             editTitle = 'Edit';
@@ -118,106 +156,87 @@ class MasterTable extends React.Component {
         if (!deleteIcon) {
             deleteIcon = 'delete';
         }
+        return (
+            <CustomTableCell key="action" align="center">
+                <Tooltip style={hideEdit ? { display: 'none' } : {}} title={editTitle} placement="top">
+                    <IconButton onClick={() => this.props.onEditButtonClick(row)} color="primary" className={classes.button} aria-label="Edit">
+                        <Icon fontSize="small">{editIcon}</Icon>
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip style={hideDelete ? { display: 'none' } : {}} title={deleteTitle} placement="top">
+                    <IconButton
+                        style={{ color: this.props.theme.palette.common.darkRed }}
+                        onClick={() => this.props.onDeleteButtonClick(row)}
+                        className={classes.button}
+                        aria-label="Delete"
+                    >
+                        <Icon fontSize="small">{deleteIcon}</Icon>
+                    </IconButton>
+                </Tooltip>
+            </CustomTableCell>
+        );
+    };
+
+    renderCell = (field, row) => {
+        if (field.name !== '') {
+            switch (field.type) {
+                case 'IMAGE':
+                    return this.renderImageCell(field, row);
+                case 'CHECK':
+                    return this.renderCheckCell(field, row);
+                default:
+                    return this.renderTextCell(field, row);
+            }
+        } else {
+            return this.renderActionCell(row);
+        }
+    };
+
+    renderHeaderCell = field => {
+        let icon = 'unfold_more';
+        console.log('Field Name => ', field.name);
+        console.log('Sort By => ', FormatManager.camelToSnake(this.state.sortBy));
+        if (field.name === FormatManager.camelToSnake(this.state.sortBy)) {
+            icon = this.state.sortOrder === 'DESC' ? 'keyboard_arrow_down' : 'keyboard_arrow_up';
+        }
+        console.log('Icon => ', icon);
+
+        return (
+            <CustomTableCell key={field.display_name} align={field.align}>
+                <Button
+                    size="small"
+                    disabled={!field.sortable}
+                    style={{ color: this.props.theme.palette.background.default }}
+                    onClick={() => this.handleSortChange(field.name)}
+                >
+                    <Icon
+                        style={{
+                            color: this.props.theme.palette.background.default,
+                            fontSize: 15,
+                            display: field.sortable ? 'block' : 'none',
+                        }}
+                    >
+                        {icon}
+                    </Icon>
+                    {field.display_name}
+                </Button>
+            </CustomTableCell>
+        );
+    };
+
+    render() {
+        const { classes, items, fields, total, pageSize, currentPage, onRowClick } = this.props;
 
         return (
             <Table className={classes.table} size="small">
                 <TableHead className={classes.tableHead}>
-                    <TableRow>
-                        {fields.map(field => {
-                            return (
-                                <CustomTableCell key={field.display_name} align={field.align}>
-                                    {field.name !== '' ? (
-                                        <Button
-                                            size="small"
-                                            style={{ color: this.props.theme.palette.background.default }}
-                                            onClick={() => this.handleSortBy(field.name)}
-                                        >
-                                            <Icon
-                                                style={{
-                                                    color: this.props.theme.palette.background.default,
-                                                    fontSize: 22,
-                                                    display: this.state.sortBy === field.name ? 'block' : 'none',
-                                                }}
-                                            >
-                                                {this.state.sortBy === field.name && this.state.sortOrder ? 'arrow_drop_down' : 'arrow_drop_up'}
-                                            </Icon>
-                                            {field.display_name}
-                                        </Button>
-                                    ) : (
-                                        <Typography variant="subtitle2" style={{ color: this.props.theme.palette.background.default }}>
-                                            {field.display_name}
-                                        </Typography>
-                                    )}
-                                </CustomTableCell>
-                            );
-                        })}
-                    </TableRow>
+                    <TableRow>{fields.map(field => this.renderHeaderCell(field))}</TableRow>
                 </TableHead>
                 <TableBody>
                     {items.map(row => (
-                        <TableRow
-                            className={classes.row}
-                            key={row.id}
-                            onClick={handleRowClick ? () => handleRowClick(row) : console.log('Handle Row Click => ', row)}
-                            hover={handleRowClick ? true : false}
-                        >
-                            {fields.map(field => {
-                                if (field.name !== '') {
-                                    if (field.type === 'IMAGE') {
-                                        return (
-                                            <CustomTableCell key={field.name} align={field.align}>
-                                                {row[field.name] ? (
-                                                    <img alt="" width={40} src={row[field.name].public_url} />
-                                                ) : (
-                                                    <img alt="Default" width={40} src="/res/default-image.png" />
-                                                )}
-                                            </CustomTableCell>
-                                        );
-                                    } else if (field.type === 'CHECK') {
-                                        return (
-                                            <CustomTableCell key={field.name} align={field.align}>
-                                                <Checkbox
-                                                    checked={row[field.name] === 'On' ? true : false}
-                                                    onChange={() => handleCheckChange(row)}
-                                                    value={field.name}
-                                                    color="primary"
-                                                />
-                                            </CustomTableCell>
-                                        );
-                                    } else
-                                        return (
-                                            <CustomTableCell style={{ width: field.width ? field.width : '' }} key={field.name} align={field.align}>
-                                                {row[field.name]}
-                                            </CustomTableCell>
-                                        );
-                                } else {
-                                    return (
-                                        <CustomTableCell key="action" align="center">
-                                            <Tooltip style={hideEdit ? { display: 'none' } : {}} title={editTitle} placement="top">
-                                                <IconButton
-                                                    onClick={() => editButton(row.id, _this, row)}
-                                                    color="primary"
-                                                    className={classes.button}
-                                                    aria-label="Edit"
-                                                >
-                                                    <Icon fontSize="small">{editIcon}</Icon>
-                                                </IconButton>
-                                            </Tooltip>
-
-                                            <Tooltip style={hideDelete ? { display: 'none' } : {}} title={deleteTitle} placement="top">
-                                                <IconButton
-                                                    style={{ color: this.props.theme.palette.common.darkRed }}
-                                                    onClick={() => deleteButton(row.id, row.name ? row.name : row.display_name, _this, row)}
-                                                    className={classes.button}
-                                                    aria-label="Delete"
-                                                >
-                                                    <Icon fontSize="small">{deleteIcon}</Icon>
-                                                </IconButton>
-                                            </Tooltip>
-                                        </CustomTableCell>
-                                    );
-                                }
-                            })}
+                        <TableRow className={classes.row} key={row.id} onClick={() => onRowClick(row)} hover={true}>
+                            {fields.map(field => this.renderCell(field, row))}
                         </TableRow>
                     ))}
                 </TableBody>
@@ -227,10 +246,8 @@ class MasterTable extends React.Component {
                             total={total}
                             pageSize={pageSize}
                             currentPage={currentPage}
-                            onChangePage={handleChangePage}
-                            onChangeRowsPerPage={event => {
-                                handleChangeRowsPerPage(event, _this);
-                            }}
+                            onPageSizeChange={this.handlePageSizeChange}
+                            onPageChange={this.handlePageChange}
                         />
                     </TableRow>
                 </TableFooter>
@@ -239,12 +256,30 @@ class MasterTable extends React.Component {
     }
 }
 
+MasterTable.defaultProps = {
+    items: [],
+    total: 0,
+    pageSize: 10,
+    currentPage: 1,
+    onEditButtonClick: () => console.log('Edit button clicked'),
+    onDeleteButtonClick: () => console.log('Delete button clicked'),
+    onPageChange: () => console.log('Page changed'),
+    onRowsPerPageChange: () => console.log('Rows per page changed'),
+    onRowClick: () => console.log('Row clicked'),
+};
+
 MasterTable.propTypes = {
-    pageSize: PropTypes.number,
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-    items: PropTypes.array.isRequired,
     fields: PropTypes.array.isRequired,
+    total: PropTypes.number,
+    pageSize: PropTypes.number,
+    currentPage: PropTypes.number,
+    sortBy: PropTypes.string,
+    items: PropTypes.array,
+    onEditButtonClick: PropTypes.func,
+    onDeleteButtonClick: PropTypes.func,
+    onPageChange: PropTypes.func,
+    onCheckChange: PropTypes.func,
+    onRowClick: PropTypes.func,
 };
 
 export default withRouter(withStyles(styles, { withTheme: true })(MasterTable));

@@ -22,6 +22,7 @@ import {
     TableRow,
     InputBase,
 } from '@material-ui/core';
+import MasterPaginationBar from '../MasterPaginationBar';
 
 const styles = theme => ({
     appBar: {
@@ -62,61 +63,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const StyledPager = withStyles(theme => ({
-    root: {
-        color: theme.palette.primary.main,
-        flex: 1,
-    },
-    selectRoot: {
-        width: 50,
-    },
-    selectIcon: {
-        color: theme.palette.primary.main,
-    },
-}))(TablePagination);
-
 class FileDialog extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
-
-    TablePaginationActions = () => {
-        const { classes, theme, pageChange, _this } = this.props;
-
-        return (
-            <div className={[classes.pager]}>
-                <IconButton onClick={() => pageChange('first', _this)} aria-label="First Page">
-                    {theme.direction === 'rtl' ? (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>
-                    ) : (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>
-                    )}
-                </IconButton>
-                <IconButton onClick={() => pageChange('previous', _this)} aria-label="Previous Page">
-                    {theme.direction === 'rtl' ? (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>
-                    ) : (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>
-                    )}
-                </IconButton>
-                <IconButton onClick={() => pageChange('forward', _this)} aria-label="Next Page">
-                    {theme.direction === 'rtl' ? (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_left</Icon>
-                    ) : (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>chevron_right</Icon>
-                    )}
-                </IconButton>
-                <IconButton onClick={() => pageChange('last', _this)} aria-label="Last Page">
-                    {theme.direction === 'rtl' ? (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>first_page</Icon>
-                    ) : (
-                        <Icon style={{ color: this.props.theme.palette.primary.main, fontSize: 22 }}>last_page</Icon>
-                    )}
-                </IconButton>
-            </div>
-        );
-    };
 
     handleSortBy(sortBy) {
         const { items } = this.props;
@@ -244,21 +195,15 @@ class FileDialog extends React.Component {
                     <Table className={classes.table}>
                         <TableFooter>
                             <TableRow>
-                                <StyledPager
+                                <MasterPaginationBar
                                     rowsPerPageOptions={[12, 18, 24]}
-                                    colSpan={10}
-                                    count={total}
-                                    rowsPerPage={pageSize}
-                                    labelRowsPerPage="Page Size :"
-                                    page={currentPage}
-                                    SelectProps={{
-                                        native: true,
-                                    }}
+                                    total={total}
+                                    pageSize={pageSize}
+                                    currentPage={currentPage}
                                     onChangePage={handleChangePage}
                                     onChangeRowsPerPage={event => {
                                         handleChangeRowsPerPage(event, _this);
                                     }}
-                                    ActionsComponent={this.TablePaginationActions}
                                 />
                             </TableRow>
                         </TableFooter>

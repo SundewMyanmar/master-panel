@@ -498,7 +498,12 @@ class UserSetupPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <AlertDialog
+                    showDialog={this.state.showError}
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    onOkButtonClick={this.handleError}
+                />
                 <FileDialog
                     showFile={this.state.showFile}
                     items={this.props.masterpanel.file}

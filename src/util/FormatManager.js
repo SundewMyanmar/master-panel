@@ -14,6 +14,14 @@ export default class FormatManager {
         return moment(date).valueOf();
     };
 
+    static snakeToCamel = str => {
+        return str.replace(/([-_][a-z])/g, word => word.toUpperCase().replace('_', ''));
+    };
+
+    static camelToSnake = str => {
+        return str.replace(/([A-Z])/g, word => '_' + word.toLowerCase()).replace(/^_/, '');
+    };
+
     static ValidateEmail = mail => {
         var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(mail);

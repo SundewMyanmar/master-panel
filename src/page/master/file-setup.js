@@ -138,7 +138,12 @@ class FileSetupPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <AlertDialog
+                    showDialog={this.state.showError}
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    onOkButtonClick={this.handleError}
+                />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         File Setup

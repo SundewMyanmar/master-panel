@@ -138,7 +138,12 @@ class RoleSetupPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <AlertDialog
+                    showDialog={this.state.showError}
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    onOkButtonClick={this.handleError}
+                />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         Role Setup
@@ -147,7 +152,7 @@ class RoleSetupPage extends React.Component {
                     <Grid className={classes.gridContainer} justify="center" container>
                         <Grid item xs={12} sm={12} md={8} lg={6}>
                             <form className={classes.form} autoComplete="off">
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={4} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.nameError ? 'error' : 'primary'}>
                                             verified_user
@@ -168,7 +173,7 @@ class RoleSetupPage extends React.Component {
                                         <div className={classes.form_error}>{this.state.nameError ? 'invalid Name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={4} alignItems="flex-start">
                                     <Grid item>
                                         <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">
                                             sms
@@ -189,7 +194,7 @@ class RoleSetupPage extends React.Component {
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="center" justify="space-evenly">
+                                <Grid container spacing={4} alignItems="center" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
                                         <Button
                                             style={{ marginTop: '30px', marginBottom: '20px', color: background.default }}

@@ -258,7 +258,12 @@ class RegisterPage extends React.Component {
 
         return (
             <div className={classes.root}>
-                <AlertDialog title="Oops!" description={this.state.errorMessage} showDialog={this.state.showError} onClickOk={this.handleError} />
+                <AlertDialog
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    showDialog={this.state.showError}
+                    onOkButtonClick={this.handleError}
+                />
                 <LoadingDialog showLoading={this.state.showLoading} message="Please wait registering!" />
                 <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
                     <Grid style={{ padding: '22px' }} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>

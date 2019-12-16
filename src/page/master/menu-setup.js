@@ -501,7 +501,12 @@ class MenuSetupPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <AlertDialog
+                    showDialog={this.state.showError}
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    onOkButtonClick={this.handleError}
+                />
                 <MaterialIconDialog showDialog={this.state.showIconDialog} onIconClick={this.closeIconDialog} _this={this} />
                 <TableDialog
                     tableTitle="Menu List"

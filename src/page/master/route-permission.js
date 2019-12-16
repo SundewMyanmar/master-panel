@@ -343,7 +343,12 @@ class RoutePermissionPage extends React.Component {
         return (
             <div>
                 <LoadingDialog showLoading={this.state.showLoading} message="Loading please wait!" />
-                <AlertDialog showDialog={this.state.showError} title="Oops!" description={this.state.errorMessage} onClickOk={this.handleError} />
+                <AlertDialog
+                    showDialog={this.state.showError}
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    onOkButtonClick={this.handleError}
+                />
                 <Snackbar
                     vertical="top"
                     horizontal="right"

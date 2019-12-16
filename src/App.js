@@ -7,13 +7,13 @@ import RegisterPage from './page/auth/register';
 import DashboardPage from './page/dashboard';
 import ProfilePage from './page/me/profile';
 import ChangePasswordPage from './page/me/changePassword';
-import UserPage from './page/master/user';
+import UserPage from './page/master/UserPage';
 import UserSetupPage from './page/master/user-setup';
-import RolePage from './page/master/role';
+import RolePage from './page/master/RolePage';
 import RoleSetupPage from './page/master/role-setup';
 import FilePage from './page/master/file';
 import FileSetupPage from './page/master/file-setup';
-import MenuPage from './page/master/menu';
+import MenuPage from './page/master/MenuPage';
 import MenuSetupPage from './page/master/menu-setup';
 import RoutePermissionPage from './page/master/route-permission';
 

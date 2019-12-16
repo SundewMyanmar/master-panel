@@ -209,7 +209,7 @@ class LoginPage extends React.Component {
                 }
             }
         } catch (error) {
-            if (error) {
+            if (error.response) {
                 this.setState({ showLoading: false, showError: true, errorMessage: error.response.data.content.message });
             } else {
                 this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again.' });
@@ -268,7 +268,12 @@ class LoginPage extends React.Component {
 
         return (
             <div className={classes.root}>
-                <AlertDialog title="Oops!" description={this.state.errorMessage} showDialog={this.state.showError} onClickOk={this.handleError} />
+                <AlertDialog
+                    title="Oops!"
+                    description={this.state.errorMessage}
+                    showDialog={this.state.showError}
+                    onOkButtonClick={this.handleError}
+                />
                 <LoadingDialog showLoading={this.state.showLoading} message="Please wait logging in!" />
                 <Snackbar
                     vertical="top"

@@ -230,7 +230,7 @@ class FileManagePage extends React.Component {
                 showDialog={this.state.deleteErrorDialog}
                 title="Delete Error"
                 description="Cannot delete in-use item"
-                onClickOk={this.deleteErrorDialogClose}
+                onOkButtonClick={this.deleteErrorDialogClose}
             />
         );
     };

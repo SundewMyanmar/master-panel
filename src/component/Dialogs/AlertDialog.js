@@ -5,7 +5,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 
 export default class AlertDialog extends React.Component {
     render() {
-        const { title, description, onClickOk, showDialog } = this.props;
+        const { title, description, onOkButtonClick, showDialog } = this.props;
 
         return (
             <div>
@@ -15,7 +15,7 @@ export default class AlertDialog extends React.Component {
                         <DialogContentText id="alert-dialog-description">{description}</DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={onClickOk} color="primary">
+                        <Button onClick={onOkButtonClick} color="primary">
                             Ok
                         </Button>
                     </DialogActions>
@@ -31,7 +31,7 @@ AlertDialog.defaultProps = {
 
 AlertDialog.propTypes = {
     showDialog: PropTypes.bool.isRequired,
-    onClickOk: PropTypes.func.isRequired,
+    onOkButtonClick: PropTypes.func.isRequired,
     title: PropTypes.string,
     description: PropTypes.string,
 };
