@@ -182,8 +182,6 @@ class MasterTable extends React.Component {
 
     renderHeaderCell = field => {
         let icon = 'unfold_more';
-        console.log('Field Name => ', field.name);
-        console.log('Sort By => ', FormatManager.camelToSnake(this.state.sortBy));
         if (field.name === FormatManager.camelToSnake(this.state.sortBy)) {
             icon = this.state.sortOrder === 'DESC' ? 'keyboard_arrow_down' : 'keyboard_arrow_up';
         }

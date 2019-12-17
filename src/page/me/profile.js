@@ -76,23 +76,18 @@ class ProfilePage extends React.Component {
 
     componentDidMount() {
         const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
-        var image, preview;
+        var image;
         if (user.profile_image) image = user.profile_image;
-        if (user.profile_image && user.profile_image.public_url) preview = user.profile_image.public_url;
-        this.setState(
-            {
-                id: user.id,
-                display_name: user.display_name,
-                email: user.email,
-                image: image,
-                previewImage: preview,
-                roles: user.roles,
-                status: user.status,
-                user_name: user.user_name,
-            },
-            () => {},
-        );
-        this.paging();
+
+        this.setState({
+            id: user.id,
+            display_name: user.display_name,
+            email: user.email,
+            image: image,
+            roles: user.roles,
+            status: user.status,
+            user_name: user.user_name,
+        });
     }
 
     onSaveItem = async () => {
@@ -148,24 +143,6 @@ class ProfilePage extends React.Component {
         }
     };
 
-    onImageChange(file, _this) {
-        var fr = new FileReader();
-        fr.onload = function() {
-            _this.setState({
-                previewImage: fr.result,
-                image: file,
-            });
-        };
-        fr.readAsDataURL(file);
-    }
-
-    onImageRemove(_this) {
-        _this.setState({
-            previewImage: null,
-            image: null,
-        });
-    }
-
     onChangeText = (key, value) => {
         this.setState({ [key]: value });
     };
@@ -178,17 +155,8 @@ class ProfilePage extends React.Component {
         this.setState({ showError: false });
     };
 
-    handleFileOpen = _this => {
-        this.setState({ showFile: true });
-        _this.setState({ showDialog: false });
-    };
-
-    handleFileClick = (event, data) => {
-        this.setState({ showFile: false, image: data, previewImage: data.public_url });
-    };
-
-    handleFileClose = () => {
-        this.setState({ showFile: false });
+    handleImageChange = image => {
+        this.setState({ image: image });
     };
 
     render() {
@@ -211,7 +179,6 @@ class ProfilePage extends React.Component {
                     message={this.state.snackMessage}
                     onCloseSnackbar={this.onCloseSnackbar}
                 />
-                <FileDialog showDialog={this.state.showFile} onClose={this.handleFileClose} onFileClick={this.handleFileClick} />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         My Profile
@@ -221,14 +188,7 @@ class ProfilePage extends React.Component {
                         <Grid item xs={12} sm={12} md={8} lg={6}>
                             <form className={classes.form} autoComplete="off">
                                 <Grid container justify="center">
-                                    <ImageUpload
-                                        onImageChange={this.onImageChange}
-                                        onImageRemove={this.onImageRemove}
-                                        previewImage={this.state.previewImage}
-                                        _this={this}
-                                        handleFileOpen={this.handleFileOpen}
-                                        id="imageUpload"
-                                    />
+                                    <ImageUpload id="imageUpload" onImageChange={this.handleImageChange} source={this.state.image} />
                                 </Grid>
                                 <Grid container spacing={8} alignItems="flex-start">
                                     <Grid item>

@@ -82,12 +82,12 @@ class UserSetupPage extends React.Component {
                 { display: 'Male', key: 'male' },
                 { display: 'Female', key: 'female' },
             ],
+            image: null,
             status: 'ACTIVE',
             roles: [],
             roleItems: [],
             showLoading: false,
             showError: false,
-            showFile: false,
             pageCount: 1,
         };
     }
@@ -125,9 +125,8 @@ class UserSetupPage extends React.Component {
             const data = await UserApi.getById(this.props.match.params.id);
 
             if (data) {
-                var image, preview;
+                var image;
                 if (data.profile_image) image = data.profile_image;
-                if (data.profile_image && data.profile_image.public_url) preview = data.profile_image.public_url;
 
                 var roles = [];
                 if (data.roles && data.roles.length > 0) {
@@ -150,7 +149,6 @@ class UserSetupPage extends React.Component {
                     password: 'PWD123456',
                     showLoading: false,
                     image: image,
-                    previewImage: preview,
                 });
                 if (data.extras) {
                     this.setState({
@@ -269,6 +267,8 @@ class UserSetupPage extends React.Component {
                 user.profile_image = null;
             }
 
+            console.log('User Image => ', user);
+
             if (this.props.match.params.id) {
                 user.id = this.state.id;
                 const response = await UserApi.update(this.state.id, user);
@@ -303,89 +303,28 @@ class UserSetupPage extends React.Component {
         this.setState({ showError: false });
     };
 
-    onImageChange(file, _this) {
-        var fr = new FileReader();
-        fr.onload = function() {
-            _this.setState({
-                previewImage: fr.result,
-                image: file,
-            });
-        };
-        fr.readAsDataURL(file);
-    }
+    handleImageChange = image => {
+        this.setState({ image: image });
+    };
 
-    onImageRemove(_this) {
-        _this.setState({
-            previewImage: null,
-            image: null,
+    handleRoleChange = event => {
+        this.setState({
+            roles: event.target.value,
         });
-    }
-
-    handleFileClick = data => {
-        this.setState({ showFile: false, image: data, previewImage: data.public_url });
     };
 
-    handleFileClose = () => {
-        this.setState({ showFile: false });
+    handleGenderChange = event => {
+        this.setState({
+            gender: event.target.value,
+        });
     };
 
-    handleFileOpen = _this => {
-        this.setState({ showFile: true });
-        _this.setState({ showDialog: false });
+    handleChange = event => {
+        this.setState({ status: event.target.value });
     };
 
     render() {
         const { classes } = this.props;
-
-        const handleRoleChange = event => {
-            this.setState({
-                roles: event.target.value,
-            });
-        };
-
-        const handleGenderChange = event => {
-            this.setState({
-                gender: event.target.value,
-            });
-        };
-
-        const handleChange = name => event => {
-            this.setState({ status: event.target.value });
-        };
-
-        const fields = [
-            {
-                name: '',
-                align: 'center',
-                display_name: '',
-            },
-            {
-                name: 'id',
-                align: 'center',
-                display_name: 'Id',
-            },
-            {
-                name: 'profile_image',
-                align: 'center',
-                display_name: 'Profile Image',
-                type: 'IMAGE',
-            },
-            {
-                name: 'name_en',
-                align: 'left',
-                display_name: 'Name',
-            },
-            {
-                name: 'order_available',
-                align: 'center',
-                display_name: 'Order Available',
-            },
-            {
-                name: 'active',
-                align: 'center',
-                display_name: 'Status',
-            },
-        ];
 
         return (
             <div>
@@ -396,7 +335,6 @@ class UserSetupPage extends React.Component {
                     description={this.state.errorMessage}
                     onOkButtonClick={this.handleError}
                 />
-                <FileDialog showDialog={this.state.showFile} onClose={this.handleFileClose} onFileClick={this.handleFileClick} />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         User Setup
@@ -406,14 +344,7 @@ class UserSetupPage extends React.Component {
                         <Grid item xs={12} sm={12} md={8} lg={6}>
                             <form className={classes.form} autoComplete="off">
                                 <Grid container justify="center">
-                                    <ImageUpload
-                                        onImageChange={this.onImageChange}
-                                        onImageRemove={this.onImageRemove}
-                                        previewImage={this.state.previewImage}
-                                        _this={this}
-                                        id="imageUpload"
-                                        handleFileOpen={this.handleFileOpen}
-                                    />
+                                    <ImageUpload id="imageUpload" onImageChange={this.handleImageChange} source={this.state.image} />
                                 </Grid>
                                 <Divider className={classes.divider} light component="h3" />
                                 <Grid container spacing={2} alignItems="flex-start">
@@ -536,7 +467,7 @@ class UserSetupPage extends React.Component {
                                             <Select
                                                 className={classes.select}
                                                 value={this.state.gender ? this.state.gender : ''}
-                                                onChange={handleGenderChange}
+                                                onChange={this.handleGenderChange}
                                                 input={<Input id="gender" />}
                                                 MenuProps={{ className: classes.menu }}
                                             >
@@ -616,7 +547,7 @@ class UserSetupPage extends React.Component {
                                             multiple
                                             className={classes.select}
                                             value={this.state.roles}
-                                            onChange={handleRoleChange}
+                                            onChange={this.handleRoleChange}
                                             input={<Input id="select-multiple" />}
                                             MenuProps={{ className: classes.menu }}
                                         >
@@ -644,7 +575,7 @@ class UserSetupPage extends React.Component {
                                             label="Select Status"
                                             className={classes.textField}
                                             value={this.state.status}
-                                            onChange={handleChange()}
+                                            onChange={this.handleChange}
                                             SelectProps={{
                                                 native: true,
                                                 MenuProps: {

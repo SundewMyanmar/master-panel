@@ -9,7 +9,7 @@ export default class AlertDialog extends React.Component {
 
         return (
             <div>
-                <Dialog fullWidth maxWidth="sm" open={showDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+                <Dialog fullWidth maxWidth="sm" open={showDialog} aria-labelledby={title}>
                     <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">{description}</DialogContentText>

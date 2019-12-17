@@ -235,7 +235,7 @@ class FileDialog extends React.Component {
 
         return (
             <React.Fragment>
-                <Dialog fullWidth maxWidth="xl" open={showDialog} onClose={onClose} TransitionComponent={Transition}>
+                <Dialog fullWidth maxWidth="xl" onEscapeKeyDown={onClose} open={showDialog} onClose={onClose} TransitionComponent={Transition}>
                     <DialogTitle style={{ borderRadius: 0, padding: '8px 24px', backgroundColor: this.props.theme.palette.primary.main }}>
                         {this.renderHeader()}
                     </DialogTitle>

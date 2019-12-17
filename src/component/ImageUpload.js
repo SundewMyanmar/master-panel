@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import { Icon, Input, IconButton } from '@material-ui/core';
+import { Icon, Input, IconButton, Hidden } from '@material-ui/core';
 
 import MenuListDialog from './Dialogs/MenuListDialog';
+import FileDialog from './Dialogs/FileDialog';
 
-const styles = theme => ({
+const styles = () => ({
     container: {
         marginTop: 20,
         backgroundColor: '#f0f0f0',
@@ -18,9 +17,6 @@ const styles = theme => ({
         marginLeft: '-50%',
         marginTop: -12,
         marginRight: -12,
-        //position: '-webkit-sticky', /* Safari */
-        //position: 'sticky',
-        //transform: 'translate(-50%, -50%)',
         backgroundColor: '#dd2c00',
         color: 'white',
         padding: 0,
@@ -33,139 +29,146 @@ const styles = theme => ({
     },
 });
 
+const MENU_LIST_ITEMS = [
+    {
+        name: 'gallery',
+        icon: 'photo',
+        label: 'Choose From Gallery',
+    },
+    {
+        name: 'upload',
+        icon: 'cloud_upload',
+        label: 'Upload New Image',
+    },
+];
+
 class ImageUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            previewImage: {},
-            showDialog: false,
+            previewImage: null,
+            showMenu: false,
+            showFile: false,
         };
     }
 
-    componentDidMount() {}
-
-    onImageClick(id) {
-        this.setState({ showDialog: true, id: id });
-        // var upload=document.getElementById(id);
-        // upload.click();
+    componentDidUpdate(prevProps) {
+        if (prevProps.source != this.props.source) {
+            this.handleFileClick(this.props.source);
+        }
     }
 
-    onImageChange(callback, _this, id) {
+    handleImageClick = id => {
+        this.setState({ showMenu: true, id: id });
+    };
+
+    handleImageChange = id => {
         var files = document.getElementById(id).files;
         if (files && files.length > 0) {
             this.setState({
                 image: files[0],
             });
 
-            this.processImage(files[0], this);
+            this.processImage(files[0]);
 
-            if (callback) {
-                callback(files[0], _this);
-            }
+            this.props.onImageChange(files[0]);
         }
-    }
+    };
 
-    processImage(file, _this) {
+    processImage = file => {
         var fr = new FileReader();
-        fr.onload = function() {
+        const _this = this;
+        fr.onload = () => {
             _this.setState({
                 previewImage: fr.result,
             });
         };
         fr.readAsDataURL(file);
-    }
-
-    onRemove(_this) {
-        _this.setState({
-            image: null,
-        });
-    }
-
-    handleMenuListDialog = () => {
-        this.setState({ showDialog: !this.state.showDialog });
     };
 
-    uploadNew = () => {
-        this.setState({ showDialog: false });
-        var upload = document.getElementById(this.state.id);
-        upload.click();
+    onRemove = () => {
+        this.props.onImageChange(null);
+        this.setState({ previewImage: null });
+    };
+
+    handleFileClick = data => {
+        let newState = { showFile: false };
+        if (data && data.public_url) {
+            newState.previewImage = data.public_url;
+            this.props.onImageChange(data);
+        }
+        this.setState(newState);
+    };
+
+    handleFileClose = () => {
+        this.setState({ showFile: false });
+    };
+
+    handleMenuItem = item => {
+        console.log('Clicked Menu => ', item);
+        if (item.name === 'gallery') {
+            this.setState({ showMenu: !this.state.showMenu, showFile: true });
+        } else if (item.name === 'upload') {
+            this.setState({ showMenu: false });
+            var upload = document.getElementById(this.state.id);
+            upload.click();
+        }
     };
 
     render() {
-        const { classes, onImageChange, previewImage, onImageRemove, _this, disableUpload, args, disableRemove, id, handleFileOpen } = this.props;
-        var { width, height } = this.props;
+        const { classes, width, height, disableUpload, disableRemove, id, onError } = this.props;
 
-        var img, visibility;
-        if (previewImage) {
-            img = previewImage;
-            if (disableRemove) visibility = 'hidden';
-            else visibility = true;
-        } else {
-            if (disableRemove) visibility = 'hidden';
-            else visibility = this.state.image ? 'visible' : 'hidden';
-            img = this.state.image ? this.state.previewImage : '/res/upload.png';
-        }
+        const visibility = !disableRemove && this.state.previewImage ? 'visible' : 'hidden';
+        const img = this.state.previewImage ? this.state.previewImage : '/res/upload.png';
 
-        if (!width) width = 200;
-        if (!height) height = 200;
         return (
-            <div>
-                <MenuListDialog
-                    show={this.state.showDialog}
-                    handleMenuListDialog={this.handleMenuListDialog}
-                    uploadNew={this.uploadNew}
-                    openFile={() => {
-                        if (handleFileOpen) {
-                            handleFileOpen(this);
-                        }
-                    }}
-                />
+            <React.Fragment>
+                <FileDialog showDialog={this.state.showFile} onError={onError} onClose={this.handleFileClose} onFileClick={this.handleFileClick} />
+                <MenuListDialog showDialog={this.state.showMenu} title="Image Upload" items={MENU_LIST_ITEMS} onItemClick={this.handleMenuItem} />
                 <div className={[classes.container]} style={{ width: width, height: height }}>
                     <img
                         onClick={() => {
-                            if (!disableUpload) this.onImageClick(id);
+                            if (!disableUpload) this.handleImageClick(id);
                         }}
                         src={img}
-                        alt=""
+                        alt="Image"
                         style={{ width: '100%', height: '100%', borderRadius: 6 }}
                     />
-                    <IconButton
-                        style={{ visibility: visibility }}
-                        onClick={() => {
-                            this.onRemove(this);
-                            if (onImageRemove) onImageRemove(_this, args);
-                        }}
-                        className={classes.image_button}
-                    >
+                    <IconButton style={{ visibility: visibility }} onClick={this.onRemove} className={classes.image_button}>
                         <Icon>close</Icon>
                     </IconButton>
-                    {/* <Input style={{display:'none'}} id="imageUpload" type="file" value={this.state.uploadFile} onChange={(event)=>{
-                        this.onImageChange(onImageChange,_this);
-                    }}/> */}
                     <Input
                         style={{ display: 'none' }}
                         id={id}
                         type="file"
                         value={this.state.uploadFile}
-                        onChange={event => {
-                            this.onImageChange(onImageChange, _this, id);
-                        }}
+                        onChange={() => this.handleImageChange(id)}
                     />
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }
 
+ImageUpload.defaultProps = {
+    id: 'ImageUpload',
+    width: 200,
+    height: 200,
+    disableUpload: false,
+    disableRemove: false,
+    onImageChange: image => console.log('Changed Image => ', image),
+    onError: error => console.log('Error => ', error),
+};
+
 ImageUpload.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+    id: PropTypes.string,
+    width: PropTypes.number,
+    heigh: PropTypes.number,
+    source: PropTypes.any,
+    disableUpload: PropTypes.bool,
+    disableRemove: PropTypes.bool,
+    onImageChange: PropTypes.func,
+    onError: PropTypes.func,
 };
 
-const mapStateToProps = state => {
-    return {
-        masterpanel: state,
-    };
-};
-
-export default withRouter(connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ImageUpload)));
+export default withStyles(styles, { withTheme: true })(ImageUpload);
