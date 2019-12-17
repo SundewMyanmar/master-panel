@@ -29,7 +29,6 @@ class TableDialog extends React.Component {
             currentPage,
             handleChangePage,
             handleChangeRowsPerPage,
-            _this,
         } = this.props;
 
         return (

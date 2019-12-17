@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import MasterTable from './MasterTable';
 
 import { Paper, IconButton, Typography, Icon, InputBase, Fab, Grid } from '@material-ui/core';
@@ -210,11 +209,7 @@ class MasterView extends React.Component {
                     message={this.state.snackMessage}
                     onCloseSnackbar={this.handleSnackBar}
                 />
-                <QuestionDialog
-                    itemName={this.state.itemName}
-                    showQuestion={this.state.showQuestion}
-                    handleQuestionDialog={this.handleQuestionDialog}
-                />
+                <QuestionDialog itemName={this.state.itemName} showQuestion={this.state.showQuestion} onDialogAction={this.handleQuestionDialog} />
                 <Paper className={classes.root}>
                     <div className={classes.searchHeader}>
                         <Grid container>

@@ -74,7 +74,7 @@ class MaterialIconView extends React.Component {
     };
 
     renderIcon = category => {
-        const { classes, onIconClick, _this } = this.props;
+        const { classes, onIconClick } = this.props;
         const filter = this.getFilter(category.icons);
 
         return filter.length > 0 ? (
@@ -86,16 +86,7 @@ class MaterialIconView extends React.Component {
                 <Grid className={classes.grid} key={category.key} container item justify="center" xs={12} sm={12} md={12} lg={12}>
                     {filter.map(icon => {
                         return (
-                            <span
-                                className={classes.buttonSpan}
-                                onClick={() => {
-                                    if (onIconClick) {
-                                        onIconClick(icon.ligature, _this);
-                                    }
-                                }}
-                                key={icon.id}
-                                aria-label="Delete"
-                            >
+                            <span className={classes.buttonSpan} onClick={() => onIconClick(icon.ligature)} key={icon.id} aria-label="Icon">
                                 <div>
                                     <Icon color="primary">{icon.ligature}</Icon>
                                 </div>
@@ -156,8 +147,12 @@ class MaterialIconView extends React.Component {
     }
 }
 
+MaterialIconView.defaultProps = {
+    onIconClick: icon => console.log('Clicked icon => ', icon),
+};
+
 MaterialIconView.propTypes = {
-    classes: PropTypes.object.isRequired,
+    onIconClick: PropTypes.func,
 };
 
 export default withStyles(styles)(MaterialIconView);

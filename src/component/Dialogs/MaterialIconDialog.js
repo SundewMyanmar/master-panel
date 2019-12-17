@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import MaterialIconView from '../MaterialIconView';
 import { primary } from '../../config/Theme';
@@ -36,21 +35,20 @@ class MaterialIconDialog extends React.Component {
                 </Toolbar>
 
                 <DialogContent style={{ padding: '0' }}>
-                    <MaterialIconView onIconClick={onIconClick ? onIconClick : () => console.log('Picked Icon')} _this={_this} />
+                    <MaterialIconView onIconClick={onIconClick} />
                 </DialogContent>
             </Dialog>
         );
     }
 }
 
+MaterialIconDialog.defaultProps = {
+    onIconClick: icon => console.log('Clicked Icon => ', icon),
+};
+
 MaterialIconDialog.propTypes = {
-    classes: PropTypes.object.isRequired,
+    showDialog: PropTypes.bool.isRequired,
+    onIconClick: PropTypes.func,
 };
 
-const mapStateToProps = state => {
-    return {
-        masterpanel: state,
-    };
-};
-
-export default connect(mapStateToProps)(withStyles(styles)(MaterialIconDialog));
+export default withStyles(styles)(MaterialIconDialog);

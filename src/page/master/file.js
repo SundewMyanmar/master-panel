@@ -246,11 +246,7 @@ class FilePage extends React.Component {
                     message={this.state.snackMessage}
                     onCloseSnackbar={this.onCloseSnackbar}
                 />
-                <QuestionDialog
-                    itemName={this.state.itemName}
-                    showQuestion={this.state.showQuestion}
-                    handleQuestionDialog={this.handleQuestionDialog}
-                />
+                <QuestionDialog itemName={this.state.itemName} showQuestion={this.state.showQuestion} onDialogAction={this.handleQuestionDialog} />
                 <ImageDialog
                     showImage={this.state.showImage}
                     onClose={this.handleImageDialog}

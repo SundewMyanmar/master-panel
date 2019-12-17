@@ -53,9 +53,13 @@ class LoadingDialog extends React.Component {
     }
 }
 
+LoadingDialog.defaultProps = {
+    message: 'Loading ...',
+};
+
 LoadingDialog.propTypes = {
-    classes: PropTypes.object.isRequired,
-    showLoading: PropTypes.bool,
+    showLoading: PropTypes.bool.isRequired,
+    message: PropTypes.string,
 };
 
 export default withStyles(styles)(LoadingDialog);

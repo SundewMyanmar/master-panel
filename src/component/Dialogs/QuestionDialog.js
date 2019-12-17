@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 
@@ -6,7 +7,7 @@ class QuestionDialog extends React.Component {
     state = {};
 
     render() {
-        const { handleQuestionDialog } = this.props;
+        const { onDialogAction } = this.props;
 
         return (
             <div>
@@ -19,10 +20,10 @@ class QuestionDialog extends React.Component {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => handleQuestionDialog(false)} color="primary" autoFocus={true}>
+                        <Button onClick={() => onDialogAction(false)} color="secondary" autoFocus={true}>
                             Cancel
                         </Button>
-                        <Button onClick={() => handleQuestionDialog(true)} color="primary">
+                        <Button onClick={() => onDialogAction(true)} color="primary">
                             Ok
                         </Button>
                     </DialogActions>
@@ -31,5 +32,13 @@ class QuestionDialog extends React.Component {
         );
     }
 }
+
+QuestionDialog.defaultProps = {
+    onDialogAction: isOk => console.log('Question Result => ', isOk),
+};
+
+QuestionDialog.propTypes = {
+    onDialogAction: PropTypes.func.isRequired,
+};
 
 export default QuestionDialog;

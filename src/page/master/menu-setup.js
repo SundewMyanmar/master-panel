@@ -357,40 +357,38 @@ class MenuSetupPage extends React.Component {
         this.setState({ menus: newSelected });
     };
 
-    handleChangePage(e) {}
-
-    handleChangeRowsPerPage(e, _this) {
-        _this.setState(
+    handleChangeRowsPerPage = e => {
+        this.setState(
             {
                 pageSize: e.target.value,
             },
             () => {
-                _this.paging();
+                this.paging();
             },
         );
-    }
+    };
 
-    pageChange = (pageParam, _this) => {
-        var currentPage = _this.state.currentPage;
+    pageChange = pageParam => {
+        var currentPage = this.state.currentPage;
         if (pageParam === 'first') {
             currentPage = 0;
         } else if (pageParam === 'previous') {
             if (currentPage > 0) currentPage -= 1;
-            else currentPage = _this.state.pageCount - 1;
+            else currentPage = this.state.pageCount - 1;
         } else if (pageParam === 'forward') {
-            if (currentPage === _this.state.pageCount - 1) currentPage = 0;
+            if (currentPage === this.state.pageCount - 1) currentPage = 0;
             else currentPage += 1;
         } else if (pageParam === 'last') {
-            currentPage = _this.state.pageCount - 1;
+            currentPage = this.state.pageCount - 1;
         }
 
-        _this.setState(
+        this.setState(
             {
                 currentPage: currentPage,
                 showLoading: true,
             },
             () => {
-                _this.paging();
+                this.paging();
             },
         );
     };
@@ -401,7 +399,7 @@ class MenuSetupPage extends React.Component {
         }
     };
 
-    onSearch() {
+    onSearch = () => {
         this.setState(
             {
                 currentPage: 0,
@@ -410,7 +408,7 @@ class MenuSetupPage extends React.Component {
                 this.paging();
             },
         );
-    }
+    };
 
     filterTextChange = (key, value) => {
         this.setState({
@@ -418,11 +416,11 @@ class MenuSetupPage extends React.Component {
         });
     };
 
-    radioHandleChange(_this, event) {
-        _this.setState({
+    handleRadioChange = event => {
+        this.setState({
             selectedValue: event.target.value,
         });
-    }
+    };
 
     loadIconDialog() {
         console.log('load');
@@ -431,15 +429,15 @@ class MenuSetupPage extends React.Component {
         });
     }
 
-    closeIconDialog(result, _this) {
+    closeIconDialog = result => {
         if (!result) {
-            result = _this.state.icon;
+            result = this.state.icon;
         }
-        _this.setState({
+        this.setState({
             showIconDialog: false,
             icon: result,
         });
-    }
+    };
 
     render() {
         const { classes } = this.props;
@@ -507,7 +505,7 @@ class MenuSetupPage extends React.Component {
                     description={this.state.errorMessage}
                     onOkButtonClick={this.handleError}
                 />
-                <MaterialIconDialog showDialog={this.state.showIconDialog} onIconClick={this.closeIconDialog} _this={this} />
+                <MaterialIconDialog showDialog={this.state.showIconDialog} onIconClick={this.closeIconDialog} />
                 <TableDialog
                     tableTitle="Menu List"
                     fields={fields}
@@ -525,7 +523,6 @@ class MenuSetupPage extends React.Component {
                     currentPage={this.state.currentPage}
                     handleChangePage={this.handleChangePage}
                     handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    _this={this}
                     multi={true}
                 />
                 <Paper className={classes.root} elevation={1}>
@@ -536,9 +533,9 @@ class MenuSetupPage extends React.Component {
                     <Grid className={classes.gridContainer} justify="center" container>
                         <Grid item xs={12} sm={12} md={8} lg={6}>
                             <form className={classes.form} autoComplete="off">
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={3} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.nameError ? 'error' : 'primary'}>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.nameError ? 'error' : 'primary'}>
                                             menu
                                         </Icon>
                                     </Grid>
@@ -557,9 +554,9 @@ class MenuSetupPage extends React.Component {
                                         <div className={classes.form_error}>{this.state.nameError ? 'invalid name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={3} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.iconError ? 'error' : 'primary'}>
+                                        <Icon style={{ fontSize: 22, paddingTop: 32 }} color={this.state.iconError ? 'error' : 'primary'}>
                                             {this.state.icon ? this.state.icon : 'toys'}
                                         </Icon>
                                     </Grid>
@@ -592,9 +589,9 @@ class MenuSetupPage extends React.Component {
                                         <div className={classes.form_error}>{this.state.iconError ? 'invalid icon field!' : ''}</div>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={3} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.stateError ? 'error' : 'primary'}>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.stateError ? 'error' : 'primary'}>
                                             toc
                                         </Icon>
                                     </Grid>
@@ -613,9 +610,9 @@ class MenuSetupPage extends React.Component {
                                         <div className={classes.form_error}>{this.state.stateError ? 'invalid state field!' : ''}</div>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={3} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.typeError ? 'error' : 'primary'}>
+                                        <Icon style={{ fontSize: 22, paddingTop: 35 }} color={this.state.typeError ? 'error' : 'primary'}>
                                             code
                                         </Icon>
                                     </Grid>
@@ -625,7 +622,7 @@ class MenuSetupPage extends React.Component {
                                                 aria-label="position"
                                                 name="position"
                                                 value={this.state.selectedValue}
-                                                onChange={event => this.radioHandleChange(this, event)}
+                                                onChange={event => this.handleRadioChange(event)}
                                                 row
                                             >
                                                 <FormControlLabel
@@ -644,9 +641,9 @@ class MenuSetupPage extends React.Component {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={3} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color="primary">
+                                        <Icon style={{ fontSize: 22, paddingTop: 32 }} color="primary">
                                             star
                                         </Icon>
                                     </Grid>
@@ -667,7 +664,7 @@ class MenuSetupPage extends React.Component {
                                         </Select>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="center">
+                                <Grid container spacing={3} alignItems="center">
                                     <Paper className={classes.chipPaper}>
                                         <div className={classes.paperHeader}>
                                             <div className={classes.chipLabel}>
@@ -703,7 +700,7 @@ class MenuSetupPage extends React.Component {
                                         </div>
                                     </Paper>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="center" justify="space-evenly">
+                                <Grid container spacing={3} alignItems="center" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
                                         <Button
                                             style={{ marginTop: '30px', marginBottom: '20px', color: background.default }}
