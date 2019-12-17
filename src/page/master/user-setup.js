@@ -89,17 +89,11 @@ class UserSetupPage extends React.Component {
             showError: false,
             showFile: false,
             pageCount: 1,
-            fileCurrentPage: 0,
-            filePageSize: 18,
-            fileTotal: 0,
-            filePageCount: 1,
         };
     }
 
     componentDidMount() {
         this._loadRoles();
-
-        this.paging();
     }
 
     _loadRoles = async () => {
@@ -327,23 +321,7 @@ class UserSetupPage extends React.Component {
         });
     }
 
-    onUploadImage = async event => {
-        try {
-            var reader = new FileReader();
-            var file = event.target.files[0];
-            reader.readAsDataURL(file);
-            if (file) {
-                var fileResponse = await FileApi.upload(file);
-                if (fileResponse) {
-                    this.paging();
-                }
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    handleFileClick = (event, data) => {
+    handleFileClick = data => {
         this.setState({ showFile: false, image: data, previewImage: data.public_url });
     };
 
@@ -354,92 +332,6 @@ class UserSetupPage extends React.Component {
     handleFileOpen = _this => {
         this.setState({ showFile: true });
         _this.setState({ showDialog: false });
-    };
-
-    paging = async () => {
-        this.setState({ showLoading: true });
-        try {
-            var result = await FileApi.getPaging(this.state.fileCurrentPage, this.state.filePageSize, 'createdAt:DESC', this.state.fileSearchFilter);
-            this.setState({ fileTotal: result.total, filePageCount: result.page_count, showLoading: false });
-
-            if (result.count > 0) {
-                this.props.dispatch({
-                    type: FILE_ACTIONS.INIT_DATA,
-                    data: result.data,
-                });
-            } else {
-                this.props.dispatch({
-                    type: FILE_ACTIONS.INIT_DATA,
-                    data: [],
-                });
-
-                this.setState({ showLoading: false });
-            }
-        } catch (error) {
-            this.props.dispatch({
-                type: FILE_ACTIONS.INIT_DATA,
-                data: [],
-            });
-        }
-    };
-
-    fileHandleChangeRowsPerPage(e, _this) {
-        _this.setState(
-            {
-                filePageSize: e.target.value,
-            },
-            () => {
-                _this.paging();
-            },
-        );
-    }
-
-    filePageChange = (pageParam, _this) => {
-        var currentPage = _this.state.fileCurrentPage;
-        if (pageParam === 'first') {
-            currentPage = 0;
-        } else if (pageParam === 'previous') {
-            if (currentPage > 0) currentPage -= 1;
-            else currentPage = _this.state.filePageCount - 1;
-        } else if (pageParam === 'forward') {
-            if (currentPage === _this.state.filePageCount - 1) currentPage = 0;
-            else currentPage += 1;
-        } else if (pageParam === 'last') {
-            currentPage = _this.state.filePageCount - 1;
-        }
-
-        _this.setState(
-            {
-                fileCurrentPage: currentPage,
-                showLoading: true,
-            },
-            () => {
-                _this.paging();
-            },
-        );
-    };
-
-    fileKeyDown = e => {
-        if (e.keyCode === 13) {
-            this.fileSearch();
-        }
-    };
-
-    fileSearch() {
-        this.setState(
-            {
-                fileCurrentPage: 0,
-            },
-            () => {
-                this.paging();
-            },
-        );
-    }
-
-    filefilterTextChange = (key, value) => {
-        this.setState({
-            fileSearchFilter: value,
-        });
     };
 
     render() {
@@ -504,25 +396,7 @@ class UserSetupPage extends React.Component {
                     description={this.state.errorMessage}
                     onOkButtonClick={this.handleError}
                 />
-                <FileDialog
-                    showFile={this.state.showFile}
-                    items={this.props.masterpanel.file}
-                    total={this.state.fileTotal}
-                    pageSize={this.state.filePageSize}
-                    currentPage={this.state.fileCurrentPage}
-                    onPaginationButtonClick={this.filePageChange}
-                    handleChangePage={this.fileHandleChangePage}
-                    handleChangeRowsPerPage={this.fileHandleChangeRowsPerPage}
-                    handleFileClick={this.handleFileClick}
-                    handleClose={this.handleFileClose}
-                    searchFilterText={this.state.fileSearchFilter ? this.state.fileSearchFilter : ''}
-                    onSearch={this.fileSearch}
-                    onKeyDown={this.fileKeyDown}
-                    onChangeText={this.filefilterTextChange}
-                    onUploadImage={this.onUploadImage}
-                    _this={this}
-                />
-
+                <FileDialog showDialog={this.state.showFile} onClose={this.handleFileClose} onFileClick={this.handleFileClick} />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         User Setup

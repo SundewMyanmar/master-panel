@@ -96,7 +96,7 @@ class MasterView extends React.Component {
             result = await this.api.getPaging(newState.currentPage, newState.pageSize, newState.sortBy, newState.searchText);
             newState.data = result.data;
             newState.total = result.total;
-            newState.pageCount = result.pageCount;
+            newState.pageCount = result.page_count;
             newState.sortBy = result.sorts.replace(' ', '');
 
             if (this.props.onDataWillLoad) {

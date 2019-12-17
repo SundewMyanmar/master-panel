@@ -3,20 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    TableFooter,
-    IconButton,
-    Icon,
-    Tooltip,
-    Button,
-    Typography,
-    Checkbox,
-} from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow, TableFooter, IconButton, Icon, Tooltip, Button, Checkbox } from '@material-ui/core';
 import MasterPaginationBar from './MasterPaginationBar';
 import FormatManager from '../util/FormatManager';
 
