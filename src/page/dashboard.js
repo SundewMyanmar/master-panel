@@ -90,6 +90,10 @@ class DashboardPage extends React.Component {
         this.props.history.push(url);
     }
 
+    handleItemLabel = item => {
+        return item.name;
+    };
+
     render() {
         const { classes } = this.props;
         // const lat = this.state.location.split(",");

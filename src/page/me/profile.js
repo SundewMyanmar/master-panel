@@ -2,29 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { primary, action, background } from '../../config/Theme';
-import {
-    withStyles,
-    Paper,
-    TextField,
-    Icon,
-    Button,
-    FormControl,
-    FormControlLabel,
-    RadioGroup,
-    Radio,
-    FormHelperText,
-    Grid,
-    Divider,
-    Typography,
-    Chip,
-    Select,
-    MenuItem,
-    Input,
-    InputLabel,
-    InputAdornment,
-    IconButton,
-} from '@material-ui/core';
+import { action, background } from '../../config/Theme';
+import { withStyles, Paper, TextField, Icon, Button, Grid, Divider, Typography } from '@material-ui/core';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import AlertDialog from '../../component/Dialogs/AlertDialog';
 import FileApi from '../../api/FileApi';
@@ -32,8 +11,6 @@ import ProfileApi from '../../api/ProfileApi';
 import ImageUpload from '../../component/ImageUpload';
 import { STORAGE_KEYS } from '../../config/Constant';
 import Snackbar from '../../component/Snackbar';
-import FileDialog from '../../component/Dialogs/FileDialog';
-import { FILE_ACTIONS } from '../../redux/FileRedux';
 
 const styles = theme => ({
     root: {

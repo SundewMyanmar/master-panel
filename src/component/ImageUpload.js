@@ -1,23 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Icon, Input, IconButton, Hidden } from '@material-ui/core';
+import { Icon, Input, IconButton } from '@material-ui/core';
 
 import MenuListDialog from './Dialogs/MenuListDialog';
 import FileDialog from './Dialogs/FileDialog';
 
-const styles = () => ({
+const styles = theme => ({
     container: {
-        marginTop: 20,
-        backgroundColor: '#f0f0f0',
+        marginTop: 25,
         cursor: 'pointer',
+        position: 'relative',
     },
     image_button: {
-        float: 'right',
-        marginLeft: '-50%',
-        marginTop: -12,
-        marginRight: -12,
-        backgroundColor: '#dd2c00',
+        position: 'absolute',
+        top: -12,
+        right: -12,
+        backgroundColor: theme.palette.common.red,
         color: 'white',
         padding: 0,
         width: 25,
@@ -53,7 +52,7 @@ class ImageUpload extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.source != this.props.source) {
+        if (prevProps.source !== this.props.source) {
             this.handleFileClick(this.props.source);
         }
     }
@@ -125,18 +124,23 @@ class ImageUpload extends React.Component {
             <React.Fragment>
                 <FileDialog showDialog={this.state.showFile} onError={onError} onClose={this.handleFileClose} onFileClick={this.handleFileClick} />
                 <MenuListDialog showDialog={this.state.showMenu} title="Image Upload" items={MENU_LIST_ITEMS} onItemClick={this.handleMenuItem} />
-                <div className={[classes.container]} style={{ width: width, height: height }}>
+                <div className={[classes.container]}>
+                    <IconButton style={{ visibility: visibility }} onClick={this.onRemove} className={classes.image_button}>
+                        <Icon>close</Icon>
+                    </IconButton>
                     <img
                         onClick={() => {
                             if (!disableUpload) this.handleImageClick(id);
                         }}
                         src={img}
-                        alt="Image"
-                        style={{ width: '100%', height: '100%', borderRadius: 6 }}
+                        alt="Uploaded"
+                        style={{
+                            maxWidth: width,
+                            maxHeight: height,
+                            width: 'auto',
+                            height: 'auto',
+                        }}
                     />
-                    <IconButton style={{ visibility: visibility }} onClick={this.onRemove} className={classes.image_button}>
-                        <Icon>close</Icon>
-                    </IconButton>
                     <Input
                         style={{ display: 'none' }}
                         id={id}
@@ -163,7 +167,7 @@ ImageUpload.defaultProps = {
 ImageUpload.propTypes = {
     id: PropTypes.string,
     width: PropTypes.number,
-    heigh: PropTypes.number,
+    height: PropTypes.number,
     source: PropTypes.any,
     disableUpload: PropTypes.bool,
     disableRemove: PropTypes.bool,

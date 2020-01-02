@@ -10,13 +10,9 @@ import {
     TextField,
     Icon,
     Button,
-    Tooltip,
     Grid,
     Divider,
     Typography,
-    Chip,
-    Select,
-    MenuItem,
     Input,
     IconButton,
     Radio,
@@ -27,12 +23,64 @@ import {
 
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import AlertDialog from '../../component/Dialogs/AlertDialog';
-import RoleApi from '../../api/RoleApi';
 import MenuApi from '../../api/MenuApi';
 import { MENU_ACTIONS } from '../../redux/MenuRedux';
 import { primary, action, background } from '../../config/Theme';
-import TableDialog from '../../component/Dialogs/TableDialog';
 import MaterialIconDialog from '../../component/Dialogs/MaterialIconDialog';
+import TablePicker from '../../component/TablePicker';
+
+const MENU_API = 'menus/';
+const MENU_TABLE_FIELDS = [
+    {
+        name: 'id',
+        align: 'center',
+        display_name: 'Id',
+        sortable: true,
+    },
+    {
+        name: 'name',
+        align: 'left',
+        display_name: 'Name',
+        sortable: true,
+    },
+    {
+        name: 'state',
+        align: 'left',
+        display_name: 'State',
+    },
+    {
+        name: 'type',
+        align: 'left',
+        display_name: 'Type',
+    },
+    {
+        name: 'role_data',
+        align: 'left',
+        display_name: 'Roles',
+    },
+];
+
+const ROLE_API = 'roles/';
+const ROLE_TABLE_FIELDS = [
+    {
+        name: 'id',
+        align: 'center',
+        display_name: 'Id',
+        sortable: true,
+    },
+    {
+        name: 'name',
+        align: 'left',
+        display_name: 'Name',
+        sortable: true,
+    },
+    {
+        name: 'description',
+        align: 'left',
+        display_name: 'Description',
+        sortable: true,
+    },
+];
 
 const styles = theme => ({
     root: {
@@ -78,38 +126,8 @@ const styles = theme => ({
         width: '100%',
         marginTop: 32,
     },
-    chips: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    chip: {
-        margin: theme.spacing(0.5),
-    },
-    chipContainer: {
-        display: 'flex',
-        justifyContent: 'start',
-        flexWrap: 'wrap',
-    },
-    chipPaper: {
-        marginTop: theme.spacing(4),
-        padding: theme.spacing(1),
-        width: '100%',
-    },
-    paperHeader: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    chipButton: {
-        width: 'calc(50%)',
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    chipLabel: {
-        width: 'calc(50%)',
-        textAlign: 'start',
-        paddingLeft: theme.spacing(1),
-    },
-    chipDivider: {
+    tablePicker: {
+        marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
     },
 });
@@ -120,9 +138,9 @@ class MenuSetupPage extends React.Component {
         this.state = {
             status: 'ACTIVE',
             roles: [],
-            roleItems: [],
             menus: [],
-            showTable: false,
+            showMenuTable: false,
+            showRoleTable: false,
             showError: false,
             showLoading: false,
             currentPage: 0,
@@ -135,101 +153,21 @@ class MenuSetupPage extends React.Component {
     }
 
     componentDidMount() {
-        this._loadRoles();
-        this.paging();
+        this.loadData();
     }
 
-    _loadRoles = async () => {
+    loadData = async () => {
+        const id = this.props.match.params.id;
+        if (!id || typeof id === 'undefined') {
+            return;
+        }
+
         this.setState({ showLoading: true });
         try {
-            const response = await RoleApi.getAll();
-            if (response.data && response.data.length > 0) {
-                this.setState(
-                    {
-                        roleItems: response.data,
-                        showLoading: false,
-                        roles: [],
-                    },
-                    () => {
-                        if (this.props.match.params.id) this._loadData();
-                    },
-                );
-            } else {
-                if (this.props.match.params.id) this._loadData();
-            }
-        } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
-        }
-    };
-
-    paging = async () => {
-        try {
-            var result = await MenuApi.getPaging(this.state.currentPage, this.state.pageSize, 'id:ASC', this.state.searchFilter);
-            this.setState({ total: result.total, pageCount: result.page_count, showLoading: false });
-
-            for (var i = 0; i < result.data.length; i++) {
-                var role = '';
-                if (result.data[i].roles) {
-                    for (var j = 0; j < result.data[i].roles.length; j++) {
-                        if (role !== '') role += ', ';
-
-                        role += result.data[i].roles[j].name;
-                    }
-                }
-                result.data[i].role_data = role;
-            }
-
-            for (var k = 0; k < result.data.length; k++) {
-                var menu = '';
-                if (result.data[k].children) {
-                    for (var l = 0; l < result.data[k].children.length; l++) {
-                        if (menu !== '') menu += ', ';
-
-                        menu += result.data[k].children[l].name;
-                    }
-                }
-                result.data[k].child_menu = menu;
-            }
-
-            if (result.count > 0) {
-                this.props.dispatch({
-                    type: MENU_ACTIONS.INIT_DATA,
-                    data: result.data,
-                });
-            } else {
-                this.props.dispatch({
-                    type: MENU_ACTIONS.INIT_DATA,
-                    data: [],
-                });
-
-                this.setState({ showLoading: false, showError: true, errorMessage: 'There is no data to show.' });
-            }
-        } catch (error) {
-            this.props.dispatch({
-                type: MENU_ACTIONS.INIT_DATA,
-                data: [],
-            });
-        }
-    };
-
-    _loadData = async () => {
-        this.setState({ showLoading: true });
-        try {
-            const data = await MenuApi.getById(this.props.match.params.id);
+            console.log('This props.match.params.id => ', id);
+            const data = await MenuApi.getById(id);
 
             if (data) {
-                var roles = [];
-                if (data.roles && data.roles.length > 0) {
-                    for (var i = 0; i < this.state.roleItems.length; i++) {
-                        for (var j = 0; j < data.roles.length; j++) {
-                            if (this.state.roleItems[i].id === data.roles[j].id) {
-                                roles.push(this.state.roleItems[i]);
-                                break;
-                            }
-                        }
-                    }
-                }
-
                 this.setState({
                     id: data.id,
                     name: data.name,
@@ -237,7 +175,7 @@ class MenuSetupPage extends React.Component {
                     state: data.state,
                     parent_id: data.parent_id,
                     selectedValue: data.type,
-                    roles: roles,
+                    roles: data.roles,
                     menus: data.children,
                     showLoading: false,
                 });
@@ -327,95 +265,6 @@ class MenuSetupPage extends React.Component {
         this.setState({ showError: false });
     };
 
-    handleTableDialog = () => {
-        this.setState({ showTable: !this.state.showTable });
-    };
-
-    selected = id => this.state.menus.map(t => t.id).indexOf(id) !== -1;
-
-    chipDelete = data => {
-        const chipData = [...this.state.menus];
-        const chipToDelete = chipData.indexOf(data);
-        chipData.splice(chipToDelete, 1);
-        this.setState({ menus: chipData });
-    };
-
-    handleRowClick = (event, data) => {
-        const { menus } = this.state;
-        const selectedIndex = menus.map(t => t.id).indexOf(data.id);
-
-        let newSelected = [];
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(menus, data);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(menus.slice(1));
-        } else if (selectedIndex === menus.length - 1) {
-            newSelected = newSelected.concat(menus.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(menus.slice(0, selectedIndex), menus.slice(selectedIndex + 1));
-        }
-        this.setState({ menus: newSelected });
-    };
-
-    handleChangeRowsPerPage = e => {
-        this.setState(
-            {
-                pageSize: e.target.value,
-            },
-            () => {
-                this.paging();
-            },
-        );
-    };
-
-    pageChange = pageParam => {
-        var currentPage = this.state.currentPage;
-        if (pageParam === 'first') {
-            currentPage = 0;
-        } else if (pageParam === 'previous') {
-            if (currentPage > 0) currentPage -= 1;
-            else currentPage = this.state.pageCount - 1;
-        } else if (pageParam === 'forward') {
-            if (currentPage === this.state.pageCount - 1) currentPage = 0;
-            else currentPage += 1;
-        } else if (pageParam === 'last') {
-            currentPage = this.state.pageCount - 1;
-        }
-
-        this.setState(
-            {
-                currentPage: currentPage,
-                showLoading: true,
-            },
-            () => {
-                this.paging();
-            },
-        );
-    };
-
-    onKeyDown = e => {
-        if (e.keyCode === 13) {
-            this.onSearch();
-        }
-    };
-
-    onSearch = () => {
-        this.setState(
-            {
-                currentPage: 0,
-            },
-            () => {
-                this.paging();
-            },
-        );
-    };
-
-    filterTextChange = (key, value) => {
-        this.setState({
-            searchFilter: value,
-        });
-    };
-
     handleRadioChange = event => {
         this.setState({
             selectedValue: event.target.value,
@@ -439,62 +288,22 @@ class MenuSetupPage extends React.Component {
         });
     };
 
+    handleRolesChange = items => {
+        this.setState({
+            roles: items,
+        });
+    };
+
+    handleChildMenuChange = items => {
+        this.setState({
+            menus: items,
+        });
+    };
+
     render() {
         const { classes } = this.props;
 
-        const handleRoleChange = event => {
-            this.setState({
-                roles: event.target.value,
-            });
-        };
-
-        const fields = [
-            {
-                name: '',
-                align: 'center',
-                display_name: '',
-            },
-            {
-                name: 'id',
-                align: 'center',
-                display_name: 'Id',
-            },
-            {
-                name: 'name',
-                align: 'left',
-                display_name: 'Name',
-            },
-            {
-                name: 'icon',
-                align: 'left',
-                display_name: 'Icon',
-            },
-            {
-                name: 'state',
-                align: 'left',
-                display_name: 'State',
-            },
-            {
-                name: 'type',
-                align: 'left',
-                display_name: 'Type',
-            },
-            {
-                name: 'role_data',
-                align: 'left',
-                display_name: 'Roles',
-            },
-            {
-                name: 'child_menu',
-                align: 'left',
-                display_name: 'Child Menu',
-            },
-            {
-                name: 'is_divider',
-                align: 'center',
-                display_name: 'Divider',
-            },
-        ];
+        console.log('Current State => ', this.state);
 
         return (
             <div>
@@ -506,25 +315,6 @@ class MenuSetupPage extends React.Component {
                     onOkButtonClick={this.handleError}
                 />
                 <MaterialIconDialog showDialog={this.state.showIconDialog} onIconClick={this.closeIconDialog} />
-                <TableDialog
-                    tableTitle="Menu List"
-                    fields={fields}
-                    items={this.props.masterpanel.menu}
-                    searchText={this.state.searchFilter}
-                    filterTextChange={this.filterTextChange}
-                    onKeyDown={this.onKeyDown}
-                    onOpenDialog={this.state.showTable}
-                    onCloseDialog={this.handleTableDialog}
-                    isSelected={this.selected}
-                    handleRowClick={this.handleRowClick}
-                    pageChange={this.pageChange}
-                    total={this.state.total}
-                    pageSize={this.state.pageSize}
-                    currentPage={this.state.currentPage}
-                    handleChangePage={this.handleChangePage}
-                    handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    multi={true}
-                />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
                         Menu Setup
@@ -641,64 +431,25 @@ class MenuSetupPage extends React.Component {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={3} alignItems="flex-start">
-                                    <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 32 }} color="primary">
-                                            star
-                                        </Icon>
-                                    </Grid>
-                                    <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <Select
-                                            multiple
-                                            className={classes.select}
-                                            value={this.state.roles}
-                                            onChange={handleRoleChange}
-                                            input={<Input id="select-multiple" />}
-                                            MenuProps={{ className: classes.menu }}
-                                        >
-                                            {this.state.roleItems.map(option => (
-                                                <MenuItem key={option.id} value={option}>
-                                                    {option.name}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </Grid>
+                                <Grid container className={classes.tablePicker} alignItems="flex-start">
+                                    <TablePicker
+                                        title="Choose Roles"
+                                        fields={ROLE_TABLE_FIELDS}
+                                        apiURL={ROLE_API}
+                                        initData={this.state.roles}
+                                        onItemLabelWillLoad={item => item.name}
+                                        onSelectionChange={this.handleRolesChange}
+                                    />
                                 </Grid>
-                                <Grid container spacing={3} alignItems="center">
-                                    <Paper className={classes.chipPaper}>
-                                        <div className={classes.paperHeader}>
-                                            <div className={classes.chipLabel}>
-                                                <Typography
-                                                    style={this.state.clientError ? { color: '#f44336' } : { color: 'rgba(0, 0, 0, 0.87)' }}
-                                                    variant="subtitle1"
-                                                    gutterBottom
-                                                >
-                                                    Child Menu
-                                                </Typography>
-                                            </div>
-                                            <div className={classes.chipButton}>
-                                                <Tooltip title="Add Child" placement="left">
-                                                    <IconButton onClick={() => this.handleTableDialog()} color="primary" aria-label="Add Child">
-                                                        <Icon>add</Icon>
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </div>
-                                        </div>
-                                        <Divider light className={classes.chipDivider} />
-                                        <div className={classes.chipContainer}>
-                                            {this.state.menus.map(data => {
-                                                return (
-                                                    <Chip
-                                                        key={data.id}
-                                                        label={data.name}
-                                                        className={classes.chip}
-                                                        onDelete={() => this.chipDelete(data)}
-                                                        color="primary"
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </Paper>
+                                <Grid container className={classes.tablePicker} alignItems="flex-start">
+                                    <TablePicker
+                                        title="Choose Child Menus"
+                                        fields={MENU_TABLE_FIELDS}
+                                        apiURL={MENU_API}
+                                        initData={this.state.menus}
+                                        onItemLabelWillLoad={item => item.name}
+                                        onSelectionChange={this.handleChildMenuChange}
+                                    />
                                 </Grid>
                                 <Grid container spacing={3} alignItems="center" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>

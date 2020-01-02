@@ -24,10 +24,33 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import AlertDialog from '../../component/Dialogs/AlertDialog';
+import TablePicker from '../../component/TablePicker';
 import { background } from '../../config/Theme';
 import PermissionApi from '../../api/PermissionApi';
 import RoleApi from '../../api/RoleApi';
 import Snackbar from '../../component/Snackbar';
+
+const ROLE_API = 'roles/';
+const ROLE_TABLE_FIELDS = [
+    {
+        name: 'id',
+        align: 'center',
+        display_name: 'Id',
+        sortable: true,
+    },
+    {
+        name: 'name',
+        align: 'left',
+        display_name: 'Name',
+        sortable: true,
+    },
+    {
+        name: 'description',
+        align: 'left',
+        display_name: 'Description',
+        sortable: true,
+    },
+];
 
 const styles = theme => ({
     root: {

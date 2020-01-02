@@ -49,12 +49,14 @@ const TABLE_FIELDS = [
         name: '',
         align: 'center',
         display_name: 'Action',
+        type: 'ACTION',
     },
 ];
 
 export default class UserPage extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     handleData = result => {

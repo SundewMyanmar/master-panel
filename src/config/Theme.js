@@ -3,12 +3,12 @@ import { createMuiTheme } from '@material-ui/core/styles';
 export const common = {
     white: '#FFF',
     black: '#000',
-    gray: '#648dae',
+    gray: '#b9c1c5',
     red: '#d50000',
     redOnPrimary: '#950000',
     darkRed: '#880e4f',
-    green: '#00a152', //'#4caf50',
-    blue: '#1976d2', //'#2196f3',
+    green: '#4caf50', //'#4caf50',
+    blue: '#2196f3', //'#2196f3',
     purple: '#7600b2',
     pink: '#f50057',
     yellow: '#ffee33',
@@ -19,6 +19,7 @@ export const common = {
     brown: '#5d4037',
     google: '#DC4E41',
     facebook: '#3b5998',
+    marked: '#d6dee2',
 };
 
 export const action = {
@@ -42,7 +43,7 @@ export const secondary = {
     contrastText: '#f1f1f1',
 };
 
-export const divider = '#000000';
+export const divider = '#212121';
 
 export const background = {
     default: '#f1f1f1',

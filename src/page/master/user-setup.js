@@ -15,26 +15,40 @@ import {
     MenuItem,
     Input,
     FormControl,
-    FormControlLabel,
-    FormLabel,
     InputLabel,
-    Switch,
-    Avatar,
-    IconButton,
 } from '@material-ui/core';
 
 import { primary, action, background } from '../../config/Theme';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import AlertDialog from '../../component/Dialogs/AlertDialog';
-import TableDialog from '../../component/Dialogs/TableDialog';
 import UserApi from '../../api/UserApi';
-import RoleApi from '../../api/RoleApi';
 import FileApi from '../../api/FileApi';
-import { FILE_ACTIONS } from '../../redux/FileRedux';
 import { USER_ACTIONS } from '../../redux/UserRedux';
 import FormatManager from '../../util/FormatManager';
 import ImageUpload from '../../component/ImageUpload';
-import FileDialog from '../../component/Dialogs/FileDialog';
+import TablePicker from '../../component/TablePicker';
+
+const ROLE_API = 'roles/';
+const ROLE_TABLE_FIELDS = [
+    {
+        name: 'id',
+        align: 'center',
+        display_name: 'Id',
+        sortable: true,
+    },
+    {
+        name: 'name',
+        align: 'left',
+        display_name: 'Name',
+        sortable: true,
+    },
+    {
+        name: 'description',
+        align: 'left',
+        display_name: 'Description',
+        sortable: true,
+    },
+];
 
 const styles = theme => ({
     root: {
@@ -85,7 +99,6 @@ class UserSetupPage extends React.Component {
             image: null,
             status: 'ACTIVE',
             roles: [],
-            roleItems: [],
             showLoading: false,
             showError: false,
             pageCount: 1,
@@ -93,31 +106,8 @@ class UserSetupPage extends React.Component {
     }
 
     componentDidMount() {
-        this._loadRoles();
+        if (this.props.match.params.id) this._loadData();
     }
-
-    _loadRoles = async () => {
-        this.setState({ showLoading: true });
-        try {
-            const response = await RoleApi.getAll();
-            if (response.data && response.data.length > 0) {
-                this.setState(
-                    {
-                        roleItems: response.data,
-                        showLoading: false,
-                        roles: [],
-                    },
-                    () => {
-                        if (this.props.match.params.id) this._loadData();
-                    },
-                );
-            } else {
-                if (this.props.match.params.id) this._loadData();
-            }
-        } catch (error) {
-            this.setState({ showLoading: false, showError: true, errorMessage: 'Please check your internet connection and try again!' });
-        }
-    };
 
     _loadData = async () => {
         this.setState({ showLoading: true });
@@ -128,24 +118,12 @@ class UserSetupPage extends React.Component {
                 var image;
                 if (data.profile_image) image = data.profile_image;
 
-                var roles = [];
-                if (data.roles && data.roles.length > 0) {
-                    for (var i = 0; i < this.state.roleItems.length; i++) {
-                        for (var j = 0; j < data.roles.length; j++) {
-                            if (this.state.roleItems[i].id === data.roles[j].id) {
-                                roles.push(this.state.roleItems[i]);
-                                break;
-                            }
-                        }
-                    }
-                }
-
                 this.setState({
                     id: data.id,
                     user_name: data.user_name,
                     email: data.email,
                     status: data.status,
-                    roles: roles,
+                    roles: data.roles,
                     password: 'PWD123456',
                     showLoading: false,
                     image: image,
@@ -307,9 +285,9 @@ class UserSetupPage extends React.Component {
         this.setState({ image: image });
     };
 
-    handleRoleChange = event => {
+    handleRolesChange = items => {
         this.setState({
-            roles: event.target.value,
+            roles: items,
         });
     };
 
@@ -340,8 +318,8 @@ class UserSetupPage extends React.Component {
                         User Setup
                     </Typography>
                     <Divider className={classes.divider} light component="h3" />
-                    <Grid className={classes.gridContainer} justify="center" container>
-                        <Grid item xs={12} sm={12} md={8} lg={6}>
+                    <Grid spacing={2} className={classes.gridContainer} justify="center" container>
+                        <Grid item spacing={2} xs={12} sm={12} md={8} lg={6}>
                             <form className={classes.form} autoComplete="off">
                                 <Grid container justify="center">
                                     <ImageUpload id="imageUpload" onImageChange={this.handleImageChange} source={this.state.image} />
@@ -543,20 +521,14 @@ class UserSetupPage extends React.Component {
                                         </Icon>
                                     </Grid>
                                     <Grid item xs={11} sm={11} md={11} lg={11}>
-                                        <Select
-                                            multiple
-                                            className={classes.select}
-                                            value={this.state.roles}
-                                            onChange={this.handleRoleChange}
-                                            input={<Input id="select-multiple" />}
-                                            MenuProps={{ className: classes.menu }}
-                                        >
-                                            {this.state.roleItems.map(option => (
-                                                <MenuItem key={option.id} value={option}>
-                                                    {option.name}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
+                                        <TablePicker
+                                            title="Choose Roles"
+                                            fields={ROLE_TABLE_FIELDS}
+                                            apiURL={ROLE_API}
+                                            initData={this.state.roles}
+                                            onItemLabelWillLoad={item => item.name}
+                                            onSelectionChange={this.handleRolesChange}
+                                        />
                                     </Grid>
                                 </Grid>
 

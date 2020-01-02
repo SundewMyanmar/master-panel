@@ -45,6 +45,7 @@ const PAGINATION_BUTTONS = [
 class MasterPaginationBar extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     handlePaginationAction = button => {

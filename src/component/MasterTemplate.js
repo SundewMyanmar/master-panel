@@ -416,7 +416,7 @@ class MasterTemplate extends React.Component {
             <div className={classes.root}>
                 <AppBar position="absolute" className={classes.appBar}>
                     <Toolbar className={classes.toolbar}>
-                        <img src="res/logo.png" alt="" height="32" className={classes.appBarIcon} />
+                        <img src="res/logo.png" alt="Logo" height="32" className={classes.appBarIcon} />
                         <Typography variant="h6" component="h1" style={{ color: this.props.theme.palette.common.white }} noWrap>
                             {APP_NAME}
                         </Typography>
@@ -435,7 +435,11 @@ class MasterTemplate extends React.Component {
                                             }}
                                         >
                                             {this.state.user.profile_image && this.state.user.profile_image.public_url ? (
-                                                <img src={this.state.user.profile_image.public_url} style={{ width: 30 }} />
+                                                <img
+                                                    src={this.state.user.profile_image.public_url}
+                                                    alt={this.state.user.display_name}
+                                                    style={{ width: 30 }}
+                                                />
                                             ) : (
                                                 <Icon className={classes.menuIcon}>account_circle</Icon>
                                             )}

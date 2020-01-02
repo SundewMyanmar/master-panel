@@ -91,7 +91,6 @@ class FileDialog extends React.Component {
 
         try {
             const result = await FileApi.getPaging(this.state.currentPage, this.state.pageSize, 'createdAt:DESC', this.state.searchText);
-            console.log('Get FIles => ', result);
             if (result.count > 0) {
                 newState.data = result.data;
                 newState.total = result.total;

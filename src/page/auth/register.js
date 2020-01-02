@@ -4,7 +4,7 @@ import { withStyles, Icon, Button, IconButton, Divider, Grid, Typography, InputB
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import uuid from 'uuid/v5';
-import { primary, secondary, action, background, text } from '../../config/Theme';
+import { primary, secondary, action, text } from '../../config/Theme';
 import AuthApi from '../../api/AuthApi';
 import LoadingDialog from '../../component/Dialogs/LoadingDialog';
 import AlertDialog from '../../component/Dialogs/AlertDialog';

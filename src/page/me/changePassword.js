@@ -184,7 +184,7 @@ class ChangePasswordPage extends React.Component {
             new_password: this.state.password,
         };
         try {
-            const response = await ProfileApi.changePassword(data);
+            await ProfileApi.changePassword(data);
             this.setState({
                 showLoading: false,
                 openGoto: true,

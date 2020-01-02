@@ -1,33 +1,38 @@
 import React from 'react';
 import MasterView from '../../component/MasterView';
 
-const ROLE_API = 'menus/';
+const MENU_API = 'menus/';
 const DETAIL_PATH = '/menu/setup/detail';
 const TABLE_FIELDS = [
     {
         name: 'id',
         align: 'center',
         display_name: 'Id',
+        sortable: true,
     },
     {
         name: 'name',
         align: 'left',
         display_name: 'Name',
+        sortable: true,
     },
     {
         name: 'icon',
         align: 'left',
         display_name: 'Icon',
+        sortable: true,
     },
     {
         name: 'state',
         align: 'left',
         display_name: 'State',
+        sortable: true,
     },
     {
         name: 'type',
         align: 'left',
         display_name: 'Type',
+        sortable: true,
     },
     {
         name: 'role_data',
@@ -50,12 +55,14 @@ const TABLE_FIELDS = [
         name: '',
         align: 'center',
         display_name: 'Action',
+        type: 'ACTION',
     },
 ];
 
 export default class MenuPage extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     handleData = result => {
@@ -87,7 +94,7 @@ export default class MenuPage extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <MasterView title="Menus" detailPath={DETAIL_PATH} apiURL={ROLE_API} fields={TABLE_FIELDS} onDataLoaded={this.handleData} />
+                <MasterView title="Menus" detailPath={DETAIL_PATH} apiURL={MENU_API} fields={TABLE_FIELDS} onDataLoaded={this.handleData} />
             </React.Fragment>
         );
     }

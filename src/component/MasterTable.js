@@ -14,6 +14,9 @@ const styles = theme => ({
     tableHead: {
         border: '1px solid ' + theme.palette.primary.dark,
     },
+    markedRow: {
+        background: theme.palette.common.marked,
+    },
 });
 
 const CustomTableCell = withStyles(theme => ({
@@ -26,7 +29,6 @@ const CustomTableCell = withStyles(theme => ({
     body: {
         paddingLeft: 0,
         paddingRight: 5,
-        // color:theme.palette.primary.main
     },
 }))(TableCell);
 
@@ -41,7 +43,7 @@ class MasterTable extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.sortBy != this.props.sortBy) {
+        if (prevProps.sortBy !== this.props.sortBy) {
             this.prepareSortString();
         }
     }
@@ -94,7 +96,7 @@ class MasterTable extends React.Component {
 
     renderImageCell = (field, row) => {
         return (
-            <CustomTableCell key={field.name} align={field.align}>
+            <CustomTableCell key={field.name + '_' + row.id} align={field.align}>
                 {row[field.name] ? (
                     <img alt="" width={40} src={row[field.name].public_url} />
                 ) : (
@@ -106,7 +108,7 @@ class MasterTable extends React.Component {
 
     renderCheckCell = (field, row) => {
         return (
-            <CustomTableCell key={field.name} align={field.align}>
+            <CustomTableCell key={field.name + '_' + row.id} align={field.align}>
                 <Checkbox
                     checked={row[field.name] === 'On' ? true : false}
                     disabled={field.read_only}
@@ -122,7 +124,7 @@ class MasterTable extends React.Component {
 
     renderTextCell = (field, row) => {
         return (
-            <CustomTableCell style={{ width: field.width ? field.width : '' }} key={field.name} align={field.align}>
+            <CustomTableCell style={{ width: field.width ? field.width : '' }} key={field.name + '_' + row.id} align={field.align}>
                 {row[field.name]}
             </CustomTableCell>
         );
@@ -146,13 +148,20 @@ class MasterTable extends React.Component {
         return (
             <CustomTableCell key="action" align="center">
                 <Tooltip style={hideEdit ? { display: 'none' } : {}} title={editTitle} placement="top">
-                    <IconButton onClick={() => this.props.onEditButtonClick(row)} color="primary" className={classes.button} aria-label="Edit">
+                    <IconButton
+                        size="small"
+                        onClick={() => this.props.onEditButtonClick(row)}
+                        className={classes.button}
+                        color="primary"
+                        aria-label="Edit"
+                    >
                         <Icon fontSize="small">{editIcon}</Icon>
                     </IconButton>
                 </Tooltip>
 
                 <Tooltip style={hideDelete ? { display: 'none' } : {}} title={deleteTitle} placement="top">
                     <IconButton
+                        size="small"
                         style={{ color: this.props.theme.palette.common.darkRed }}
                         onClick={() => this.props.onDeleteButtonClick(row)}
                         className={classes.button}
@@ -166,7 +175,9 @@ class MasterTable extends React.Component {
     };
 
     renderCell = (field, row) => {
-        if (field.name !== '') {
+        if (field.type === 'ACTION') {
+            return this.renderActionCell(row);
+        } else if (field.name !== '') {
             switch (field.type) {
                 case 'IMAGE':
                     return this.renderImageCell(field, row);
@@ -176,7 +187,7 @@ class MasterTable extends React.Component {
                     return this.renderTextCell(field, row);
             }
         } else {
-            return this.renderActionCell(row);
+            return <CustomTableCell>None</CustomTableCell>;
         }
     };
 
@@ -185,7 +196,6 @@ class MasterTable extends React.Component {
         if (field.name === FormatManager.camelToSnake(this.state.sortBy)) {
             icon = this.state.sortOrder === 'DESC' ? 'keyboard_arrow_down' : 'keyboard_arrow_up';
         }
-        console.log('Icon => ', icon);
 
         return (
             <CustomTableCell key={field.display_name} align={field.align}>
@@ -219,11 +229,25 @@ class MasterTable extends React.Component {
                     <TableRow>{fields.map(field => this.renderHeaderCell(field))}</TableRow>
                 </TableHead>
                 <TableBody>
-                    {items.map(row => (
-                        <TableRow className={classes.row} key={row.id} onClick={() => onRowClick(row)} hover={true}>
-                            {fields.map(field => this.renderCell(field, row))}
-                        </TableRow>
-                    ))}
+                    {items.map(row => {
+                        let pointerStyle = {
+                            cursor: 'pointer',
+                        };
+
+                        return (
+                            <TableRow
+                                style={onRowClick ? pointerStyle : null}
+                                className={row.marked ? classes.markedRow : classes.row}
+                                key={row.id}
+                                onClick={() => {
+                                    if (onRowClick) onRowClick(row);
+                                }}
+                                hover={true}
+                            >
+                                {fields.map(field => this.renderCell(field, row))}
+                            </TableRow>
+                        );
+                    })}
                 </TableBody>
                 <TableFooter>
                     <TableRow>
@@ -250,7 +274,6 @@ MasterTable.defaultProps = {
     onDeleteButtonClick: () => console.log('Delete button clicked'),
     onPageChange: () => console.log('Page changed'),
     onRowsPerPageChange: () => console.log('Rows per page changed'),
-    onRowClick: () => console.log('Row clicked'),
 };
 
 MasterTable.propTypes = {
