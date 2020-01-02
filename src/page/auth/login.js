@@ -231,8 +231,8 @@ class LoginPage extends React.Component {
         this.setState({ showPassword: !this.state.showPassword });
     };
 
-    handleError = () => {
-        this.setState({ showError: !this.state.showError });
+    handleError = error => {
+        console.log('Error => ', error);
     };
 
     handleKeyPress = e => {

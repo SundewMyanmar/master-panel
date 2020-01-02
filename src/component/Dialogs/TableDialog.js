@@ -176,8 +176,8 @@ class TableDialog extends React.Component {
                 return;
             }
         }
-        currentSelection = [...currentSelection, item];
 
+        currentSelection = [...currentSelection, item];
         onSelectionChange(currentSelection);
     };
 
@@ -265,7 +265,7 @@ class TableDialog extends React.Component {
 
 TableDialog.defaultProps = {
     title: 'Master View',
-    multiSelect: false,
+    multiSelect: true,
     onSelectionChange: items => console.log('Selected Item ', items),
     onError: error => console.log('Error => ', error),
 };

@@ -44,6 +44,7 @@ class TablePicker extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            displayText: '',
             items: [],
             prevItems: [],
             showTableDialog: false,
@@ -64,8 +65,13 @@ class TablePicker extends React.Component {
     }
 
     handleTableDialog = result => {
+        if (!this.props.multiSelect) {
+            this.setState({ showTableDialog: false });
+            return;
+        }
+
         let newState = {
-            showTableDialog: !this.state.showTableDialog,
+            showTableDialog: false,
             items: result ? this.state.items : this.state.prevItems,
             prevItems: result ? this.state.items : this.state.prevItems,
         };
@@ -81,12 +87,79 @@ class TablePicker extends React.Component {
         this.setState({ items: items, prevItems: items });
     };
 
-    handleSelectionChange = items => {
-        this.setState({ items: items });
+    handleSelectionChange = data => {
+        if (!this.props.multiSelect) {
+            const display = this.props.onItemLabelWillLoad(data);
+            this.setState({
+                showTableDialog: false,
+                displayText: display,
+            });
+            this.props.onSelectionChange(data);
+            return;
+        }
+
+        this.setState({ items: data });
+    };
+
+    renderMultiInput = () => {
+        const { classes, onItemLabelWillLoad } = this.props;
+        return (
+            <Grid container>
+                <Grid container item xs={10} sm={10} className={classes.chipContainer}>
+                    {this.state.items.map((item, index) => {
+                        const label = onItemLabelWillLoad(item);
+                        return (
+                            <Chip
+                                className={classes.chip}
+                                key={item.id ? item.id : index}
+                                label={label}
+                                onDelete={() => this.handleItemRemove(item)}
+                            />
+                        );
+                    })}
+                </Grid>
+                <Grid className={classes.chipButton} container item xs={2} sm={2}>
+                    <Tooltip title="Add Child" placement="left">
+                        <IconButton onClick={() => this.setState({ showTableDialog: true })} color="primary" aria-label="Add Child">
+                            <Icon>playlist_add_check</Icon>
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
+                <Divider light className={classes.chipDivider} variant="fullWidth" />
+            </Grid>
+        );
+    };
+
+    renderSingleInput = () => {
+        const { classes, theme } = this.props;
+        return (
+            <Grid container>
+                <Grid container item xs={10} sm={10} className={classes.chipContainer}>
+                    <Typography
+                        variant="body1"
+                        style={{
+                            color: theme.palette.primary.main,
+                            marginTop: 20,
+                            marginLeft: 8,
+                        }}
+                    >
+                        {this.state.displayText}
+                    </Typography>
+                </Grid>
+                <Grid className={classes.chipButton} container item xs={2} sm={2}>
+                    <Tooltip title="Add Child" placement="left">
+                        <IconButton onClick={() => this.setState({ showTableDialog: true })} color="primary" aria-label="Add Child">
+                            <Icon>playlist_add_check</Icon>
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
+                <Divider light className={classes.chipDivider} variant="fullWidth" />
+            </Grid>
+        );
     };
 
     render() {
-        const { classes, fields, apiURL, title, onDataWillLoad, onDataLoaded, onItemLabelWillLoad } = this.props;
+        const { classes, title, multiSelect, fields, apiURL, onDataLoaded, onDataWillLoad } = this.props;
         return (
             <React.Fragment>
                 <TableDialog
@@ -96,7 +169,7 @@ class TablePicker extends React.Component {
                     fields={fields}
                     apiURL={apiURL}
                     onSelectionChange={this.handleSelectionChange}
-                    multiSelect={true}
+                    multiSelect={multiSelect}
                     selectedData={this.state.items}
                     onDataWillLoad={onDataWillLoad}
                     onDataLoaded={onDataLoaded}
@@ -111,29 +184,7 @@ class TablePicker extends React.Component {
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container>
-                        <Grid container item xs={10} sm={10} className={classes.chipContainer}>
-                            {this.state.items.map((item, index) => {
-                                const label = onItemLabelWillLoad(item);
-                                return (
-                                    <Chip
-                                        className={classes.chip}
-                                        key={item.id ? item.id : index}
-                                        label={label}
-                                        onDelete={() => this.handleItemRemove(item)}
-                                    />
-                                );
-                            })}
-                        </Grid>
-                        <Grid className={classes.chipButton} container item xs={2} sm={2}>
-                            <Tooltip title="Add Child" placement="left">
-                                <IconButton onClick={() => this.setState({ showTableDialog: true })} color="primary" aria-label="Add Child">
-                                    <Icon>playlist_add_check</Icon>
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                        <Divider light className={classes.chipDivider} variant="fullWidth" />
-                    </Grid>
+                    {multiSelect ? this.renderMultiInput() : this.renderSingleInput()}
                 </Paper>
             </React.Fragment>
         );
@@ -142,6 +193,7 @@ class TablePicker extends React.Component {
 
 TablePicker.defaultProps = {
     title: 'Choose Item',
+    multiSelect: true,
     onItemLabelWillLoad: item => (item.label ? item.label : item.id),
     onItemRemove: item => console.log('Item removed => ', item),
     onSelectionChange: data => console.log('Changed selected data => ', data),
@@ -152,6 +204,7 @@ TablePicker.propTypes = {
     fields: PropTypes.array.isRequired,
     apiURL: PropTypes.string.isRequired,
     initData: PropTypes.array,
+    multiSelect: PropTypes.bool,
     onDataWillLoad: PropTypes.func,
     onDataLoaded: PropTypes.func,
     onItemLabelWillLoad: PropTypes.func,

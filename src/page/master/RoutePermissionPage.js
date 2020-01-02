@@ -15,10 +15,6 @@ import {
     Collapse,
     ListItemSecondaryAction,
     Checkbox,
-    Select,
-    InputLabel,
-    MenuItem,
-    FormControl,
 } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -27,7 +23,6 @@ import AlertDialog from '../../component/Dialogs/AlertDialog';
 import TablePicker from '../../component/TablePicker';
 import { background } from '../../config/Theme';
 import PermissionApi from '../../api/PermissionApi';
-import RoleApi from '../../api/RoleApi';
 import Snackbar from '../../component/Snackbar';
 
 const ROLE_API = 'roles/';
@@ -85,7 +80,6 @@ class RoutePermissionPage extends React.Component {
         this.state = {
             default_routes: {},
             modified_routes: {},
-            roles: [],
             role: {},
             showLoading: false,
             showError: false,
@@ -100,21 +94,7 @@ class RoutePermissionPage extends React.Component {
             showLoading: true,
         });
         this.loadDefaultRoutes();
-        this.loadRoles();
     }
-
-    loadRoles = async () => {
-        try {
-            var result = await RoleApi.getAll();
-            this.setState({
-                roles: result.data,
-            });
-        } catch (error) {
-            this.setState({
-                roles: [],
-            });
-        }
-    };
 
     loadDefaultRoutes = async () => {
         try {
@@ -144,7 +124,7 @@ class RoutePermissionPage extends React.Component {
             var result = await PermissionApi.getPermissionByRoles(this.state.role.id);
 
             var modified_routes = {};
-            Object.keys(this.state.default_routes).map(key => {
+            Object.keys(this.state.default_routes).forEach(key => {
                 if (this.state.default_routes[key] && this.state.default_routes[key].routes) {
                     var routes = this.state.default_routes[key].routes;
                     var count = 0;
@@ -186,7 +166,7 @@ class RoutePermissionPage extends React.Component {
         });
         try {
             var datas = [];
-            await Object.keys(this.state.modified_routes).map(key => {
+            await Object.keys(this.state.modified_routes).forEach(key => {
                 var item = this.state.modified_routes[key];
 
                 var data = {
@@ -257,7 +237,7 @@ class RoutePermissionPage extends React.Component {
 
         if (item.routes) {
             //Go a long way to not override all data
-            item.routes.map(i => {
+            item.routes.forEach(i => {
                 modified_routes = this.overrideModify(i.method + ':' + i.pattern, i, modified_routes);
 
                 modified_routes[i.method + ':' + i.pattern].checked = checked;
@@ -345,10 +325,15 @@ class RoutePermissionPage extends React.Component {
         );
     }
 
-    handleSelectChange = event => {
+    handleError = () => {
+        this.setState({ showError: !this.state.showError });
+    };
+
+    handleRoleChange = role => {
+        console.log('Selected Role => ', role);
         this.setState(
             {
-                role: event.target.value,
+                role: role,
             },
             () => {
                 this.loadRoutesByRoles();
@@ -356,7 +341,7 @@ class RoutePermissionPage extends React.Component {
         );
     };
 
-    onCloseSnackbar = () => {
+    handleCloseSnackBar = () => {
         this.setState({ showSnack: false });
     };
 
@@ -378,7 +363,7 @@ class RoutePermissionPage extends React.Component {
                     showSnack={this.state.showSnack}
                     type="success"
                     message={this.state.snackMessage}
-                    onCloseSnackbar={this.onCloseSnackbar}
+                    onCloseSnackbar={this.handleCloseSnackBar}
                 />
                 <Paper className={classes.root} elevation={1}>
                     <Typography style={{ textAlign: 'center' }} color="primary" variant="h5" component="h3">
@@ -394,18 +379,14 @@ class RoutePermissionPage extends React.Component {
                                     </Icon>
                                 </Grid>
                                 <Grid item xs={11} sm={11} md={11} lg={11}>
-                                    <FormControl className={classes.formControl}>
-                                        <InputLabel htmlFor="role">Role</InputLabel>
-                                        <Select value={this.state.role} onChange={this.handleSelectChange}>
-                                            {this.state.roles.map((r, index) => {
-                                                return (
-                                                    <MenuItem key={r.id ? r.id : index} value={r}>
-                                                        {r.name}
-                                                    </MenuItem>
-                                                );
-                                            })}
-                                        </Select>
-                                    </FormControl>
+                                    <TablePicker
+                                        title="Choose Role"
+                                        fields={ROLE_TABLE_FIELDS}
+                                        apiURL={ROLE_API}
+                                        multiSelect={false}
+                                        onItemLabelWillLoad={item => item.name}
+                                        onSelectionChange={this.handleRoleChange}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid container justify="flex-end">

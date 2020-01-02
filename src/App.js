@@ -8,14 +8,14 @@ import DashboardPage from './page/dashboard';
 import ProfilePage from './page/me/profile';
 import ChangePasswordPage from './page/me/changePassword';
 import UserPage from './page/master/UserPage';
-import UserSetupPage from './page/master/user-setup';
+import UserSetupPage from './page/master/UserSetupPage';
 import RolePage from './page/master/RolePage';
-import RoleSetupPage from './page/master/role-setup';
+import RoleSetupPage from './page/master/RoleSetupPage';
 import FilePage from './page/master/file';
 import FileSetupPage from './page/master/file-setup';
 import MenuPage from './page/master/MenuPage';
-import MenuSetupPage from './page/master/menu-setup';
-import RoutePermissionPage from './page/master/route-permission';
+import MenuSetupPage from './page/master/MenuSetupPage';
+import RoutePermissionPage from './page/master/RoutePermissionPage';
 
 import MasterTemplate from './component/MasterTemplate';
 import { STORAGE_KEYS } from './config/Constant';
