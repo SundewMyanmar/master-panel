@@ -14,6 +14,7 @@ import * as DeviceDetect from 'react-device-detect';
 const styles = theme => ({
     root: {
         background: primary.light,
+        backgroundImage: 'url(/res/bg.png)',
         height: '100vh',
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -265,13 +266,13 @@ class RegisterPage extends React.Component {
                     onOkButtonClick={this.handleError}
                 />
                 <LoadingDialog showLoading={this.state.showLoading} message="Please wait registering!" />
-                <Grid className={classes.container} container spacing={24} alignItems="center" justify="center">
+                <Grid className={classes.container} container spacing={4} alignItems="center" justify="center">
                     <Grid style={{ padding: '22px' }} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
                         <Grid container justify="center">
                             <img src="res/logo.png" alt="SUNDEW MYANMAR" title="SUNDEW MYANMAR" className={classes.img} />
                         </Grid>
                         <Grid item xs={12}>
-                            <Divider light style={{ margin: '20px 0' }} />
+                            <Divider style={{ margin: '20px 0' }} />
                         </Grid>
                         <Grid item>
                             <Paper className={classes.inputContainer} elevation={1}>
@@ -433,7 +434,7 @@ class RegisterPage extends React.Component {
                                 Register
                             </Button>
 
-                            <Divider light style={{ margin: '20px 0' }} />
+                            <Divider style={{ margin: '20px 0' }} />
 
                             <Typography style={{ textAlign: 'center', margin: '0px 0px 8px 0px', fontSize: '14px' }} variant="subtitle1">
                                 Copyright © 2019 {new Date().getFullYear() <= 2019 ? '' : '-' + new Date().getFullYear()} by{' '}

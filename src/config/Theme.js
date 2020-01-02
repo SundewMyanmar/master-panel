@@ -43,7 +43,7 @@ export const secondary = {
     contrastText: '#f1f1f1',
 };
 
-export const divider = '#212121';
+export const divider = primary.main;
 
 export const background = {
     default: '#f1f1f1',

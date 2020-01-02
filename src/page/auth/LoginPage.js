@@ -18,6 +18,7 @@ import * as DeviceDetect from 'react-device-detect';
 const styles = theme => ({
     root: {
         background: 'linear-gradient(to top, #fff,' + background.light + ')',
+        backgroundImage: 'url(/res/bg.png)',
         height: '100vh',
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -201,7 +202,7 @@ class LoginPage extends React.Component {
                     this.setState({
                         showError: true,
                         showLoading: false,
-                        errorMessage: "You don't have permission to use Mefood Lunchbox Web Panel. Please contact to your admin.",
+                        errorMessage: "You don't have permission to use Web Panel. Please contact to your admin.",
                     });
                     sessionStorage.clear();
                 } else {
@@ -283,7 +284,7 @@ class LoginPage extends React.Component {
                     message={this.state.snackMessage}
                     onCloseSnackbar={this.onCloseSnackbar}
                 />
-                <Grid className={classes.container} container spacing={10} alignItems="center" justify="center">
+                <Grid className={classes.container} container spacing={4} alignItems="center" justify="center">
                     <Grid style={{ padding: '22px' }} className={classes.cardBox} item xs={12} sm={8} md={6} lg={4}>
                         <Grid container justify="center">
                             <img src="res/logo.png" alt="MeFood" title="MeFood" className={classes.img} />

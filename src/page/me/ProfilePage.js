@@ -167,9 +167,9 @@ class ProfilePage extends React.Component {
                                 <Grid container justify="center">
                                     <ImageUpload id="imageUpload" onImageChange={this.handleImageChange} source={this.state.image} />
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start">
+                                <Grid container spacing={2} alignItems="flex-start">
                                     <Grid item>
-                                        <Icon style={{ fontSize: 22, paddingTop: 40 }} color={this.state.display_nameError ? 'error' : 'primary'}>
+                                        <Icon style={{ fontSize: 22, paddingTop: 25 }} color={this.state.display_nameError ? 'error' : 'primary'}>
                                             storage
                                         </Icon>
                                     </Grid>
@@ -188,7 +188,7 @@ class ProfilePage extends React.Component {
                                         <div className={classes.form_error}>{this.state.display_nameError ? 'invalid display name field!' : ''}</div>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={8} alignItems="flex-start" justify="space-evenly">
+                                <Grid container spacing={2} alignItems="flex-start" justify="space-evenly">
                                     <Grid xs={12} sm={6} item md={5} lg={5}>
                                         <Button
                                             style={{ marginTop: '30px', marginBottom: '20px', color: background.default }}
