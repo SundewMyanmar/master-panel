@@ -138,15 +138,6 @@ class GridView extends React.Component {
                                                 </Grid>
                                             </Grid>
                                         </CardContent>
-                                        {/* <Divider light/>
-                                        <CardActions style={{ justifyContent : "flex-end"}}>
-                                            <IconButton color="secondary" aria-label="Edit">
-                                                <Icon fontSize="small">edit</Icon>
-                                            </IconButton>
-                                            <IconButton aria-label="Delete" style={{ color: this.props.theme.palette.common.red }} >
-                                                <Icon fontSize="small">delete</Icon>
-                                            </IconButton>
-                                        </CardActions> */}
                                     </CardActionArea>
                                 </Card>
                             </Grid>

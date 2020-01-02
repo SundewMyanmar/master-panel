@@ -120,7 +120,7 @@ class LoginPage extends React.Component {
         var snackMessage = '';
         const query = new URLSearchParams(this.props.location.search);
         var response = query.get('callback');
-        if (response == 'success') {
+        if (response === 'success') {
             showSnack = true;
             snackMessage = 'Register success! Please log in to continue.';
         }

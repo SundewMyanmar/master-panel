@@ -151,7 +151,7 @@ class FileSetupPage extends React.Component {
                     <Divider className={classes.divider} light component="h3" />
                     <Grid className={classes.gridContainer} justify="center" container>
                         <Grid item xs={12} sm={12} md={8} lg={6}>
-                            <Grid container spacing={16} justify="center">
+                            <Grid container spacing={2} justify="center">
                                 <input
                                     style={{ display: 'none' }}
                                     accept="image/*"
@@ -160,6 +160,16 @@ class FileSetupPage extends React.Component {
                                     multiple
                                     onChange={event => this.onChangeImage(event)}
                                 />
+                                {this.state.files.map(file => {
+                                    return (
+                                        <Grid key={file.name} item style={{ position: 'relative' }}>
+                                            <IconButton className={classes.btnClose} aria-label="Close" onClick={() => this.removeImage(file)}>
+                                                <Icon>cancel</Icon>
+                                            </IconButton>
+                                            <CardMedia className={classes.media} image={file.previewImage} />
+                                        </Grid>
+                                    );
+                                })}
                                 <Grid item>
                                     <label htmlFor="image_upload">
                                         <CardActionArea component="span">
@@ -171,17 +181,6 @@ class FileSetupPage extends React.Component {
                                         </CardActionArea>
                                     </label>
                                 </Grid>
-
-                                {this.state.files.map(file => {
-                                    return (
-                                        <Grid key={file.name} item style={{ position: 'relative' }}>
-                                            <IconButton className={classes.btnClose} aria-label="Close" onClick={() => this.removeImage(file)}>
-                                                <Icon>cancel</Icon>
-                                            </IconButton>
-                                            <CardMedia className={classes.media} image={file.previewImage} />
-                                        </Grid>
-                                    );
-                                })}
                             </Grid>
 
                             {this.state.fileError ? (

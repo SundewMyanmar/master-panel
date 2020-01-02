@@ -234,12 +234,12 @@ class FileDialog extends React.Component {
 
         return (
             <React.Fragment>
-                <Dialog fullWidth maxWidth="xl" onEscapeKeyDown={onClose} open={showDialog} onClose={onClose} TransitionComponent={Transition}>
+                <Dialog fullWidth maxWidth="lg" onEscapeKeyDown={onClose} open={showDialog} onClose={onClose} TransitionComponent={Transition}>
                     <DialogTitle style={{ borderRadius: 0, padding: '8px 24px', backgroundColor: this.props.theme.palette.primary.main }}>
                         {this.renderHeader()}
                     </DialogTitle>
                     <DialogContent>
-                        <Grid container item xs={12} style={{ padding: '8px 0px 8px 8px' }} spacing={8}>
+                        <Grid container item xs={12} style={{ padding: '8px 0px 8px 8px' }} spacing={2}>
                             {this.state.data.map(this.renderItem)}
                         </Grid>
                     </DialogContent>
