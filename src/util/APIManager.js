@@ -1,82 +1,145 @@
-import { API_URL, STORAGE_KEYS } from '../config/Constant';
+import { API, STORAGE_KEYS } from '../config/Constant';
+import { v4 as uuid } from 'uuid';
 import Axios from 'axios';
+import { osName, osVersion } from 'react-device-detect';
+export default class ApiManager {
+    get apiUrl() {
+        return this.apiUrl;
+    }
 
-export default class APIManager {
-    async getHeaders(isAuth) {
+    constructor(baseURL) {
+        this.apiURL = API + baseURL;
+    }
+
+    getDeviceId() {
+        let deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+        if (!deviceId) {
+            deviceId = uuid();
+            localStorage.setItem(STORAGE_KEYS.DEVICE_ID, deviceId);
+        }
+        return deviceId;
+    }
+
+    getDeviceOS() {
+        return osName + osVersion;
+    }
+
+    getUserInfo() {
+        const userData = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || 'public-token';
+        return JSON.parse(userData);
+    }
+
+    getHeaders(isAuth) {
         let result = {
             'Content-Type': 'application/json;charset=UTF-8',
         };
         if (isAuth) {
             try {
-                const userData = (await sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || 'public-token';
-                const jsonUserData = JSON.parse(userData);
-                if (jsonUserData && jsonUserData.current_token) {
-                    result['Authorization'] = 'Bearer ' + jsonUserData.current_token;
+                const user = this.getUserInfo();
+                if (user && user.currentToken) {
+                    result['Authorization'] = 'Bearer ' + user.currentToken;
                 }
             } catch (error) {
                 console.warn(error.response);
-                throw error;
+                throw error.response.data;
             }
         }
         return result;
     }
 
-    async get(url, isAuth) {
-        try {
-            const headers = await this.getHeaders(isAuth);
-            console.log('Headers =>', headers);
-            console.log('GET => ' + API_URL + url);
-            const response = await Axios.get(API_URL + url, { headers });
-            console.log('Response => ', response);
-            return response.data;
-        } catch (error) {
-            console.warn(error);
-            throw error;
+    errorHandling(error) {
+        console.warn(error.response);
+        if (error.response.status === 401) {
+            sessionStorage.clear();
         }
     }
 
-    async post(url, data, isAuth) {
+    async get(url, headers) {
         try {
-            const headers = await this.getHeaders(isAuth);
             console.log('Headers =>', headers);
-            console.log('POST => ', API_URL + url);
-            console.log('BODY => ', data);
-            const response = await Axios.post(API_URL + url, data, { headers });
+            console.log('GET => ' + this.apiURL + url);
+            const response = await Axios.get(this.apiURL + url, { headers });
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
-            console.warn(error.response);
-            throw error;
-        }
-    }
-
-    async put(url, data, isAuth) {
-        try {
-            const headers = await this.getHeaders(isAuth);
-            console.log('Headers =>', headers);
-            console.log('PUT => ' + API_URL + url);
-            console.log('BODY => ', data);
-            const response = await Axios.put(API_URL + url, data, { headers });
-            console.log('Response => ', response);
-            return response.data;
-        } catch (error) {
-            console.warn(error);
-            throw error;
-        }
-    }
-
-    async deleteItem(url, data, isAuth) {
-        try {
-            const headers = await this.getHeaders(isAuth);
-            console.log('Headers =>', headers);
-            console.log('DELETE => ' + API_URL + url);
-            console.log('BODY => ', data);
-            const response = await Axios.delete(API_URL + url, { headers, data });
-            console.log('Response => ', response);
-            return response.data;
-        } catch (error) {
-            console.warn(error.response);
+            this.errorHandling(error);
             throw error.response.data;
         }
+    }
+
+    async post(url, data, headers) {
+        try {
+            console.log('Headers =>', headers);
+            console.log('POST => ', this.apiURL + url);
+            console.log('BODY => ', data);
+            const response = await Axios.post(this.apiURL + url, data, { headers });
+            console.log('Response => ', response);
+            return response.data;
+        } catch (error) {
+            this.errorHandling(error);
+            throw error.response.data;
+        }
+    }
+
+    async put(url, data, headers) {
+        try {
+            console.log('Headers =>', headers);
+            console.log('PUT => ' + this.apiURL + url);
+            console.log('BODY => ', data);
+            const response = await Axios.put(this.apiURL + url, data, { headers });
+            console.log('Response => ', response);
+            return response.data;
+        } catch (error) {
+            this.errorHandling(error);
+            throw error.response.data;
+        }
+    }
+
+    async delete(url, data, headers) {
+        try {
+            console.log('Headers =>', headers);
+            console.log('DELETE => ' + this.apiURL + url);
+            console.log('BODY => ', data);
+            const response = await Axios.delete(this.apiURL + url, { headers, data });
+            console.log('Response => ', response);
+            return response.data;
+        } catch (error) {
+            this.errorHandling(error);
+            throw error.response.data;
+        }
+    }
+
+    async getPaging(page, size, sort, filter) {
+        let url = '?page=' + page + '&size=' + size;
+        if (sort && sort !== '') url += '&sort=' + sort;
+        if (filter && filter !== '') url += '&filter=' + filter;
+
+        const response = await this.get(url, this.getHeaders(true));
+        return response;
+    }
+
+    async getById(id) {
+        const response = await this.get('/' + id, this.getHeaders(true));
+        return response;
+    }
+
+    async addNew(data) {
+        const response = await this.post('', data, this.getHeaders(true));
+        return response;
+    }
+
+    async modifyById(id, data) {
+        const response = await this.put('/' + id, data, this.getHeaders(true));
+        return response;
+    }
+
+    async removeById(id) {
+        const response = await this.delete('/' + id, {}, this.getHeaders(true));
+        return response;
+    }
+
+    async multiRemove(ids) {
+        const response = await this.delete('/multi', ids, this.getHeaders(true));
+        return response;
     }
 }

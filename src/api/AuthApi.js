@@ -1,29 +1,73 @@
-import APIManager from '../util/APIManager';
+import ApiManager from '../util/ApiManager';
 
-const AUTH_URL = 'auth/';
+type Auth = {
+    deviceId: string,
+    deviceOs: string,
+    firebaseMessagingToken?: String,
+};
 
-class AuthApi extends APIManager {
-    async Authenticate(request) {
-        try {
-            const response = await this.post(AUTH_URL, request, false);
-            if (response.code >= 200 && response.code < 300) {
-                return response.content;
-            }
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+type UserAuth = {
+    ...Auth,
+    password: string,
+    user: string,
+};
+
+type UserRegistration = {
+    ...Auth,
+    displayName: string,
+    email: string,
+    phoneNumber: string,
+    password: string,
+};
+
+type ForgetPassword = {
+    phoneNumber: string,
+    email: string,
+    callback: string,
+};
+
+type ResetPassword = {
+    oldPassword: string,
+    newPassword: string,
+    user: string,
+};
+
+class AuthApi extends ApiManager {
+    constructor() {
+        super('auth');
     }
 
-    async register(request) {
-        try {
-            const reg_url = AUTH_URL + 'register/';
-            const response = await this.post(reg_url, request, false);
-            return response.content;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+    async setAuth(data): Auth {
+        return {
+            deviceId: this.getDeviceId(),
+            deviceOS: this.getDeviceOS(),
+            firebaseMessagingToken: null,
+            ...data,
+        };
+    }
+
+    async register(request: UserRegistration) {
+        const data = await this.setAuth(request);
+        const response = await this.post('/register', data, this.getHeaders(false));
+        return response;
+    }
+
+    async authByUserAndPassword(request: UserAuth) {
+        const data = await this.setAuth(request);
+        const response = await this.post('', data, this.getHeaders(false));
+        return response;
+    }
+
+    async forgetPassword(request: ForgetPassword) {
+        const response = await this.post('/forgetPassword', request, this.getHeaders(false));
+        return response;
+    }
+
+    async authByFacebook(accessToken: string) {}
+
+    async resetPassword(request: ResetPassword) {
+        const response = await this.post('/resetPassword', request, this.getHeaders(false));
+        return response;
     }
 }
 

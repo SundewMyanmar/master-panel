@@ -1,86 +1,44 @@
-import ApiManager from '../util/APIManager';
-import { API_URL } from '../config/Constant';
-import Axios from 'axios';
+import ApiManager from '../util/ApiManager';
 
 class FileApi extends ApiManager {
-    async upload(file) {
-        let headers = await this.getHeaders(true);
-        headers['Content-Type'] = 'multipart/form-data';
+    constructor() {
+        super('files');
+    }
 
-        const formData = new FormData();
-        formData.append('uploadedFile', file);
-        formData.append('isPublic', true);
-
-        try {
-            const url = API_URL + 'files/upload/';
-            const response = await Axios.post(url, formData, { headers: headers });
-
-            const responseJson = response.data;
-            if (responseJson.content && responseJson.code >= 200 && responseJson.code <= 300) {
-                return responseJson.content;
+    downloadLink(file) {
+        if (file && file.id) {
+            if (file.publicAccess) {
+                return file.urls.public;
+            } else {
+                const user = this.getUserInfo();
+                return file.urls.private + '?accessToken=' + user.currentToken;
             }
-        } catch (error) {
-            console.error('Upload Error => ', error);
-            throw error;
         }
         return null;
+    }
+
+    async upload(file, isPublic) {
+        let headers = this.getHeaders(true);
+        headers['Content-Type'] = 'multipart/form-data';
+        const data = new FormData();
+        data.append('uploadedFile', file);
+        data.append('isPublic', isPublic);
+        const response = await this.post('/upload', data, headers);
+        return response;
     }
 
     async multiUpload(files) {
-        let headers = await this.getHeaders(true);
+        let headers = this.getHeaders(true);
         headers['Content-Type'] = 'multipart/form-data';
 
-        const formData = new FormData();
+        const data = new FormData();
         for (var i = 0; i < files.length; i++) {
-            formData.append('uploadedFile', files[i]);
+            data.append('uploadedFile', files[i]);
         }
 
-        formData.append('isPublic', true);
-
-        try {
-            const url = API_URL + 'files/multi/upload/';
-            const response = await Axios.post(url, formData, { headers: headers });
-
-            const responseJson = response.data;
-            if (responseJson.content && responseJson.code >= 200 && responseJson.code <= 300) {
-                return responseJson.content;
-            }
-        } catch (error) {
-            console.error('Upload Error => ', error);
-            throw error;
-        }
-        return null;
-    }
-
-    async getPaging(page, size, sort, filter) {
-        try {
-            var url = 'files/?page=' + page + '&size=' + size;
-            if (sort && sort !== '') url += '&sort=' + sort;
-            if (filter && filter !== '') url += '&filter=' + filter;
-
-            const response = await this.get(url, true);
-            if (response.code >= 200 && response.code < 300) {
-                return response.content;
-            }
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-        return null;
-    }
-
-    async delete(id) {
-        try {
-            const url = 'files/' + id;
-            const response = await this.deleteItem(url, {}, true);
-            if (response.code >= 200 && response.code < 300) {
-                return response.content;
-            }
-        } catch (error) {
-            console.error('err', error);
-            throw error;
-        }
-        return null;
+        data.append('isPublic', true);
+        const response = await this.post('/multi/upload', data, headers);
+        return response;
     }
 }
 

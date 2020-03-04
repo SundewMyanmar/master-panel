@@ -1,13 +1,29 @@
 import moment from 'moment';
 
-// import {
-//     DATE_FORMAT,
-// } from "../config/Constant.js";
-
 export default class FormatManager {
+    static tryParseJson = text => {
+        try {
+            const jsonObj = JSON.parse(text);
+            if (jsonObj && typeof jsonObj === 'object') {
+                return jsonObj;
+            } else {
+                return text;
+            }
+        } catch (e) {
+            return text;
+        }
+    };
+
     static formatDate = (date, format) => {
         const unixTS = parseInt(date / 1000);
         return moment.unix(unixTS).format(format);
+    };
+
+    static buildCSV = input => {
+        if (!input) {
+            return '""';
+        }
+        return '"' + input.replace(/["]/g, '""') + '"';
     };
 
     static toTimestamp = date => {

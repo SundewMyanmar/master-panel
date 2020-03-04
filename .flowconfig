@@ -1,0 +1,19 @@
+[ignore]
+.*/node_modules/.*
+.*/src/registerServiceWorker\.js
+.*/src/index\.js
+.*\.test\.js
+
+[include]
+src/*.js
+
+[libs]
+
+[lints]
+# all=off by default
+sketchy-null=warn
+sketchy-null-bool=off
+
+[options]
+
+[strict]

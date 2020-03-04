@@ -1,11 +1,11 @@
 export const MASTER_ACTIONS = {
-    INIT_DATA: 'LOAD_ITEMS',
-    CREATE_NEW: 'CREATE_NEW',
+    INIT_DATA: 'LOAD_MASTER_DATA',
+    CREATE_NEW: 'CREATE_NEW_ITEM',
     MODIFIED: 'MODIFIED_ITEM',
     REMOVE: 'REMOVE_ITEM',
 };
 
-const UserReducer = (state = [], action) => {
+const MasterReducer = (state = [], action) => {
     switch (action.type) {
         case MASTER_ACTIONS.INIT_DATA:
             return action.data;
@@ -19,4 +19,4 @@ const UserReducer = (state = [], action) => {
             return state;
     }
 };
-export default UserReducer;
+export default MasterReducer;
