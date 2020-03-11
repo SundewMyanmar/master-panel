@@ -45,10 +45,10 @@ const DataAction = (props: DataActionProps) => {
         <>
             <Tooltip title="More Actions" placement="top">
                 <IconButton size="small" onClick={event => setAnchorEl(event.currentTarget)} color="primary" aria-label={id} {...iconButtonProps}>
-                    <Icon>more_horiz</Icon>
+                    <Icon>more_vert</Icon>
                 </IconButton>
             </Tooltip>
-            <Menu id="actions-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+            <Menu id="actions-menu" marginThreshold={50} anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 {actions.map((item, index) => {
                     return (
                         <MenuItem dense key={item.id + '-' + index} onClick={() => handleClick(item)}>

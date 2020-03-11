@@ -90,6 +90,11 @@ const Login = props => {
 
     const classes = styles();
 
+    const handleError = error => {
+        setLoading(false);
+        setError(error.message || 'Please check your internet connection and try again.');
+    };
+
     const handleSubmit = (event, form) => {
         if (!window.navigator.onLine) {
             setError('Please check your internet connection and try again.');
@@ -101,10 +106,7 @@ const Login = props => {
                 sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(data));
                 history.push('/');
             })
-            .catch(error => {
-                setLoading(false);
-                setError(error.message || 'Please check your internet connection and try again.');
-            });
+            .catch(handleError);
     };
 
     const facebookLogin = () => {

@@ -1,34 +1,20 @@
-import React, { useState } from 'react';
-import {
-    List,
-    ListItem,
-    ListItemIcon,
-    Icon,
-    ListItemText,
-    Divider,
-    Menu,
-    MenuItem,
-    Collapse,
-    useTheme,
-    makeStyles,
-    Typography,
-    fade,
-} from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { Icon, makeStyles, Typography, fade } from '@material-ui/core';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import { MenuProps } from './SideMenu';
 
-type TreeMenuProps = {
-    menus: Array<MenuProps>,
-    openIds: Array<String>,
+export const TreeCollapseIcon = (expand, onClick) => {
+    return (
+        <Icon onClick={onClick} fontSize="small">
+            {expand ? 'arrow_right' : 'arrow_drop_down'}
+        </Icon>
+    );
 };
 
 const useTreeItemStyles = makeStyles(theme => ({
     root: {
-        color: theme.palette.text.secondary,
-        '&:focus > $content': {
-            backgroundColor: `var(--tree-view-bg-color, ${theme.palette.primary.light})`,
-            color: `var(--tree-view-color, ${theme.palette.primary.contrastText})`,
+        '&:focus > $content $label, &$selected > $content $label': {
+            color: theme.palette.primary.contrastText,
         },
     },
     content: {
@@ -37,14 +23,15 @@ const useTreeItemStyles = makeStyles(theme => ({
         borderBottomRightRadius: theme.spacing(2),
         paddingRight: theme.spacing(1),
         fontWeight: theme.typography.fontWeightMedium,
-        '$expanded > &': {
+        '$selected > &': {
             fontWeight: theme.typography.fontWeightRegular,
         },
     },
+    selected: {},
     group: {
-        marginLeft: 12,
-        paddingLeft: 12,
-        borderLeft: `1px solid ${fade(theme.palette.text.primary, 0.4)}`,
+        marginLeft: 7,
+        paddingLeft: 7,
+        borderLeft: `1px dotted ${fade(theme.palette.text.primary, 0.4)}`,
     },
     label: {
         fontWeight: 'inherit',
@@ -66,21 +53,21 @@ const useTreeItemStyles = makeStyles(theme => ({
 
 export const DefaultTreeItem = props => {
     const classes = useTreeItemStyles();
-
-    const { label, icon, onClick, state, items, ...other } = props;
-    const history = useHistory();
+    //Unused property need to add for remove in DOM.
+    const { nodeId, label, icon, onClick, onCollapseClick, items, divider, parentId, createdAt, modifiedAt, ...other } = props;
     const isCollapseable = items && items.length > 0;
 
     const handleClick = () => {
-        if (state && state.length) {
-            history.push(state);
-        } else if (onClick) {
+        if (onClick) {
             onClick(props);
         }
     };
 
     return (
         <TreeItem
+            nodeId={nodeId}
+            expandIcon={TreeCollapseIcon(true, () => onCollapseClick(nodeId))}
+            collapseIcon={TreeCollapseIcon(false, () => onCollapseClick(nodeId))}
             onClick={handleClick}
             label={
                 <div className={classes.labelRoot}>
@@ -103,11 +90,24 @@ export const DefaultTreeItem = props => {
         >
             {isCollapseable
                 ? items.map((menu, index) => {
-                      return <DefaultTreeItem nodeId={menu.id + '-' + index} key={menu.id + '-' + index} {...menu} />;
+                      return (
+                          <DefaultTreeItem
+                              onCollapseClick={onCollapseClick}
+                              onClick={onClick}
+                              nodeId={menu.id + '-' + index}
+                              key={menu.id + '-' + index}
+                              {...menu}
+                          />
+                      );
                   })
                 : null}
         </TreeItem>
     );
+};
+
+type TreeMenuProps = {
+    menus: Array<MenuProps>,
+    onClickItem?: (item: Object) => void,
 };
 
 const styles = makeStyles(theme => ({
@@ -120,24 +120,45 @@ const styles = makeStyles(theme => ({
 
 const TreeMenu = (props: TreeMenuProps) => {
     const classes = styles();
-    const [expanded, setExpanded] = React.useState(props.openIds);
-    const handleChange = (event, nodes) => {
-        setExpanded(nodes);
+    const { onClickItem, menus } = props;
+    const [expandedNodes, setExpandedNodes] = React.useState([]);
+
+    React.useEffect(() => {
+        const expNodes = menus.map((menu, index) => menu.id + '-' + index);
+        setExpandedNodes(expNodes);
+    }, [menus]);
+
+    const handleCollapseItemClick = nodeId => {
+        const existIdx = expandedNodes.findIndex(x => x === nodeId);
+        const updateNodes = existIdx < 0 ? [...expandedNodes, nodeId] : expandedNodes.filter(x => x !== nodeId);
+
+        setExpandedNodes(updateNodes);
     };
 
     return (
         <TreeView
-            expanded={expanded}
-            onNodeToggle={handleChange}
+            expanded={expandedNodes}
             className={classes.root}
             defaultCollapseIcon={<Icon>arrow_drop_down</Icon>}
             defaultExpandIcon={<Icon>arrow_right</Icon>}
         >
-            {props.menus.map((menu, index) => {
-                return <DefaultTreeItem nodeId={menu.id + '-' + index} key={menu.id + '-' + index} {...menu} />;
+            {menus.map((menu, index) => {
+                return (
+                    <DefaultTreeItem
+                        onCollapseClick={handleCollapseItemClick}
+                        onClick={onClickItem}
+                        nodeId={menu.id + '-' + index}
+                        key={menu.id + '-' + index}
+                        {...menu}
+                    />
+                );
             })}
         </TreeView>
     );
+};
+
+TreeMenu.defaultProps = {
+    onClickItem: item => console.warn('Undefined onClickItem => ', item),
 };
 
 export default TreeMenu;

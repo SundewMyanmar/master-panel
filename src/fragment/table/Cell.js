@@ -6,7 +6,7 @@ import LangManager from '../../util/LangManager';
 
 export type CellProps = {
     ...TableCellBaseProps,
-    type: 'text' | 'image' | 'action' | 'raw',
+    type: 'text' | 'image' | 'icon' | 'bool' | 'raw',
     field: TableField,
     data: Object,
 };
@@ -23,6 +23,17 @@ export const ImageCell = (field, data) => {
     }
 
     return <img alt={alt} width={40} src={image} {...imageProps} />;
+};
+
+export const IconCell = (field, data) => {
+    const { name, onLoad } = field;
+
+    let icon = data[name];
+    if (onLoad) {
+        icon = onLoad(data);
+    }
+
+    return <Icon color="primary">{icon}</Icon>;
 };
 
 export const BooleanCell = (field, data) => {
@@ -47,6 +58,9 @@ const Cell = (props: CellProps) => {
     switch (field.type) {
         case 'image':
             cellValue = ImageCell(field, data);
+            break;
+        case 'icon':
+            cellValue = IconCell(field, data);
             break;
         case 'bool':
             cellValue = BooleanCell(field, data);

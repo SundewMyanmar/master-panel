@@ -2,11 +2,16 @@ import ApiManager from '../util/ApiManager';
 
 class MenuApi extends ApiManager {
     constructor() {
-        super('menus');
+        super('admin/menus');
     }
 
-    async getByRole(data) {
-        const response = await this.get('roles?ids=' + data, this.getHeaders(true));
+    async getTree(filter) {
+        const response = await this.get('/tree?filter=' + filter, this.getHeaders(true));
+        return response;
+    }
+
+    async getCurrentUserMenu() {
+        const response = await this.get('/me', this.getHeaders(true));
         return response;
     }
 }

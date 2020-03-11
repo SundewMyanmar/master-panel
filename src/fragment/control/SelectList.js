@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TextFieldProps, TextField, Icon, InputAdornment } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import FormatManager from '../../util/FormatManager';
 
 export type SelectListProps = {
     ...TextFieldProps,
@@ -21,9 +22,12 @@ const SelectList = (props: SelectListProps) => {
 
     const currentInput = inputRef || React.createRef();
 
+    //Set value if props.value changed.
     React.useEffect(() => {
-        if (currentInput.current && value) {
-            handleChange({ target: currentInput.input }, value);
+        const newValue = FormatManager.defaultNull(value) || '';
+        if (currentInput.current && newValue !== currentInput.current.value) {
+            currentInput.current.value = newValue;
+            handleChange({ target: currentInput.current }, value);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
@@ -97,7 +101,7 @@ const SelectList = (props: SelectListProps) => {
 };
 
 SelectList.defaultProps = {
-    onLoadItem: item => item.label || 'Undefined onLoadItem/label',
+    onLoadItem: item => item.toString(),
 };
 
 export default SelectList;

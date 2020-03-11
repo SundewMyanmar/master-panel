@@ -14,6 +14,13 @@ export default class FormatManager {
         }
     };
 
+    static defaultNull = input => {
+        if (typeof input === 'undefined') {
+            return null;
+        }
+        return input;
+    };
+
     static formatDate = (date, format) => {
         const unixTS = parseInt(date / 1000);
         return moment.unix(unixTS).format(format);

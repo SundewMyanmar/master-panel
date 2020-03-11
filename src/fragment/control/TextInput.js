@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextField, TextFieldProps, InputAdornment, Icon } from '@material-ui/core';
+import FormatManager from '../../util/FormatManager';
 
 export type TextInputProps = {
     ...TextFieldProps,
@@ -22,8 +23,10 @@ export default function TextInput(props: TextInputProps) {
 
     //Set value if props.value changed.
     React.useEffect(() => {
-        if (currentInput.current && value && value.length > 0) {
-            currentInput.current.value = value;
+        const newValue = FormatManager.defaultNull(value) || '';
+
+        if (currentInput.current && newValue !== currentInput.current.value) {
+            currentInput.current.value = newValue;
             handleTextChange({ target: currentInput.current });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

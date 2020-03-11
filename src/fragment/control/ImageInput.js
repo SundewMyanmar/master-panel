@@ -1,5 +1,5 @@
 import React, { useState, createRef, useEffect } from 'react';
-import { InputProps, IconButton, makeStyles, Icon, FormHelperText } from '@material-ui/core';
+import { InputProps, IconButton, makeStyles, Icon } from '@material-ui/core';
 import ListPicker from './ListPicker';
 import FileApi from '../../api/FileApi';
 import FilePicker from './FilePicker';

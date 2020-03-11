@@ -2,6 +2,7 @@ import * as React from 'react';
 import { InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
 import { TableField } from '../table';
 import TablePicker from './TablePicker';
+import FormatManager from '../../util/FormatManager';
 
 export type ObjectInputProps = {
     ...InputProps,
@@ -76,15 +77,17 @@ const ObjectInput = (props: ObjectInputProps) => {
     const [showTable, setShowTable] = React.useState(false);
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
-    const [selectedData, setSelectedData] = React.useState(multi ? values : value);
+    const [selectedData, setSelectedData] = React.useState(FormatManager.defaultNull(multi ? values : value));
     const classes = styles({ invalid });
     const currentInput = inputRef || React.createRef();
 
     //Set value if props.value changed.
     React.useEffect(() => {
-        if ((values && values.length > 0) || (value && value.id)) {
-            handleClose(multi ? values : value);
+        const inputData = FormatManager.defaultNull(multi ? values : value);
+        if (selectedData !== inputData) {
+            handleClose(inputData);
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values, value]);
 
@@ -124,6 +127,16 @@ const ObjectInput = (props: ObjectInputProps) => {
         }
     };
 
+    const handleRemove = item => {
+        if (!multi) {
+            handleClose(null);
+            return;
+        }
+        console.log('Remove item => ', item);
+        let updateSelection = selectedData.filter(x => x.id !== item.id);
+        handleClose(updateSelection);
+    };
+
     const handleError = error => {
         setShowTable(false);
         setError(error);
@@ -143,15 +156,20 @@ const ObjectInput = (props: ObjectInputProps) => {
                 <>
                     {selectedData.map((item, index) => {
                         const display = onLoadItem(item);
-                        return <Chip className={classes.chip} key={item.id ? item.id : index} label={display} />;
+                        return <Chip onDelete={() => handleRemove(item)} className={classes.chip} key={item.id ? item.id : index} label={display} />;
                     })}
                 </>
             );
         }
 
         const display = onLoadItem(selectedData);
+        if (typeof display === 'object') {
+            return (
+                <Chip onDelete={() => handleRemove(selectedData)} className={classes.chip} icon={<Icon>{display.icon}</Icon>} label={display.label} />
+            );
+        }
 
-        return <Typography variant="body1">{display}</Typography>;
+        return <Chip onDelete={() => handleRemove(selectedData)} className={classes.chip} label={display} />;
     };
 
     return (

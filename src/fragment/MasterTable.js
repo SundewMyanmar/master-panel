@@ -156,6 +156,9 @@ const MasterTable = (props: MasterTableProps) => {
 
     const handleActionMenu = menuItem => {
         switch (menuItem.id) {
+            case 'uncheck_all':
+                setSelectedData([]);
+                break;
             case 'export_csv':
                 exportCSV();
                 break;

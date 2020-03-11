@@ -52,7 +52,13 @@ const TablePicker = (props: TablePickerProps) => {
     const { title, multi, selectedData, show, fields, onLoad, onClose, onError } = props;
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
-    const [checked, setChecked] = useState(selectedData);
+    const [checked, setChecked] = useState(() => {
+        if (multi && !selectedData) {
+            return [];
+        }
+
+        return selectedData;
+    });
     const loadData = async (currentPage, pageSize, sort) => {
         setLoading(true);
         try {
@@ -76,7 +82,11 @@ const TablePicker = (props: TablePickerProps) => {
 
     //Set value if props.value changed.
     React.useEffect(() => {
-        setChecked(selectedData);
+        if (multi && !selectedData) {
+            setChecked([]);
+        } else {
+            setChecked(selectedData);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedData]);
 
@@ -102,9 +112,23 @@ const TablePicker = (props: TablePickerProps) => {
         }
     };
 
+    const handleClose = action => {
+        if (!multi) {
+            onClose(false);
+            return;
+        }
+
+        if (action) {
+            onClose(checked);
+        } else {
+            setChecked(selectedData || []);
+            onClose(false);
+        }
+    };
+
     return (
         <>
-            <Dialog fullWidth maxWidth="lg" onEscapeKeyDown={() => onClose(false)} open={show} TransitionComponent={Transition}>
+            <Dialog fullWidth maxWidth="lg" onEscapeKeyDown={() => handleClose(false)} open={show} TransitionComponent={Transition}>
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justify="flex-start">
@@ -117,7 +141,7 @@ const TablePicker = (props: TablePickerProps) => {
                         </Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
                             <Tooltip title="Close Dialog">
-                                <IconButton size="small" color="primary" onClick={() => onClose(false)} aria-label="Close">
+                                <IconButton size="small" color="primary" onClick={() => handleClose(false)} aria-label="Close">
                                     <Icon>close</Icon>
                                 </IconButton>
                             </Tooltip>
@@ -137,15 +161,15 @@ const TablePicker = (props: TablePickerProps) => {
                         selectedData={checked}
                         onPageChange={handlePageChange}
                         onSelectionChange={handleSelectionChange}
-                        onRowClick={handleRowClick}
+                        onRowClick={multi ? null : handleRowClick}
                     />
                 </DialogContent>
                 {multi ? (
                     <DialogActions>
-                        <Button onClick={() => onClose(checked)} color="primary" variant="contained">
+                        <Button onClick={() => handleClose(true)} color="primary" variant="contained">
                             Ok
                         </Button>
-                        <Button onClick={() => onClose(false)} color="secondary" variant="contained">
+                        <Button onClick={() => handleClose(false)} color="secondary" variant="contained">
                             Cancel
                         </Button>
                     </DialogActions>

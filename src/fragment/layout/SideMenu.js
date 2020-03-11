@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Collapse, makeStyles, Popover, PopoverProps } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Collapse, makeStyles, Popover, PopoverProps, Tooltip } from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import SearchInput from '../control/SearchInput';
@@ -100,7 +100,23 @@ const ItemStyles = makeStyles(theme => ({
 const DefaultMenuItem = (props: MenuItemProps) => {
     const history = useHistory();
     const location = useLocation();
-    const { state, dispatch, parentCount, onMenuItemClick, id, label, icon, onClick, path, items, divider, ...rest } = props;
+    const {
+        state,
+        dispatch,
+        parentCount,
+        onMenuItemClick,
+        id,
+        label,
+        icon,
+        onClick,
+        path,
+        items,
+        divider,
+        parentId,
+        createdAt,
+        modifiedAt,
+        ...rest
+    } = props;
 
     const isFolder = items && items.length > 0;
     const open = state.openIds.findIndex(x => x === props.id) >= 0;
@@ -159,9 +175,11 @@ const DefaultMenuItem = (props: MenuItemProps) => {
                 aria-owns={'popup-menu-' + id}
                 aria-haspopup="true"
             >
-                <ListItemIcon className={classes.menuIcon}>
-                    <Icon fontSize={state.hideMenu ? 'large' : 'default'}>{icon}</Icon>
-                </ListItemIcon>
+                <Tooltip title={label} aria-label={label}>
+                    <ListItemIcon className={classes.menuIcon}>
+                        <Icon fontSize={state.hideMenu ? 'large' : 'default'}>{icon}</Icon>
+                    </ListItemIcon>
+                </Tooltip>
                 {state.hideMenu ? null : <ListItemText inset={false} primary={label} className={classes.menuText} />}
                 {!state.hideMenu && isFolder ? <Icon fontSize="small">{open ? 'expand_less' : 'chevron_right'}</Icon> : null}
             </ListItem>

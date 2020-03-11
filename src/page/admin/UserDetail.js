@@ -8,7 +8,6 @@ import MasterForm from '../../fragment/MasterForm';
 import UserApi from '../../api/UserApi';
 import { ROLE_TABLE_FIELDS } from './Role';
 import FileApi from '../../api/FileApi';
-import { SUPPORTED_GENDERS } from '../../config/Constant';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -51,6 +50,7 @@ const UserDetail = props => {
         UserApi.getById(id)
             .then(data => {
                 setDetail(data);
+                setUpdate(true);
             })
             .catch(error => {
                 if (error.code !== 'HTTP_406') {
@@ -77,8 +77,8 @@ const UserDetail = props => {
             password: form.password,
             status: form.status ? 'ACTIVE' : 'CANCEL',
             extras: {
-                address: form.address,
-                gender: form.gender ? form.gender.id : null,
+                address: form.address || '',
+                gender: form.gender && typeof form.gender === 'string' ? form.gender : '',
             },
         };
 
@@ -94,7 +94,7 @@ const UserDetail = props => {
         }
 
         if (isUpdate) {
-            user.id = id;
+            user.id = detail.id;
             user.password = 'default_password';
             UserApi.modifyById(id, user)
                 .then(response => {
@@ -129,8 +129,6 @@ const UserDetail = props => {
             onValidate: (event, form) => (form.password !== event.target.value ? "Password and Confirm Password doesn't match." : ''),
         },
     ];
-
-    console.log('User Detail => ', detail);
 
     const fields = [
         {
@@ -180,8 +178,8 @@ const UserDetail = props => {
             label: 'Gender',
             icon: 'person',
             type: 'list',
-            data: SUPPORTED_GENDERS,
-            value: detail.extras && detail.extras.gender ? SUPPORTED_GENDERS.find(g => g.id === detail.extras.gender) : null,
+            data: ['Male', 'Female', 'Other'],
+            value: detail.extras ? detail.extras.gender : null,
         },
         {
             id: 'address',
@@ -214,11 +212,11 @@ const UserDetail = props => {
                     </Typography>
                     <MasterForm fields={isUpdate ? fields : [...fields, ...newUserFields]} onSubmit={(event, form) => handleSubmit(form)}>
                         <Grid container justify="flex-end">
-                            <Button type="button" variant="contained" color="default" onClick={() => history.push('/user/')}>
-                                Back to List
+                            <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
+                                <Icon>arrow_back</Icon> Back to List
                             </Button>
                             <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                                Save
+                                <Icon>save</Icon> Save
                             </Button>
                         </Grid>
                     </MasterForm>

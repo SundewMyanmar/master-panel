@@ -21,7 +21,7 @@ const modifiedHideMenu = state => {
 
 const Reducer = (state, action) => {
     switch (action.type) {
-        case ACTIONS.INIT:
+        case ACTIONS.LOAD:
             return action.payload;
         case ACTIONS.MODIFIED_OPEN_IDS:
             return modifiedOpenIds(state, action.id);

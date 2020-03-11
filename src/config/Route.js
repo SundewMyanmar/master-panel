@@ -12,6 +12,7 @@ import UserDetail from '../page/admin/UserDetail';
 import Role from '../page/admin/Role';
 import RoleDetail from '../page/admin/RoleDetail';
 import Menu from '../page/admin/Menu';
+import MenuDetail from '../page/admin/MenuDetail';
 import Permission from '../page/admin/Permission';
 
 export const PrivateRoute = [
@@ -23,6 +24,7 @@ export const PrivateRoute = [
     { path: '/role', page: Role },
     { path: '/role/detail/:id', page: RoleDetail },
     { path: '/menu', page: Menu },
+    { path: '/menu/detail/:id', page: MenuDetail },
     { path: '/permission', page: Permission },
 ];
 

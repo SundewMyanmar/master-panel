@@ -114,11 +114,11 @@ const RoleDetail = props => {
                     </Typography>
                     <MasterForm fields={fields} onSubmit={handleSubmit}>
                         <Grid container justify="flex-end">
-                            <Button type="button" variant="contained" color="default" onClick={() => history.push('/role/')}>
-                                Back to List
+                            <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
+                                <Icon>arrow_back</Icon> Back to List
                             </Button>
                             <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                                Save
+                                <Icon>save</Icon> Save
                             </Button>
                         </Grid>
                     </MasterForm>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
 import IconPicker from './IconPicker';
+import FormatManager from '../../util/FormatManager';
 
 export type IconInputProps = {
     ...InputProps,
@@ -56,15 +57,17 @@ const IconInput = (props: IconInputProps) => {
     const [showIcons, setShowIcons] = React.useState(false);
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
-    const [selectedData, setSelectedData] = React.useState(multi ? values : value);
+    const [selectedData, setSelectedData] = React.useState(FormatManager.defaultNull(multi ? values : value));
     const classes = styles({ invalid });
     const currentInput = inputRef || React.createRef();
 
     //Set value if props.value changed.
     React.useEffect(() => {
-        if ((values && values.length > 0) || (value && value.id)) {
-            handleClose(multi ? values : value);
+        const inputData = FormatManager.defaultNull(multi ? values : value);
+        if (selectedData !== inputData) {
+            handleClose(inputData);
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values, value]);
 
@@ -73,7 +76,6 @@ const IconInput = (props: IconInputProps) => {
         if (result === false) {
             return;
         }
-        console.log('result => ', result);
         setSelectedData(result);
         const hasData = result && (result.id || result.length > 0);
 

@@ -1,14 +1,15 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { Route, useHistory, Redirect } from 'react-router-dom';
 import { makeStyles, AppBar, Toolbar, Typography, Box, CssBaseline, Drawer, Divider, useTheme } from '@material-ui/core';
 import { PrivateRoute } from '../../config/Route';
-import { STORAGE_KEYS, APP_NAME, APP_VERSION, DEFAULT_SIDE_MENU } from '../../config/Constant';
+import { STORAGE_KEYS, APP_NAME, APP_VERSION, DEFAULT_SIDE_MENU, USER_PROFILE_MENU } from '../../config/Constant';
 import { Copyright } from '../control';
 import SideMenu from './SideMenu';
 import DrawerHeader from './DrawerHeader';
 import Reducer, { ACTIONS } from './Reducer';
 import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
+import MenuApi from '../../api/MenuApi';
 
 const DRAWER_FULL_SIZE: Number = 255;
 const DRAWER_SMALL_SIZE: Number = 64;
@@ -72,6 +73,9 @@ const useStyles = makeStyles(theme => ({
         overflow: 'auto',
         flexDirection: 'column',
     },
+    copyRight: {
+        marginBottom: theme.spacing(3),
+    },
 }));
 
 const Layout = props => {
@@ -101,6 +105,47 @@ const Layout = props => {
         openIds: [],
         hideMenu: false,
     });
+
+    const loadMenu = async () => {
+        const menus = await MenuApi.getCurrentUserMenu();
+        if (menus && menus.data.length > 0) {
+            const uniqueMenus = menus.data.reduce((unique, o) => {
+                if (!unique.some(obj => obj.id === o.id)) {
+                    unique.push(o);
+                }
+                return unique;
+            }, []);
+
+            let mainMenu = uniqueMenus.filter(m => !m.parentId);
+
+            //Recurrsively sort menus
+            const sortMenu = items =>
+                items.sort((a, b) => {
+                    if (a.items && a.items.length > 0) {
+                        sortMenu(a.items);
+                    }
+                    return a.priority - b.priority;
+                });
+
+            sortMenu(mainMenu);
+
+            console.log('Load Menu => ', mainMenu);
+
+            dispatch({
+                type: ACTIONS.LOAD,
+                payload: {
+                    menus: [...mainMenu, USER_PROFILE_MENU, logoutMenu],
+                    openIds: [],
+                    hideMenu: false,
+                },
+            });
+        }
+    };
+
+    useEffect(() => {
+        loadMenu();
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <div className={classes.root}>
@@ -144,7 +189,7 @@ const Layout = props => {
                         );
                     })}
                 </div>
-                <Box pt={4}>
+                <Box pt={4} className={classes.copyRight}>
                     <Copyright />
                 </Box>
             </main>

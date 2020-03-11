@@ -93,8 +93,6 @@ const IconDisplay = props => {
         return null;
     }
 
-    console.log('selected Data => ', selectedData);
-
     return (
         <div className={classes.root}>
             <div className={classes.title}>

@@ -90,16 +90,15 @@ const DataTable = (props: DataTableProps) => {
         onSelectionChange,
         ...tableProps
     } = props;
-    const [checked, setChecked] = useState(selectedData);
     const [rootState, setRootState] = useState('unchecked');
 
     useEffect(() => {
-        if (!checked || checked.length <= 0 || !items || items.length <= 0) {
-            setRootState('unchecked');
+        if (!multi) {
             return;
         }
 
-        if (!multi) {
+        if (!selectedData || selectedData.length <= 0 || !items || items.length <= 0) {
+            setRootState('unchecked');
             return;
         }
 
@@ -109,7 +108,7 @@ const DataTable = (props: DataTableProps) => {
             if (!item) {
                 continue;
             }
-            const existIdx = checked.findIndex(x => x.id === item.id);
+            const existIdx = selectedData.findIndex(x => x.id === item.id);
             if (existIdx >= 0) {
                 found++;
             }
@@ -120,30 +119,29 @@ const DataTable = (props: DataTableProps) => {
         } else {
             setRootState('unchecked');
         }
-    }, [items, checked]);
+        // eslint-disable-next-line
+    }, [items, selectedData]);
 
     const handleRootClick = event => {
         if (!multi) {
             return;
         }
-        let updateSelection = checked.filter(x => items.findIndex(item => item.id === x.id) < 0);
+        let updateSelection = selectedData.filter(x => items.findIndex(item => item.id === x.id) < 0);
         if (event.target.checked) {
             updateSelection = [...updateSelection, ...items];
         }
-        setChecked(updateSelection);
         onSelectionChange(updateSelection);
     };
 
-    const handleClick = item => {
+    const handleCheck = item => {
         if (!multi) {
             onSelectionChange(item);
             return;
         }
 
-        const existIdx = checked.findIndex(x => x.id === item.id);
-        const updateSelection = existIdx < 0 ? [...checked, item] : checked.filter(x => x.id !== item.id);
+        const existIdx = selectedData.findIndex(x => x.id === item.id);
+        const updateSelection = existIdx < 0 ? [...selectedData, item] : selectedData.filter(x => x.id !== item.id);
 
-        setChecked(updateSelection);
         onSelectionChange(updateSelection);
     };
 
@@ -199,7 +197,9 @@ const DataTable = (props: DataTableProps) => {
                                 cursor: 'pointer',
                             };
 
-                            const marked = multi ? checked.findIndex(x => x.id === row.id) >= 0 : checked && checked.id && row.id === checked.id;
+                            const marked = multi
+                                ? selectedData.findIndex(x => x.id === row.id) >= 0
+                                : selectedData && selectedData.id && row.id === selectedData.id;
 
                             return (
                                 <TableRow
@@ -215,7 +215,7 @@ const DataTable = (props: DataTableProps) => {
                                         <TableCell align="center" style={{ width: 64 }}>
                                             <Checkbox
                                                 checked={marked}
-                                                onChange={() => handleClick(row)}
+                                                onChange={() => handleCheck(row)}
                                                 value={row.id || dataIdx}
                                                 color="secondary"
                                             />
@@ -238,6 +238,7 @@ const DataTable = (props: DataTableProps) => {
                 <TableFooter className={classes.tableFooter}>
                     <TableRow>
                         <PaginationBar
+                            colSpan={multi ? fields.length + 1 : fields.length}
                             total={total}
                             pageSize={pageSize}
                             currentPage={currentPage}
@@ -254,7 +255,6 @@ const DataTable = (props: DataTableProps) => {
 DataTable.defaultProps = {
     multi: false,
     items: [],
-    selectedData: [],
     total: 0,
     pageSize: 10,
     currentPage: 1,

@@ -37,25 +37,23 @@ const styles = makeStyles(theme => ({
     },
 }));
 
+const SESSION_USER = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
+
 const Profile = props => {
     const classes = styles();
     const [user, setUser] = useState(() => {
         ProfileApi.getProfile()
             .then(data => {
+                if (!data.currentToken) {
+                    data.currentToken = SESSION_USER.currentToken;
+                }
                 setUser(data);
             })
             .catch(error => {
                 setLoading(false);
                 setError(error.message || 'Please check your internet connection and try again.');
             });
-        return {
-            profileImage: null,
-            displayName: '',
-            phoneNumber: '',
-            email: '',
-            roles: [],
-            status: 'cancel',
-        };
+        return SESSION_USER;
     });
     const [noti, setNoti] = useState('');
     const [loading, setLoading] = useState(false);
@@ -86,11 +84,13 @@ const Profile = props => {
             const response = await ProfileApi.updateProfile(profile);
 
             if (response) {
-                sessionStorage.setItem(
-                    STORAGE_KEYS.CURRENT_USER,
-                    JSON.stringify({ ...user, displayName: response.displayName, profileImage: response.profileImage }),
-                );
-                setUser({ ...user, displayName: response.displayName, profileImage: response.profileImage });
+                if (!response.currentToken) {
+                    delete response.currentToken;
+                }
+                const updatedData = { ...user, ...response };
+                console.log('Modified user => ', updatedData);
+                sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(updatedData));
+                setUser(updatedData);
                 setLoading(false);
                 setNoti('Successfully update your new profile.');
             }
@@ -150,7 +150,7 @@ const Profile = props => {
                     </Typography>
                     <MasterForm fields={profileFields} onSubmit={(event, form) => handleSubmit(form)}>
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                            Save
+                            <Icon fontSize="small">save</Icon> Save
                         </Button>
                     </MasterForm>
                 </Paper>

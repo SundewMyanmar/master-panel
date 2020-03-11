@@ -26,12 +26,6 @@ export const FACEBOOK = {
     API_VERSION: '',
 };
 
-export const SUPPORTED_GENDERS = [
-    { id: 'm', label: 'Male' },
-    { id: 'f', label: 'Female' },
-    { id: 'o', label: 'Other' },
-];
-
 export const ADMIN_MENU = {
     id: 'admin',
     label: 'Administration',
@@ -99,6 +93,11 @@ export const DEFAULT_SIDE_MENU = [
 ];
 
 export const BATCH_ACTION_MENU = [
+    {
+        id: 'uncheck_all',
+        label: 'Uncheck all',
+        icon: 'check_box_outline_blank',
+    },
     {
         id: 'export_csv',
         label: 'CSV Export',

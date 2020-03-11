@@ -88,7 +88,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     case 'table':
                         return <ObjectInput {...inputProps} />;
                     default:
-                        return <TextInput {...inputProps} />;
+                        return <TextInput type={type} {...inputProps} />;
                 }
             })}
             {children}
