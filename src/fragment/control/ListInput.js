@@ -14,7 +14,7 @@ export type SelectListProps = {
     onChange(event: React.SyntheticEvent<HTMLInputElement>, value: Object): ?Function,
 };
 
-const SelectList = (props: SelectListProps) => {
+const ListInput = (props: SelectListProps) => {
     const { id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
@@ -100,8 +100,8 @@ const SelectList = (props: SelectListProps) => {
     );
 };
 
-SelectList.defaultProps = {
+ListInput.defaultProps = {
     onLoadItem: item => item.toString(),
 };
 
-export default SelectList;
+export default ListInput;

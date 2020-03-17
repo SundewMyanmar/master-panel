@@ -153,7 +153,7 @@ const FilePicker = (props: FilePickerProps) => {
                 setPaging(result);
             }
         } catch (error) {
-            onError(error.message || 'Please check your internet connection and try again.');
+            onError(error.message || error.title || 'Please check your internet connection and try again.');
         } finally {
             setLoading(false);
         }

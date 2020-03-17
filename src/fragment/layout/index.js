@@ -11,8 +11,10 @@ import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
 import MenuApi from '../../api/MenuApi';
 
-const DRAWER_FULL_SIZE: Number = 255;
+const DRAWER_FULL_SIZE: Number = window.innerWidth > 1400 ? 300 : 260;
 const DRAWER_SMALL_SIZE: Number = 64;
+
+const MIN_WIDTH_TO_HIDE = 1060;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -103,7 +105,7 @@ const Layout = props => {
     const [state, dispatch] = useReducer(Reducer, {
         menus: [...DEFAULT_SIDE_MENU, logoutMenu],
         openIds: [],
-        hideMenu: false,
+        hideMenu: window.innerWidth < MIN_WIDTH_TO_HIDE,
     });
 
     const loadMenu = async () => {
@@ -129,14 +131,11 @@ const Layout = props => {
 
             sortMenu(mainMenu);
 
-            console.log('Load Menu => ', mainMenu);
-
             dispatch({
                 type: ACTIONS.LOAD,
                 payload: {
+                    ...state,
                     menus: [...mainMenu, USER_PROFILE_MENU, logoutMenu],
-                    openIds: [],
-                    hideMenu: false,
                 },
             });
         }

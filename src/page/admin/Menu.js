@@ -84,6 +84,8 @@ const INIT_MENU = {
     path: '',
     roles: [],
     description: '',
+    parent: null,
+    parentId: null,
 };
 
 const Menu = props => {
@@ -94,9 +96,10 @@ const Menu = props => {
     const [question, setQuestion] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [selectedMenu, setSelectedMenu] = React.useState(INIT_MENU);
+    //const AVAILABLE_PATHS = PrivateRoute.map(r => r.path);
 
     const handleError = error => {
-        setError(error.message || 'Please check your internet connection and try again.');
+        setError(error.message || error.title || 'Please check your internet connection and try again.');
         setLoading(false);
     };
 
@@ -238,6 +241,7 @@ const Menu = props => {
             icon: 'link',
             label: 'Path',
             type: 'text',
+            //data: AVAILABLE_PATHS,
             value: selectedMenu.path || '',
         },
         {

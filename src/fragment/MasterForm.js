@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, EmailInput, PasswordInput, NumberInput, ImageInput, CheckboxInput, SelectList, ObjectInput, IconInput } from './control';
+import { TextInput, EmailInput, PasswordInput, NumberInput, ImageInput, CheckboxInput, ListInput, ObjectInput, IconInput } from './control';
 import { TextInputProps } from './control/TextInput';
 
 export type Field = {
@@ -84,7 +84,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     case 'file':
                         return <ImageInput {...inputProps} />;
                     case 'list':
-                        return <SelectList {...inputProps} />;
+                        return <ListInput {...inputProps} />;
                     case 'table':
                         return <ObjectInput {...inputProps} />;
                     default:

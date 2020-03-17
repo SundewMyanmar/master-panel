@@ -9,7 +9,8 @@ export type IconInputProps = {
     value?: Object,
     icon?: string,
     multi?: Boolean,
-    required: boolean,
+    required: Boolean,
+    disableRemove: Boolean,
     label: string,
     onValidate(event: React.SyntheticEvent<HTMLInputElement>): (?Function) => string,
     onChange(event: React.SyntheticEvent<HTMLInputElement>): ?Function,
@@ -53,7 +54,7 @@ const styles = makeStyles(theme => ({
 }));
 
 const IconInput = (props: IconInputProps) => {
-    const { values, label, id, name, inputRef, value, icon, placeholder, multi, fields, onValidate, onChange, ...rest } = props;
+    const { values, label, id, name, inputRef, value, icon, placeholder, disableRemove, multi, fields, onValidate, onChange, ...rest } = props;
     const [showIcons, setShowIcons] = React.useState(false);
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
@@ -107,6 +108,15 @@ const IconInput = (props: IconInputProps) => {
         }
     };
 
+    const handleRemove = item => {
+        if (!multi) {
+            handleClose(null);
+            return;
+        }
+        let updateSelection = selectedData.filter(x => x.id !== item.id);
+        handleClose(updateSelection);
+    };
+
     const handleError = error => {
         setShowIcons(false);
         setError(error);
@@ -125,12 +135,27 @@ const IconInput = (props: IconInputProps) => {
             return (
                 <>
                     {selectedData.map((item, index) => {
-                        return <Chip className={classes.chip} key={item + '_' + index} icon={<Icon>{item}</Icon>} label={item} />;
+                        return (
+                            <Chip
+                                className={classes.chip}
+                                key={item + '_' + index}
+                                onDelete={disableRemove ? null : () => handleRemove(item)}
+                                icon={<Icon>{item}</Icon>}
+                                label={item}
+                            />
+                        );
                     })}
                 </>
             );
         }
-        return <Chip className={classes.chip} icon={<Icon>{selectedData}</Icon>} label={selectedData} />;
+        return (
+            <Chip
+                className={classes.chip}
+                onDelete={disableRemove ? null : () => handleRemove(selectedData)}
+                icon={<Icon>{selectedData}</Icon>}
+                label={selectedData}
+            />
+        );
     };
 
     return (
@@ -175,6 +200,8 @@ const IconInput = (props: IconInputProps) => {
     );
 };
 
-IconInput.defaultProps = {};
+IconInput.defaultProps = {
+    disableRemove: false,
+};
 
 export default IconInput;

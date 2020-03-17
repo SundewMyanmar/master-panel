@@ -51,8 +51,8 @@ export const ADMIN_MENU = {
             path: '/menu',
         },
         {
-            id: 'admin-permission',
-            label: 'Route Permission',
+            id: 'admin-route',
+            label: 'Api Permission',
             icon: 'router',
             path: '/permission',
         },
@@ -66,17 +66,25 @@ export const USER_PROFILE_MENU = {
     open: true,
     items: [
         {
-            id: 'sys-2',
+            id: 'profile-1',
             label: 'Profile',
             icon: 'face',
             path: '/profile',
         },
         {
-            id: 'sys-2',
+            id: 'profile-2',
             label: 'Change Password',
             icon: 'vpn_key',
             path: '/changePassword',
         },
+        process.env.NODE_ENV === 'development'
+            ? {
+                  id: 'profile-3',
+                  label: 'API Tools',
+                  icon: 'code',
+                  path: '/api-debug',
+              }
+            : null,
     ],
 };
 

@@ -11,8 +11,9 @@ export type ObjectInputProps = {
     icon?: string,
     multi?: Boolean,
     fields: Array<TableField>,
-    required: boolean,
+    required: Boolean,
     label: string,
+    disableRemove?: Boolean,
     onLoadData(currentPage: Number, pageSize: Number, sort: String, search: String): (?Function) => Promise<Any>,
     onLoadItem(item: Object): (?Function) => string,
     onValidate(event: React.SyntheticEvent<HTMLInputElement>): (?Function) => string,
@@ -68,6 +69,7 @@ const ObjectInput = (props: ObjectInputProps) => {
         placeholder,
         multi,
         fields,
+        disableRemove,
         onValidate,
         onChange,
         onLoadData,
@@ -132,7 +134,6 @@ const ObjectInput = (props: ObjectInputProps) => {
             handleClose(null);
             return;
         }
-        console.log('Remove item => ', item);
         let updateSelection = selectedData.filter(x => x.id !== item.id);
         handleClose(updateSelection);
     };
@@ -156,7 +157,14 @@ const ObjectInput = (props: ObjectInputProps) => {
                 <>
                     {selectedData.map((item, index) => {
                         const display = onLoadItem(item);
-                        return <Chip onDelete={() => handleRemove(item)} className={classes.chip} key={item.id ? item.id : index} label={display} />;
+                        return (
+                            <Chip
+                                onDelete={disableRemove ? null : () => handleRemove(item)}
+                                className={classes.chip}
+                                key={item.id ? item.id : index}
+                                label={display}
+                            />
+                        );
                     })}
                 </>
             );
@@ -165,11 +173,20 @@ const ObjectInput = (props: ObjectInputProps) => {
         const display = onLoadItem(selectedData);
         if (typeof display === 'object') {
             return (
-                <Chip onDelete={() => handleRemove(selectedData)} className={classes.chip} icon={<Icon>{display.icon}</Icon>} label={display.label} />
+                <Chip
+                    onDelete={disableRemove ? null : () => handleRemove(selectedData)}
+                    className={classes.chip}
+                    icon={<Icon>{display.icon}</Icon>}
+                    label={display.label}
+                />
             );
         }
 
-        return <Chip onDelete={() => handleRemove(selectedData)} className={classes.chip} label={display} />;
+        if (disableRemove) {
+            return <Typography variant="body2">{display}</Typography>;
+        }
+
+        return <Chip onDelete={disableRemove ? null : () => handleRemove(selectedData)} className={classes.chip} label={display} />;
     };
 
     return (
@@ -222,6 +239,7 @@ ObjectInput.defaultProps = {
         console.warn('Undefined OnLoadItem => ', item);
         return item.id;
     },
+    disableRemove: false,
 };
 
 export default ObjectInput;

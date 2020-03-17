@@ -64,7 +64,7 @@ const Register = props => {
             })
             .catch(error => {
                 setLoading(false);
-                setError(error.message || 'Please check your internet connection and try again.');
+                setError(error.message || error.title || 'Please check your internet connection and try again.');
             });
     };
 

@@ -6,8 +6,8 @@ import SearchInput from './SearchInput';
 import NumberInput from './NumberInput';
 import ImageInput from './ImageInput';
 import CheckboxInput from './CheckboxInput';
-import SelectList from './SelectList';
+import ListInput from './ListInput';
 import ObjectInput from './ObjectInput';
 import IconInput from './IconInput';
 
-export { Copyright, TextInput, NumberInput, PasswordInput, ImageInput, EmailInput, SearchInput, CheckboxInput, SelectList, ObjectInput, IconInput };
+export { Copyright, TextInput, NumberInput, PasswordInput, ImageInput, EmailInput, SearchInput, CheckboxInput, ListInput, ObjectInput, IconInput };

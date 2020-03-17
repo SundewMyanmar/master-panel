@@ -42,7 +42,7 @@ const UserDetail = props => {
 
     const handleError = error => {
         setLoading(false);
-        setError(error.message || 'Please check your internet connection and try again.');
+        setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
     const [detail, setDetail] = useState(() => {
@@ -202,7 +202,7 @@ const UserDetail = props => {
         <>
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <LoadingDialog show={loading} />
-            <Container component="main" maxWidth="sm">
+            <Container component="main" maxWidth="md">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>
                         <Icon>account_box</Icon>

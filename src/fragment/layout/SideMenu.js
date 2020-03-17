@@ -34,7 +34,7 @@ type ChildMenuGroupProps = {
 };
 
 const PopupMenu = (props: { ...ChildMenuGroupProps, ...PopoverProps }) => {
-    const { onMenuItemClick, dispatch, state, parentCount, items, ...popover } = props;
+    const { onMenuItemClick, dispatch, state, parentCount, divider, parentId, createdAt, modifiedAt, items, ...popover } = props;
 
     return (
         <>

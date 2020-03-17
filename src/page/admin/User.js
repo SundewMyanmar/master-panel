@@ -127,7 +127,7 @@ const User = props => {
     };
 
     const handleError = error => {
-        setAlert(error.message || 'Please check your internet connection and try again.');
+        setAlert(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
     const resetPasswordFields = [

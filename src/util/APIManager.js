@@ -25,7 +25,7 @@ export default class ApiManager {
     }
 
     getUserInfo() {
-        const userData = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || 'public-token';
+        const userData = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '{"currentToken": "public-token"}';
         return JSON.parse(userData);
     }
 
@@ -40,8 +40,11 @@ export default class ApiManager {
                     result['Authorization'] = 'Bearer ' + user.currentToken;
                 }
             } catch (error) {
-                console.warn(error.response);
-                throw error.response.data;
+                if (error.response) {
+                    console.warn(error.response);
+                    throw error.response.data || error.response;
+                }
+                throw error;
             }
         }
         return result;
@@ -49,16 +52,21 @@ export default class ApiManager {
 
     errorHandling(error) {
         console.warn(error.response);
-        if (error.response.status === 401) {
+        if (error.response.status === 401 || error.response.status === 403) {
             sessionStorage.clear();
         }
+    }
+
+    buildUrl(url) {
+        //Clean URL '//'
+        return (this.apiURL + url).replace(/(?<!https?:)\/\/+/g, '/');
     }
 
     async get(url, headers) {
         try {
             console.log('Headers =>', headers);
-            console.log('GET => ' + this.apiURL + url);
-            const response = await Axios.get(this.apiURL + url, { headers });
+            console.log('GET => ' + this.buildUrl(url));
+            const response = await Axios.get(this.buildUrl(url), { headers });
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
@@ -70,9 +78,9 @@ export default class ApiManager {
     async post(url, data, headers) {
         try {
             console.log('Headers =>', headers);
-            console.log('POST => ', this.apiURL + url);
+            console.log('POST => ', this.buildUrl(url));
             console.log('BODY => ', data);
-            const response = await Axios.post(this.apiURL + url, data, { headers });
+            const response = await Axios.post(this.buildUrl(url), data, { headers });
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
@@ -84,9 +92,9 @@ export default class ApiManager {
     async put(url, data, headers) {
         try {
             console.log('Headers =>', headers);
-            console.log('PUT => ' + this.apiURL + url);
+            console.log('PUT => ' + this.buildUrl(url));
             console.log('BODY => ', data);
-            const response = await Axios.put(this.apiURL + url, data, { headers });
+            const response = await Axios.put(this.buildUrl(url), data, { headers });
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
@@ -98,9 +106,9 @@ export default class ApiManager {
     async delete(url, data, headers) {
         try {
             console.log('Headers =>', headers);
-            console.log('DELETE => ' + this.apiURL + url);
+            console.log('DELETE => ' + this.buildUrl(url));
             console.log('BODY => ', data);
-            const response = await Axios.delete(this.apiURL + url, { headers, data });
+            const response = await Axios.delete(this.buildUrl(url), { headers, data });
             console.log('Response => ', response);
             return response.data;
         } catch (error) {

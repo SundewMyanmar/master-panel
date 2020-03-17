@@ -58,7 +58,7 @@ const Role = props => {
     };
 
     const handleError = error => {
-        setError(error.message || 'Please check your internet connection and try again.');
+        setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
     return (

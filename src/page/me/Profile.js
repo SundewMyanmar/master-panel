@@ -37,7 +37,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const SESSION_USER = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
+const SESSION_USER = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || { displayName: '', email: '', phoneNumber: '', roles: [] };
 
 const Profile = props => {
     const classes = styles();
@@ -51,7 +51,7 @@ const Profile = props => {
             })
             .catch(error => {
                 setLoading(false);
-                setError(error.message || 'Please check your internet connection and try again.');
+                setError(error.message || error.title || 'Please check your internet connection and try again.');
             });
         return SESSION_USER;
     });
@@ -96,7 +96,7 @@ const Profile = props => {
             }
         } catch (error) {
             setLoading(false);
-            setError(error.message || 'Please check your internet connection and try again.');
+            setError(error.message || error.title || 'Please check your internet connection and try again.');
         }
     };
 
@@ -135,6 +135,8 @@ const Profile = props => {
         },
     ];
 
+    const userName = user.displayName || 'Unknown';
+
     return (
         <>
             <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
@@ -146,7 +148,7 @@ const Profile = props => {
                         <Icon>account_circle</Icon>
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        {user.displayName + "'s Profile"}
+                        {userName + "'s Profile"}
                     </Typography>
                     <MasterForm fields={profileFields} onSubmit={(event, form) => handleSubmit(form)}>
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
