@@ -41,6 +41,13 @@ const SESSION_USER = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER
 
 const Profile = props => {
     const classes = styles();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const handleError = error => {
+        setLoading(false);
+        setError(error.message || error.title || 'Please check your internet connection and try again.');
+    };
+
     const [user, setUser] = useState(() => {
         ProfileApi.getProfile()
             .then(data => {
@@ -49,15 +56,10 @@ const Profile = props => {
                 }
                 setUser(data);
             })
-            .catch(error => {
-                setLoading(false);
-                setError(error.message || error.title || 'Please check your internet connection and try again.');
-            });
+            .catch(handleError);
         return SESSION_USER;
     });
     const [noti, setNoti] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
 
     const handleSubmit = async form => {
         setLoading(true);
@@ -95,8 +97,7 @@ const Profile = props => {
                 setNoti('Successfully update your new profile.');
             }
         } catch (error) {
-            setLoading(false);
-            setError(error.message || error.title || 'Please check your internet connection and try again.');
+            handleError(error);
         }
     };
 

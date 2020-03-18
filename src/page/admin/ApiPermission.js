@@ -57,6 +57,11 @@ const styles = makeStyles(theme => ({
     },
 }));
 
+const isPatternMatch = (pattern1, pattern2) => {
+    const regexPattern = /\{[^}/]+\}/g;
+    return pattern1 === pattern2 || pattern1.replace(regexPattern, '%') === pattern2 || pattern1 === pattern2.replace(regexPattern, '%');
+};
+
 const ApiPermission = props => {
     const classes = styles();
     const [loading, setLoading] = React.useState(false);
@@ -90,6 +95,18 @@ const ApiPermission = props => {
             return;
         }
         setSelectedRole(role);
+        RouteApi.getPermissionByRole(role.id)
+            .then(allowRoutes => {
+                const markedData = allowRoutes.data.map(route => {
+                    return route;
+                });
+                setLoading(false);
+                setSelectedData(markedData);
+            })
+            .catch(error => {
+                setSelectedData([]);
+                handleError(error);
+            });
     };
 
     const handleSubmit = () => {
@@ -103,14 +120,14 @@ const ApiPermission = props => {
             return;
         }
 
+        console.log('Selected Data => ', selectedData);
         setLoading(true);
 
-        console.log('Selected Role => ', selectedRole);
-
         RouteApi.savePermissionByRole(selectedRole.id, selectedData)
-            .then(data => {
+            .then(savedData => {
                 setLoading(false);
-                console.log('Save Data => ', data);
+                console.log('Response Data => ', savedData.data);
+                setSelectedData(savedData.data);
             })
             .catch(handleError);
     };
@@ -140,7 +157,7 @@ const ApiPermission = props => {
 
     const handleRouteCheck = (event, module, route) => {
         const checked = event.target.checked;
-        const savedData = selectedData.filter(r => r.pattern !== route.path);
+        const savedData = selectedData.filter(r => !isPatternMatch(r.pattern, route.path));
         if (checked) {
             route.supportedMethods.forEach(method => {
                 savedData.push({
@@ -155,7 +172,9 @@ const ApiPermission = props => {
 
     const handleMethodCheck = (event, module, route, method) => {
         const checked = event.target.checked;
-        const savedData = selectedData.filter(r => !(r.module === module.name && r.pattern === route.path && r.httpMethod === method.http));
+        const savedData = selectedData.filter(
+            r => !(r.module === module.name && r.httpMethod === method.http && isPatternMatch(r.pattern, route.path)),
+        );
         if (checked) {
             savedData.push({
                 module: module.name,
@@ -167,7 +186,8 @@ const ApiPermission = props => {
     };
 
     const renderDefaultMethod = (module, route, method) => {
-        const isMarked = selectedData.findIndex(r => r.module === module.name && r.pattern === route.path && r.httpMethod === method.http) >= 0;
+        const isMarked =
+            selectedData.findIndex(r => r.module === module.name && r.httpMethod === method.http && isPatternMatch(r.pattern, route.path)) >= 0;
         return (
             <div key={module.name + route.path + method.http}>
                 <ListItem button className={classes.method}>
@@ -190,7 +210,7 @@ const ApiPermission = props => {
 
     const renderDefaultRoute = (module, route) => {
         const isExpand = expanded.findIndex(x => x === route.path) >= 0;
-        const selectedCount = selectedData.filter(r => r.module === module.name && r.pattern === route.path).length;
+        const selectedCount = selectedData.filter(r => r.module === module.name && isPatternMatch(r.pattern, route.path)).length;
         const isMarked = selectedCount === route.supportedMethods.length;
         const isInterdeminate = selectedCount > 0 && !isMarked;
 
