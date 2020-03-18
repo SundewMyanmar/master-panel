@@ -58,7 +58,7 @@ const styles = makeStyles(theme => ({
 }));
 
 const isPatternMatch = (pattern1, pattern2) => {
-    const regexPattern = /\{[^}/]+\}/g;
+    const regexPattern = /\{[^}/]+}/g;
     return pattern1 === pattern2 || pattern1.replace(regexPattern, '%') === pattern2 || pattern1 === pattern2.replace(regexPattern, '%');
 };
 

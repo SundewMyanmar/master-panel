@@ -20,7 +20,7 @@ class SwaggerApi extends ApiManager {
                 for (const method in route) {
                     const { tags, ...info } = route[method];
                     for (let i = 0; i < tags.length; i++) {
-                        const cleanPath = path.replace(/\{\?.+\}/g, '');
+                        const cleanPath = path.replace(/\{\?[^}/]+}/g, '');
                         const idx = modules.findIndex(m => m.name === tags[i]);
                         if (idx >= 0) {
                             let module = modules[idx];

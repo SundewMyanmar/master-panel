@@ -9,6 +9,7 @@ export default class ApiManager {
 
     constructor(baseURL) {
         this.apiURL = API + baseURL;
+        Axios.defaults.withCredentials = true;
     }
 
     getDeviceId() {
@@ -34,32 +35,33 @@ export default class ApiManager {
             'Content-Type': 'application/json;charset=UTF-8',
         };
         if (isAuth) {
-            try {
-                const user = this.getUserInfo();
-                if (user && user.currentToken) {
-                    result['Authorization'] = 'Bearer ' + user.currentToken;
-                }
-            } catch (error) {
-                if (error.response) {
-                    console.warn(error.response);
-                    throw error.response.data || error.response;
-                }
-                throw error;
+            const user = this.getUserInfo();
+            if (user && user.currentToken) {
+                result['Authorization'] = 'Bearer ' + user.currentToken;
             }
         }
         return result;
     }
 
     errorHandling(error) {
-        console.warn(error.response);
-        if (error.response.status === 401 || error.response.status === 403) {
+        console.warn(error);
+        const status = error.response && error.response.status ? error.response.status : 0;
+        let message = error;
+        if (error.response) {
+            message = error.response;
+            if (error.response.data) {
+                message = error.response.data;
+            }
+        }
+        if (status === 401 || status === 403) {
             sessionStorage.clear();
         }
+        throw message;
     }
 
     buildUrl(url) {
         //Clean URL '//'
-        return (this.apiURL + url).replace(/(?<!https?:)\/\/+/g, '/');
+        return (this.apiURL + url).replace(/([^:]\/)\/+/g, '$1');
     }
 
     async get(url, headers) {
@@ -70,8 +72,7 @@ export default class ApiManager {
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
-            this.errorHandling(error);
-            throw error.response.data;
+            throw this.errorHandling(error);
         }
     }
 
@@ -84,8 +85,7 @@ export default class ApiManager {
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
-            this.errorHandling(error);
-            throw error.response.data;
+            throw this.errorHandling(error);
         }
     }
 
@@ -99,7 +99,7 @@ export default class ApiManager {
             return response.data;
         } catch (error) {
             this.errorHandling(error);
-            throw error.response.data;
+            throw error;
         }
     }
 
@@ -112,8 +112,7 @@ export default class ApiManager {
             console.log('Response => ', response);
             return response.data;
         } catch (error) {
-            this.errorHandling(error);
-            throw error.response.data;
+            throw this.errorHandling(error);
         }
     }
 
