@@ -83,7 +83,7 @@ const User = props => {
             return await UserApi.removeById(removeData.id);
         } else if (Array.isArray(removeData) && removeData.length > 0) {
             const removeIds = removeData.map(item => item.id);
-            return await UserApi.multiRemove(removeIds);
+            return await UserApi.removeAll(removeIds);
         }
     };
 

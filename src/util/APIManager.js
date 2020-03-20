@@ -130,6 +130,11 @@ export default class ApiManager {
         return response;
     }
 
+    async importData(data) {
+        const response = await this.post('/import', data, this.getHeaders(true));
+        return response;
+    }
+
     async addNew(data) {
         const response = await this.post('', data, this.getHeaders(true));
         return response;
@@ -145,8 +150,8 @@ export default class ApiManager {
         return response;
     }
 
-    async multiRemove(ids) {
-        const response = await this.delete('/multi', ids, this.getHeaders(true));
+    async removeAll(ids) {
+        const response = await this.delete('/', ids, this.getHeaders(true));
         return response;
     }
 }

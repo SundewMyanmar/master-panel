@@ -26,6 +26,42 @@ export const FACEBOOK = {
     API_VERSION: '',
 };
 
+export const BATCH_IMPORT_MENU = [
+    {
+        id: 'import_csv',
+        label: 'CSV Import',
+        icon: 'grid_on',
+    },
+    {
+        id: 'import_json',
+        label: 'JSON Import',
+        icon: 'code',
+    },
+];
+
+export const BATCH_ACTION_MENU = [
+    {
+        id: 'uncheck_all',
+        label: 'Uncheck all',
+        icon: 'check_box_outline_blank',
+    },
+    {
+        id: 'export_csv',
+        label: 'CSV Export',
+        icon: 'grid_on',
+    },
+    {
+        id: 'export_json',
+        label: 'JSON Export',
+        icon: 'code',
+    },
+    {
+        id: 'remove',
+        label: 'Remove All',
+        icon: 'delete',
+    },
+];
+
 export const ADMIN_MENU = {
     id: 'admin',
     label: 'Administration',
@@ -98,27 +134,4 @@ export const DEFAULT_SIDE_MENU = [
     },
     ADMIN_MENU,
     USER_PROFILE_MENU,
-];
-
-export const BATCH_ACTION_MENU = [
-    {
-        id: 'uncheck_all',
-        label: 'Uncheck all',
-        icon: 'check_box_outline_blank',
-    },
-    {
-        id: 'export_csv',
-        label: 'CSV Export',
-        icon: 'grid_on',
-    },
-    {
-        id: 'export_json',
-        label: 'JSON Export',
-        icon: 'code',
-    },
-    {
-        id: 'remove',
-        label: 'Remove All',
-        icon: 'delete',
-    },
 ];

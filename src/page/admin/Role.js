@@ -47,7 +47,7 @@ const Role = props => {
         } else if (Array.isArray(removeData) && removeData.length > 0) {
             console.log('Remove IDs => ', Array.isArray(removeData) && removeData.length > 0);
             const removeIds = removeData.map(item => item.id);
-            return await RoleApi.multiRemove(removeIds);
+            return await RoleApi.removeAll(removeIds);
         }
     };
 

@@ -110,10 +110,10 @@ const ListPicker = (props: ListPickerProps) => {
             {multi ? (
                 <DialogActions>
                     <Button onClick={() => onClose(true)} color="primary" variant="contained">
-                        Ok
+                        <Icon>done</Icon> Ok
                     </Button>
-                    <Button onClick={() => onClose(false)} color="secondary" variant="contained">
-                        Cancel
+                    <Button onClick={() => onClose(false)} color="default" variant="contained">
+                        <Icon>close</Icon> Cancel
                     </Button>
                 </DialogActions>
             ) : null}

@@ -17,7 +17,7 @@ import { HeaderCell } from './HeaderCell';
 
 export type TableField = {
     name: String,
-    type: 'text' | 'image' | 'action' | 'raw',
+    type: 'text' | 'image' | 'icon' | 'bool' | 'raw',
     align: 'left' | 'center' | 'right',
     label: String,
     minWidth: Number,
@@ -30,12 +30,14 @@ export type DataTableProps = {
     ...TableBaseProps,
     fields: Array<Object>,
     items: Array<Object>,
-    selectedData: Array<Object> | Object,
-    total: Number,
-    pageSize: Number,
-    currentPage: Number,
-    sort: String,
+    selectedData?: Array<Object> | Object,
+    total?: Number,
+    pageSize?: Number,
+    currentPage?: Number,
+    sort?: String,
     multi?: Boolean,
+    noData?: String,
+    disablePaging?: Boolean,
     onPageChange(page: Number): ?Function,
     onRowClick(item: Object): ?Function,
     onSelectionChange(result: Object | Array<Object>): ?Function,
@@ -85,6 +87,8 @@ const DataTable = (props: DataTableProps) => {
         pageSize,
         currentPage,
         sort,
+        noData,
+        disablePaging,
         onPageChange,
         onRowClick,
         onSelectionChange,
@@ -230,23 +234,25 @@ const DataTable = (props: DataTableProps) => {
                     ) : (
                         <TableRow>
                             <TableCell size="medium" colSpan={multi ? fields.length + 1 : fields.length}>
-                                There is no data.
+                                {noData}
                             </TableCell>
                         </TableRow>
                     )}
                 </TableBody>
-                <TableFooter className={classes.tableFooter}>
-                    <TableRow>
-                        <PaginationBar
-                            colSpan={multi ? fields.length + 1 : fields.length}
-                            total={total}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageSizeChange={handlePageSizeChange}
-                            onPageChange={handlePageChange}
-                        />
-                    </TableRow>
-                </TableFooter>
+                {disablePaging ? null : (
+                    <TableFooter className={classes.tableFooter}>
+                        <TableRow>
+                            <PaginationBar
+                                colSpan={multi ? fields.length + 1 : fields.length}
+                                total={total}
+                                pageSize={pageSize}
+                                currentPage={currentPage}
+                                onPageSizeChange={handlePageSizeChange}
+                                onPageChange={handlePageChange}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                )}
             </Table>
         </TableContainer>
     );
@@ -254,10 +260,14 @@ const DataTable = (props: DataTableProps) => {
 
 DataTable.defaultProps = {
     multi: false,
+    selectedData: {},
     items: [],
     total: 0,
     pageSize: 10,
     currentPage: 1,
+    sort: 'id:Desc',
+    noData: 'There is no data.',
+    disablePaging: false,
     onPageChange: newPaged => console.warn('Undefined onPageChange => ', newPaged),
     onSelectionChange: result => console.warn('Undefined onSelectionChange => ', result),
 };

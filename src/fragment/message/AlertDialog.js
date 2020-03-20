@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Zoom } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Zoom, Icon } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
@@ -22,7 +22,7 @@ export default function AlertDialog(props: AlertDialogProps) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary" variant="contained">
-                    Ok
+                    <Icon>done</Icon> Ok
                 </Button>
             </DialogActions>
         </Dialog>

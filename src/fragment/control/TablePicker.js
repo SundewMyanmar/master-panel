@@ -167,10 +167,10 @@ const TablePicker = (props: TablePickerProps) => {
                 {multi ? (
                     <DialogActions>
                         <Button onClick={() => handleClose(true)} color="primary" variant="contained">
-                            Ok
+                            <Icon>done</Icon> Ok
                         </Button>
-                        <Button onClick={() => handleClose(false)} color="secondary" variant="contained">
-                            Cancel
+                        <Button onClick={() => handleClose(false)} color="default" variant="contained">
+                            <Icon>done</Icon> Cancel
                         </Button>
                     </DialogActions>
                 ) : null}

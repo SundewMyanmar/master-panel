@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Zoom } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Zoom, Icon } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -27,10 +27,10 @@ export default function QuestionDialog(props: QuestionDialogProps) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => onClose(true)} variant="contained" color="primary">
-                    Ok
+                    <Icon>done</Icon> Ok
                 </Button>
-                <Button onClick={() => onClose(false)} variant="contained" color="secondary">
-                    Cancel
+                <Button onClick={() => onClose(false)} variant="contained" color="default">
+                    <Icon>done</Icon> Cancel
                 </Button>
             </DialogActions>
         </Dialog>
