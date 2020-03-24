@@ -9,14 +9,10 @@ import {
     makeStyles,
     Divider,
     Typography,
-    Tooltip,
-    IconButton,
     Icon,
     LinearProgress,
     DialogActions,
-    Table,
 } from '@material-ui/core';
-import MasterForm from '../MasterForm';
 import DataTable from '.';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -25,8 +21,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export type ImportDialgProps = {
     show: boolean,
+    fields: Array,
     title: string,
-    onError?: (error: Object | String) => void,
     onClose?: (result: Object) => void,
 };
 
@@ -93,19 +89,22 @@ export const CsvReader = input => {
 
 export default function ImportDialog(props: ImportDialgProps) {
     const classes = styles();
-    const { title, onClose, onError, show } = props;
+    const { title, fields, onClose, show } = props;
     const [loading, setLoading] = React.useState(false);
     const [message, setMessage] = React.useState('Please upload a csv/json file.');
-    const [fields, setFields] = React.useState([]);
+    const [header, setHeader] = React.useState([]);
     const [data, setData] = React.useState([]);
     const inputUpload = React.createRef();
 
     const handleClose = isSubmit => {
         if (!isSubmit) {
-            setFields([]);
-            setData([]);
+            onClose(false);
+        } else {
+            onClose({ header: header, data: data });
         }
-        onClose(isSubmit);
+
+        setHeader([]);
+        setData([]);
     };
 
     const handleUploadChange = event => {
@@ -116,12 +115,15 @@ export default function ImportDialog(props: ImportDialgProps) {
             var fileReader = new FileReader();
             fileReader.onload = () => {
                 if (file.type.endsWith('csv')) {
-                    const csv = CsvReader(fileReader.result);
-                    console.log('CSV Data => ', csv);
-                    const fields = csv.headers.map(val => ({ name: val, label: val }));
-                    setFields(fields);
-                    setData(csv.data);
-                    setLoading(false);
+                    try {
+                        const csv = CsvReader(fileReader.result);
+                        setHeader(csv.header);
+                        setData(csv.data);
+                    } catch (error) {
+                        setMessage(error);
+                    } finally {
+                        setLoading(false);
+                    }
                 }
             };
             fileReader.readAsText(file);
@@ -156,22 +158,20 @@ export default function ImportDialog(props: ImportDialgProps) {
                 <DataTable items={data} fields={fields} noData={message} disablePaging={true} />
             </DialogContent>
             <DialogActions>
-                <form>
-                    <input
-                        ref={inputUpload}
-                        style={{ display: 'none' }}
-                        name="uploadFile"
-                        accept=".csv, .json, .txt"
-                        type="file"
-                        onChange={handleUploadChange}
-                    />
-                    <Button onClick={() => handleClose(true)} color="primary" variant="contained" style={{ marginRight: 8 }}>
-                        <Icon>done</Icon> Ok
-                    </Button>
-                    <Button onClick={() => handleClose(false)} color="default" variant="contained">
-                        <Icon>close</Icon> Cancel
-                    </Button>
-                </form>
+                <input
+                    ref={inputUpload}
+                    style={{ display: 'none' }}
+                    name="uploadFile"
+                    accept=".csv, .json, .txt"
+                    type="file"
+                    onChange={handleUploadChange}
+                />
+                <Button onClick={() => handleClose(true)} color="primary" variant="contained">
+                    <Icon>done</Icon> Ok
+                </Button>
+                <Button onClick={() => handleClose(false)} color="default" variant="contained">
+                    <Icon>close</Icon> Cancel
+                </Button>
             </DialogActions>
         </Dialog>
     );

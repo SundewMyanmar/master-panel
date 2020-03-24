@@ -5,8 +5,19 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import DefaultTheme from './config/Theme';
 import { PublicRoute } from './config/Route';
 import Layout from './fragment/layout';
+import ApiManager from './util/ApiManager';
+
+const api = new ApiManager('/');
+const checkConnection = async () => {
+    console.log('Check Connection!');
+    const response = await api.get('/', api.getHeaders(false));
+    console.log(response);
+};
 
 export default function App() {
+    //check XSRF
+    checkConnection();
+
     return (
         <ThemeProvider theme={DefaultTheme}>
             <Router>

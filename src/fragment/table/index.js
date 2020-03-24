@@ -216,7 +216,7 @@ const DataTable = (props: DataTableProps) => {
                                     hover={true}
                                 >
                                     {multi ? (
-                                        <TableCell align="center" style={{ width: 64 }}>
+                                        <TableCell align="center" style={{ maxWidth: 64 }}>
                                             <Checkbox
                                                 checked={marked}
                                                 onChange={() => handleCheck(row)}

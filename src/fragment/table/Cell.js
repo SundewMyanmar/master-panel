@@ -12,7 +12,7 @@ export type CellProps = {
 };
 
 export const ImageCell = (field, data) => {
-    const { name, align, label, type, sortable, hidden, minWidth, onLoad, ...imageProps } = field;
+    const { name, align, label, type, sortable, hidden, filterable, minWidth, onLoad, ...imageProps } = field;
 
     let image = data[name] || './images/default-image.png';
     let alt = field.name + '-image';
@@ -69,7 +69,7 @@ const Cell = (props: CellProps) => {
             cellValue = field.onLoad(data);
             break;
         default:
-            cellValue = field.onLoad ? field.onLoad(data) : LangManager.translateToUni(data[field.name]);
+            cellValue = field.onLoad ? LangManager.translateToUni(field.onLoad(data)) : LangManager.translateToUni(data[field.name]);
             break;
     }
 

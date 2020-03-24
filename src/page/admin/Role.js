@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, useHistory, useLocation } from 'react-router';
 import MasterTable from '../../fragment/MasterTable';
-import { AlertDialog, Notification } from '../../fragment/message';
+import { AlertDialog, Notification, LoadingDialog } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
 
 export const ROLE_TABLE_FIELDS = [
@@ -34,11 +34,33 @@ const Role = props => {
 
     const [error, setError] = React.useState('');
     const [noti, setNoti] = React.useState(message || '');
+    const [loading, setLoading] = React.useState(false);
+
+    const handleError = error => {
+        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        setLoading(false);
+    };
 
     const handleLoadData = async (currentPage, pageSize, sort, search) => {
-        const result = await RoleApi.getPaging(currentPage, pageSize, sort, search);
-        return result;
+        try {
+            const result = await RoleApi.getPaging(currentPage, pageSize, sort, search);
+            return result;
+        } catch (error) {
+            handleError(error);
+        }
+        return {};
     };
+
+    const [struct, setStructure] = React.useState(() => {
+        RoleApi.getStructure()
+            .then(resp => {
+                if (resp.count > 0) {
+                    setStructure(resp.data);
+                }
+            })
+            .catch(handleError);
+        return [];
+    });
 
     const handleRemoveData = async removeData => {
         console.log('Remove IDs => ', typeof removeData === 'object');
@@ -57,21 +79,30 @@ const Role = props => {
         history.push(url);
     };
 
-    const handleError = error => {
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+    const handleImport = result => {
+        console.log('import => ', result);
+        setLoading(true);
+        RoleApi.importData(result.data)
+            .then(resp => {
+                console.log(resp);
+                setLoading(false);
+            })
+            .catch(handleError);
     };
 
     return (
         <>
             <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
+            <LoadingDialog show={loading} />
             <MasterTable
                 title="Roles"
-                fields={ROLE_TABLE_FIELDS}
+                structure={struct}
                 onLoad={handleLoadData}
                 onEdit={handleDetail}
                 onAddNew={() => handleDetail(null)}
                 onRemove={handleRemoveData}
+                onImport={handleImport}
                 onError={handleError}
             />
         </>

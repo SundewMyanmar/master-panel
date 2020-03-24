@@ -1,66 +1,9 @@
 import React, { useState } from 'react';
 import { withRouter, useHistory, useLocation } from 'react-router-dom';
 import MasterTable from '../../fragment/MasterTable';
-import LangManager from '../../util/LangManager';
 import UserApi from '../../api/UserApi';
 import { AlertDialog, Notification } from '../../fragment/message';
 import FormDialog from '../../fragment/message/FormDialog';
-
-const TABLE_FIELDS = [
-    {
-        name: 'id',
-        align: 'center',
-        label: 'ID',
-        sortable: true,
-    },
-    {
-        name: 'profileImage',
-        align: 'center',
-        label: 'Image',
-        type: 'image',
-    },
-    {
-        name: 'roles',
-        align: 'left',
-        label: 'Roles',
-        onLoad: item => {
-            if (item.roles && item.roles.length > 0) {
-                return item.roles.map(role => LangManager.translateToUni(role.name)).join(', ');
-            }
-            return 'No Role';
-        },
-    },
-    {
-        name: 'displayName',
-        align: 'left',
-        label: 'Name',
-        sortable: true,
-    },
-    {
-        name: 'email',
-        align: 'left',
-        label: 'Email',
-        sortable: true,
-    },
-    {
-        name: 'facebookId',
-        align: 'center',
-        label: 'FB_User',
-        type: 'bool',
-        sortable: true,
-        width: 50,
-        onLoad: item => item.facebookId,
-    },
-    {
-        name: 'status',
-        align: 'center',
-        label: 'Status',
-        type: 'bool',
-        sortable: 'true',
-        width: 50,
-        onLoad: item => item.status.toLowerCase() === 'active',
-    },
-];
 
 const User = props => {
     const location = useLocation();
@@ -73,10 +16,27 @@ const User = props => {
     const [noti, setNoti] = useState(message || '');
     const [resetForm, setResetForm] = useState(null);
 
-    const handleLoadData = async (currentPage, pageSize, sort, search) => {
-        const result = await UserApi.getPaging(currentPage, pageSize, sort, search);
-        return result;
+    const handleError = error => {
+        setAlert(error.message || error.title || 'Please check your internet connection and try again.');
     };
+
+    const handleLoadData = async (currentPage, pageSize, sort, search) => {
+        try {
+            const result = await UserApi.getPaging(currentPage, pageSize, sort, search);
+            return result;
+        } catch (error) {
+            handleError(error);
+        }
+    };
+
+    const [struct, setStructure] = React.useState(() => {
+        UserApi.getStructure()
+            .then(resp => {
+                setStructure(resp.data);
+            })
+            .catch(handleError);
+        return [];
+    });
 
     const handleRemoveData = async removeData => {
         if (typeof removeData === 'object') {
@@ -126,10 +86,6 @@ const User = props => {
             .catch(handleError);
     };
 
-    const handleError = error => {
-        setAlert(error.message || error.title || 'Please check your internet connection and try again.');
-    };
-
     const resetPasswordFields = [
         {
             id: 'adminPassword',
@@ -168,7 +124,7 @@ const User = props => {
             />
             <MasterTable
                 title="Users"
-                fields={TABLE_FIELDS}
+                structure={struct}
                 onLoad={handleLoadData}
                 onEdit={handleDetail}
                 onAddNew={() => handleDetail(null)}

@@ -47,7 +47,7 @@ export type ActionProps = {
 };
 
 type MasterTableProps = {
-    fields: Array<TableField>,
+    structure: Array<TableField>,
     moreActions: Array<ActionProps>,
     title?: String,
     onAddNew?: Function,
@@ -56,19 +56,34 @@ type MasterTableProps = {
     onRemove(removeData: Object | Array): (?Function) => Promise<Any>,
     onError(error: Object | String): ?Function,
     onItemAction(item: Object, data: Object): ?Function,
+    onImport?: data => void,
     onRowClick?: Function,
 };
 
 const MasterTable = (props: MasterTableProps) => {
     const classes = styles();
 
-    const { title, fields, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick } = props;
+    const { title, structure, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick, onImport } = props;
 
     const [loading, setLoading] = useState(false);
     const [question, setQuestion] = useState('');
     const [search, setSearch] = useState('');
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
+
+    const fields = structure
+        .filter(f => f.grid != null)
+        .map(field => {
+            let result = {
+                name: field.name,
+                ...field.grid,
+            };
+            console.log('onLoad => ', field.grid.onLoad);
+            result.onLoad = result.onLoad && result.onLoad.length > 0 ? new Function('item', result.onLoad) : null;
+            return result;
+        });
+
+    console.log('fields => ', fields);
 
     const loadData = async (currentPage, pageSize, sort) => {
         setLoading(true);
@@ -93,11 +108,11 @@ const MasterTable = (props: MasterTableProps) => {
 
     const exportCSV = async () => {
         setLoading(true);
-        let csv = fields.map(field => FormatManager.buildCSV(field.label)).join(',') + '\n';
+        let csv = structure.map(field => FormatManager.buildCSV(field.label)).join(',') + '\n';
 
         selectedData.forEach(data => {
             csv +=
-                fields
+                structure
                     .map(field => {
                         const value = data[field.name];
                         if (typeof value === 'string') {
@@ -221,14 +236,15 @@ const MasterTable = (props: MasterTableProps) => {
     ];
 
     const fields_with_action = [
-        ...fields,
         {
             name: 'data_actions',
             align: 'center',
-            label: 'Actions',
+            label: 'Action',
+            minWidth: 50,
             type: 'raw',
             onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
         },
+        ...fields,
     ];
 
     return (
@@ -251,7 +267,7 @@ const MasterTable = (props: MasterTableProps) => {
                             disabled={!selectedData || selectedData.length < 1}
                             label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
                         />
-                        <ImportMenu onImportItems={(data, config) => console.log('Import ', config, ' => ', data)} className={classes.newButton} />
+                        <ImportMenu fields={fields} onImportItems={onImport} className={classes.newButton} />
                         <Button onClick={onAddNew} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
                             <Icon>add</Icon>
                             New
@@ -279,9 +295,10 @@ const MasterTable = (props: MasterTableProps) => {
 };
 
 MasterTable.defaultProps = {
-    fields: [],
+    structure: [],
     title: 'Master Data',
     moreActions: [],
+    onImport: data => console.warn('Undefined onImport => ', data),
     onAddNew: () => console.warn('Undefined onAddNew'),
     onEdit: item => console.warn('Undefined onEdit => ', item),
     onError: error => console.warn('Undefined onError => ', error),

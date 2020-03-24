@@ -130,6 +130,11 @@ export default class ApiManager {
         return response;
     }
 
+    async getStructure() {
+        const response = await this.get('/struct', this.getHeaders(true));
+        return response;
+    }
+
     async importData(data) {
         const response = await this.post('/import', data, this.getHeaders(true));
         return response;
