@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import { Grid, GridProps, CardActionArea, Card, Icon, CardMedia, Divider, CardContent, Typography, makeStyles } from '@material-ui/core';
+import { Grid, GridProps, CardActionArea, Card, CardMedia, CardContent, Typography, makeStyles } from '@material-ui/core';
 import FileApi from '../../api/FileApi';
 
 const itemStyles = makeStyles(theme => ({
@@ -8,20 +8,20 @@ const itemStyles = makeStyles(theme => ({
         width: '100%',
         cursor: 'pointer',
         margin: theme.spacing(1),
-        border: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.common.white),
-        backgroundColor: props.selected ? theme.palette.primary.main : theme.palette.divider,
+        border: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
+        backgroundColor: theme.palette.background.paper,
     }),
     title: {
         padding: theme.spacing(0.5, 0),
     },
     media: props => ({
         paddingTop: '75%', // 16:9
-        borderBottom: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.common.white),
+        borderBottom: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
     }),
     info: props => ({
         padding: theme.spacing(0.5, 1),
-        color: props.selected ? theme.palette.primary.contrastText : theme.palette.primary.dark,
-        backgroundColor: props.selected ? theme.palette.primary.main : theme.palette.divider,
+        color: props.selected ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText,
+        backgroundColor: props.selected ? theme.palette.primary.main : theme.palette.secondary.main,
     }),
     markedIcon: {
         position: 'absolute',
@@ -53,7 +53,6 @@ export const FileGridItem = (props: FileGridItemProps) => {
                 <CardActionArea onClick={onClick}>
                     <CardMedia className={classes.media} image={url} title={item.name ? item.name : 'No Image'} />
                     {url && isImage ? <img src={url} alt={item.name} style={{ display: 'none' }} /> : null}
-                    <Divider light />
                     <CardContent style={isMarked ? { position: 'relative' } : null} className={classes.info}>
                         <Typography className={classes.title} variant="subtitle2" align="center">
                             {item.name + '.' + item.extension}

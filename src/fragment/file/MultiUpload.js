@@ -1,24 +1,61 @@
 import React from 'react';
-import { Fade, Dialog, DialogTitle, DialogContent, makeStyles } from '@material-ui/core';
+import { useDropzone } from 'react-dropzone';
+import {
+    Fade,
+    Dialog,
+    makeStyles,
+    Typography,
+    Container,
+    DialogActions,
+    Button,
+    Icon,
+    Grid,
+    Divider,
+    IconButton,
+    MuiThemeProvider,
+} from '@material-ui/core';
+import { ErrorTheme } from '../../config/Theme';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
 const styles = makeStyles(theme => ({
+    root: {
+        padding: theme.spacing(1),
+    },
     container: {
+        minHeight: 120,
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 4,
+        outline: 'none',
+        color: theme.palette.action.disabled,
+        transition: 'border .24s ease-in-out',
+        border: '2px dashed ' + theme.palette.info.main,
+        background: theme.palette.background.default,
         cursor: 'pointer',
+        marginBottom: theme.spacing(1),
+    },
+    thumbnailContainer: {
+        border: '1px solid ' + theme.palette.divider,
+        padding: theme.spacing(1),
+        borderRadius: 4,
+        backgroundColor: theme.palette.background.default,
         position: 'relative',
-        border: '3px solid ' + theme.palette.primary.light,
-        display: 'inline-flex',
-        margin: theme.spacing(2, 0),
+    },
+    thumbnail: {
+        maxWidth: 128,
+        maxHeight: 128,
+        width: 'auto',
+        height: 'auto',
     },
     removeButton: {
         position: 'absolute',
-        top: -12,
-        right: -12,
-        backgroundColor: theme.palette.error.main,
-        color: 'white',
+        bottom: 0,
+        right: 0,
         padding: 0,
         width: 25,
         height: 25,
@@ -27,45 +64,113 @@ const styles = makeStyles(theme => ({
         cursor: 'pointer',
         borderRadius: 40,
     },
-    hiddenInput: {
-        display: 'none',
-        zIndex: -9999,
-        color: theme.palette.background.paper,
-        backgroundColor: theme.palette.background.paper,
-        border: 0,
-    },
 }));
 
 type MultiUploadProps = {
     show: boolean,
+    accept: string,
     onClose: (result: Array<Object>) => void,
 };
 
 export const MultiUpload = (props: MultiUploadProps) => {
-    const { show, onClose } = props;
+    const { show, accept, onClose } = props;
     const classes = styles();
     const [files, setFiles] = React.useState([]);
-    const inputUpload = React.createRef();
 
-    const handleUpload = event => {
-        const files = event.target.files;
-        if (files && files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const fileReader = new FileReader();
-                fileReader.onload = () => {};
-                fileReader.readAsDataURL(file);
-            }
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: accept,
+        onDrop: acceptedFiles => {
+            const newFiles = acceptedFiles.map((file, idx) =>
+                Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                    id: idx + '-' + file.name,
+                }),
+            );
+            setFiles([...files, ...newFiles]);
+        },
+    });
+
+    React.useEffect(
+        () => () => {
+            // Make sure to revoke the data uris to avoid memory leaks
+            files.forEach(file => {
+                if (file.preview) {
+                    URL.revokeObjectURL(file.preview);
+                }
+            });
+        },
+        [files],
+    );
+
+    const handleClose = status => {
+        const uploadFiles = files.map(file => {
+            URL.revokeObjectURL(file.preview);
+            delete file.preview;
+            return file;
+        });
+        if (status) {
+            onClose(uploadFiles);
+        } else {
+            onClose(false);
         }
+        setFiles([]);
+    };
+
+    const handleRemove = file => {
+        // Make sure to revoke the data uris to avoid memory leaks
+        URL.revokeObjectURL(file.preview);
+        const updatedFiles = files.filter(f => f.id !== file.id);
+        console.log('Updated Files => ', updatedFiles);
+        setFiles(updatedFiles);
     };
 
     return (
-        <Dialog maxWidth="lg" open={show} onEscapeKeyDown={() => onClose(false)} TransitionComponent={Transition}>
-            <DialogTitle id="alert-dialog-title">Upload Files</DialogTitle>
-            <DialogContent>
-                <img onClick={() => inputUpload.current.click()} src="./images/upload.png" alt={'Uploaded Image'} />
-                <input style={{ display: 'none' }} multiple accept="image/*" type="file" onChange={handleUpload} ref={inputUpload} />
-            </DialogContent>
+        <Dialog
+            maxWidth="md"
+            fullWidth
+            open={show}
+            onClose={() => handleClose(false)}
+            onEscapeKeyDown={() => handleClose(false)}
+            TransitionComponent={Transition}
+        >
+            <Container className={classes.root}>
+                <div {...getRootProps({ className: classes.container })}>
+                    <input {...getInputProps()} />
+                    <Typography variant="h5" color="inherit">
+                        Drag &amp; drop or click to upload files.
+                    </Typography>
+                </div>
+                <Grid container spacing={1}>
+                    {files.map((file, idx) => {
+                        return (
+                            <Grid key={file.id} container item justify="center" xs={6} sm={4} md={3} lg={2}>
+                                <div className={classes.thumbnailContainer}>
+                                    <MuiThemeProvider theme={ErrorTheme}>
+                                        <IconButton onClick={() => handleRemove(file)} className={classes.removeButton}>
+                                            <Icon color="primary">delete</Icon>
+                                        </IconButton>
+                                    </MuiThemeProvider>
+                                    <img className={classes.thumbnail} src={file.preview} alt={file.name} />
+                                </div>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            </Container>
+            <Divider />
+            <DialogActions>
+                <Button onClick={() => handleClose(true)} variant="contained" color="primary">
+                    <Icon>done</Icon> Ok
+                </Button>
+                <Button onClick={() => handleClose(false)} variant="contained" color="default">
+                    <Icon>done</Icon> Cancel
+                </Button>
+            </DialogActions>
         </Dialog>
     );
+};
+
+MultiUpload.defaultProps = {
+    accept: 'image/*',
+    onClose: result => console.warn('Undefined onClose =>', result),
 };

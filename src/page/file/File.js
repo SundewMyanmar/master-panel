@@ -12,7 +12,6 @@ import { MultiUpload } from '../../fragment/file/MultiUpload';
 const styles = makeStyles(theme => ({
     header: {
         flex: 1,
-        // backgroundColor:theme.palette.primary.main,
         borderBottom: '1px solid ' + theme.palette.divider,
         padding: theme.spacing(1),
     },
@@ -54,8 +53,7 @@ const File = props => {
     const [data, setData] = React.useState([]);
     const [removeData, setRemoveData] = React.useState(null);
     const [preview, setPreview] = React.useState(null);
-    const [showUploadDialog, setShowUploadDialog] = React.useState(true);
-    const inputUpload = React.createRef();
+    const [showUploadDialog, setShowUploadDialog] = React.useState(false);
 
     const handleError = error => {
         setError(error.message || error.title || 'Please check your internet connection and try again.');
@@ -116,13 +114,25 @@ const File = props => {
         setRemoveData(null);
     };
 
+    const handleUpload = result => {
+        if (result && result.length > 0) {
+            setLoading(true);
+            FileApi.upload(result, false)
+                .then(response => {
+                    loadData(0, paging.pageSize, paging.sort);
+                })
+                .catch(handleError);
+        }
+        setShowUploadDialog(false);
+    };
+
     return (
         <>
             <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <LoadingDialog show={loading} />
-            <MultiUpload show={showUploadDialog} />
+            <MultiUpload show={showUploadDialog} onClose={handleUpload} />
             {preview ? <ImagePreview show={preview != null} data={preview} onRemove={handleRemove} onClose={handleClosePreview} /> : null}
             <Paper className={classes.root} elevation={6}>
                 <Grid container className={classes.header}>

@@ -44,7 +44,7 @@ const styles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.default,
         borderTop: '1px solid ' + theme.palette.divider,
         borderBottom: '1px solid ' + theme.palette.divider,
-        padding: theme.spacing(2, 2.5),
+        padding: theme.spacing(1),
     },
     header: {
         padding: theme.spacing(1, 2),
@@ -79,7 +79,7 @@ const FilePicker = (props: FilePickerProps) => {
     const [paging, setPaging] = useState(() => {
         return {
             currentPage: 0,
-            pageSize: 12,
+            pageSize: 24,
             total: 0,
             data: [],
         };
@@ -138,7 +138,7 @@ const FilePicker = (props: FilePickerProps) => {
                     <TableFooter>
                         <TableRow>
                             <PaginationBar
-                                rowsPerPage={[12, 24, 36]}
+                                rowsPerPage={[12, 24, 36, 72]}
                                 total={paging.total}
                                 pageSize={paging.pageSize}
                                 currentPage={paging.currentPage}
