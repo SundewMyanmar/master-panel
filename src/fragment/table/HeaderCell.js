@@ -4,8 +4,8 @@ import { TableCell, TableSortLabel, makeStyles } from '@material-ui/core';
 export type HeaderCellProps = {
     ...TableSortLabelProps,
     field: TableField,
-    sort: String,
-    onSortChange(field: TableField, sort: 'ASC' | 'DESC'): (?Function) => String,
+    sort: string,
+    onSortChange(field: TableField, sort: 'ASC' | 'DESC'): (?Function) => string,
 };
 
 const headerStyles = makeStyles(theme => ({

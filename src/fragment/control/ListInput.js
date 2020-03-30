@@ -66,12 +66,13 @@ const ListInput = (props: SelectListProps) => {
 
     const buildInputField = params => {
         const { InputProps, InputLabelProps, ...otherParams } = params;
+        const placeholder = 'Choose ' + FormatManager.camelToReadable(id || name);
         return (
             <TextField
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                placeholder={'Enter ' + (id || name)}
+                placeholder={placeholder}
                 error={invalid}
                 helperText={error}
                 {...otherParams}
@@ -95,6 +96,7 @@ const ListInput = (props: SelectListProps) => {
             onChange={handleChange}
             popupIcon={<Icon color="primary">arrow_drop_down</Icon>}
             renderInput={buildInputField}
+            disableClearable={true}
             value={selectedItem}
         />
     );

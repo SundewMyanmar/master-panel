@@ -14,9 +14,9 @@ const styles = makeStyles(theme => ({
 }));
 
 export type ActionProps = {
-    id: String,
-    label: String,
-    icon: String,
+    id: string,
+    label: string,
+    icon: string,
     onClick: ?Function,
 };
 

@@ -5,8 +5,8 @@ import { USER_PROFILE_MENU } from '../../config/Constant';
 import { useHistory } from 'react-router-dom';
 
 type UserMenuProps = {
-    name: String,
-    image?: String | Object,
+    name: string,
+    image?: string | Object,
 };
 
 const styles = makeStyles(theme => ({

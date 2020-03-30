@@ -2,9 +2,9 @@ import React from 'react';
 import { Grid, Typography, IconButton, Icon, makeStyles, useTheme } from '@material-ui/core';
 
 type DrawerHeaderProps = {
-    image?: String,
-    name: String,
-    hideMenu: Boolean,
+    image?: string,
+    name: string,
+    hideMenu: boolean,
     onMenuClick: ?Function,
 };
 

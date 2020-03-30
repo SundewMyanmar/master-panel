@@ -16,14 +16,14 @@ import PaginationBar from '../PaginationBar';
 import { HeaderCell } from './HeaderCell';
 
 export type TableField = {
-    name: String,
+    name: string,
     type: 'text' | 'image' | 'icon' | 'bool' | 'raw',
     align: 'left' | 'center' | 'right',
-    label: String,
-    minWidth: Number,
-    sortable: ?Boolean,
-    hidden: ?Boolean,
-    onLoad(item: Object): (?Function) => Component | String,
+    label: string,
+    minWidth: number,
+    sortable: ?boolean,
+    hidden: ?boolean,
+    onLoad(item: Object): (?Function) => Component | string,
 };
 
 export type DataTableProps = {
@@ -31,17 +31,17 @@ export type DataTableProps = {
     fields: Array<Object>,
     items: Array<Object>,
     selectedData?: Array<Object> | Object,
-    total?: Number,
-    pageSize?: Number,
-    currentPage?: Number,
-    sort?: String,
-    multi?: Boolean,
-    noData?: String,
-    disablePaging?: Boolean,
-    onPageChange(page: Number): ?Function,
+    total?: number,
+    pageSize?: number,
+    currentPage?: number,
+    sort?: string,
+    multi?: boolean,
+    noData?: string,
+    disablePaging?: boolean,
+    onPageChange(page: number): ?Function,
     onRowClick(item: Object): ?Function,
     onSelectionChange(result: Object | Array<Object>): ?Function,
-    onError(error: Object | String): ?Function,
+    onError(error: Object | string): ?Function,
 };
 
 const styles = makeStyles(theme => ({

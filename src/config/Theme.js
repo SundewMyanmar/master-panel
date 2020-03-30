@@ -73,6 +73,41 @@ export const action = {
     selectedOpacity: 0.55,
 };
 
+export const ErrorTheme = createMuiTheme({
+    palette: {
+        primary: error,
+    },
+});
+
+export const WarningTheme = createMuiTheme({
+    palette: {
+        primary: warning,
+    },
+});
+
+export const InfoTheme = createMuiTheme({
+    palette: {
+        primary: info,
+    },
+});
+
+export const SuccessTheme = createMuiTheme({
+    palette: {
+        primary: success,
+    },
+});
+
+export const FacebookTheme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#7694e4',
+            main: '#4267B2',
+            dark: '#003d82',
+            contrastText: '#fff',
+        },
+    },
+});
+
 export default createMuiTheme({
     palette: {
         type: 'light',

@@ -21,11 +21,11 @@ type ListPickerProps = {
     show: boolean,
     values?: Array<Object>,
     multi: boolean,
-    title: ?String,
-    idField?: String,
-    iconField?: String,
-    labelField?: String,
-    onChange(result: Object | Boolean): ?Function,
+    title: ?string,
+    idField?: string,
+    iconField?: string,
+    labelField?: string,
+    onChange(result: Object | boolean): ?Function,
     onClose(result: Object | Array<Object>): Function,
 };
 

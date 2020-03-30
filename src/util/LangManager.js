@@ -23,7 +23,12 @@ export default class LangManager {
 
     static translateText = (content, lang) => {
         if (content && typeof content === 'object') {
-            return lang === 'zg' ? content.zg : content.uni;
+            if (lang === 'zg' && content.zg) {
+                return content.zg;
+            } else if (lang === 'uni' && content.uni) {
+                return content.uni;
+            }
+            return JSON.stringify(content);
         } else if (content && Translator[content]) {
             return Translator[content][lang];
         }

@@ -6,8 +6,8 @@ import FilePicker from './FilePicker';
 import { AlertDialog } from '../message';
 
 type ImageSize = {
-    width: Number,
-    height: Number,
+    width: number,
+    height: number,
 };
 
 type ImageInputProps = {
@@ -15,10 +15,10 @@ type ImageInputProps = {
     size: ?ImageSize,
     onUpload: ?Function,
     onRemove: ?Function,
-    enableFilePicker?: Boolean,
-    disabledUpload?: Boolean,
-    disabledRemove?: Boolean,
-    value: Object | String,
+    enableFilePicker?: boolean,
+    disabledUpload?: boolean,
+    disabledRemove?: boolean,
+    value: Object | string,
     onChange(image): Function,
 };
 
@@ -138,7 +138,7 @@ const ImagePicker = (props: ImageInputProps) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
-            var fileReader = new FileReader();
+            const fileReader = new FileReader();
             fileReader.onload = () => {
                 handleChange(file, fileReader.result);
             };

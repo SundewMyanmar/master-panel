@@ -12,7 +12,7 @@ const styles = makeStyles(theme => ({
     header: {
         flex: 1,
         // backgroundColor:theme.palette.primary.main,
-        borderBottom: '1px solid #eff6f7',
+        borderBottom: '1px solid' + theme.palette.divider,
         padding: theme.spacing(1),
     },
     newButton: {
@@ -33,37 +33,38 @@ const styles = makeStyles(theme => ({
 }));
 
 export type PaginationObject = {
-    currentPage: Number,
-    pageSize: Number,
-    total: Number,
+    currentPage: number,
+    pageSize: number,
+    total: number,
     data: Array<Object>,
-    sort: String,
+    sort: string,
 };
 
 export type ActionProps = {
-    id: String,
-    label: String,
-    icon: String,
+    id: string,
+    label: string,
+    icon: string,
 };
 
 type MasterTableProps = {
-    structure: Array<TableField>,
+    fields: Array<TableField>,
+    importFields: Array<string>,
     moreActions: Array<ActionProps>,
-    title?: String,
+    title?: string,
     onAddNew?: Function,
     onEdit(item: Object): ?Function,
-    onLoad(currentPage: Number, pageSize: Number, sort: String, search: String): (?Function) => Promise<Any>,
+    onLoad(currentPage: number, pageSize: number, sort: string, search: string): (?Function) => Promise<Any>,
     onRemove(removeData: Object | Array): (?Function) => Promise<Any>,
-    onError(error: Object | String): ?Function,
+    onError(error: Object | string): ?Function,
     onItemAction(item: Object, data: Object): ?Function,
-    onImport?: data => void,
+    onImport?: data => Promise<Any>,
     onRowClick?: Function,
 };
 
 const MasterTable = (props: MasterTableProps) => {
     const classes = styles();
 
-    const { title, structure, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick, onImport } = props;
+    const { title, fields, importFields, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick, onImport } = props;
 
     const [loading, setLoading] = useState(false);
     const [question, setQuestion] = useState('');
@@ -71,19 +72,9 @@ const MasterTable = (props: MasterTableProps) => {
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
 
-    const fields = structure
-        .filter(f => f.grid != null)
-        .map(field => {
-            let result = {
-                name: field.name,
-                ...field.grid,
-            };
-            console.log('onLoad => ', field.grid.onLoad);
-            result.onLoad = result.onLoad && result.onLoad.length > 0 ? new Function('item', result.onLoad) : null;
-            return result;
-        });
-
-    console.log('fields => ', fields);
+    if (importFields.findIndex(f => f === 'version') < 0) {
+        importFields.push('version');
+    }
 
     const loadData = async (currentPage, pageSize, sort) => {
         setLoading(true);
@@ -108,13 +99,13 @@ const MasterTable = (props: MasterTableProps) => {
 
     const exportCSV = async () => {
         setLoading(true);
-        let csv = structure.map(field => FormatManager.buildCSV(field.label)).join(',') + '\n';
+        let csv = importFields.map(field => FormatManager.buildCSV(field)).join(',') + '\n';
 
         selectedData.forEach(data => {
             csv +=
-                structure
+                importFields
                     .map(field => {
-                        const value = data[field.name];
+                        const value = data[field] || '';
                         if (typeof value === 'string') {
                             return FormatManager.buildCSV(value);
                         }
@@ -164,6 +155,18 @@ const MasterTable = (props: MasterTableProps) => {
 
     const handlePageChange = pagination => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
+    };
+
+    const handleImport = data => {
+        setLoading(true);
+        if (onImport) {
+            onImport(data)
+                .then(() => {
+                    loadData(0, paging.pageSize, paging.sort);
+                })
+                .catch(onError)
+                .finally(() => setLoading(false));
+        }
     };
 
     const handleSelectionChange = result => {
@@ -239,7 +242,7 @@ const MasterTable = (props: MasterTableProps) => {
         {
             name: 'data_actions',
             align: 'center',
-            label: 'Action',
+            label: '@',
             minWidth: 50,
             type: 'raw',
             onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
@@ -253,13 +256,13 @@ const MasterTable = (props: MasterTableProps) => {
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Paper className={classes.root} elevation={6}>
                 <Grid container className={classes.header}>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} justify="flex-start" alignContent="center">
-                        <SearchInput className={classes.searchBox} onSearch={value => setSearch(value)} placeholder="Search Files" />
-                    </Grid>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" justify="center">
+                    <Grid container item lg={4} md={4} sm={6} xs={12} justify="flex-start" alignContent="center" alignItems="center">
                         <Typography color="primary" variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
+                    </Grid>
+                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justify="center">
+                        <SearchInput onSearch={value => setSearch(value)} placeholder="Search Files" />
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
                         <ActionMenu
@@ -267,7 +270,7 @@ const MasterTable = (props: MasterTableProps) => {
                             disabled={!selectedData || selectedData.length < 1}
                             label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
                         />
-                        <ImportMenu fields={fields} onImportItems={onImport} className={classes.newButton} />
+                        <ImportMenu fields={importFields} onImportItems={handleImport} className={classes.newButton} />
                         <Button onClick={onAddNew} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
                             <Icon>add</Icon>
                             New
@@ -295,10 +298,9 @@ const MasterTable = (props: MasterTableProps) => {
 };
 
 MasterTable.defaultProps = {
-    structure: [],
+    fields: [],
     title: 'Master Data',
     moreActions: [],
-    onImport: data => console.warn('Undefined onImport => ', data),
     onAddNew: () => console.warn('Undefined onAddNew'),
     onEdit: item => console.warn('Undefined onEdit => ', item),
     onError: error => console.warn('Undefined onError => ', error),

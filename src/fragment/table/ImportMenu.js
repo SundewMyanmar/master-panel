@@ -10,8 +10,8 @@ const styles = makeStyles(theme => ({
 
 type ImportMenuProps = {
     ...ButtonProps,
-    label?: String,
-    title?: String,
+    label?: string,
+    title?: string,
     onImportItems?: data => void,
     fields: Array,
 };
@@ -22,15 +22,17 @@ const ImportMenu = (props: ImportMenuProps) => {
     const [showImport, setShowImport] = React.useState(false);
 
     const handleClose = result => {
-        if (result && result.data.length > 0) {
+        if (result && result.length > 0) {
             onImportItems(result);
         }
         setShowImport(false);
     };
 
+    const importablFields = fields.map(field => ({ name: field, label: field }));
+
     return (
         <>
-            <ImportDialog show={showImport} title={title ? title : 'Import Data'} fields={fields} onClose={handleClose} />
+            <ImportDialog show={showImport} title={title ? title : 'Import Data'} fields={importablFields} onClose={handleClose} />
             <Button type="button" color="secondary" onClick={() => setShowImport(true)} variant="contained" aria-label="Import Data" {...buttonProps}>
                 <Icon className={classes.icon}>cloud_upload</Icon>
                 {label ? label : 'Import'}
@@ -40,7 +42,7 @@ const ImportMenu = (props: ImportMenuProps) => {
 };
 
 ImportMenu.defaultProps = {
-    onImportItems: (data, config) => console.warn('Undefined onImportItems => ', data),
+    onImportItems: data => console.warn('Undefined onImportItems => ', data),
 };
 
 export default ImportMenu;

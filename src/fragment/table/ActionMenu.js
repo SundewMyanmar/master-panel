@@ -1,3 +1,4 @@
+/* @flow */
 import React from 'react';
 import { ButtonProps, Button, Icon, Menu, MenuItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { BATCH_ACTION_MENU } from '../../config/Constant';
@@ -16,7 +17,7 @@ const styles = makeStyles(theme => ({
 
 type ActionMenuProps = {
     ...ButtonProps,
-    label: String,
+    label: string,
     onMenuItemClick(item: Object): Function,
 };
 

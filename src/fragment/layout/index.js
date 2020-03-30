@@ -11,8 +11,8 @@ import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
 import MenuApi from '../../api/MenuApi';
 
-const DRAWER_FULL_SIZE: Number = window.innerWidth > 1400 ? 300 : 260;
-const DRAWER_SMALL_SIZE: Number = 64;
+const DRAWER_FULL_SIZE: number = window.innerWidth > 1400 ? 300 : 260;
+const DRAWER_SMALL_SIZE: number = 64;
 
 const MIN_WIDTH_TO_HIDE = 1060;
 

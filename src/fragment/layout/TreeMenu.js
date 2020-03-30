@@ -54,7 +54,7 @@ const useTreeItemStyles = makeStyles(theme => ({
 export const DefaultTreeItem = props => {
     const classes = useTreeItemStyles();
     //Unused property need to add for remove in DOM.
-    const { nodeId, label, icon, onClick, onCollapseClick, items, divider, parentId, createdAt, modifiedAt, ...other } = props;
+    const { nodeId, label, icon, onClick, onCollapseClick, items, divider, parentId, createdBy, modifiedBy, createdAt, modifiedAt, ...other } = props;
     const isCollapseable = items && items.length > 0;
 
     const handleClick = () => {

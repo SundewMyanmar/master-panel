@@ -6,13 +6,13 @@ import SearchInput from '../control/SearchInput';
 import { ACTIONS } from './Reducer';
 
 export type MenuProps = {
-    id: String | Number,
-    label: String,
-    icon: String,
+    id: string | number,
+    label: string,
+    icon: string,
     onClick: ?Function,
-    path?: String,
+    path?: string,
     items?: Array<MenuProps>,
-    divider?: Boolean,
+    divider?: boolean,
 };
 
 type SideMenuProps = {
@@ -23,18 +23,31 @@ type SideMenuProps = {
 
 type MenuItemProps = {
     ...SideMenuProps,
-    hideMenu: Boolean,
-    parentCount?: Number,
+    hideMenu: boolean,
+    parentCount?: number,
     onMenuItemClick(menu: MenuProps): ?Function,
 };
 
 type ChildMenuGroupProps = {
     ...MenuItemProps,
-    open: Boolean,
+    open: boolean,
 };
 
 const PopupMenu = (props: { ...ChildMenuGroupProps, ...PopoverProps }) => {
-    const { onMenuItemClick, dispatch, state, parentCount, divider, parentId, createdAt, modifiedAt, items, ...popover } = props;
+    const {
+        onMenuItemClick,
+        dispatch,
+        state,
+        parentCount,
+        divider,
+        parentId,
+        createdBy,
+        modifiedBy,
+        createdAt,
+        modifiedAt,
+        items,
+        ...popover
+    } = props;
 
     return (
         <>
@@ -113,6 +126,8 @@ const DefaultMenuItem = (props: MenuItemProps) => {
         items,
         divider,
         parentId,
+        createdBy,
+        modifiedBy,
         createdAt,
         modifiedAt,
         ...rest

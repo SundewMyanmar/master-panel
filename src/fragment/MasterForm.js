@@ -9,8 +9,8 @@ export type Field = {
 };
 
 export type GridProps = {
-    row: Number,
-    col: Number,
+    row: number,
+    col: number,
 };
 
 export type MasterFormProps = {

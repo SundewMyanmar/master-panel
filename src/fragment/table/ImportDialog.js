@@ -14,6 +14,7 @@ import {
     DialogActions,
 } from '@material-ui/core';
 import DataTable from '.';
+import FormatManager from '../../util/FormatManager';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
@@ -46,28 +47,42 @@ const styles = makeStyles(theme => ({
 
 const CSV_REGEX = {
     seperator: /,|;|:|\|/g,
-    jsonPattern: /(\[[^\]]*])|(\{[^}]*})/g,
+    jsonPattern: /(\[[^\]]*]+)|(\{[^}]*}+)/g,
     seperatorCleaner: /(",")/g,
     escape: /""/g,
     trim: /^("|\n|\r)|("|\n|\r)$/g,
     validName: /[^a-zA-Z0-9\\._]/g,
-    tempJSON: '{json_data}',
+    tempJSON: '@json_data',
+    invalidColumn: '<invalid>',
 };
 
-export const CsvReader = input => {
-    let output = { headers: [], data: [] };
+export const CsvReader = (fields, input) => {
+    let output = [];
+    let headers = [];
     input.split(/\r\n|\n/g).forEach((line, idx) => {
         const row = line.replace(CSV_REGEX.seperatorCleaner, ',').replace(CSV_REGEX.trim, '');
         if (row.length > 0) {
             if (idx === 0) {
-                output.headers = row.split(CSV_REGEX.seperator).map(val => val.replace(CSV_REGEX.validName, '_'));
+                headers = row.split(CSV_REGEX.seperator).map(val => {
+                    const header = FormatManager.snakeToCamel(val.replace(CSV_REGEX.validName, '_'));
+                    const validIdx = fields.findIndex(f => f.name.toLowerCase() === header.toLowerCase());
+                    if (validIdx >= 0) {
+                        return fields[validIdx];
+                    } else {
+                        return CSV_REGEX.invalidColumn;
+                    }
+                });
             } else {
                 const innerValues = row.match(CSV_REGEX.jsonPattern);
                 const values = row.replace(CSV_REGEX.jsonPattern, CSV_REGEX.tempJSON).split(CSV_REGEX.seperator);
                 let item = {};
                 let jsonIdx = 0;
-                output.headers.forEach((prop, col) => {
-                    let value = values[col].replace(CSV_REGEX.escape, '"');
+                headers.forEach((prop, col) => {
+                    if (prop === CSV_REGEX.invalidColumn) {
+                        return;
+                    }
+
+                    let value = values[col].trim().replace(CSV_REGEX.escape, '"');
                     if (value === CSV_REGEX.tempJSON) {
                         value = innerValues[jsonIdx].replace(CSV_REGEX.escape, '"');
                         try {
@@ -78,9 +93,9 @@ export const CsvReader = input => {
                             jsonIdx++;
                         }
                     }
-                    item[prop] = value;
+                    item[prop.name] = value;
                 });
-                output.data.push(item);
+                output.push(item);
             }
         }
     });
@@ -91,19 +106,16 @@ export default function ImportDialog(props: ImportDialgProps) {
     const classes = styles();
     const { title, fields, onClose, show } = props;
     const [loading, setLoading] = React.useState(false);
-    const [message, setMessage] = React.useState('Please upload a csv/json file.');
-    const [header, setHeader] = React.useState([]);
+    const [message, setMessage] = React.useState('Please upload a csv file.');
     const [data, setData] = React.useState([]);
     const inputUpload = React.createRef();
 
     const handleClose = isSubmit => {
-        if (!isSubmit) {
-            onClose(false);
+        if (isSubmit && data && data.length > 0) {
+            onClose(data);
         } else {
-            onClose({ header: header, data: data });
+            onClose(false);
         }
-
-        setHeader([]);
         setData([]);
     };
 
@@ -112,13 +124,12 @@ export default function ImportDialog(props: ImportDialgProps) {
         if (files && files.length > 0) {
             setLoading(true);
             const file = files[0];
-            var fileReader = new FileReader();
+            const fileReader = new FileReader();
             fileReader.onload = () => {
                 if (file.type.endsWith('csv')) {
                     try {
-                        const csv = CsvReader(fileReader.result);
-                        setHeader(csv.header);
-                        setData(csv.data);
+                        const csv = CsvReader(fields, fileReader.result);
+                        setData(csv);
                     } catch (error) {
                         setMessage(error);
                     } finally {
@@ -162,7 +173,7 @@ export default function ImportDialog(props: ImportDialgProps) {
                     ref={inputUpload}
                     style={{ display: 'none' }}
                     name="uploadFile"
-                    accept=".csv, .json, .txt"
+                    accept=".csv, .txt"
                     type="file"
                     onChange={handleUploadChange}
                 />

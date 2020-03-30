@@ -3,10 +3,10 @@ import { TablePagination, TablePaginationBaseProps, IconButton, Icon, makeStyles
 
 type PaginationBarProps = {
     ...TablePaginationBaseProps,
-    rowsPerPage: Array<Number>,
-    total: Number,
-    pageSize: Number,
-    currentPage: Number,
+    rowsPerPage: Array<number>,
+    total: number,
+    pageSize: number,
+    currentPage: number,
     onPageChange(newPage): Function,
     onPageSizeChange(newPageSize): Function,
 };

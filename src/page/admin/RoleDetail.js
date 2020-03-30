@@ -63,6 +63,7 @@ const RoleDetail = props => {
 
         if (isUpdate) {
             form.id = id;
+            form.version = detail.version;
             RoleApi.modifyById(id, form)
                 .then(response => {
                     setLoading(false);

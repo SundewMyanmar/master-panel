@@ -10,11 +10,6 @@ import {
     Typography,
     Zoom,
     LinearProgress,
-    Card,
-    CardActionArea,
-    CardMedia,
-    Divider,
-    CardContent,
     makeStyles,
     Icon,
     DialogActions,
@@ -25,102 +20,24 @@ import {
 import PaginationBar from '../PaginationBar';
 import SearchInput from './SearchInput';
 import FileApi from '../../api/FileApi';
+import FileGrid from '../file/FileGrid';
 
 type FilePickerProps = {
-    show: Boolean,
+    show: boolean,
     selectedData: Array<Object> | Object,
-    multi: Boolean,
-    title?: String,
-    currentPage?: Number,
-    pageSize?: Number,
-    total?: Number,
-    onError(error: Object | String): ?Function,
-    onSelectionChange(result: Object | Boolean): ?Function,
+    multi: boolean,
+    title?: string,
+    currentPage?: number,
+    pageSize?: number,
+    total?: number,
+    onError(error: Object | string): ?Function,
+    onSelectionChange(result: Object | boolean): ?Function,
     onClose(result: Object | Array<Object>): Function,
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
-
-const itemStyles = makeStyles(theme => ({
-    root: {
-        maxWidth: 345,
-        width: '100%',
-        cursor: 'pointer',
-    },
-    title: {
-        marginBottom: theme.spacing(1),
-    },
-    media: {
-        borderBottom: '1px solid ' + theme.palette.divider,
-        paddingTop: '75%', // 16:9
-    },
-    info: {
-        padding: theme.spacing(0.5, 2),
-    },
-    infoRow: {
-        padding: theme.spacing(0.5),
-        borderTop: '1px solid ' + theme.palette.divider,
-    },
-    markedIcon: {
-        position: 'absolute',
-        fontSize: 28,
-        bottom: 0,
-        right: 0,
-    },
-}));
-
-const FileInfoField = props => {
-    const { label, value, ...rest } = props;
-    return (
-        <Grid container {...rest}>
-            <Grid container item xs={4}>
-                <Typography variant="caption">{label}</Typography>
-            </Grid>
-            <Grid container item xs={8}>
-                <Typography variant="subtitle2">{value}</Typography>
-            </Grid>
-        </Grid>
-    );
-};
-
-const FileItem = props => {
-    const { onClick, multi, isMarked, ...item } = props;
-    const [size, setSize] = useState(item.size);
-    const classes = itemStyles({ selected: isMarked });
-    const isImage = item.type.startsWith('image');
-    const url = FileApi.downloadLink(item);
-
-    const handleImageLoading = ({ target: img }) => {
-        setSize(img.naturalWidth + ' x ' + img.naturalHeight + ' (' + item.size + ')');
-    };
-
-    return (
-        <Grid key={item.key} container item justify="center" xs={12} sm={4} md={3} lg={3}>
-            <Card className={classes.root} elevation={3}>
-                <CardActionArea style={multi ? { position: 'relative' } : null} onClick={onClick}>
-                    {isMarked ? (
-                        <Icon className={classes.markedIcon} color="secondary">
-                            check_box
-                        </Icon>
-                    ) : null}
-                    <CardMedia className={classes.media} image={url || '/res/default-image.png'} title={item.name ? item.name : 'No Image'} />
-                    {url && isImage ? <img onLoad={handleImageLoading} src={url} alt={item.name} style={{ display: 'none' }} /> : null}
-                    <Divider light />
-                    <CardContent className={classes.info}>
-                        <Typography className={classes.title} variant="subtitle2" align="center" noWrap>
-                            {item.name + '.' + item.extension}
-                        </Typography>
-                        <FileInfoField label="Size" className={classes.infoRow} value={size} />
-                        <FileInfoField label="Type" className={classes.infoRow} value={item.type} />
-                        <FileInfoField label="Access" className={classes.infoRow} value={item.publicAccess ? 'Public' : 'Private'} />
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </Grid>
-    );
-};
 
 const styles = makeStyles(theme => ({
     content: {
@@ -215,27 +132,7 @@ const FilePicker = (props: FilePickerProps) => {
                     {loading ? <LinearProgress /> : <div className={classes.noLoading}></div>}
                 </DialogTitle>
                 <DialogContent className={classes.content}>
-                    <Grid container spacing={3}>
-                        {paging.data ? (
-                            paging.data.map((item, index) => {
-                                const isMarked = multi
-                                    ? checked.findIndex(x => x.id === item.id) >= 0
-                                    : checked && checked.id && checked.id === item.id;
-
-                                return (
-                                    <FileItem
-                                        isMarked={isMarked}
-                                        multi={multi}
-                                        key={item.id + '-' + index}
-                                        onClick={() => handleClick(item)}
-                                        {...item}
-                                    />
-                                );
-                            })
-                        ) : (
-                            <p align="center">There is no file.</p>
-                        )}
-                    </Grid>
+                    <FileGrid data={paging.data} selectedData={checked} onClickItem={handleClick} />
                 </DialogContent>
                 <Table>
                     <TableFooter>

@@ -3,7 +3,7 @@ import ApiManager from '../util/ApiManager';
 type Auth = {
     deviceId: string,
     deviceOs: string,
-    firebaseMessagingToken?: String,
+    firebaseMessagingToken?: string,
 };
 
 type UserAuth = {

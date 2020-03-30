@@ -64,7 +64,7 @@ const ForgetPassword = props => {
     const forgetPasswordFields = [
         {
             id: 'phoneNumber',
-            label: 'Phone Number',
+            label: 'Phone number',
             icon: 'phone',
             required: true,
             type: 'text',

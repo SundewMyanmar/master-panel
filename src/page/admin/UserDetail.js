@@ -96,6 +96,7 @@ const UserDetail = props => {
         if (isUpdate) {
             user.id = detail.id;
             user.password = 'default_password';
+            user.version = detail.version;
             UserApi.modifyById(id, user)
                 .then(response => {
                     setLoading(false);
@@ -155,7 +156,7 @@ const UserDetail = props => {
         },
         {
             id: 'phoneNumber',
-            label: 'Phone Number',
+            label: 'Phone number',
             icon: 'phone',
             required: true,
             type: 'text',

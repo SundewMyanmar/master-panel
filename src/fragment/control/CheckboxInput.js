@@ -3,10 +3,10 @@ import { FormControlLabel, CheckboxProps, Checkbox } from '@material-ui/core';
 
 export type CheckboxInputProps = {
     ...CheckboxProps,
-    label: String,
-    value: String,
-    checked: Boolean,
-    required: Boolean,
+    label: string,
+    value: string,
+    checked: boolean,
+    required: boolean,
 };
 
 const CheckboxInput = (props: CheckboxInputProps) => {

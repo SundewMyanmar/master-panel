@@ -4,7 +4,69 @@ import MasterTable from '../../fragment/MasterTable';
 import UserApi from '../../api/UserApi';
 import { AlertDialog, Notification } from '../../fragment/message';
 import FormDialog from '../../fragment/message/FormDialog';
+import LangManager from '../../util/LangManager';
 
+export const USER_TABLE_FIELDS = [
+    {
+        name: 'id',
+        align: 'center',
+        label: 'ID',
+        sortable: true,
+    },
+    {
+        name: 'profileImage',
+        align: 'center',
+        label: 'Image',
+        type: 'image',
+    },
+    {
+        name: 'roles',
+        align: 'left',
+        label: 'Roles',
+        onLoad: item => {
+            if (item.roles && item.roles.length > 0) {
+                return item.roles.map(role => LangManager.translateToUni(role.name)).join(', ');
+            }
+            return 'No Role';
+        },
+    },
+    {
+        name: 'displayName',
+        align: 'left',
+        label: 'Name',
+        sortable: true,
+    },
+    {
+        name: 'phoneNumber',
+        align: 'left',
+        label: 'Phone',
+        sortable: true,
+    },
+    {
+        name: 'email',
+        align: 'left',
+        label: 'Email',
+        sortable: true,
+    },
+    {
+        name: 'facebookId',
+        align: 'center',
+        label: 'FB_User',
+        type: 'bool',
+        sortable: true,
+        width: 50,
+        onLoad: item => item.facebookId,
+    },
+    {
+        name: 'status',
+        align: 'center',
+        label: 'Status',
+        type: 'bool',
+        sortable: 'true',
+        width: 50,
+        onLoad: item => item.status.toLowerCase() === 'active',
+    },
+];
 const User = props => {
     const location = useLocation();
     const history = useHistory();
@@ -20,6 +82,10 @@ const User = props => {
         setAlert(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
+    const handleImport = async result => {
+        return UserApi.importData(result);
+    };
+
     const handleLoadData = async (currentPage, pageSize, sort, search) => {
         try {
             const result = await UserApi.getPaging(currentPage, pageSize, sort, search);
@@ -28,15 +94,6 @@ const User = props => {
             handleError(error);
         }
     };
-
-    const [struct, setStructure] = React.useState(() => {
-        UserApi.getStructure()
-            .then(resp => {
-                setStructure(resp.data);
-            })
-            .catch(handleError);
-        return [];
-    });
 
     const handleRemoveData = async removeData => {
         if (typeof removeData === 'object') {
@@ -111,6 +168,8 @@ const User = props => {
 
     const resetPasswordTitle = resetForm ? 'Reset password for ' + resetForm.displayName : 'Reset password for Htoonlin';
 
+    const gridFields = USER_TABLE_FIELDS.map(f => f.name);
+
     return (
         <React.Fragment>
             <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
@@ -124,12 +183,14 @@ const User = props => {
             />
             <MasterTable
                 title="Users"
-                structure={struct}
+                fields={USER_TABLE_FIELDS}
+                importFields={[...gridFields, 'extras', 'password']}
                 onLoad={handleLoadData}
                 onEdit={handleDetail}
                 onAddNew={() => handleDetail(null)}
                 onRemove={handleRemoveData}
                 onError={handleError}
+                onImport={handleImport}
                 onItemAction={handleItemAction}
                 moreActions={[
                     {

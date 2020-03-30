@@ -7,10 +7,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export type QuestionDialogProps = {
-    show: Boolean,
-    title: String,
-    message: String,
-    onClose(result: Boolean): ?Function,
+    show: boolean,
+    title: string,
+    message: string,
+    onClose(result: boolean): ?Function,
 };
 
 export default function QuestionDialog(props: QuestionDialogProps) {

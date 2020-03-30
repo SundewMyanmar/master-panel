@@ -63,6 +63,8 @@ export default function TextInput(props: TextInputProps) {
         return props.InputProps;
     };
 
+    const placeholder = 'Enter ' + FormatManager.camelToReadable(id || name);
+
     return (
         <TextField
             variant="outlined"
@@ -71,7 +73,7 @@ export default function TextInput(props: TextInputProps) {
             InputLabelProps={{
                 shrink: true,
             }}
-            placeholder={'Enter ' + (id || name)}
+            placeholder={placeholder}
             {...rest}
             id={id || name}
             name={name || id}

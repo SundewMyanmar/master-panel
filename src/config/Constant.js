@@ -133,5 +133,12 @@ export const DEFAULT_SIDE_MENU = [
         divider: true,
     },
     ADMIN_MENU,
+    {
+        id: 'sys-file',
+        label: 'File Manager',
+        icon: 'storage',
+        path: '/file',
+        divider: true,
+    },
     USER_PROFILE_MENU,
 ];

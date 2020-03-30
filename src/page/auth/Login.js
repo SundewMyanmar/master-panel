@@ -1,25 +1,13 @@
 import React, { useState, createRef } from 'react';
 import { withRouter, useHistory, useLocation } from 'react-router-dom';
-import {
-    Typography,
-    Container,
-    CssBaseline,
-    Avatar,
-    Icon,
-    Grid,
-    Button,
-    Link,
-    Box,
-    createMuiTheme,
-    MuiThemeProvider,
-    makeStyles,
-} from '@material-ui/core';
+import { Typography, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, MuiThemeProvider, makeStyles } from '@material-ui/core';
 
 import Copyright from '../../fragment/control/Copyright';
 import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
 import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS, FACEBOOK } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
+import { FacebookTheme } from '../../config/Theme';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -46,17 +34,6 @@ const styles = makeStyles(theme => ({
     },
     fbLoginButton: {},
 }));
-
-const facebookTheme = createMuiTheme({
-    palette: {
-        primary: {
-            light: '#7694e4',
-            main: '#4267B2',
-            dark: '#003d82',
-            contrastText: '#fff',
-        },
-    },
-});
 
 const loginFields = [
     {
@@ -116,7 +93,7 @@ const Login = props => {
 
         return (
             <>
-                <MuiThemeProvider theme={facebookTheme}>
+                <MuiThemeProvider theme={FacebookTheme}>
                     <Button fullWidth variant="contained" color="primary" className={classes.loginWith}>
                         <img className={classes.logoImage} src="images/facebook.png" alt="Facebook" /> Login with Facebook
                     </Button>

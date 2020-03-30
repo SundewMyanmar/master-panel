@@ -18,12 +18,12 @@ import SearchInput from './SearchInput';
 import DataTable from '../table';
 
 type TablePickerProps = {
-    show: Boolean,
+    show: boolean,
     selectedData?: Array<Object> | Object,
-    multi?: Boolean,
+    multi?: boolean,
     fields: Array<TableField>,
-    onError(error: Object | String): ?Function,
-    onLoad(currentPage: Number, pageSize: Number, sort: String, search: String): (?Function) => Promise<Any>,
+    onError(error: Object | string): ?Function,
+    onLoad(currentPage: number, pageSize: number, sort: string, search: string): (?Function) => Promise<Any>,
     onClose(result: Object | Array<Object>): Function,
 };
 
@@ -94,6 +94,13 @@ const TablePicker = (props: TablePickerProps) => {
         loadData(0, paging.pageSize, paging.sort);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
+
+    useEffect(() => {
+        if (show) {
+            setSearch('');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [show]);
 
     const handlePageChange = pagination => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);

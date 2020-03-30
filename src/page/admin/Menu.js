@@ -7,6 +7,7 @@ import { Grid, Paper, Container, Avatar, Icon, Typography, Button, makeStyles } 
 import MasterForm from '../../fragment/MasterForm';
 import { ROLE_TABLE_FIELDS } from './Role';
 import RoleApi from '../../api/RoleApi';
+import ImportMenu from '../../fragment/table/ImportMenu';
 
 export const MENU_TABLE_FIELDS = [
     {
@@ -56,6 +57,8 @@ const styles = makeStyles(theme => ({
         background: theme.palette.background.default,
         padding: theme.spacing(3),
         border: '1px solid ' + theme.palette.divider,
+        margin: theme.spacing(2, 0, 1),
+        flex: 1,
     },
     innerBox: {
         marginTop: theme.spacing(2),
@@ -111,6 +114,10 @@ const Menu = props => {
         return await RoleApi.getPaging(currentPage, pageSize, sort, search);
     };
 
+    const handleImport = async result => {
+        return MenuApi.importData(result);
+    };
+
     const loadData = async () => {
         const result = await MenuApi.getTree('');
         if (result && result.data) {
@@ -139,6 +146,7 @@ const Menu = props => {
 
         if (selectedMenu && selectedMenu.id) {
             menu.id = selectedMenu.id;
+            menu.version = selectedMenu.version;
             MenuApi.modifyById(selectedMenu.id, menu)
                 .then(response => {
                     loadData();
@@ -282,7 +290,6 @@ const Menu = props => {
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <LoadingDialog show={loading} />
-            <QuestionDialog />
             <Container component="main" maxWidth="md">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>
@@ -292,8 +299,13 @@ const Menu = props => {
                         System Menu
                     </Typography>
                     <Grid className={classes.innerBox} container>
-                        <Grid className={classes.treeBox} container item md={5} sm={12} xs={12} justify="center" alignContent="flex-start">
-                            <TreeMenu menus={data} onClickItem={handleClickMenu} />
+                        <Grid container item md={5} sm={12} xs={12} alignContent="flex-start" alignItems="stretch" direction="column">
+                            <Grid container item className={classes.treeBox}>
+                                <TreeMenu menus={data} onClickItem={handleClickMenu} />
+                            </Grid>
+                            <Grid container item>
+                                <ImportMenu fields={fields.map(f => f.id)} onImportItems={handleImport} className={classes.newButton} />
+                            </Grid>
                         </Grid>
                         <Grid className={classes.inputBox} container item md={7} sm={12} xs={12} justify="flex-end" alignContent="flex-start">
                             <MasterForm fields={fields} onSubmit={(event, form) => handleSubmit(form)}>

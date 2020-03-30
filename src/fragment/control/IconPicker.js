@@ -18,11 +18,11 @@ import SearchInput from './SearchInput';
 import { MATERIAL_ICONS } from '../../config/MaterialIcon';
 
 type IconPickerProps = {
-    show: Boolean,
-    selectedData: Array<String> | String,
-    multi: Boolean,
-    title?: String,
-    onClose(result: Boolean | Object | Array<Object>): Function,
+    show: boolean,
+    selectedData: Array<string> | string,
+    multi: boolean,
+    title?: string,
+    onClose(result: boolean | Object | Array<Object>): Function,
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {
