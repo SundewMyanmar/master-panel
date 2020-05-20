@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { STORAGE_KEYS } from '../config/Constant';
 import { Typography, Paper, makeStyles, Grid, Icon, Button } from '@material-ui/core';
 import DataTable, { TableField } from './table';
 import { QuestionDialog, LoadingDialog } from './message';
@@ -66,6 +67,7 @@ const MasterTable = (props: MasterTableProps) => {
 
     const { title, fields, importFields, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick, onImport } = props;
 
+    const [init, setInit] = useState(true);
     const [loading, setLoading] = useState(false);
     const [question, setQuestion] = useState('');
     const [search, setSearch] = useState('');
@@ -80,6 +82,7 @@ const MasterTable = (props: MasterTableProps) => {
         setLoading(true);
         try {
             const result = await onLoad(currentPage, pageSize, sort, search);
+            console.log('handel Master Table', result);
             setPaging(result);
         } catch (error) {
             onError(error);
@@ -141,17 +144,58 @@ const MasterTable = (props: MasterTableProps) => {
     const [paging, setPaging] = useState(() => {
         return {
             currentPage: 0,
-            pageSize: 10,
+            pageSize: 5,
             total: 0,
             data: [],
-            sort: 'id:DESC',
+            sort: 'id:ASC',
         };
     });
 
     useEffect(() => {
-        loadData(0, paging.pageSize, paging.sort);
+        async function initData() {
+            const tableData = await localStorage.getItem(`${STORAGE_KEYS.TABLE_SESSION}.${title}`);
+            const tableJson = JSON.parse(tableData);
+            console.log('paging', tableJson);
+            setInit(false);
+            if (tableJson && tableJson.paging.data && tableJson.paging.data.length > 0) {
+                loadData(tableJson.paging.currentPage, tableJson.paging.pageSize, tableJson.paging.sort);
+                setSelectedData(tableJson.selectedData);
+                setSearch(tableJson.search);
+            } else {
+                loadData(0, paging.pageSize, paging.sort);
+            }
+        }
+
+        initData();
+    }, []);
+
+    useEffect(() => {
+        handleTableSession();
+        console.log('search', paging, search, init);
+        if (!init) {
+            console.log('win');
+            loadData(paging.currentPage, paging.pageSize, paging.sort);
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
+
+    useEffect(() => {
+        handleTableSession();
+        console.log('selected,paging');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedData, paging]);
+
+    const handleTableSession = () => {
+        localStorage.setItem(
+            `${STORAGE_KEYS.TABLE_SESSION}.${title}`,
+            JSON.stringify({
+                paging: paging,
+                selectedData: selectedData,
+                search: search,
+            }),
+        );
+    };
 
     const handlePageChange = pagination => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
@@ -262,7 +306,7 @@ const MasterTable = (props: MasterTableProps) => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justify="center">
-                        <SearchInput onSearch={value => setSearch(value)} placeholder="Search Files" />
+                        <SearchInput value={search} onSearch={value => setSearch(value)} placeholder="Search Files" />
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
                         <ActionMenu

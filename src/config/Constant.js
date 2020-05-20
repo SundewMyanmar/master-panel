@@ -3,14 +3,17 @@ export const APP_VERSION = '1.5';
 
 const URLS = {
     development: 'http://localhost:8080/',
-    production: 'http://api.sundewmyanmar.com:8080/threeinlife-api/',
+    production: 'http://192.168.8.140:8080/',
 };
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
+
+export const GOOGLE_API_KEYS = '';
 
 export const STORAGE_KEYS = {
     CURRENT_USER: '@com.sdm.CURRENT_USER',
     DEVICE_ID: '@com.sdm.DEVICE_ID',
     MENU: '@com.sdm.MAIN_MENU',
+    TABLE_SESSION: '@com.sdm.TABLE_SESS',
 };
 
 export const SUPPORTED_LANGUAGE = [

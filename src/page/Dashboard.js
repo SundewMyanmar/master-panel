@@ -9,4 +9,5 @@ const Dashboard = props => {
         </React.Fragment>
     );
 };
+
 export default withRouter(Dashboard);

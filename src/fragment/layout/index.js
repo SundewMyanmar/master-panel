@@ -109,6 +109,8 @@ const Layout = props => {
     });
 
     const loadMenu = async () => {
+        if (currentUser.length <= 0) return;
+
         const menus = await MenuApi.getCurrentUserMenu();
         if (menus && menus.data.length > 0) {
             const uniqueMenus = menus.data.reduce((unique, o) => {

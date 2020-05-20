@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextField, TextFieldProps, InputAdornment, Icon, IconButton } from '@material-ui/core';
+import FormatManager from '../../util/FormatManager';
 
 export type SearchIpnutProps = {
     ...TextFieldProps,
@@ -15,9 +16,19 @@ export default function SearchInput(props: SearchIpnutProps) {
     const [search, setSearch] = React.useState(value);
     const searchTextField = React.createRef();
 
+    //Set value if props.value changed.
+    React.useEffect(() => {
+        const newValue = FormatManager.defaultNull(value) || '';
+
+        if (searchTextField.current && newValue !== searchTextField.current.value) {
+            searchTextField.current.value = newValue;
+            handleTextChange({ target: searchTextField.current });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
+
     const handleTextChange = event => {
         setSearch(event.target.value);
-
         if (onChange) {
             onChange(event);
         }
