@@ -96,8 +96,10 @@ const TablePicker = (props: TablePickerProps) => {
     }, [search]);
 
     useEffect(() => {
-        if (show) {
+        if (show && search.length > 0) {
             setSearch('');
+        } else if (show) {
+            loadData(0, paging.pageSize, paging.sort);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [show]);
