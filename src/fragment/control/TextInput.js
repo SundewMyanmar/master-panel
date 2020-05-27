@@ -27,7 +27,9 @@ export default function TextInput(props: TextInputProps) {
 
         if (currentInput.current && newValue !== currentInput.current.value) {
             currentInput.current.value = newValue;
-            handleTextChange({ target: currentInput.current });
+            handleTextChange({
+                target: currentInput.current,
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
@@ -43,7 +45,6 @@ export default function TextInput(props: TextInputProps) {
         setError(errorText);
         event.target.setCustomValidity(errorText);
         setInvalid(errorText.length > 0);
-
         if (onChange) {
             onChange(event);
         }

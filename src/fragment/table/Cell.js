@@ -8,6 +8,7 @@ export type CellProps = {
     ...TableCellBaseProps,
     type: 'text' | 'image' | 'icon' | 'bool' | 'raw',
     field: TableField,
+    rowIndex: int,
     data: Object,
 };
 
@@ -20,8 +21,9 @@ export const ImageCell = (field, data) => {
         image = onLoad(data);
     } else if (typeof image === 'object' && image.id) {
         image = FileApi.downloadLink(data[field.name]);
+    } else {
+        image = image.url;
     }
-
     return <img alt={alt} width={40} src={image} {...imageProps} />;
 };
 
@@ -48,7 +50,7 @@ export const BooleanCell = (field, data) => {
 };
 
 const Cell = (props: CellProps) => {
-    const { field, data, ...cellProps } = props;
+    const { field, data, rowIndex, ...cellProps } = props;
     let cellValue = 'None';
 
     if (field.hidden) {
@@ -66,10 +68,12 @@ const Cell = (props: CellProps) => {
             cellValue = BooleanCell(field, data);
             break;
         case 'raw':
-            cellValue = field.onLoad(data);
+            cellValue = field.onLoad(data, rowIndex);
             break;
         default:
-            cellValue = field.onLoad ? LangManager.translateToUni(field.onLoad(data)) : LangManager.translateToUni(data[field.name]);
+            cellValue = field.onLoad
+                ? LangManager.translateToUni(field.onLoad(data, rowIndex))
+                : LangManager.translateToUni(data[field.name], rowIndex);
             break;
     }
 

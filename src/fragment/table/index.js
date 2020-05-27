@@ -210,6 +210,7 @@ const DataTable = (props: DataTableProps) => {
                                     selected={marked}
                                     style={onRowClick ? pointerStyle : null}
                                     key={row.id + '-' + dataIdx}
+                                    index={dataIdx}
                                     onClick={() => {
                                         if (onRowClick) onRowClick(row);
                                     }}
@@ -226,7 +227,7 @@ const DataTable = (props: DataTableProps) => {
                                         </TableCell>
                                     ) : null}
                                     {fields.map((field, index) => (
-                                        <Cell key={field.name + '-' + index} field={field} data={row} />
+                                        <Cell key={field.name + '-' + index} rowIndex={dataIdx} field={field} data={row} />
                                     ))}
                                 </TableRow>
                             );

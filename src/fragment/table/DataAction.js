@@ -24,11 +24,12 @@ type DataActionProps = {
     ...IconButtonProps,
     data: Object,
     actions: Array<ActionProps>,
+    rowIndex: Int,
     onMenuItemClick(item: Object): Function,
 };
 
 const DataAction = (props: DataActionProps) => {
-    const { id, actions, data, onMenuItemClick, ...iconButtonProps } = props;
+    const { id, actions, data, rowIndex, onMenuItemClick, ...iconButtonProps } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
     const classes = styles();
 
@@ -36,9 +37,9 @@ const DataAction = (props: DataActionProps) => {
         setAnchorEl(null);
     };
 
-    const handleClick = item => {
+    const handleClick = (item, index) => {
         setAnchorEl(null);
-        onMenuItemClick(item, data);
+        onMenuItemClick(item, data, rowIndex);
     };
 
     return (
@@ -51,7 +52,7 @@ const DataAction = (props: DataActionProps) => {
             <Menu id="actions-menu" marginThreshold={50} anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 {actions.map((item, index) => {
                     return (
-                        <MenuItem dense key={item.id + '-' + index} onClick={() => handleClick(item)}>
+                        <MenuItem dense key={item.id + '-' + index} onClick={() => handleClick(item, index)}>
                             <ListItemIcon className={classes.menuIcon}>
                                 <Icon>{item.icon}</Icon>
                             </ListItemIcon>

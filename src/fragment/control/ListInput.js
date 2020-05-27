@@ -46,6 +46,7 @@ const ListInput = (props: SelectListProps) => {
         if (onChange) {
             onChange({
                 target: {
+                    id: id || name,
                     name: id || name,
                     value: item,
                 },
