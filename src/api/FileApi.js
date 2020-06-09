@@ -5,13 +5,13 @@ class FileApi extends ApiManager {
         super('files');
     }
 
-    downloadLink(file) {
+    downloadLink(file, size = '') {
         if (file && file.id) {
             if (file.publicAccess) {
-                return file.urls.public;
+                return file.urls.public + (size ? '?size=' + size : '');
             } else {
                 const user = this.getUserInfo();
-                return file.urls.private + '?accessToken=' + user.currentToken;
+                return file.urls.private + '?accessToken=' + user.currentToken + (size ? '&size=' + size : '');
             }
         } else if (file && file.name) {
             return file.name;

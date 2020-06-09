@@ -33,7 +33,7 @@ const UserMenu = (props: UserMenuProps) => {
     const { name, image } = props;
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const imageUrl = FileApi.downloadLink(image);
+    const imageUrl = FileApi.downloadLink(image, 'thumb');
 
     const handleClose = () => {
         setAnchorEl(null);

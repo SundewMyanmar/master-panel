@@ -87,7 +87,7 @@ const Layout = props => {
 
     const currentUser = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
     const user = currentUser.length ? JSON.parse(currentUser) : {};
-    const userProfileImage = FileApi.downloadLink(user.profileImage) || './images/logo.png';
+    const userProfileImage = FileApi.downloadLink(user.profileImage, 'small') || './images/logo.png';
 
     const handleLogout = () => {
         sessionStorage.clear();
