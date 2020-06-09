@@ -96,7 +96,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
 
     return (
         <form style={{ width: '100%' }} {...rest} ref={ref} onKeyDown={handleKeyDown} onSubmit={handleFormSubmit}>
-            <Grid direction={direction || 'column'} container alignItems={direction == 'row' ? 'center' : 'stretch'}>
+            <Grid direction={direction || 'column'} container alignItems={direction === 'row' ? 'center' : 'stretch'}>
                 {fields.map((field, index) => {
                     const { type, ...inputProps } = field;
                     inputProps.key = field.id + '_' + index;

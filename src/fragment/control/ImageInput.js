@@ -76,6 +76,7 @@ export const MultiImagePicker = props => {
         if (imgs[imgs.length - 1] !== null) imgs = [...imgs, null];
         setImages(imgs);
         setOnChange(imgs);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const handleOnChange = (event, index) => {
