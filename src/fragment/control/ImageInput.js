@@ -76,6 +76,7 @@ export const MultiImagePicker = props => {
         if (imgs[imgs.length - 1] !== null) imgs = [...imgs, null];
         setImages(imgs);
         setOnChange(imgs);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const handleOnChange = (event, index) => {
@@ -142,7 +143,7 @@ const ImagePicker = (props: ImageInputProps) => {
     const inputUpload = createRef();
 
     useEffect(() => {
-        const imageURL = FileApi.downloadLink(value);
+        const imageURL = FileApi.downloadLink(value, 'small');
         if (imageURL !== preview && inputUpload.current) {
             handleChange(value, imageURL);
         }
@@ -194,7 +195,7 @@ const ImagePicker = (props: ImageInputProps) => {
             return;
         }
 
-        const url = FileApi.downloadLink(result);
+        const url = FileApi.downloadLink(result, 'small');
         handleChange(result, url);
     };
 

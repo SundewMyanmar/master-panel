@@ -20,7 +20,7 @@ export const ImageCell = (field, data) => {
     if (onLoad) {
         image = onLoad(data);
     } else if (image && typeof image === 'object' && image.id) {
-        image = FileApi.downloadLink(data[field.name]);
+        image = FileApi.downloadLink(data[field.name], 'thumb');
     } else if (image) {
         image = image.url;
     }
