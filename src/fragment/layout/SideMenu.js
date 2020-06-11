@@ -61,7 +61,7 @@ const PopupMenu = (props: { ...ChildMenuGroupProps, ...PopoverProps }) => {
                 {items.map((menu, index) => (
                     <DefaultMenuItem
                         onMenuItemClick={() => onMenuItemClick(menu)}
-                        key={menu.id + '-' + index}
+                        key={menu ? menu.id : 'id' + '-' + index}
                         parentCount={parentCount}
                         dispatch={dispatch}
                         state={state}
@@ -82,7 +82,7 @@ const FolderMenu = (props: ChildMenuGroupProps) => {
                     <DefaultMenuItem
                         parentCount={parent + 1}
                         onMenuItemClick={() => props.onMenuItemClick(menu)}
-                        key={menu.id + '-' + index}
+                        key={(menu ? menu.id : 'id') + '-' + index}
                         dispatch={props.dispatch}
                         state={props.state}
                         {...menu}

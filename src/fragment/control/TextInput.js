@@ -27,15 +27,18 @@ export default function TextInput(props: TextInputProps) {
 
         if (currentInput.current && newValue !== currentInput.current.value) {
             currentInput.current.value = newValue;
+            console.log('on change', currentInput.current, currentInput.current.id, newValue, currentInput.current.setCustomValidity);
             handleTextChange({
                 target: currentInput.current,
             });
         }
+        console.log('not change', currentInput.current.id, newValue);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const handleTextChange = event => {
         const data = event.target.value;
+        console.log(event.target.id, event.target.value);
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
             errorText = props.label + " can't be blank.";
@@ -45,6 +48,7 @@ export default function TextInput(props: TextInputProps) {
         setError(errorText);
         event.target.setCustomValidity(errorText);
         setInvalid(errorText.length > 0);
+        console.log('onchange', event.target, event.target.id, event.target.value);
         if (onChange) {
             onChange(event);
         }

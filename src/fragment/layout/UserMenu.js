@@ -71,11 +71,11 @@ const UserMenu = (props: UserMenuProps) => {
             <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 {menuItems.map((item, index) => {
                     return (
-                        <MenuItem key={item.id + '-' + index} onClick={() => handleClick(item)}>
+                        <MenuItem key={(item ? item.id : 'id') + '-' + index} onClick={() => handleClick(item)}>
                             <ListItemIcon className={classes.menuIcon}>
-                                <Icon>{item.icon}</Icon>
+                                <Icon>{item ? item.icon : ''}</Icon>
                             </ListItemIcon>
-                            <ListItemText inset={false} primary={item.label} className={classes.menuText} />
+                            <ListItemText inset={false} primary={item ? item.label : ''} className={classes.menuText} />
                         </MenuItem>
                     );
                 })}

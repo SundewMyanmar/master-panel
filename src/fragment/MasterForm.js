@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { TextInput, EmailInput, PasswordInput, NumberInput, ImageInput, CheckboxInput, ListInput, ObjectInput, IconInput } from './control';
+import { MultiImagePicker } from './control/ImageInput';
 import { TextInputProps } from './control/TextInput';
 
 export type Field = {
@@ -19,7 +20,7 @@ export type MasterFormProps = {
     grid: GridProps,
     onWillSubmit(form: Object): (?Function) => boolean,
     onSubmit(event: React.SyntheticEvent<HTMLFormElement>, form: Object): ?Function,
-    onInputChange: ?Function,
+    onChange: ?Function,
     onKeyDown: ?Function,
 };
 
@@ -28,7 +29,7 @@ export type MasterFormProps = {
 const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const [form, setForm] = useState({});
 
-    const { direction, onWillSubmit, onSubmit, onInputChange, onKeyDown, children, fields, ...rest } = props;
+    const { direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
 
     const handleFormSubmit = event => {
         event.preventDefault();
@@ -52,8 +53,8 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
 
         setForm(form);
 
-        if (onInputChange) {
-            onInputChange(event);
+        if (onChange) {
+            onChange(event);
         }
     };
 
@@ -81,6 +82,9 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 return <CheckboxInput {...inputProps} />;
             case 'image':
                 return <ImageInput {...inputProps} />;
+            // case 'multi-image': {
+            //     return <MultiImagePicker {...inputProps} />;
+            // }
             case 'icon':
                 return <IconInput {...inputProps} />;
             case 'file':

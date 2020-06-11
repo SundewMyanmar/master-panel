@@ -153,7 +153,7 @@ const Layout = props => {
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    <img src="images/logo.png" height={theme.spacing(5)} alt="SUNDEW MYANMAR" className={classes.logo} />
+                    <img src={`/${'images/logo.png'}`} height={theme.spacing(5)} alt="SUNDEW MYANMAR" className={classes.logo} />
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {APP_NAME} ({APP_VERSION})
                     </Typography>

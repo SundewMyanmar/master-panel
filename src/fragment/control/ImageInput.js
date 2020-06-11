@@ -223,7 +223,7 @@ const ImagePicker = (props: ImageInputProps) => {
 
     const visibility = !disabledRemove && preview ? 'visible' : 'hidden';
 
-    const img = preview ? preview : './images/upload.png';
+    const img = preview ? preview : `/${'images/upload.png'}`;
 
     return (
         <>

@@ -45,7 +45,7 @@ export const FileGridItem = (props: FileGridItemProps) => {
     const { onClick, multi, isMarked, ...item } = props;
     const classes = itemStyles({ selected: isMarked });
     const isImage = item.type.startsWith('image');
-    const url = FileApi.downloadLink(item) || '/res/default-image.png';
+    const url = FileApi.downloadLink(item) || `./${'images/default-image.png'}`;
 
     return (
         <Grid container item justify="center" xs={6} sm={4} md={3} lg={2}>

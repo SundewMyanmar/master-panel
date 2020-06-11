@@ -15,16 +15,16 @@ export type CellProps = {
 export const ImageCell = (field, data) => {
     const { name, align, label, type, sortable, hidden, filterable, minWidth, onLoad, ...imageProps } = field;
 
-    let image = data[name] || './images/default-image.png';
+    let image = data[name];
     let alt = field.name + '-image';
     if (onLoad) {
         image = onLoad(data);
-    } else if (typeof image === 'object' && image.id) {
+    } else if (image && typeof image === 'object' && image.id) {
         image = FileApi.downloadLink(data[field.name]);
-    } else {
+    } else if (image) {
         image = image.url;
     }
-    return <img alt={alt} width={40} src={image} {...imageProps} />;
+    return <img alt={alt} width={40} src={image || `../../${'images/default-image.png'}`} {...imageProps} />;
 };
 
 export const IconCell = (field, data) => {

@@ -57,7 +57,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
     const { show, data, onClose, onRemove } = props;
     const [dimension, setDimension] = React.useState(data.size);
     const isImage = data.type.startsWith('image');
-    const url = FileApi.downloadLink(data) || '/res/default-image.png';
+    const url = FileApi.downloadLink(data) || `./${'images/default-image.png'}`;
 
     const handleImageLoading = ({ target: img }) => {
         setDimension(img.naturalWidth + ' x ' + img.naturalHeight);
