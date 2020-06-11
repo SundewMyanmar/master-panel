@@ -58,11 +58,10 @@ const changePasswordFields = [
     },
 ];
 
-const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
-
 const ChangePassword = props => {
     const classes = styles();
     const history = useHistory();
+    const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 

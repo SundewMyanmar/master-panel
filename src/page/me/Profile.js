@@ -37,12 +37,11 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const SESSION_USER = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || { displayName: '', email: '', phoneNumber: '', roles: [] };
-
 const Profile = props => {
     const classes = styles();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
     const handleError = error => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
@@ -52,12 +51,12 @@ const Profile = props => {
         ProfileApi.getProfile()
             .then(data => {
                 if (!data.currentToken) {
-                    data.currentToken = SESSION_USER.currentToken;
+                    data.currentToken = user.currentToken;
                 }
                 setUser(data);
             })
             .catch(handleError);
-        return SESSION_USER;
+        return JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || { displayName: '', email: '', phoneNumber: '', roles: [] });
     });
     const [noti, setNoti] = useState('');
 
@@ -89,6 +88,7 @@ const Profile = props => {
                 if (!response.currentToken) {
                     delete response.currentToken;
                 }
+                console.log('Current User => ', user);
                 const updatedData = { ...user, ...response };
                 console.log('Modified user => ', updatedData);
                 sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(updatedData));

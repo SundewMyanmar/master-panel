@@ -61,7 +61,7 @@ const PopupMenu = (props: { ...ChildMenuGroupProps, ...PopoverProps }) => {
                 {items.map((menu, index) => (
                     <DefaultMenuItem
                         onMenuItemClick={() => onMenuItemClick(menu)}
-                        key={menu ? menu.id : 'id' + '-' + index}
+                        key={menu ? menu.id : 'id-' + index}
                         parentCount={parentCount}
                         dispatch={dispatch}
                         state={state}
