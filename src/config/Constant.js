@@ -7,6 +7,8 @@ const URLS = {
 };
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
 
+export const SESSION_TIMEOUT = 1000 * 3600 * 20; //20 Minutes
+
 export const GOOGLE_API_KEYS = '';
 
 export const STORAGE_KEYS = {

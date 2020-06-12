@@ -117,7 +117,7 @@ const MasterTable = (props: MasterTableProps) => {
                     .join(',') + '\n';
         });
 
-        const fileName = title.replace(/\s/g, '_') + '_' + FormatManager.formatDate(new Date(), 'YYYYMMDD_hhmmss') + '.csv';
+        const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'YYYYMMDD_hhmmss') + '.csv';
 
         const blob = new Blob([decodeURIComponent(encodeURI(csv))], {
             type: 'text/csv;charset=UTF-8;header=present',
@@ -130,7 +130,7 @@ const MasterTable = (props: MasterTableProps) => {
     const exportJson = async () => {
         setLoading(true);
         const json = JSON.stringify(selectedData);
-        const fileName = title.replace(/\s/g, '_') + '_' + FormatManager.formatDate(new Date(), 'YYYYMMDD_hhmmss') + '.json';
+        const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'YYYYMMDD_hhmmss') + '.json';
 
         const blob = new Blob([decodeURIComponent(encodeURI(json))], {
             type: 'data:application/json;charset=UTF-8',
@@ -153,7 +153,7 @@ const MasterTable = (props: MasterTableProps) => {
 
     useEffect(() => {
         async function initData() {
-            const tableData = await localStorage.getItem(`${STORAGE_KEYS.TABLE_SESSION}.${title}`);
+            const tableData = await localStorage.getItem(`${STORAGE_KEYS.TABLE_SESSION}.${FormatManager.readableToSnake(title)}`);
             const tableJson = JSON.parse(tableData);
             console.log('paging', tableJson);
             setInit(false);

@@ -1,8 +1,10 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import { Route, useHistory, Redirect } from 'react-router-dom';
+import IdleTimer from 'react-idle-timer';
 import { makeStyles, AppBar, Toolbar, Typography, Box, CssBaseline, Drawer, Divider, useTheme } from '@material-ui/core';
 import { PrivateRoute } from '../../config/Route';
-import { STORAGE_KEYS, APP_NAME, APP_VERSION, DEFAULT_SIDE_MENU, USER_PROFILE_MENU } from '../../config/Constant';
+
+import { SESSION_TIMEOUT, STORAGE_KEYS, APP_NAME, APP_VERSION, DEFAULT_SIDE_MENU, USER_PROFILE_MENU } from '../../config/Constant';
 import { Copyright } from '../control';
 import SideMenu from './SideMenu';
 import DrawerHeader from './DrawerHeader';
@@ -88,6 +90,7 @@ const Layout = props => {
     const currentUser = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
     const user = currentUser.length ? JSON.parse(currentUser) : {};
     const userProfileImage = FileApi.downloadLink(user.profileImage, 'small') || './images/logo.png';
+    const idleTimer = useRef(null);
 
     const handleLogout = () => {
         sessionStorage.clear();
@@ -150,6 +153,7 @@ const Layout = props => {
 
     return (
         <div className={classes.root}>
+            <IdleTimer ref={idleTimer} element={document} onIdle={handleLogout} debounce={1000} timeout={SESSION_TIMEOUT} />
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
