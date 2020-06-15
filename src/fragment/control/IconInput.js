@@ -1,3 +1,4 @@
+/* @flow */
 import * as React from 'react';
 import { InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
 import IconPicker from './IconPicker';
@@ -12,8 +13,8 @@ export type IconInputProps = {
     required: boolean,
     disableRemove: boolean,
     label: string,
-    onValidate(event: React.SyntheticEvent<HTMLInputElement>): (?Function) => string,
-    onChange(event: React.SyntheticEvent<HTMLInputElement>): ?Function,
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
 const styles = makeStyles(theme => ({

@@ -22,9 +22,9 @@ type TablePickerProps = {
     selectedData?: Array<Object> | Object,
     multi?: boolean,
     fields: Array<TableField>,
-    onError(error: Object | string): ?Function,
-    onLoad(currentPage: number, pageSize: number, sort: string, search: string): (?Function) => Promise<Any>,
-    onClose(result: Object | Array<Object>): Function,
+    onError?: (error: Object | string) => void,
+    onLoad?: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
+    onClose?: (result: Object | Array<Object>) => void,
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {

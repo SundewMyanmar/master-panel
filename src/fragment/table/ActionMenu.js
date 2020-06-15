@@ -18,7 +18,7 @@ const styles = makeStyles(theme => ({
 type ActionMenuProps = {
     ...ButtonProps,
     label: string,
-    onMenuItemClick(item: Object): Function,
+    onMenuItemClick: (item: Object) => void,
 };
 
 const ActionMenu = (props: ActionMenuProps) => {

@@ -1,3 +1,4 @@
+/* @flow */
 import * as React from 'react';
 import TextInput, { TextInputProps } from './TextInput';
 import FormatManager from '../../util/FormatManager';

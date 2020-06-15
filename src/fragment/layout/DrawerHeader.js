@@ -5,7 +5,7 @@ type DrawerHeaderProps = {
     image?: string,
     name: string,
     hideMenu: boolean,
-    onMenuClick: ?Function,
+    onMenuClick?: () => void,
 };
 
 const styles = makeStyles(theme => ({

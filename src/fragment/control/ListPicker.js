@@ -25,8 +25,8 @@ type ListPickerProps = {
     idField?: string,
     iconField?: string,
     labelField?: string,
-    onChange(result: Object | boolean): ?Function,
-    onClose(result: Object | Array<Object>): Function,
+    onChange?: (result: Object | boolean) => void,
+    onClose: (result: Object | Array<Object>) => void,
 };
 
 const itemStyles = makeStyles(theme => ({

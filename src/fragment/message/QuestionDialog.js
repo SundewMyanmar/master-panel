@@ -10,7 +10,7 @@ export type QuestionDialogProps = {
     show: boolean,
     title: string,
     message: string,
-    onClose(result: boolean): ?Function,
+    onClose: (result: boolean) => void,
 };
 
 export default function QuestionDialog(props: QuestionDialogProps) {

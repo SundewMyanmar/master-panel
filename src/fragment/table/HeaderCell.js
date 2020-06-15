@@ -5,7 +5,7 @@ export type HeaderCellProps = {
     ...TableSortLabelProps,
     field: TableField,
     sort: string,
-    onSortChange(field: TableField, sort: 'ASC' | 'DESC'): (?Function) => string,
+    onSortChange?: (field: TableField, sort: 'ASC' | 'DESC') => string,
 };
 
 const headerStyles = makeStyles(theme => ({

@@ -23,7 +23,7 @@ export type TableField = {
     minWidth: number,
     sortable: ?boolean,
     hidden: ?boolean,
-    onLoad(item: Object): (?Function) => Component | string,
+    onLoad?: (item: Object) => Component | string,
 };
 
 export type DataTableProps = {
@@ -38,10 +38,10 @@ export type DataTableProps = {
     multi?: boolean,
     noData?: string,
     disablePaging?: boolean,
-    onPageChange(page: number): ?Function,
-    onRowClick(item: Object): ?Function,
-    onSelectionChange(result: Object | Array<Object>): ?Function,
-    onError(error: Object | string): ?Function,
+    onPageChange?: (page: number) => void,
+    onRowClick?: (item: Object) => void,
+    onSelectionChange?: (result: Object | Array<Object>) => void,
+    onError?: (error: Object | string) => void,
 };
 
 const styles = makeStyles(theme => ({

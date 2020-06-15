@@ -61,7 +61,7 @@ export type TabControlProps = {
     textColor: 'secondary' | 'primary' | 'inherit',
     variant: 'standard' | 'scrollable' | 'fullWidth',
     scrollButtons: 'auto' | 'desktop' | 'on' | 'off',
-    onChange(e, newValue): ?Function,
+    onChange: (e, newValue) => void,
 };
 
 const TabControl = (props: TabScrollButtonProps) => {

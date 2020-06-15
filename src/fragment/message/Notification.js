@@ -11,7 +11,7 @@ export type NotificationProps = {
     show: boolean,
     message: string,
     title?: string,
-    onClose?: Function,
+    onClose?: () => void,
     position?: Position,
     type: 'success' | 'warning' | 'error' | 'info',
 };

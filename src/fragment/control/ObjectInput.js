@@ -14,10 +14,10 @@ export type ObjectInputProps = {
     required: boolean,
     label: string,
     disableRemove?: boolean,
-    onLoadData(currentPage: number, pageSize: number, sort: string, search: string): (?Function) => Promise<Any>,
-    onLoadItem(item: Object): (?Function) => string,
-    onValidate(event: React.SyntheticEvent<HTMLInputElement>): (?Function) => string,
-    onChange(event: React.SyntheticEvent<HTMLInputElement>): ?Function,
+    onLoadData: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
+    onLoadItem?: (item: Object) => string,
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
 const styles = makeStyles(theme => ({

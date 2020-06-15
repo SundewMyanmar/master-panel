@@ -54,10 +54,10 @@ export type MapComponentProps = {
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<String>,
-    onMarkerComplete?: ?Function,
-    onCircleComplete?: ?Function,
-    onPolygonComplete?: ?Function,
+    drawingModes: Array<string>,
+    onMarkerComplete?: () => void,
+    onCircleComplete?: () => void,
+    onPolygonComplete?: () => void,
 };
 
 const MapComponent = compose(

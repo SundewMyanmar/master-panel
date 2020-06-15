@@ -1,3 +1,4 @@
+/* @flow */
 import React, { useState } from 'react';
 import {
     Dialog,
@@ -22,7 +23,7 @@ type IconPickerProps = {
     selectedData: Array<string> | string,
     multi: boolean,
     title?: string,
-    onClose(result: boolean | Object | Array<Object>): Function,
+    onClose: (result: boolean | Object | Array<Object>) => void,
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {

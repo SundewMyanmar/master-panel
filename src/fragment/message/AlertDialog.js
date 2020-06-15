@@ -9,7 +9,7 @@ export type AlertDialogProps = {
     show: boolean,
     title: string,
     message: string,
-    onClose?: Function,
+    onClose: () => void,
 };
 
 export default function AlertDialog(props: AlertDialogProps) {

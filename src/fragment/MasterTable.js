@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { STORAGE_KEYS } from '../config/Constant';
-import { Typography, Paper, makeStyles, Grid, Icon, Button } from '@material-ui/core';
+import { Typography, Paper, makeStyles, Grid, Icon, Button, useTheme } from '@material-ui/core';
 import DataTable, { TableField } from './table';
 import { QuestionDialog, LoadingDialog } from './message';
 import { SearchInput } from './control';
@@ -47,23 +47,24 @@ export type ActionProps = {
     icon: string,
 };
 
-type MasterTableProps = {
+export type MasterTableProps = {
     fields: Array<TableField>,
     importFields: Array<string>,
     moreActions: Array<ActionProps>,
     title?: string,
-    onAddNew?: Function,
-    onEdit(item: Object): ?Function,
-    onLoad(currentPage: number, pageSize: number, sort: string, search: string): (?Function) => Promise<Any>,
-    onRemove(removeData: Object | Array): (?Function) => Promise<Any>,
-    onError(error: Object | string): ?Function,
-    onItemAction(item: Object, data: Object): ?Function,
-    onImport?: data => Promise<Any>,
-    onRowClick?: Function,
+    onAddNew?: () => void,
+    onEdit: (item: Object) => void,
+    onLoad: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
+    onRemove: (removeData: Object | Array) => Promise<Any>,
+    onError: (error: Object | string) => void,
+    onItemAction: (item: Object, data: Object) => void,
+    onImport?: (data: Object | Any) => Promise<Any>,
+    onRowClick?: () => void,
 };
 
 const MasterTable = (props: MasterTableProps) => {
     const classes = styles();
+    const theme = useTheme();
 
     const { title, fields, importFields, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick, onImport } = props;
 
@@ -280,6 +281,7 @@ const MasterTable = (props: MasterTableProps) => {
             id: 'remove',
             label: 'Remove',
             icon: 'delete',
+            color: theme.palette.error.main,
         },
     ];
 

@@ -1,3 +1,4 @@
+// @flow
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { TextInput, EmailInput, PasswordInput, NumberInput, ImageInput, CheckboxInput, ListInput, ObjectInput, IconInput } from './control';
@@ -7,7 +8,7 @@ import { TextInputProps } from './control/TextInput';
 export type Field = {
     ...TextInputProps,
     data?: Array | Object,
-    onValidate(event: React.SyntheticEvent<HTMLInputElement>, form?: Object): (?Function) => string,
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, form?: Object) => string,
 };
 
 export type GridProps = {
@@ -18,10 +19,10 @@ export type GridProps = {
 export type MasterFormProps = {
     fields: Array<Field>,
     grid: GridProps,
-    onWillSubmit(form: Object): (?Function) => boolean,
-    onSubmit(event: React.SyntheticEvent<HTMLFormElement>, form: Object): ?Function,
-    onChange: ?Function,
-    onKeyDown: ?Function,
+    onWillSubmit?: (form: Object) => boolean,
+    onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
+    onChange: () => void,
+    onKeyDown: () => void,
 };
 
 //const CHILDREN_MAPPING = [TextInput, EmailInput, PasswordInput, NumberInput, ImageInput];

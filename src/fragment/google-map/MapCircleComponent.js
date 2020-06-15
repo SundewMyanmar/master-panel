@@ -14,8 +14,8 @@ export type MapCircleComponentProps = {
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<String>,
-    onCircleComplete?: ?Function,
+    drawingModes: Array<string>,
+    onCircleComplete?: () => void,
 };
 
 const MapCircleComponent = (props: MapCircleComponentProps) => {

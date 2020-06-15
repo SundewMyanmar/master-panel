@@ -23,7 +23,7 @@ const DEFAULT_GRID_SIZE = 60;
 export type MarkerComonentProps = {
     position: Object,
     description: string,
-    onClick?: ?Function,
+    onClick?: () => void,
 };
 
 export const MarkerComponent = (props: MarkerComonentProps) => {
@@ -69,8 +69,8 @@ export type MapMarkerComponentProps = {
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<String>,
-    onMarkerComplete?: ?Function,
+    drawingModes: Array<string>,
+    onMarkerComplete?: () => void,
 };
 
 const MapMarkerComponent = (props: MapMarkerComponentProps) => {

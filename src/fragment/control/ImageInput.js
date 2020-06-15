@@ -13,13 +13,13 @@ type ImageSize = {
 type ImageInputProps = {
     ...InputProps,
     size: ?ImageSize,
-    onUpload: ?Function,
-    onRemove: ?Function,
     enableFilePicker?: boolean,
     disabledUpload?: boolean,
     disabledRemove?: boolean,
     value: Object | string,
-    onChange(image): Function,
+    onUpload?: () => void,
+    onRemove?: () => void,
+    onChange: (image: Object | string) => void,
 };
 
 const styles = makeStyles(theme => ({

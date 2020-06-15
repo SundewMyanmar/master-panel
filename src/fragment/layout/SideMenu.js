@@ -9,7 +9,7 @@ export type MenuProps = {
     id: string | number,
     label: string,
     icon: string,
-    onClick: ?Function,
+    onClick?: () => void,
     path?: string,
     items?: Array<MenuProps>,
     divider?: boolean,
@@ -18,14 +18,14 @@ export type MenuProps = {
 type SideMenuProps = {
     menus: Array<MenuProps>,
     state?: Object,
-    dispatch?: Function,
+    dispatch?: () => void,
 };
 
 type MenuItemProps = {
     ...SideMenuProps,
     hideMenu: boolean,
     parentCount?: number,
-    onMenuItemClick(menu: MenuProps): ?Function,
+    onMenuItemClick?: (menu: MenuProps) => void,
 };
 
 type ChildMenuGroupProps = {

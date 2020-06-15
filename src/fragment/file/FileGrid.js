@@ -77,7 +77,7 @@ const FileGrid = (props: FileGridProps) => {
 
     return (
         <Grid container {...gridProps}>
-            {data ? (
+            {data && data.length > 0 ? (
                 data.map((item, index) => {
                     const isMarked = multi
                         ? selectedData.findIndex(x => x.id === item.id) >= 0

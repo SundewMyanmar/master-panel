@@ -7,8 +7,8 @@ export type SearchIpnutProps = {
     icon?: string,
     required: boolean,
     label: string,
-    onSearch(search: string): ?Function,
-    onChange(event: React.SyntheticEvent<HTMLInputElement>): ?Function,
+    onSearch?: (search: string) => void,
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
 export default function SearchInput(props: SearchIpnutProps) {

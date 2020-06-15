@@ -1,3 +1,4 @@
+/* @flow */
 import React, { useState, useEffect } from 'react';
 import {
     Dialog,
@@ -30,9 +31,9 @@ type FilePickerProps = {
     currentPage?: number,
     pageSize?: number,
     total?: number,
-    onError(error: Object | string): ?Function,
-    onSelectionChange(result: Object | boolean): ?Function,
-    onClose(result: Object | Array<Object>): Function,
+    onError?: (error: Object | string) => void,
+    onSelectionChange?: (result: Object | boolean) => void,
+    onClose: (result: Object | Array<Object>) => void,
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {

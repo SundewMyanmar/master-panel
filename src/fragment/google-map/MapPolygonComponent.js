@@ -10,15 +10,15 @@ export type MapPolygonComponentProps = {
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<String>,
+    drawingModes: Array<string>,
     polygonOptions: Object,
     draggable: Boolean,
     defaultZoom: number,
     defaultCenter: Object,
     childElement: Object,
     allowDrawing: boolean,
-    onClick?: ?Function,
-    onPolygonComplete?: ?Function,
+    onClick?: () => void,
+    onPolygonComplete?: () => void,
 };
 
 const MapPolygonComponent = (props: MapPolygonComponent) => {

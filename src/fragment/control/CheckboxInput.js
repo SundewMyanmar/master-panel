@@ -1,3 +1,4 @@
+/* @flow */
 import * as React from 'react';
 import { FormControlLabel, CheckboxProps, Checkbox } from '@material-ui/core';
 

@@ -10,9 +10,9 @@ export type FormDialogProps = {
     fields: Array<Field>,
     show: boolean,
     title: string,
-    onClose?: Function,
-    onWillSubmit(form: Object): (?Function) => boolean,
-    onSubmit(event: React.SyntheticEvent<HTMLFormElement>, form: Object): ?Function,
+    onClose?: () => void,
+    onWillSubmit?: (form: Object) => boolean,
+    onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
 };
 
 const styles = makeStyles(theme => ({

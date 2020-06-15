@@ -9,9 +9,9 @@ export type SelectListProps = {
     icon?: string,
     required: boolean,
     label: string,
-    onLoadItem(item: Object): (?Function) => string,
-    onValidate(event: React.SyntheticEvent<HTMLInputElement>, value: Object): (?Function) => string,
-    onChange(event: React.SyntheticEvent<HTMLInputElement>, value: Object): ?Function,
+    onLoadItem?: (item: Object) => string,
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => string,
+    onChange: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => void,
 };
 
 const ListInput = (props: SelectListProps) => {

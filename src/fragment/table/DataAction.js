@@ -17,7 +17,7 @@ export type ActionProps = {
     id: string,
     label: string,
     icon: string,
-    onClick: ?Function,
+    onClick: () => void,
 };
 
 export type DataActionProps = {
@@ -25,7 +25,7 @@ export type DataActionProps = {
     data: Object,
     actions: Array<ActionProps>,
     rowIndex: Int,
-    onMenuItemClick(item: Object): Function,
+    onMenuItemClick: (item: Object) => void,
 };
 
 const DataAction = (props: DataActionProps) => {

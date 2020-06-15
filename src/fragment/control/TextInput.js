@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import * as React from 'react';
 import { TextField, TextFieldProps, InputAdornment, Icon } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
@@ -7,8 +10,8 @@ export type TextInputProps = {
     icon?: string,
     required: boolean,
     label: string,
-    onValidate(event: React.SyntheticEvent<HTMLInputElement>): (?Function) => string,
-    onChange(event: React.SyntheticEvent<HTMLInputElement>): ?Function,
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
 export default function TextInput(props: TextInputProps) {

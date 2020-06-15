@@ -7,8 +7,8 @@ type PaginationBarProps = {
     total: number,
     pageSize: number,
     currentPage: number,
-    onPageChange(newPage): Function,
-    onPageSizeChange(newPageSize): Function,
+    onPageChange: (newPage: number) => void,
+    onPageSizeChange: (newPageSize: number) => void,
 };
 
 const PAGINATION_BUTTONS = [

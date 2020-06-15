@@ -1,3 +1,4 @@
+/* @flow */
 import React from 'react';
 import { SwatchesPicker, SketchPicker } from 'react-color';
 import { makeStyles, ButtonGroup, Button, Icon, Paper, MenuItem, MenuList, Grow, ClickAwayListener, Popper, Grid } from '@material-ui/core';
@@ -15,8 +16,8 @@ const DEFAULT_HEIGHT = 377;
 type ColorInputProps = {
     defaultType: 'swatch' | 'sketch',
     defaultColor: string,
-    onChangeComplete(color: string): ?Function,
-    onChange(color: string): ?Function,
+    onChangeComplete: (color: string) => void,
+    onChange: (color: string) => void,
 };
 
 const ColorInput = (props: ColorInputProps) => {
