@@ -5,6 +5,7 @@ import UserApi from '../../api/UserApi';
 import { AlertDialog, Notification } from '../../fragment/message';
 import FormDialog from '../../fragment/message/FormDialog';
 import LangManager from '../../util/LangManager';
+import { useTheme } from '@material-ui/core';
 
 export const USER_TABLE_FIELDS = [
     {
@@ -73,6 +74,8 @@ const User = props => {
 
     const query = new URLSearchParams(location.search);
     const message = query.get('message');
+
+    const theme = useTheme();
 
     const [alert, setAlert] = useState('');
     const [noti, setNoti] = useState(message || '');
@@ -197,11 +200,13 @@ const User = props => {
                         id: 'resetPasword',
                         label: 'Reset Password',
                         icon: 'vpn_key',
+                        color: theme.palette.warning.main,
                     },
                     {
                         id: 'cleanToken',
                         label: 'Clean Auth Tokens',
                         icon: 'devices',
+                        color: theme.palette.info.main,
                     },
                 ]}
             />

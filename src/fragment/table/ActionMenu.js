@@ -46,9 +46,9 @@ const ActionMenu = (props: ActionMenuProps) => {
                     return (
                         <MenuItem key={item.id + '-' + index} onClick={() => handleClick(item)}>
                             <ListItemIcon className={classes.menuIcon}>
-                                <Icon>{item.icon}</Icon>
+                                <Icon style={{ color: item.color }}>{item.icon}</Icon>
                             </ListItemIcon>
-                            <ListItemText inset={false} primary={item.label} className={classes.menuText} />
+                            <ListItemText inset={false} primary={item.label} className={classes.menuText} style={{ color: item.color }} />
                         </MenuItem>
                     );
                 })}

@@ -20,7 +20,7 @@ export type ActionProps = {
     onClick: ?Function,
 };
 
-type DataActionProps = {
+export type DataActionProps = {
     ...IconButtonProps,
     data: Object,
     actions: Array<ActionProps>,
@@ -54,9 +54,9 @@ const DataAction = (props: DataActionProps) => {
                     return (
                         <MenuItem dense key={item.id + '-' + index} onClick={() => handleClick(item, index)}>
                             <ListItemIcon className={classes.menuIcon}>
-                                <Icon>{item.icon}</Icon>
+                                <Icon style={{ color: item.color }}>{item.icon}</Icon>
                             </ListItemIcon>
-                            <ListItemText inset={false} primary={item.label} className={classes.menuText} />
+                            <ListItemText inset={false} primary={item.label} className={classes.menuText} style={{ color: item.color }} />
                         </MenuItem>
                     );
                 })}

@@ -64,6 +64,7 @@ export const BATCH_ACTION_MENU = [
         id: 'remove',
         label: 'Remove All',
         icon: 'delete',
+        color: 'red',
     },
 ];
 
