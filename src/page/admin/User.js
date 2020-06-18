@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { withRouter, useHistory, useLocation } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import MasterTable from '../../fragment/MasterTable';
 import UserApi from '../../api/UserApi';
 import { AlertDialog, Notification } from '../../fragment/message';
 import FormDialog from '../../fragment/message/FormDialog';
 import LangManager from '../../util/LangManager';
 import { useTheme } from '@material-ui/core';
+import { STORAGE_KEYS } from '../../config/Constant';
 
 export const USER_TABLE_FIELDS = [
     {
@@ -69,16 +70,14 @@ export const USER_TABLE_FIELDS = [
     },
 ];
 const User = props => {
-    const location = useLocation();
     const history = useHistory();
-
-    const query = new URLSearchParams(location.search);
-    const message = query.get('message');
-
     const theme = useTheme();
 
     const [alert, setAlert] = useState('');
-    const [noti, setNoti] = useState(message || '');
+    const [noti, setNoti] = useState(() => {
+        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
+        return flashMessage || '';
+    });
     const [resetForm, setResetForm] = useState(null);
 
     const handleError = error => {

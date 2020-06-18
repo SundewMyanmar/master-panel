@@ -1,5 +1,5 @@
 import React, { useState, createRef } from 'react';
-import { withRouter, useHistory, useLocation } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, MuiThemeProvider, makeStyles } from '@material-ui/core';
 
 import Copyright from '../../fragment/control/Copyright';
@@ -52,16 +52,13 @@ const loginFields = [
 ];
 
 const Login = props => {
-    const location = useLocation();
     const history = useHistory();
-
-    const query = new URLSearchParams(location.search);
-    const message = query.get('message');
-    const messageType = query.get('messageType') || 'info';
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [noti, setNoti] = useState(message ? { type: messageType, message: message } : false);
+    const [noti, setNoti] = useState(() => {
+        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
+        return flashMessage || '';
+    });
 
     const submitButton = createRef();
 
@@ -107,7 +104,7 @@ const Login = props => {
 
     return (
         <>
-            <Notification show={noti ? true : false} onClose={() => setNoti(false)} type={noti.type} title={noti.type} message={noti.message} />
+            <Notification show={noti ? true : false} onClose={() => setNoti(false)} type="success" title="Welcome" message={noti.message} />
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <LoadingDialog show={loading} />
 

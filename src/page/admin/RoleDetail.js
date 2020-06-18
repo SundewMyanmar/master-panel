@@ -5,6 +5,7 @@ import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles } 
 import { LoadingDialog, AlertDialog } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
+import { STORAGE_KEYS } from '../../config/Constant';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -67,14 +68,16 @@ const RoleDetail = props => {
             RoleApi.modifyById(id, form)
                 .then(response => {
                     setLoading(false);
-                    history.push('/role?message=Modified role : ' + response.id + ' .');
+                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Modified role : ${response.id} .`);
+                    history.push('/role');
                 })
                 .catch(handleError);
         } else {
             RoleApi.addNew(form)
                 .then(response => {
                     setLoading(false);
-                    history.push('/role?message=Created new role : ' + response.id + ' .');
+                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Created new role : ${response.id} .`);
+                    history.push('/role');
                 })
                 .catch(handleError);
         }

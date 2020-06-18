@@ -8,6 +8,7 @@ import MasterForm from '../../fragment/MasterForm';
 import UserApi from '../../api/UserApi';
 import { ROLE_TABLE_FIELDS } from './Role';
 import FileApi from '../../api/FileApi';
+import { STORAGE_KEYS } from '../../config/Constant';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -100,14 +101,16 @@ const UserDetail = props => {
             UserApi.modifyById(id, user)
                 .then(response => {
                     setLoading(false);
-                    history.push('/user?message=Modified user : ' + response.id + ' .');
+                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Modified user : ' + response.id + ' .');
+                    history.push('/user');
                 })
                 .catch(handleError);
         } else {
             UserApi.addNew(user)
                 .then(response => {
                     setLoading(false);
-                    history.push('/user?message=Created new user : ' + response.id + ' .');
+                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Created new user : ' + response.id + ' .');
+                    history.push('/user');
                 })
                 .catch(handleError);
         }

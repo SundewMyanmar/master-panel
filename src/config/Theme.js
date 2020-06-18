@@ -126,4 +126,11 @@ export default createMuiTheme({
     typography: {
         htmlFontSize: 18,
     },
+    overrides: {
+        MuiTableRow: {
+            selected: {
+                backgroundColor: info.light,
+            },
+        },
+    },
 });

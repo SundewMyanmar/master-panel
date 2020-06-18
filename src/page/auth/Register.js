@@ -6,6 +6,7 @@ import { Copyright } from '../../fragment/control';
 import { LoadingDialog, AlertDialog } from '../../fragment/message';
 import AuthApi from '../../api/AuthApi';
 import MasterForm from '../../fragment/MasterForm';
+import { STORAGE_KEYS } from '../../config/Constant';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -60,7 +61,8 @@ const Register = props => {
         AuthApi.register(userData)
             .then(() => {
                 setLoading(false);
-                history.push('/login?message=Register success! Please log in to continue.');
+                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Register success! Please log in to continue.');
+                history.push('/login');
             })
             .catch(error => {
                 setLoading(false);

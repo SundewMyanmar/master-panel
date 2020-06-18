@@ -81,7 +81,8 @@ const ChangePassword = props => {
         ProfileApi.changePassword(data)
             .then(response => {
                 sessionStorage.clear();
-                history.push('/login?message=Password has changed! Please log in with new password.');
+                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Password has changed! Please log in with new password.');
+                history.push('/login');
             })
             .catch(error => {
                 setLoading(false);

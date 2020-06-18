@@ -1,8 +1,9 @@
 import React from 'react';
-import { withRouter, useHistory, useLocation } from 'react-router';
+import { withRouter, useHistory } from 'react-router';
 import MasterTable from '../../fragment/MasterTable';
 import { AlertDialog, Notification } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
+import { STORAGE_KEYS } from '../../config/Constant';
 
 export const ROLE_TABLE_FIELDS = [
     {
@@ -26,14 +27,13 @@ export const ROLE_TABLE_FIELDS = [
 ];
 
 const Role = props => {
-    const location = useLocation();
     const history = useHistory();
 
-    const query = new URLSearchParams(location.search);
-    const message = query.get('message');
-
     const [error, setError] = React.useState('');
-    const [noti, setNoti] = React.useState(message || '');
+    const [noti, setNoti] = React.useState(() => {
+        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
+        return flashMessage || '';
+    });
 
     const handleError = error => {
         setError(error.message || error.title || 'Please check your internet connection and try again.');

@@ -6,6 +6,7 @@ import { Copyright } from '../../fragment/control';
 import MasterForm from '../../fragment/MasterForm';
 import { AlertDialog, LoadingDialog } from '../../fragment/message';
 import AuthApi from '../../api/AuthApi';
+import { STORAGE_KEYS } from '../../config/Constant';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -63,7 +64,8 @@ const ResetPassword = props => {
         AuthApi.resetPassword(requestData)
             .then(data => {
                 setLoading(false);
-                history.push('/login?messageType=success&message=Welcome ' + data.displayName);
+                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Welcome ${data.displayName}.`);
+                history.push('/login');
             })
             .catch(error => {
                 setLoading(false);
