@@ -16,6 +16,7 @@ export const STORAGE_KEYS = {
     DEVICE_ID: '@com.sdm.DEVICE_ID',
     MENU: '@com.sdm.MAIN_MENU',
     TABLE_SESSION: '@com.sdm.TABLE_SESS',
+    FLASH_MESSAGE: '@com.sdm.FLASH_MESSAGE',
 };
 
 export const SUPPORTED_LANGUAGE = [
