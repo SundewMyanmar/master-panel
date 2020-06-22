@@ -66,71 +66,6 @@ const MENU_LIST_ITEMS = [
     },
 ];
 
-//TODO: Fix Multi Image Picker
-export const MultiImagePicker = props => {
-    const { id, name, value, onChange, ...rest } = props;
-    const [images, setImages] = useState(value);
-
-    useEffect(() => {
-        var imgs = value || [null];
-        if (imgs[imgs.length - 1] !== null) imgs = [...imgs, null];
-        setImages(imgs);
-        setOnChange(imgs);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value]);
-
-    const handleOnChange = (event, index) => {
-        var data = images;
-        data[index] = event.target.value;
-
-        if (index === data.length - 1 && event.target.value) data = [...data, null];
-
-        setImages(data);
-        setOnChange(data);
-    };
-
-    const setOnChange = data => {
-        if (onChange)
-            onChange({
-                target: {
-                    name: id || name,
-                    value: data,
-                },
-            });
-    };
-
-    const handleOnRemove = (event, index) => {
-        var data = images;
-        data.splice(index, 1);
-
-        if (data.length === 0 || data[data.length - 1] !== null) {
-            data = [...data, null];
-        }
-
-        setImages(data);
-
-        setOnChange(data);
-    };
-
-    return (
-        <>
-            {images &&
-                images.map(img => (
-                    <ImagePicker
-                        id={id}
-                        name={name}
-                        key={`img-${img == null ? 'no-data' : images.indexOf(img)}`}
-                        index={images.indexOf(img)}
-                        value={img ? img.image : null}
-                        onChange={handleOnChange}
-                        onRemove={handleOnRemove}
-                        {...rest}
-                    />
-                ))}
-        </>
-    );
-};
-
 const ImagePicker = (props: ImageInputProps) => {
     const classes = styles();
     const { id, index, name, size, value, enableFilePicker, disabledUpload, disabledRemove, onChange, onRemove, required, ...rest } = props;
@@ -144,7 +79,7 @@ const ImagePicker = (props: ImageInputProps) => {
 
     useEffect(() => {
         const imageURL = FileApi.downloadLink(value, 'small');
-        if (imageURL !== preview && inputUpload.current) {
+        if (imageURL && imageURL !== preview && inputUpload.current) {
             handleChange(value, imageURL);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -86,6 +86,7 @@ const TabControl = (props: TabScrollButtonProps) => {
                     textColor={textColor || 'primary'}
                     orientation={orientation || 'horizontal'}
                     aria-label="scrollable force tabs example"
+                    centered
                 >
                     {tabs &&
                         tabs.map((tab, index) => (

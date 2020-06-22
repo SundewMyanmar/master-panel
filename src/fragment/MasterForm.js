@@ -1,7 +1,20 @@
 // @flow
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
-import { TextInput, EmailInput, PasswordInput, NumberInput, ImageInput, CheckboxInput, ListInput, ObjectInput, IconInput } from './control';
+import {
+    TextInput,
+    EmailInput,
+    PasswordInput,
+    NumberInput,
+    ImageInput,
+    CheckboxInput,
+    ListInput,
+    ObjectInput,
+    IconInput,
+    ChipInput,
+    ColorInput,
+    TabControl,
+} from './control';
 import { MultiImagePicker } from './control/ImageInput';
 import { TextInputProps } from './control/TextInput';
 
@@ -19,6 +32,7 @@ export type GridProps = {
 export type MasterFormProps = {
     fields: Array<Field>,
     grid: GridProps,
+    type: 'form' | 'tab',
     onWillSubmit?: (form: Object) => boolean,
     onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
     onChange: () => void,
@@ -30,7 +44,7 @@ export type MasterFormProps = {
 const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const [form, setForm] = useState({});
 
-    const { direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
+    const { type, variant, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
 
     const handleFormSubmit = event => {
         event.preventDefault();
@@ -94,15 +108,27 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 return <ListInput {...inputProps} />;
             case 'table':
                 return <ObjectInput {...inputProps} />;
+            case 'chip':
+                return <ChipInput {...inputProps} />;
+            case 'color':
+                return <ColorInput {...inputProps} />;
             default:
                 return <TextInput type={type} {...inputProps} />;
         }
     };
 
-    return (
-        <form style={{ width: '100%' }} {...rest} ref={ref} onKeyDown={handleKeyDown} onSubmit={handleFormSubmit}>
+    const renderTab = datas => {
+        datas = datas.map(data => {
+            data.content = renderGrid(data.fields);
+            return data;
+        });
+        return <TabControl {...rest} centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
+    };
+
+    const renderGrid = datas => {
+        return (
             <Grid direction={direction || 'column'} container alignItems={direction === 'row' ? 'center' : 'stretch'}>
-                {fields.map((field, index) => {
+                {datas.map((field, index) => {
                     const { type, ...inputProps } = field;
                     inputProps.key = field.id + '_' + index;
                     inputProps.name = field.name || field.id;
@@ -119,9 +145,19 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     );
                 })}
             </Grid>
+        );
+    };
+
+    return (
+        <form style={{ width: '100%' }} {...rest} ref={ref} onKeyDown={handleKeyDown} onSubmit={handleFormSubmit}>
+            {type == 'tab' ? renderTab(fields) : renderGrid(fields)}
             {children}
         </form>
     );
 });
+
+MasterForm.defaultProps = {
+    type: 'form',
+};
 
 export default MasterForm;

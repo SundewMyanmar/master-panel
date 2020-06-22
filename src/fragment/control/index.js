@@ -9,5 +9,23 @@ import CheckboxInput from './CheckboxInput';
 import ListInput from './ListInput';
 import ObjectInput from './ObjectInput';
 import IconInput from './IconInput';
+import ChipInput from './ChipInput';
+import ColorInput from './ColorInput';
+import TabControl from './TabControl';
 
-export { Copyright, TextInput, NumberInput, PasswordInput, ImageInput, EmailInput, SearchInput, CheckboxInput, ListInput, ObjectInput, IconInput };
+export {
+    Copyright,
+    TextInput,
+    NumberInput,
+    PasswordInput,
+    ImageInput,
+    EmailInput,
+    SearchInput,
+    CheckboxInput,
+    ListInput,
+    ObjectInput,
+    IconInput,
+    ChipInput,
+    ColorInput,
+    TabControl,
+};

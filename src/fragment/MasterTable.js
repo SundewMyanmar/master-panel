@@ -60,13 +60,33 @@ export type MasterTableProps = {
     onItemAction: (item: Object, data: Object) => void,
     onImport?: (data: Object | Any) => Promise<Any>,
     onRowClick?: () => void,
+
+    hideSearch?: Boolean,
+    hideDataActions?: Boolean,
+    hideCRUD?: Boolean,
 };
 
 const MasterTable = (props: MasterTableProps) => {
     const classes = styles();
     const theme = useTheme();
 
-    const { title, fields, importFields, onError, onAddNew, onEdit, moreActions, onLoad, onRemove, onItemAction, onRowClick, onImport } = props;
+    const {
+        title,
+        fields,
+        importFields,
+        onError,
+        onAddNew,
+        onEdit,
+        moreActions,
+        onLoad,
+        onRemove,
+        onItemAction,
+        onRowClick,
+        onImport,
+        hideSearch,
+        hideDataActions,
+        hideCRUD,
+    } = props;
 
     const [init, setInit] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -75,7 +95,7 @@ const MasterTable = (props: MasterTableProps) => {
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
 
-    if (importFields.findIndex(f => f === 'version') < 0) {
+    if (!hideDataActions && importFields.findIndex(f => f === 'version') < 0) {
         importFields.push('version');
     }
 
@@ -270,8 +290,7 @@ const MasterTable = (props: MasterTableProps) => {
         setRemoveData(null);
     };
 
-    const actions = [
-        ...moreActions,
+    const defaultActions = [
         {
             id: 'edit',
             label: 'Edit',
@@ -285,17 +304,21 @@ const MasterTable = (props: MasterTableProps) => {
         },
     ];
 
-    const fields_with_action = [
-        {
-            name: 'data_actions',
-            align: 'center',
-            label: '@',
-            minWidth: 50,
-            type: 'raw',
-            onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
-        },
-        ...fields,
-    ];
+    const actions = [...moreActions, ...(hideCRUD ? [] : defaultActions)];
+
+    const actionFields = {
+        name: 'data_actions',
+        align: 'center',
+        label: '@',
+        minWidth: 50,
+        type: 'raw',
+        onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
+    };
+    let fields_with_action = [];
+    if (actions.length > 0) {
+        fields_with_action = [actionFields];
+    }
+    fields_with_action = [...fields_with_action, ...fields];
 
     return (
         <>
@@ -309,19 +332,25 @@ const MasterTable = (props: MasterTableProps) => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justify="center">
-                        <SearchInput value={search} onSearch={value => setSearch(value)} placeholder="Search Files" />
+                        {hideSearch || <SearchInput value={search} onSearch={value => setSearch(value)} placeholder="Search Files" />}
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
-                        <ActionMenu
-                            onMenuItemClick={handleActionMenu}
-                            disabled={!selectedData || selectedData.length < 1}
-                            label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
-                        />
-                        <ImportMenu fields={importFields} onImportItems={handleImport} className={classes.newButton} />
-                        <Button onClick={onAddNew} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
-                            <Icon>add</Icon>
-                            New
-                        </Button>
+                        {hideDataActions || (
+                            <>
+                                <ActionMenu
+                                    onMenuItemClick={handleActionMenu}
+                                    disabled={!selectedData || selectedData.length < 1}
+                                    label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
+                                />
+                                <ImportMenu fields={importFields} onImportItems={handleImport} className={classes.newButton} />
+                            </>
+                        )}
+                        {hideCRUD || (
+                            <Button onClick={onAddNew} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
+                                <Icon>add</Icon>
+                                New
+                            </Button>
+                        )}
                     </Grid>
                 </Grid>
                 <Grid container item lg={12}>
@@ -348,6 +377,9 @@ MasterTable.defaultProps = {
     fields: [],
     title: 'Master Data',
     moreActions: [],
+    hideSearch: false,
+    hideCRUD: false,
+    hideDataActions: false,
     onAddNew: () => console.warn('Undefined onAddNew'),
     onEdit: item => console.warn('Undefined onEdit => ', item),
     onError: error => console.warn('Undefined onError => ', error),
