@@ -24,6 +24,27 @@ export type Field = {
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, form?: Object) => string,
 };
 
+/*
+<MasterForm type="tab" {...props}/>
+//Sample Fields
+[
+    {
+        label:"Tab 1",
+        icon:"person"
+        fields:[
+            //old master form fields
+        ]
+    },
+    {
+        label:"Tab 2",
+        icon:"person_outline"
+        fields:[
+            //old master form fields
+        ]
+    }
+]
+*/
+
 export type GridProps = {
     row: number,
     col: number,
@@ -122,7 +143,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
             data.content = renderGrid(data.fields);
             return data;
         });
-        return <TabControl {...rest} centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
+        return <TabControl {...rest} centered variant={variant || 'standard'} tabs={datas}></TabControl>;
     };
 
     const renderGrid = datas => {

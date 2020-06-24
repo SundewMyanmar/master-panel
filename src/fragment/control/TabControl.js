@@ -12,9 +12,9 @@ const useStyles = makeStyles(theme => ({
         padding: 8,
     },
     tabTitle: {
-        minWidth: 50,
+        minWidth: 150,
         textTransform: 'none',
-        flex: 1,
+        flex: 'none',
     },
     tabPanel: {
         backgroundColor: theme.palette.background.paper,
@@ -80,13 +80,17 @@ const TabControl = (props: TabScrollButtonProps) => {
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    variant={variant || 'scrollable'}
+                    variant={variant || 'standard'}
                     scrollButtons={scrollButtons || 'on'}
                     indicatorColor={indicatorColor || 'primary'}
                     textColor={textColor || 'primary'}
                     orientation={orientation || 'horizontal'}
                     aria-label="scrollable force tabs example"
-                    centered
+                    TabIndicatorProps={{
+                        style: {
+                            height: 4,
+                        },
+                    }}
                 >
                     {tabs &&
                         tabs.map((tab, index) => (
@@ -94,7 +98,6 @@ const TabControl = (props: TabScrollButtonProps) => {
                                 key={`tab-header-${tabs.indexOf(tab)}`}
                                 label={tab.label}
                                 className={classes.tabTitle}
-                                style={{ borderRight: index == tabs.length - 1 ? 'none' : `1px solid ${common.gray}` }}
                                 icon={<Icon>{tab.icon}</Icon>}
                                 {...a11yProps(tabs.indexOf(tab))}
                                 wrapped
