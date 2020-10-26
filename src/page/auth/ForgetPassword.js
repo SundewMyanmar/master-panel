@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Typography, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, makeStyles } from '@material-ui/core';
+import { Typography, Paper, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, makeStyles } from '@material-ui/core';
 
 import Copyright from '../../fragment/control/Copyright';
 import MasterForm from '../../fragment/MasterForm';
@@ -12,6 +12,7 @@ const styles = makeStyles(theme => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
+        padding: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -20,6 +21,7 @@ const styles = makeStyles(theme => ({
         padding: theme.spacing(3),
         margin: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
+        color: theme.palette.text.active,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -85,7 +87,7 @@ const ForgetPassword = props => {
             <LoadingDialog show={loading} />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <div className={classes.paper}>
+                <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>
                         <Icon>dialpad</Icon>
                     </Avatar>
@@ -98,13 +100,13 @@ const ForgetPassword = props => {
                         </Button>
                         <Grid container justify="flex-end">
                             <Grid item>
-                                <Link href="/#/login" variant="body2">
+                                <Link href="/#/login" color="textSecondary" variant="body2">
                                     Remember your password? Sign in
                                 </Link>
                             </Grid>
                         </Grid>
                     </MasterForm>
-                </div>
+                </Paper>
                 <Box>
                     <Copyright />
                 </Box>

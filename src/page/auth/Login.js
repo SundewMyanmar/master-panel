@@ -1,6 +1,6 @@
 import React, { useState, createRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Typography, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, MuiThemeProvider, makeStyles } from '@material-ui/core';
+import { Typography, Container, CssBaseline, Avatar, Grid, Button, Link, Box, MuiThemeProvider, makeStyles } from '@material-ui/core';
 
 import Copyright from '../../fragment/control/Copyright';
 import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
@@ -10,7 +10,17 @@ import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
 
 const styles = makeStyles(theme => ({
+    container: {
+        backgroundColor: theme.palette.background.paper,
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3),
+        paddingBottom: theme.spacing(0.5),
+        marginBottom: theme.spacing(4),
+        borderRadius: 4,
+        boxShadow: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+    },
     paper: {
+        paddingTop: theme.spacing(2),
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
         display: 'flex',
@@ -20,10 +30,18 @@ const styles = makeStyles(theme => ({
     avatar: {
         padding: theme.spacing(3),
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.common.white,
+        color: theme.palette.primary.contrastText,
+        border: '2px solid ' + theme.palette.secondary.main,
+        width: 150,
+        height: 150,
+    },
+    image: {
+        width: 120,
+        height: 120,
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(2, 0, 2),
     },
     loginWith: {
         margin: theme.spacing(1, 0),
@@ -70,10 +88,10 @@ const Login = props => {
     };
 
     const handleSubmit = (event, form) => {
-        if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
-            return;
-        }
+        // if (!window.navigator.onLine) {
+        //     setError('Please check your internet connection and try again.');
+        //     return;
+        // }
         setLoading(true);
         AuthApi.authByUserAndPassword(form)
             .then(data => {
@@ -109,33 +127,36 @@ const Login = props => {
             <LoadingDialog show={loading} />
 
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <Icon>lock_out_lined_icon</Icon>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign In
-                    </Typography>
-                    {facebookLogin()}
-                    <MasterForm fields={loginFields} onSubmit={handleSubmit}>
-                        <Button type="submit" ref={submitButton} fullWidth variant="contained" color="primary" className={classes.submit}>
+                <Box className={classes.container} boxShadow={2}>
+                    <CssBaseline />
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            {/* <Icon>lock_out_lined_icon</Icon> */}
+                            <img src="/images/logo.png" className={classes.image} />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
                             Sign In
-                        </Button>
-                    </MasterForm>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="/#/auth/forgetPassword" variant="body2">
-                                Forgot password?
-                            </Link>
+                        </Typography>
+                        {facebookLogin()}
+                        <MasterForm fields={loginFields} onSubmit={handleSubmit}>
+                            <Button type="submit" ref={submitButton} fullWidth variant="contained" color="primary" className={classes.submit}>
+                                Sign In
+                            </Button>
+                        </MasterForm>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="/#/auth/register" color="textSecondary" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link href="/#/auth/register" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </div>
+                    </div>
+                </Box>
                 <Box>
                     <Copyright />
                 </Box>

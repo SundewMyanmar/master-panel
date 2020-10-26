@@ -10,21 +10,21 @@ type DrawerHeaderProps = {
 
 const styles = makeStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.secondary.light,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
     },
     title: {
-        color: theme.palette.primary.contrastText,
-        borderLeft: '3px solid ' + theme.palette.secondary.main,
+        color: theme.palette.secondary.contrastText,
+        borderLeft: '5px solid ' + theme.palette.secondary.main,
         paddingLeft: theme.spacing(1),
     },
     glassBackground: {
-        background: '#36373ac9',
+        background: '#6ca7b4c9',
     },
     menuIcon: {
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.secondary.contrastText,
     },
 }));
 
@@ -38,7 +38,7 @@ const DrawerHeader = (props: DrawerHeaderProps) => {
                 <Grid container alignItems="center" direction="row" justify="space-around">
                     {props.hideMenu ? null : (
                         <div>
-                            <Typography style={{ color: theme.palette.common.white }} variant="h6" gutterBottom>
+                            <Typography style={{ color: theme.palette.secondary.contrastText }} variant="h6" gutterBottom>
                                 Welcome!
                             </Typography>
                             <Typography className={classes.title} variant="subtitle1">

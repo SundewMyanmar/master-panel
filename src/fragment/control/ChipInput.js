@@ -29,15 +29,16 @@ export type ChipInputProps = {
 const styles = makeStyles(theme => ({
     root: {},
     label: props => ({
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
     }),
     chipTextField: { position: 'relative', flex: 1, paddingRight: 14, paddingLeft: 1 },
     content: props => ({
+        backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
-        padding: theme.spacing(0.5, 0, 0.5, 1.5),
+        padding: theme.spacing(0.5, 0.5, 0.5, 0.5),
         borderColor: props.invalid ? theme.palette.error.main : theme.palette.common.gray,
         '&:hover': {
             borderColor: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
@@ -57,7 +58,7 @@ const styles = makeStyles(theme => ({
 }));
 
 const ChipInput = (props: ChipInputProps) => {
-    const { label, id, name, inputRef, value, icon, disableRemove, disableInsert, onValidate, onChange, ...rest } = props;
+    const { variant, label, id, name, inputRef, value, icon, disableRemove, disableInsert, onValidate, onChange, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
     const [newChip, setNewChip] = React.useState('');
@@ -83,7 +84,7 @@ const ChipInput = (props: ChipInputProps) => {
             evt.preventDefault();
             let chip = newChip;
             if (chip) {
-                setItems([chip, ...items]);
+                setItems([...items, chip]);
                 setNewChip('');
                 if (onChange) {
                     onChange({
@@ -164,37 +165,40 @@ const ChipInput = (props: ChipInputProps) => {
 
     const inputPlaceholder = 'Enter ' + FormatManager.camelToReadable(id || name);
 
+    let variantProps = { variant: variant, elevation: 0 };
+    if (variant !== 'standard') {
+        variantProps = { ...variantProps, elevation: 1 };
+    }
+
     return (
         <>
             <FormControl variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
                     {label} {props.required ? '*' : ''}
                 </InputLabel>
-                <Paper variant="outlined" classes={{ root: classes.content }}>
+                <Paper {...variantProps} classes={{ root: classes.content }}>
                     <Grid container>
                         <Grid container item xs={12} sm={12} className={classes.chipContainer} alignItems="center">
-                            <div className={classes.chipTextField}>
-                                {displayBox()}
-                                {disableInsert || (
-                                    <TextField
-                                        margin="normal"
-                                        fullWidth
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        placeholder={inputPlaceholder}
-                                        {...rest}
-                                        id={id || name}
-                                        name={name || id}
-                                        inputRef={currentInput}
-                                        onKeyDown={handleKeyDown}
-                                        onChange={handleTextChange}
-                                        onPaste={handlePaste}
-                                        InputProps={buildInputIcon(icon)}
-                                        value={newChip}
-                                    />
-                                )}
-                            </div>
+                            <div className={classes.chipTextField}>{displayBox()}</div>
+                            {disableInsert || (
+                                <TextField
+                                    margin="normal"
+                                    fullWidth
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    placeholder={inputPlaceholder}
+                                    {...rest}
+                                    id={id || name}
+                                    name={name || id}
+                                    inputRef={currentInput}
+                                    onKeyDown={handleKeyDown}
+                                    onChange={handleTextChange}
+                                    onPaste={handlePaste}
+                                    InputProps={buildInputIcon(icon)}
+                                    value={newChip}
+                                />
+                            )}
                         </Grid>
                     </Grid>
                 </Paper>

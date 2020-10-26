@@ -166,7 +166,7 @@ const ImagePicker = (props: ImageInputProps) => {
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <FilePicker show={showFile} selectedData={image} onClose={handleCloseFile} onError={handleError} title="Choose File" />
             <ListPicker show={showMenu} onClose={handleCloseMenu} data={MENU_LIST_ITEMS} title="Choose Action" />
-            <div className={[classes.container]}>
+            <div {...rest} className={[classes.container]}>
                 <IconButton style={{ visibility: visibility }} onClick={handleRemove} className={classes.removeButton}>
                     <Icon>close</Icon>
                 </IconButton>

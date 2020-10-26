@@ -41,6 +41,7 @@ const itemStyles = makeStyles(theme => ({
         padding: theme.spacing(1),
         fontSize: 16,
         fontWeight: 800,
+        color: theme.palette.text.primary,
     },
     iconButton: {
         cursor: 'pointer',
@@ -51,9 +52,11 @@ const itemStyles = makeStyles(theme => ({
         background: theme.palette.background.paper,
         color: theme.palette.primary.main,
         '&:hover': {
-            background: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
+            background: theme.palette.primary.light,
         },
+    },
+    closeButton: {
+        color: theme.palette.text.primary,
     },
     markedIconButton: {
         cursor: 'pointer',
@@ -61,18 +64,22 @@ const itemStyles = makeStyles(theme => ({
         margin: theme.spacing(0.5),
         width: 100,
         textAlign: 'center',
-        background: theme.palette.primary.main,
+        background: theme.palette.primary.light,
         color: theme.palette.primary.contrastText,
         '&:hover': {
-            background: theme.palette.primary.dark,
+            background: theme.palette.primary.light,
             color: theme.palette.primary.contrastText,
         },
+    },
+    buttonIcon: {
+        color: theme.palette.text.primary,
     },
     buttonCaption: {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         fontSize: 11,
+        color: theme.palette.text.primary,
     },
 }));
 
@@ -114,7 +121,7 @@ const IconDisplay = props => {
                             aria-label="Icon"
                         >
                             <div>
-                                <Icon fontSize="large" color="inherit">
+                                <Icon fontSize="large" className={classes.buttonIcon}>
                                     {icon.ligature}
                                 </Icon>
                             </div>
@@ -179,7 +186,7 @@ const IconPicker = (props: IconPickerProps) => {
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justify="flex-start">
-                            <Typography color="primary" variant="h6" component="h1" noWrap>
+                            <Typography color="inherit" variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>
@@ -188,8 +195,8 @@ const IconPicker = (props: IconPickerProps) => {
                         </Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
                             <Tooltip title="Close Dialog">
-                                <IconButton size="small" color="primary" onClick={() => onClose(false)} aria-label="Close">
-                                    <Icon>close</Icon>
+                                <IconButton color="inherit" size="small" onClick={() => onClose(false)} aria-label="Close">
+                                    <Icon color="inherit">close</Icon>
                                 </IconButton>
                             </Tooltip>
                         </Grid>

@@ -2,14 +2,17 @@ import React from 'react';
 import { Tooltip, IconButtonProps, IconButton, Icon, Menu, MenuItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 
 const styles = makeStyles(theme => ({
+    menuButton: {
+        color: theme.palette.text.primary,
+    },
     menuIcon: {
-        color: theme.palette.primary.dark,
+        color: theme.palette.text.primary,
         display: 'inline-flex',
         flexShrink: 0,
         minWidth: theme.spacing(4),
     },
     menuText: {
-        color: theme.palette.primary.dark,
+        color: theme.palette.text.primary,
     },
 }));
 
@@ -45,18 +48,28 @@ const DataAction = (props: DataActionProps) => {
     return (
         <>
             <Tooltip title="More Actions" placement="top">
-                <IconButton size="small" onClick={event => setAnchorEl(event.currentTarget)} color="primary" aria-label={id} {...iconButtonProps}>
+                <IconButton
+                    size="small"
+                    onClick={event => setAnchorEl(event.currentTarget)}
+                    className={classes.menuButton}
+                    aria-label={id}
+                    {...iconButtonProps}
+                >
                     <Icon>more_vert</Icon>
                 </IconButton>
             </Tooltip>
             <Menu id="actions-menu" marginThreshold={50} anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 {actions.map((item, index) => {
+                    let colorProps = {};
+                    if (item.color) {
+                        colorProps = { style: { color: item.color } };
+                    }
                     return (
                         <MenuItem dense key={item.id + '-' + index} onClick={() => handleClick(item, index)}>
                             <ListItemIcon className={classes.menuIcon}>
-                                <Icon style={{ color: item.color }}>{item.icon}</Icon>
+                                <Icon {...colorProps}>{item.icon}</Icon>
                             </ListItemIcon>
-                            <ListItemText inset={false} primary={item.label} className={classes.menuText} style={{ color: item.color }} />
+                            <ListItemText inset={false} primary={item.label} className={classes.menuText} {...colorProps} />
                         </MenuItem>
                     );
                 })}

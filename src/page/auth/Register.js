@@ -21,6 +21,7 @@ const styles = makeStyles(theme => ({
         padding: theme.spacing(3),
         margin: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
+        color: theme.palette.text.active,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -127,7 +128,7 @@ const Register = props => {
 
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="/#/login" variant="body2">
+                            <Link href="/#/login" color="textSecondary" variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>

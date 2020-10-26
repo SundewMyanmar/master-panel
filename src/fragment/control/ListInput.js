@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextFieldProps, TextField, Icon, InputAdornment } from '@material-ui/core';
+import { TextFieldProps, TextField, InputBase, Icon, InputAdornment } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import FormatManager from '../../util/FormatManager';
 
@@ -15,7 +15,7 @@ export type SelectListProps = {
 };
 
 const ListInput = (props: SelectListProps) => {
-    const { id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
+    const { variant, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(value);
@@ -68,23 +68,45 @@ const ListInput = (props: SelectListProps) => {
     const buildInputField = params => {
         const { InputProps, InputLabelProps, ...otherParams } = params;
         const placeholder = 'Choose ' + FormatManager.camelToReadable(id || name);
+
         return (
-            <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                placeholder={placeholder}
-                error={invalid}
-                helperText={error}
-                {...otherParams}
-                {...rest}
-                InputProps={buildInputIcon(InputProps)}
-                InputLabelProps={{
-                    ...InputLabelProps,
-                    shrink: true,
-                }}
-                inputRef={currentInput}
-            />
+            <>
+                {variant == 'standard' ? (
+                    <TextField
+                        variant="standard"
+                        margin="normal"
+                        fullWidth
+                        placeholder={placeholder}
+                        error={invalid}
+                        helperText={error}
+                        {...otherParams}
+                        {...rest}
+                        InputProps={buildInputIcon(InputProps)}
+                        InputLabelProps={{
+                            ...InputLabelProps,
+                            shrink: true,
+                        }}
+                        inputRef={currentInput}
+                    />
+                ) : (
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        placeholder={placeholder}
+                        error={invalid}
+                        helperText={error}
+                        {...otherParams}
+                        {...rest}
+                        InputProps={buildInputIcon(InputProps)}
+                        InputLabelProps={{
+                            ...InputLabelProps,
+                            shrink: true,
+                        }}
+                        inputRef={currentInput}
+                    />
+                )}
+            </>
         );
     };
 

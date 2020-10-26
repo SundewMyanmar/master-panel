@@ -8,6 +8,8 @@ import ActionMenu from './table/ActionMenu';
 import DataAction from './table/DataAction';
 import FormatManager from '../util/FormatManager';
 import ImportMenu from './table/ImportMenu';
+import { Field } from './MasterForm';
+import ScrollBar from './control/ScrollBar';
 
 const styles = makeStyles(theme => ({
     header: {
@@ -15,6 +17,10 @@ const styles = makeStyles(theme => ({
         // backgroundColor:theme.palette.primary.main,
         borderBottom: '1px solid' + theme.palette.divider,
         padding: theme.spacing(1),
+    },
+    headerTitle: {
+        marginLeft: theme.spacing(2),
+        color: theme.palette.text.primary,
     },
     newButton: {
         marginLeft: theme.spacing(1),
@@ -49,9 +55,13 @@ export type ActionProps = {
 
 export type MasterTableProps = {
     fields: Array<TableField>,
+    inputFields: Array<Field>,
     importFields: Array<string>,
     moreActions: Array<ActionProps>,
     title?: string,
+    onInputChange?: () => void,
+    value?: Object,
+    onSave?: () => void,
     onAddNew?: () => void,
     onEdit: (item: Object) => void,
     onLoad: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
@@ -60,7 +70,7 @@ export type MasterTableProps = {
     onItemAction: (item: Object, data: Object) => void,
     onImport?: (data: Object | Any) => Promise<Any>,
     onRowClick?: () => void,
-
+    type: 'TABLE' | 'INPUT',
     hideSearch?: Boolean,
     hideDataActions?: Boolean,
     hideCRUD?: Boolean,
@@ -73,7 +83,12 @@ const MasterTable = (props: MasterTableProps) => {
     const {
         title,
         fields,
+        inputFields,
         importFields,
+        type,
+        onInputChange,
+        value,
+        onSave,
         onError,
         onAddNew,
         onEdit,
@@ -103,7 +118,6 @@ const MasterTable = (props: MasterTableProps) => {
         setLoading(true);
         try {
             const result = await onLoad(currentPage, pageSize, sort, search);
-            console.log('handel Master Table', result);
             setPaging(result);
         } catch (error) {
             onError(error);
@@ -124,15 +138,22 @@ const MasterTable = (props: MasterTableProps) => {
     const exportCSV = async () => {
         setLoading(true);
         let csv = importFields.map(field => FormatManager.buildCSV(field)).join(',') + '\n';
-
+        console.log('csv', selectedData);
         selectedData.forEach(data => {
             csv +=
                 importFields
                     .map(field => {
-                        const value = data[field] || '';
-                        if (typeof value === 'string') {
+                        let value = data[field] || '';
+                        if (typeof data[field] === 'boolean') value = data[field];
+
+                        if (typeof value === 'string' || typeof value === 'boolean') {
                             return FormatManager.buildCSV(value);
+                        } else if (typeof value === 'object') {
+                            if (value.id) {
+                                return FormatManager.buildCSV(JSON.stringify({ id: value.id }));
+                            }
                         }
+
                         return FormatManager.buildCSV(JSON.stringify(value));
                     })
                     .join(',') + '\n';
@@ -193,9 +214,7 @@ const MasterTable = (props: MasterTableProps) => {
 
     useEffect(() => {
         handleTableSession();
-        console.log('search', paging, search, init);
         if (!init) {
-            console.log('win');
             loadData(paging.currentPage, paging.pageSize, paging.sort);
         }
 
@@ -204,7 +223,6 @@ const MasterTable = (props: MasterTableProps) => {
 
     useEffect(() => {
         handleTableSession();
-        console.log('selected,paging');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedData, paging]);
 
@@ -224,6 +242,7 @@ const MasterTable = (props: MasterTableProps) => {
     };
 
     const handleImport = data => {
+        console.log('import', data);
         setLoading(true);
         if (onImport) {
             onImport(data)
@@ -295,6 +314,7 @@ const MasterTable = (props: MasterTableProps) => {
             id: 'edit',
             label: 'Edit',
             icon: 'edit',
+            color: theme.palette.text.primary,
         },
         {
             id: 'remove',
@@ -327,7 +347,7 @@ const MasterTable = (props: MasterTableProps) => {
             <Paper className={classes.root} elevation={6}>
                 <Grid container className={classes.header}>
                     <Grid container item lg={4} md={4} sm={6} xs={12} justify="flex-start" alignContent="center" alignItems="center">
-                        <Typography color="primary" variant="h6" component="h1" noWrap>
+                        <Typography className={classes.headerTitle} variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
                     </Grid>
@@ -356,8 +376,13 @@ const MasterTable = (props: MasterTableProps) => {
                 <Grid container item lg={12}>
                     <DataTable
                         multi={true}
+                        type={type}
                         items={paging.data}
                         fields={fields_with_action}
+                        inputFields={inputFields}
+                        onInputChange={onInputChange}
+                        value={value}
+                        onSave={onSave}
                         total={paging.total}
                         pageSize={paging.pageSize}
                         currentPage={paging.currentPage}
@@ -380,6 +405,7 @@ MasterTable.defaultProps = {
     hideSearch: false,
     hideCRUD: false,
     hideDataActions: false,
+    type: 'TABLE',
     onAddNew: () => console.warn('Undefined onAddNew'),
     onEdit: item => console.warn('Undefined onEdit => ', item),
     onError: error => console.warn('Undefined onError => ', error),

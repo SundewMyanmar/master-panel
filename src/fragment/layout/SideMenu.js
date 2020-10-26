@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Collapse, makeStyles, Popover, PopoverProps, Tooltip } from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router-dom';
-
+import ScrollBar from '../control/ScrollBar';
 import SearchInput from '../control/SearchInput';
 import { ACTIONS } from './Reducer';
 
@@ -97,16 +97,17 @@ const FolderMenu = (props: ChildMenuGroupProps) => {
 const ItemStyles = makeStyles(theme => ({
     root: props => ({
         paddingLeft: props.hideMenu ? 15 : theme.spacing(2 * (props.parentCount + 1)),
-        borderRight: !props.hideMenu && props.selected ? '4px solid ' + theme.palette.secondary.main : null,
+        borderRight: !props.hideMenu && props.selected ? '4px solid ' + theme.palette.primary.light : null,
     }),
     menuIcon: props => ({
-        color: props.selected ? theme.palette.primary.contrastText : theme.palette.primary.dark,
+        color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
+        width: 27,
         display: 'inline-flex',
         flexShrink: 0,
-        minWidth: theme.spacing(4),
+        minWidth: theme.spacing(3),
     }),
     menuText: props => ({
-        color: props.selected ? theme.palette.primary.contrastText : theme.palette.primary.dark,
+        color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
     }),
 }));
 
@@ -245,7 +246,7 @@ const SideMenu = (props: SideMenuProps) => {
     }
 
     return (
-        <div className={classes.root}>
+        <ScrollBar className={classes.root}>
             {hideMenu ? null : (
                 <>
                     <div className={classes.searchBox}>
@@ -265,7 +266,7 @@ const SideMenu = (props: SideMenuProps) => {
                     />
                 ))}
             </List>
-        </div>
+        </ScrollBar>
     );
 };
 

@@ -12,6 +12,8 @@ import IconInput from './IconInput';
 import ChipInput from './ChipInput';
 import ColorInput from './ColorInput';
 import TabControl from './TabControl';
+import GridControl from './GridControl';
+import InfoCard from './InfoCard';
 
 export {
     Copyright,
@@ -28,4 +30,6 @@ export {
     ChipInput,
     ColorInput,
     TabControl,
+    GridControl,
+    InfoCard,
 };

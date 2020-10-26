@@ -24,7 +24,7 @@ export const ImageCell = (field, data) => {
     } else if (image) {
         image = image.url;
     }
-    return <img alt={alt} width={40} src={image || `../../${'images/default-image.png'}`} {...imageProps} />;
+    return <img alt={alt} width={30} style={{ marginTop: 3 }} src={image || `../../${'images/default-image.png'}`} {...imageProps} />;
 };
 
 export const IconCell = (field, data) => {
@@ -46,7 +46,7 @@ export const BooleanCell = (field, data) => {
         checked = onLoad(data);
     }
 
-    return <Icon color={checked ? 'primary' : 'error'}>{checked ? 'check' : 'close'}</Icon>;
+    return <Icon color={checked ? 'textPrimary' : 'error'}>{checked ? 'check' : 'close'}</Icon>;
 };
 
 const Cell = (props: CellProps) => {
@@ -78,7 +78,7 @@ const Cell = (props: CellProps) => {
     }
 
     return (
-        <TableCell align={field.align} style={field.minWidth ? { minWidth: field.minWidth } : null} {...cellProps}>
+        <TableCell color="secondary" align={field.align} style={field.minWidth ? { minWidth: field.minWidth } : null} {...cellProps}>
             {cellValue || '-'}
         </TableCell>
     );

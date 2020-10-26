@@ -1,12 +1,14 @@
 import React, { useReducer, useEffect, useRef } from 'react';
 import { Route, useHistory, Redirect } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
-import { makeStyles, AppBar, Toolbar, Typography, Box, CssBaseline, Drawer, Divider, useTheme } from '@material-ui/core';
+import { IconButton, Icon, Tooltip, makeStyles, AppBar, Toolbar, Typography, Box, CssBaseline, Drawer, Divider, useTheme } from '@material-ui/core';
 import { PrivateRoute } from '../../config/Route';
-
+import clsx from 'clsx';
+import Scrollbar from '../control/ScrollBar';
 import { SESSION_TIMEOUT, STORAGE_KEYS, APP_NAME, APP_VERSION, DEFAULT_SIDE_MENU, USER_PROFILE_MENU } from '../../config/Constant';
 import { Copyright } from '../control';
 import SideMenu from './SideMenu';
+import NotificationMenu from './NotificationMenu';
 import DrawerHeader from './DrawerHeader';
 import Reducer, { ACTIONS } from './Reducer';
 import FileApi from '../../api/FileApi';
@@ -47,20 +49,36 @@ const useStyles = makeStyles(theme => ({
     },
     logo: {
         borderRadius: 3,
-        border: '1px solid white',
+        // border: '1px solid ' + theme.palette.common.gray,
         marginRight: theme.spacing(2),
+        backgroundColor: theme.palette.primary.contrastText,
+        padding: 2,
     },
     title: {
         flexGrow: 1,
     },
-    drawerPaper: {
-        // backgroundColor:theme.palette.background.light,
-        position: 'relative',
+    drawer: {
+        width: DRAWER_FULL_SIZE,
+        flexShrink: 0,
         whiteSpace: 'nowrap',
+    },
+    drawerOpen: {
+        width: DRAWER_FULL_SIZE,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
+    },
+    drawerClose: {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: 'hidden',
+        width: DRAWER_SMALL_SIZE,
+        [theme.breakpoints.up('sm')]: {
+            width: DRAWER_SMALL_SIZE,
+        },
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -82,7 +100,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Layout = props => {
+export type LayoutProps = {
+    onToggleMode: () => void,
+    mode: 'LIGHT' | 'DARK',
+};
+
+const Layout = (props: LayoutProps) => {
+    const { onToggleMode, mode } = props;
+
     const history = useHistory();
     const classes = useStyles();
     const theme = useTheme();
@@ -161,13 +186,49 @@ const Layout = props => {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {APP_NAME} ({APP_VERSION})
                     </Typography>
-                    <div className={classes.grow} />
-                    <UserMenu image={user.profileImage} name={user.displayName || user.email} />
+                    <div />
+                    <div>
+                        <NotificationMenu name="Notifications" />
+                        {/* <NotificationMenu name="New Orders" icon="shopping_cart" /> */}
+                        <Tooltip title={mode === 'DARK' ? 'Toggle Light Mode' : 'Toggle Dark Mode'}>
+                            <IconButton
+                                aria-label="delete"
+                                onClick={() => {
+                                    if (onToggleMode) {
+                                        onToggleMode(mode === 'DARK' ? 'LIGHT' : 'DARK');
+                                    }
+                                }}
+                            >
+                                <Icon>{mode === 'DARK' ? 'brightness_7' : 'brightness_4'}</Icon>
+                            </IconButton>
+                        </Tooltip>
+                        <UserMenu
+                            image={user.profileImage}
+                            name={user.displayName || user.email}
+                            role={
+                                user.roles &&
+                                user.roles
+                                    .map(function(elem) {
+                                        return elem.name;
+                                    })
+                                    .join(', ')
+                            }
+                        />
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer
                 variant="permanent"
-                classes={{ paper: classes.drawerPaper }}
+                className={clsx(classes.drawer, {
+                    [classes.drawerOpen]: !state.hideMenu,
+                    [classes.drawerClose]: state.hideMenu,
+                })}
+                classes={{
+                    paper: clsx({
+                        [classes.drawerOpen]: !state.hideMenu,
+                        [classes.drawerClose]: state.hideMenu,
+                    }),
+                }}
                 style={state.hideMenu ? { width: DRAWER_SMALL_SIZE } : { width: DRAWER_FULL_SIZE }}
             >
                 <div className={classes.appBarSpacer} />
@@ -181,22 +242,24 @@ const Layout = props => {
                 <SideMenu state={state} dispatch={dispatch} />
             </Drawer>
             <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <div className={classes.container}>
-                    {PrivateRoute.map((route, index) => {
-                        return (
-                            <Route
-                                exact
-                                key={index}
-                                path={route.path}
-                                render={props => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
-                            />
-                        );
-                    })}
-                </div>
-                <Box pt={4} className={classes.copyRight}>
-                    <Copyright />
-                </Box>
+                <Scrollbar>
+                    <div className={classes.appBarSpacer} />
+                    <div className={classes.container}>
+                        {PrivateRoute.map((route, index) => {
+                            return (
+                                <Route
+                                    exact
+                                    key={index}
+                                    path={route.path}
+                                    render={props => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
+                                />
+                            );
+                        })}
+                    </div>
+                    <Box pt={4} className={classes.copyRight}>
+                        <Copyright />
+                    </Box>
+                </Scrollbar>
             </main>
         </div>
     );

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import chroma from 'chroma-js';
 
 export default class FormatManager {
     static tryParseJson = text => {
@@ -26,10 +27,28 @@ export default class FormatManager {
         return moment.unix(unixTS).format(format);
     };
 
+    static validURL = str => {
+        var pattern = new RegExp(
+            '^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$',
+            'i',
+        ); // fragment locator
+        return !!pattern.test(str);
+    };
+
     static buildCSV = input => {
+        if (typeof input === 'boolean') {
+            return '"' + input + '"';
+        }
+
         if (!input) {
             return '""';
         }
+
         return '"' + input.replace(/["]/g, '""') + '"';
     };
 
@@ -84,5 +103,75 @@ export default class FormatManager {
 
     static TimeDiff = (date1, date2) => {
         return Math.abs(date1 - date2) / 36e5;
+    };
+
+    static thousandSeparator = input => {
+        return parseFloat(input).toLocaleString('en');
+    };
+
+    static hex2Rgb = e => {
+        if (!e) return null;
+        let t = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        e = e.replace(t, function(e, t, r, o) {
+            return t + t + r + r + o + o;
+        });
+        let r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);
+        return r
+            ? {
+                  r: parseInt(r[1], 16),
+                  g: parseInt(r[2], 16),
+                  b: parseInt(r[3], 16),
+              }
+            : null;
+    };
+
+    static rgb2Hex = e => {
+        let t = Math.round(e.b) + 256 * Math.round(e.g) + 65536 * Math.round(e.r);
+        return '#' + ('000000' + t.toString(16)).substr(-6);
+    };
+
+    static lightenHex = hex => {
+        return chroma(hex)
+            .brighten()
+            .hex();
+    };
+
+    static darkenHex = hex => {
+        return chroma(hex)
+            .darken()
+            .hex();
+    };
+
+    static contrastText = hex => {
+        let c = hex.substring(1); // strip #
+        let rgb = parseInt(c, 16); // convert rrggbb to decimal
+        let r = (rgb >> 16) & 0xff; // extract red
+        let g = (rgb >> 8) & 0xff; // extract green
+        let b = (rgb >> 0) & 0xff; // extract blue
+
+        let luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+        console.log('light/dark', luma);
+        if (luma < 127.5) {
+            return '#FFF';
+        }
+        return '#000';
+    };
+
+    static generateThemeColors = hex => {
+        return {
+            main: hex,
+            light: this.darkenHex(hex),
+            dark: this.lightenHex(hex),
+            contrastText: this.contrastText(hex),
+        };
+    };
+
+    static randomColor = () => {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     };
 }

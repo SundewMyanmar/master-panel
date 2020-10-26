@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function EmailInput(props: Props) {
-    const { onValidate, ...rest } = props;
+    const { variant, onValidate, ...rest } = props;
 
     const validateEmail = event => {
         const value = event.target.value;
@@ -21,6 +21,13 @@ export default function EmailInput(props: Props) {
 
         return error;
     };
+    let variantProps = { variant: variant };
+    if (variant !== 'standard') {
+        variantProps = {
+            ...variantProps,
+            icon: 'mail',
+        };
+    }
 
-    return <TextInput icon="mail" type="email" onValidate={validateEmail} {...rest} />;
+    return <TextInput {...variantProps} type="email" onValidate={validateEmail} {...rest} />;
 }

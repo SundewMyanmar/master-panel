@@ -14,6 +14,7 @@ export type ObjectInputProps = {
     required: boolean,
     label: string,
     disableRemove?: boolean,
+    disabledLoad?: boolean,
     onLoadData: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
     onLoadItem?: (item: Object) => string,
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
@@ -21,14 +22,17 @@ export type ObjectInputProps = {
 };
 
 const styles = makeStyles(theme => ({
-    root: {},
+    root: {
+        backgroundColor: 'inherit',
+    },
     label: props => ({
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: 'inherit', //theme.palette.background.paper,
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
-        color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
+        color: props.invalid ? theme.palette.error.main : theme.palette.text.primary,
     }),
     content: props => ({
+        backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0, 0.5, 1.5),
         borderColor: props.invalid ? theme.palette.error.main : theme.palette.common.gray,
@@ -36,6 +40,9 @@ const styles = makeStyles(theme => ({
             borderColor: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
         },
     }),
+    openIcon: {
+        color: theme.palette.text.primary,
+    },
     chip: {
         margin: theme.spacing(0.5, 0.5, 0.5, 0),
     },
@@ -59,6 +66,8 @@ const styles = makeStyles(theme => ({
 
 const ObjectInput = (props: ObjectInputProps) => {
     const {
+        variant,
+        height,
         values,
         label,
         id,
@@ -70,6 +79,7 @@ const ObjectInput = (props: ObjectInputProps) => {
         multi,
         fields,
         disableRemove,
+        disabledLoad,
         onValidate,
         onChange,
         onLoadData,
@@ -159,6 +169,7 @@ const ObjectInput = (props: ObjectInputProps) => {
                         const display = onLoadItem(item);
                         return (
                             <Chip
+                                {...heightProps}
                                 onDelete={disableRemove ? null : () => handleRemove(item)}
                                 className={classes.chip}
                                 key={item.id ? item.id : index}
@@ -189,6 +200,14 @@ const ObjectInput = (props: ObjectInputProps) => {
         return <Chip onDelete={disableRemove ? null : () => handleRemove(selectedData)} className={classes.chip} label={display} />;
     };
 
+    let variantProps = { variant: variant, elevation: 0 };
+    let heightProps = {};
+    if (variant !== 'standard') {
+        variantProps = { ...variantProps, elevation: 1 };
+    }
+
+    if (variant === 'standard' && height) heightProps = { style: { height: height } };
+
     return (
         <>
             <TablePicker
@@ -202,11 +221,11 @@ const ObjectInput = (props: ObjectInputProps) => {
                 selectedData={selectedData}
                 onSelectionChange={result => setSelectedData(result)}
             />
-            <FormControl variant="outlined" margin="normal" fullWidth className={classes.root}>
+            <FormControl {...rest} variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
                     {label} {props.required ? '*' : ''}
                 </InputLabel>
-                <Paper variant="outlined" classes={{ root: classes.content }}>
+                <Paper {...variantProps} classes={{ root: classes.content }}>
                     <Grid container>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
                             {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
@@ -222,9 +241,11 @@ const ObjectInput = (props: ObjectInputProps) => {
                             </div>
                         </Grid>
                         <Grid className={classes.actionButton} container item xs={2} sm={2} justify="flex-end" alignItems="center">
-                            <IconButton disableRipple onClick={() => setShowTable(true)} color="primary" aria-label="Choose">
-                                <Icon>open_in_new</Icon>
-                            </IconButton>
+                            {disabledLoad || (
+                                <IconButton disableRipple onClick={() => setShowTable(true)} className={classes.openIcon} aria-label="Choose">
+                                    <Icon>open_in_new</Icon>
+                                </IconButton>
+                            )}
                         </Grid>
                     </Grid>
                 </Paper>
@@ -240,6 +261,7 @@ ObjectInput.defaultProps = {
         return item.id;
     },
     disableRemove: false,
+    disabledLoad: false,
 };
 
 export default ObjectInput;

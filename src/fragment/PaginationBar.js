@@ -39,6 +39,9 @@ const actionStyles = makeStyles(theme => ({
         flexShrink: 0,
         marginLeft: theme.spacing(2.5),
     },
+    paginateButton: {
+        color: theme.palette.text.primary,
+    },
 }));
 const PaginationAction = props => {
     const { count, page, rowsPerPage, onChangePage } = props;
@@ -74,7 +77,7 @@ const PaginationAction = props => {
             {PAGINATION_BUTTONS.map((item, index) => {
                 return (
                     <IconButton
-                        color="primary"
+                        className={classes.paginateButton}
                         disabled={isDisabled(item)}
                         onClick={() => handlePaginationAction(item)}
                         key={index}

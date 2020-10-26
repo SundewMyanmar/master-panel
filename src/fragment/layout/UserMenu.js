@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
-import { makeStyles, IconButton, Avatar, Menu, MenuItem, ListItemIcon, Icon, ListItemText, Tooltip } from '@material-ui/core';
+import {
+    makeStyles,
+    IconButton,
+    Avatar,
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    Icon,
+    ListItemText,
+    Tooltip,
+    Divider,
+    useTheme,
+    Grid,
+    Typography,
+} from '@material-ui/core';
 import FileApi from '../../api/FileApi';
 import { USER_PROFILE_MENU } from '../../config/Constant';
 import { useHistory } from 'react-router-dom';
@@ -17,20 +31,24 @@ const styles = makeStyles(theme => ({
         height: theme.spacing(4),
     },
     menuIcon: {
-        color: theme.palette.primary.dark,
+        color: theme.palette.text.primary,
         display: 'inline-flex',
         flexShrink: 0,
         minWidth: theme.spacing(4),
     },
     menuText: {
-        color: theme.palette.primary.dark,
+        color: theme.palette.text.primary,
+    },
+    headerGrid: {
+        padding: theme.spacing(1),
     },
 }));
 
 const UserMenu = (props: UserMenuProps) => {
     const classes = styles();
     const history = useHistory();
-    const { name, image } = props;
+    const theme = useTheme();
+    const { name, role, image } = props;
     const [anchorEl, setAnchorEl] = useState(null);
 
     const imageUrl = FileApi.downloadLink(image, 'thumb');
@@ -68,7 +86,42 @@ const UserMenu = (props: UserMenuProps) => {
                     )}
                 </IconButton>
             </Tooltip>
-            <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                elevation={0}
+                getContentAnchorEl={null}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                <Grid className={classes.headerGrid} container direction="column" justify="center" alignItems="center">
+                    <Grid item>
+                        {imageUrl ? (
+                            <Avatar className={classes.avatar} alt={name} src={imageUrl} />
+                        ) : (
+                            <Avatar className={classes.avatar}>{name[0]}</Avatar>
+                        )}
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="subtitle1">{name}</Typography>
+                    </Grid>
+                    <Grid item style={{ display: !role ? 'none' : 'block' }}>
+                        <Typography variant="caption" display="block" gutterBottom>
+                            {role}
+                        </Typography>
+                    </Grid>
+                </Grid>
+
+                <Divider />
                 {menuItems.map((item, index) => {
                     return (
                         <MenuItem key={(item ? item.id : 'id') + '-' + index} onClick={() => handleClick(item)}>
@@ -85,7 +138,7 @@ const UserMenu = (props: UserMenuProps) => {
 };
 
 UserMenu.defaultProps = {
-    name: 'Unknown',
+    name: 'User',
 };
 
 export default UserMenu;
