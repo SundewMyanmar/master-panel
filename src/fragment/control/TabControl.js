@@ -11,14 +11,18 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper,
         padding: 8,
     },
+    tabControl: {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
     tabTitle: {
         minWidth: 150,
-        textTransform: 'none',
+        minHeight: 60,
         flex: 'none',
+        textTransform: 'none',
+        color: theme.palette.text.primary,
     },
     tabPanel: {
         backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.background.default}`,
     },
 }));
 
@@ -58,14 +62,14 @@ export type TabControlProps = {
     tabs: Object,
     orientation: 'horizontal' | 'vertical',
     indicatorColor: 'secondary' | 'primary',
-    textColor: 'secondary' | 'primary' | 'inherit',
+    // textColor: 'secondary' | 'primary' | 'inherit',
     variant: 'standard' | 'scrollable' | 'fullWidth',
     scrollButtons: 'auto' | 'desktop' | 'on' | 'off',
     onChange: (e, newValue) => void,
 };
 
 const TabControl = (props: TabScrollButtonProps) => {
-    const { tabs, onChange, orientation, textColor, indicatorColor, variant, scrollButtons } = props;
+    const { tabs, onChange, orientation, /*textColor,*/ indicatorColor, variant, scrollButtons } = props;
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -76,8 +80,24 @@ const TabControl = (props: TabScrollButtonProps) => {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="default">
-                <Tabs
+            {/* <AppBar position="static" color="primary"> */}
+            <Tabs
+                className={classes.tabControl}
+                value={value}
+                onChange={handleChange}
+                aria-label="sundew-tab-control"
+                variant={variant || 'standard'}
+                scrollButtons={scrollButtons || 'on'}
+                indicatorColor={indicatorColor || 'secondary'}
+                // textColor={textColor || 'primary'}
+                TabIndicatorProps={{
+                    style: {
+                        height: 4,
+                    },
+                }}
+                orientation={orientation || 'horizontal'}
+            >
+                {/* <Tabs
                     value={value}
                     onChange={handleChange}
                     variant={variant || 'standard'}
@@ -86,25 +106,20 @@ const TabControl = (props: TabScrollButtonProps) => {
                     textColor={textColor || 'primary'}
                     orientation={orientation || 'horizontal'}
                     aria-label="scrollable force tabs example"
-                    TabIndicatorProps={{
-                        style: {
-                            height: 4,
-                        },
-                    }}
-                >
-                    {tabs &&
-                        tabs.map((tab, index) => (
-                            <Tab
-                                key={`tab-header-${tabs.indexOf(tab)}`}
-                                label={tab.label}
-                                className={classes.tabTitle}
-                                icon={<Icon>{tab.icon}</Icon>}
-                                {...a11yProps(tabs.indexOf(tab))}
-                                wrapped
-                            />
-                        ))}
-                </Tabs>
-            </AppBar>
+                > */}
+                {tabs &&
+                    tabs.map((tab, index) => (
+                        <Tab
+                            key={`tab-header-${tabs.indexOf(tab)}`}
+                            label={tab.label}
+                            className={classes.tabTitle}
+                            icon={<Icon>{tab.icon}</Icon>}
+                            {...a11yProps(tabs.indexOf(tab))}
+                            wrapped
+                        />
+                    ))}
+            </Tabs>
+            {/* </AppBar> */}
             {tabs &&
                 tabs.map(tab => (
                     <TabPanel className={classes.tabPanel} key={`tab-content-${tabs.indexOf(tab)}`} value={value} index={tabs.indexOf(tab)}>

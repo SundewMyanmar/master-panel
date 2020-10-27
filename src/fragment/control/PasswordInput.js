@@ -14,7 +14,7 @@ const STRENGTH_REGEX = {
 
 export default function PasswordInput(props: Props) {
     const [showPassword, setShowPassword] = React.useState(false);
-    const { onValidate, ...rest } = props;
+    const { onValidate, variant, ...rest } = props;
 
     const handleValidation = event => {
         const value = event.target.value;
@@ -31,11 +31,20 @@ export default function PasswordInput(props: Props) {
 
         return error;
     };
+
+    let variantProps = { variant: variant };
+    if (variant !== 'standard') {
+        variantProps = {
+            ...variantProps,
+            icon: 'lock',
+        };
+    }
+
     return (
         <TextInput
             {...rest}
             type={showPassword ? 'text' : 'password'}
-            icon="lock"
+            {...variantProps}
             onValidate={handleValidation}
             InputProps={{
                 endAdornment: (

@@ -44,10 +44,12 @@ const useTreeItemStyles = makeStyles(theme => ({
     },
     labelIcon: {
         marginRight: theme.spacing(1),
+        color: theme.palette.text.primary,
     },
     labelText: {
         fontWeight: 'inherit',
         flexGrow: 1,
+        color: theme.palette.text.primary,
     },
 }));
 
@@ -82,6 +84,7 @@ export const DefaultTreeItem = props => {
             classes={{
                 root: classes.root,
                 content: classes.content,
+                selected: classes.selected,
                 expanded: classes.expanded,
                 group: classes.group,
                 label: classes.label,

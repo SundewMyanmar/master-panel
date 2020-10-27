@@ -3,6 +3,7 @@ import * as React from 'react';
 import { InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
 import IconPicker from './IconPicker';
 import FormatManager from '../../util/FormatManager';
+import { common } from '../../config/Theme';
 
 export type IconInputProps = {
     ...InputProps,
@@ -18,14 +19,17 @@ export type IconInputProps = {
 };
 
 const styles = makeStyles(theme => ({
-    root: {},
+    root: {
+        backgroundColor: 'inherit',
+    },
     label: props => ({
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
     }),
     content: props => ({
+        backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0, 0.5, 1.5),
         borderColor: props.invalid ? theme.palette.error.main : theme.palette.common.gray,
@@ -33,6 +37,9 @@ const styles = makeStyles(theme => ({
             borderColor: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
         },
     }),
+    openIcon: {
+        color: theme.palette.text.primary,
+    },
     chip: {
         margin: theme.spacing(0.5, 0.5, 0.5, 0),
     },
@@ -55,7 +62,24 @@ const styles = makeStyles(theme => ({
 }));
 
 const IconInput = (props: IconInputProps) => {
-    const { values, label, id, name, inputRef, value, icon, placeholder, disableRemove, multi, fields, onValidate, onChange, ...rest } = props;
+    const {
+        variant,
+        height,
+        values,
+        label,
+        id,
+        name,
+        inputRef,
+        value,
+        icon,
+        placeholder,
+        disableRemove,
+        multi,
+        fields,
+        onValidate,
+        onChange,
+        ...rest
+    } = props;
     const [showIcons, setShowIcons] = React.useState(false);
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
@@ -128,7 +152,7 @@ const IconInput = (props: IconInputProps) => {
         if (!hasData) {
             return (
                 <Typography className={classes.placeholder} variant="body1">
-                    {placeholder || 'Choose ' + label}
+                    {placeholder || 'Choose ' + (label || name || id)}
                 </Typography>
             );
         }
@@ -151,6 +175,7 @@ const IconInput = (props: IconInputProps) => {
         }
         return (
             <Chip
+                {...heightProps}
                 className={classes.chip}
                 onDelete={disableRemove ? null : () => handleRemove(selectedData)}
                 icon={<Icon>{selectedData}</Icon>}
@@ -158,6 +183,18 @@ const IconInput = (props: IconInputProps) => {
             />
         );
     };
+
+    let variantProps = { style: { border: 'none' } };
+    let heightProps = {};
+    let borderProps = {
+        // borderBottom: '1px solid ' + common.black,
+    };
+    if (variant !== 'standard') {
+        variantProps = {};
+        borderProps = {};
+    }
+
+    if (variant === 'standard' && height) heightProps = { style: { height: height } };
 
     return (
         <>
@@ -169,12 +206,12 @@ const IconInput = (props: IconInputProps) => {
                 onError={handleError}
                 selectedData={selectedData}
             />
-            <FormControl variant="outlined" margin="normal" fullWidth className={classes.root}>
+            <FormControl {...rest} variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
                     {label} {props.required ? '*' : ''}
                 </InputLabel>
-                <Paper variant="outlined" classes={{ root: classes.content }}>
-                    <Grid container>
+                <Paper {...variantProps} variant="outlined" classes={{ root: classes.content }}>
+                    <Grid container style={{ ...borderProps }}>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
                             {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
                             <div style={{ position: 'relative' }}>
@@ -189,7 +226,7 @@ const IconInput = (props: IconInputProps) => {
                             </div>
                         </Grid>
                         <Grid className={classes.actionButton} container item xs={2} sm={2} justify="flex-end" alignItems="center">
-                            <IconButton disableRipple onClick={() => setShowIcons(true)} color="primary" aria-label="Choose">
+                            <IconButton disableRipple onClick={() => setShowIcons(true)} className={classes.openIcon} aria-label="Choose">
                                 <Icon>open_in_new</Icon>
                             </IconButton>
                         </Grid>

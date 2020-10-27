@@ -45,6 +45,9 @@ const styles = makeStyles(theme => ({
         height: 4,
         display: 'block',
     },
+    closeButton: {
+        color: theme.palette.text.primary,
+    },
 }));
 
 const TablePicker = (props: TablePickerProps) => {
@@ -91,7 +94,6 @@ const TablePicker = (props: TablePickerProps) => {
     }, [selectedData]);
 
     useEffect(() => {
-        console.log('load table');
         loadData(0, paging.pageSize, paging.sort);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
@@ -142,7 +144,7 @@ const TablePicker = (props: TablePickerProps) => {
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justify="flex-start">
-                            <Typography color="primary" variant="h6" component="h1" noWrap>
+                            <Typography color="textPrimary" variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>
@@ -151,7 +153,7 @@ const TablePicker = (props: TablePickerProps) => {
                         </Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
                             <Tooltip title="Close Dialog">
-                                <IconButton size="small" color="primary" onClick={() => handleClose(false)} aria-label="Close">
+                                <IconButton size="small" className={classes.closeButton} onClick={() => handleClose(false)} aria-label="Close">
                                     <Icon>close</Icon>
                                 </IconButton>
                             </Tooltip>

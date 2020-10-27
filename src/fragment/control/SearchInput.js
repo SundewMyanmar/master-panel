@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, TextFieldProps, InputAdornment, Icon, IconButton } from '@material-ui/core';
+import { TextField, TextFieldProps, InputAdornment, Icon, IconButton, makeStyles } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 
 export type SearchIpnutProps = {
@@ -11,11 +11,17 @@ export type SearchIpnutProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
+const styles = makeStyles(theme => ({
+    closeButton: {
+        color: theme.palette.text.primary,
+    },
+}));
+
 export default function SearchInput(props: SearchIpnutProps) {
     const { id, name, value, onSearch, onChange, ...rest } = props;
     const [search, setSearch] = React.useState(value);
     const searchTextField = React.createRef();
-
+    const classes = styles();
     //Set value if props.value changed.
     React.useEffect(() => {
         const newValue = FormatManager.defaultNull(value) || '';
@@ -53,7 +59,7 @@ export default function SearchInput(props: SearchIpnutProps) {
         let inputProps = {
             startAdornment: (
                 <InputAdornment position="start">
-                    <Icon color="primary">search</Icon>
+                    <Icon color="textPrimary">search</Icon>
                 </InputAdornment>
             ),
         };
@@ -63,7 +69,7 @@ export default function SearchInput(props: SearchIpnutProps) {
                 <InputAdornment position="end">
                     {search ? (
                         <IconButton edge="end" aria-label="Clear filter text" onClick={handleClearText} size="small">
-                            <Icon color="primary" fontSize="small">
+                            <Icon className={classes.closeButton} fontSize="small">
                                 close
                             </Icon>
                         </IconButton>

@@ -2,7 +2,7 @@
  * @flow
  */
 import * as React from 'react';
-import { TextField, TextFieldProps, InputAdornment, Icon } from '@material-ui/core';
+import { TextField, InputBase, TextFieldProps, InputAdornment, Icon } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 
 export type TextInputProps = {
@@ -10,17 +10,18 @@ export type TextInputProps = {
     icon?: string,
     required: boolean,
     label: string,
+    variant: 'filled' | 'outlined' | 'standard',
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-export default function TextInput(props: TextInputProps) {
+const TextInput = (props: TextInputProps) => {
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
 
     //Remove default onChange
     //Skip onValidate props to parent componets
-    const { id, name, inputRef, value, onChange, onValidate, icon, ...rest } = props;
+    const { id, name, variant, inputRef, value, onChange, onValidate, icon, ...rest } = props;
 
     const currentInput = inputRef || React.createRef();
 
@@ -41,7 +42,7 @@ export default function TextInput(props: TextInputProps) {
         const data = event.target.value;
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
-            errorText = props.label + " can't be blank.";
+            errorText = (props.label || props.name || props.id) + " can't be blank.";
         } else if (onValidate) {
             errorText = onValidate(event);
         }
@@ -69,23 +70,54 @@ export default function TextInput(props: TextInputProps) {
 
     const placeholder = 'Enter ' + FormatManager.camelToReadable(id || name);
 
-    return (
-        <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            InputLabelProps={{
+    let variantProps = { variant: variant };
+    if (variant !== 'standard') {
+        variantProps = {
+            ...variantProps,
+            InputLabelProps: {
                 shrink: true,
-            }}
-            placeholder={placeholder}
-            {...rest}
-            id={id || name}
-            name={name || id}
-            inputRef={currentInput}
-            error={invalid}
-            helperText={error}
-            onChange={handleTextChange}
-            InputProps={buildInputIcon(icon)}
-        />
+            },
+            helperText: error,
+        };
+    }
+
+    return (
+        <>
+            {variant == 'standard' ? (
+                <InputBase
+                    {...variantProps}
+                    margin="normal"
+                    fullWidth
+                    placeholder={placeholder}
+                    {...rest}
+                    id={id || name}
+                    name={name || id}
+                    inputRef={currentInput}
+                    error={invalid}
+                    onChange={handleTextChange}
+                    InputProps={buildInputIcon(icon)}
+                />
+            ) : (
+                <TextField
+                    {...variantProps}
+                    margin="normal"
+                    fullWidth
+                    placeholder={placeholder}
+                    {...rest}
+                    id={id || name}
+                    name={name || id}
+                    inputRef={currentInput}
+                    error={invalid}
+                    onChange={handleTextChange}
+                    InputProps={buildInputIcon(icon)}
+                />
+            )}
+        </>
     );
-}
+};
+
+TextInput.defaultProps = {
+    variant: 'outlined',
+};
+
+export default TextInput;

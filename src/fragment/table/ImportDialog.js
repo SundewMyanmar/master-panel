@@ -126,9 +126,10 @@ export default function ImportDialog(props: ImportDialgProps) {
             const file = files[0];
             const fileReader = new FileReader();
             fileReader.onload = () => {
-                if (file.type.endsWith('csv')) {
+                if (file.type.endsWith('csv') || file.name.endsWith('csv')) {
                     try {
                         const csv = CsvReader(fields, fileReader.result);
+
                         setData(csv);
                     } catch (error) {
                         setMessage(error);

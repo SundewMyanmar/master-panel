@@ -15,7 +15,7 @@ import {
     Link,
 } from '@material-ui/core';
 import { SwatchesPicker, SketchPicker } from 'react-color';
-import { primary } from '../../config/Theme';
+import { info } from '../../config/Theme';
 
 type ColorPickerProps = {
     show: boolean,
@@ -51,6 +51,9 @@ const styles = makeStyles(theme => ({
         height: 4,
         display: 'block',
     },
+    titleText: {
+        color: theme.palette.text.primary,
+    },
 }));
 
 const ColorPicker = (props: ColorPickerProps) => {
@@ -85,14 +88,14 @@ const ColorPicker = (props: ColorPickerProps) => {
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={8} md={8} sm={8} xs={12} alignItems="center" justify="flex-start">
-                            <Typography color="primary" variant="h6" component="h1" noWrap>
+                            <Typography className={classes.titleText} variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>
 
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
                             <Tooltip title="Close Dialog">
-                                <IconButton size="small" color="primary" onClick={() => handleClose()} aria-label="Close">
+                                <IconButton size="small" className={classes.titleText} onClick={() => handleClose()} aria-label="Close">
                                     <Icon>close</Icon>
                                 </IconButton>
                             </Tooltip>
@@ -104,7 +107,9 @@ const ColorPicker = (props: ColorPickerProps) => {
                         <Link
                             style={{
                                 cursor: 'pointer',
-                                backgroundColor: type == 'SKETCH' ? primary.contrastText : primary.light,
+                                backgroundColor: type == 'SKETCH' ? 'inherit' : info.light,
+                                padding: 3,
+                                borderRadius: 2,
                             }}
                             color="inherit"
                             onClick={() => setType('SWATCH')}
@@ -114,7 +119,9 @@ const ColorPicker = (props: ColorPickerProps) => {
                         <Link
                             style={{
                                 cursor: 'pointer',
-                                backgroundColor: type == 'SKETCH' ? primary.light : primary.contrastText,
+                                backgroundColor: type == 'SKETCH' ? info.light : 'inherit',
+                                padding: 3,
+                                borderRadius: 2,
                             }}
                             color="inherit"
                             onClick={() => setType('SKETCH')}

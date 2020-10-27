@@ -6,6 +6,8 @@ import MasterForm from '../../fragment/MasterForm';
 import FileApi from '../../api/FileApi';
 import ProfileApi from '../../api/ProfileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { primary, secondary } from '../../config/Theme';
+import FormatManager from '../../util/FormatManager';
 
 const styles = makeStyles(theme => ({
     paper: {
@@ -20,6 +22,7 @@ const styles = makeStyles(theme => ({
         padding: theme.spacing(3),
         margin: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
+        color: theme.palette.text.active,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -53,6 +56,18 @@ const Profile = props => {
                 if (!data.currentToken) {
                     data.currentToken = user.currentToken;
                 }
+                if (data.extras && data.extras.theme) {
+                    let theme = JSON.parse(data.extras.theme);
+                    console.log('theme', theme);
+                    data.primary = theme.primary.main || primary.main;
+                    data.secondary = theme.secondary.main || secondary.main;
+                    data.darkMode = theme.darkMode || false;
+                } else {
+                    data.primary = primary.main;
+                    data.secondary = secondary.main;
+                    data.darkMode = false;
+                }
+                console.log('theme2', data);
                 setUser(data);
             })
             .catch(handleError);
@@ -70,7 +85,17 @@ const Profile = props => {
                 roles: user.roles,
                 status: user.status,
                 phoneNumber: user.phoneNumber,
+                extras: user.extras || {},
             };
+
+            let theme = {
+                primary: form.primary ? FormatManager.generateThemeColors(form.primary) : primary,
+                secondary: form.secondary ? FormatManager.generateThemeColors(form.secondary) : secondary,
+                darkMode: form.darkMode ? true : false,
+            };
+
+            profile.extras.theme = JSON.stringify(theme);
+            console.log('profile', profile);
             if (form.image && form.image.id) {
                 profile.profileImage = form.image;
             } else if (form.image && !form.image.id) {
@@ -133,6 +158,28 @@ const Profile = props => {
             type: 'email',
             value: user ? user.email : '',
             disabled: true,
+        },
+        {
+            id: 'primary',
+            label: 'Primary Color',
+            required: false,
+            type: 'color',
+            value: user ? user.primary : '',
+        },
+        {
+            id: 'secondary',
+            label: 'Secondary Color',
+            required: false,
+            type: 'color',
+            value: user ? user.secondary : '',
+        },
+        {
+            id: 'darkMode',
+            label: 'Dark Mode',
+            required: false,
+            type: 'checkbox',
+            value: user ? user.darkMode : false,
+            checked: user ? (user.darkMode ? true : false) : false,
         },
     ];
 

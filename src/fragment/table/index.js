@@ -10,7 +10,23 @@ import {
     TableCell,
     TableContainer,
     Checkbox,
+    IconButton,
+    Icon,
 } from '@material-ui/core';
+import {
+    TextInput,
+    EmailInput,
+    PasswordInput,
+    NumberInput,
+    ImageInput,
+    CheckboxInput,
+    ListInput,
+    ObjectInput,
+    IconInput,
+    ChipInput,
+    ColorInput,
+    TabControl,
+} from '../control';
 import Cell from './Cell';
 import PaginationBar from '../PaginationBar';
 import { HeaderCell } from './HeaderCell';
@@ -29,6 +45,7 @@ export type TableField = {
 export type DataTableProps = {
     ...TableBaseProps,
     fields: Array<Object>,
+    inputFields: Array<Object>,
     items: Array<Object>,
     selectedData?: Array<Object> | Object,
     total?: number,
@@ -38,6 +55,7 @@ export type DataTableProps = {
     multi?: boolean,
     noData?: string,
     disablePaging?: boolean,
+    type: 'TABLE' | 'INPUT',
     onPageChange?: (page: number) => void,
     onRowClick?: (item: Object) => void,
     onSelectionChange?: (result: Object | Array<Object>) => void,
@@ -57,8 +75,16 @@ const styles = makeStyles(theme => ({
         background: theme.palette.background.default,
         borderBottom: theme.palette.primary.dark,
     },
+    inputTableRow: {
+        backgroundColor: 'inherit',
+        // height: 100,
+        margin: 0,
+    },
     tableFooter: {
         padding: theme.spacing(1),
+    },
+    footerRow: {
+        backgroundColor: theme.palette.background.paper,
     },
 }));
 
@@ -66,10 +92,10 @@ const SelectionCheckbox = makeStyles(theme => ({
     root: {
         color: theme.palette.primary.contrastText,
         '&$checked': {
-            color: theme.palette.secondary.main,
+            color: theme.palette.primary.light,
         },
         '&$indeterminate': {
-            color: theme.palette.secondary.main,
+            color: theme.palette.primary.light,
         },
     },
     checked: {},
@@ -82,6 +108,8 @@ const DataTable = (props: DataTableProps) => {
         multi,
         selectedData,
         fields,
+        inputFields,
+        value,
         items,
         total,
         pageSize,
@@ -89,6 +117,9 @@ const DataTable = (props: DataTableProps) => {
         sort,
         noData,
         disablePaging,
+        type,
+        onSave,
+        onInputChange,
         onPageChange,
         onRowClick,
         onSelectionChange,
@@ -173,6 +204,99 @@ const DataTable = (props: DataTableProps) => {
         });
     };
 
+    const handleValueChange = (field, event) => {
+        if (onInputChange) {
+            onInputChange(event);
+        }
+    };
+
+    const handleSave = () => {
+        if (onSave) {
+            onSave(value);
+        }
+    };
+
+    const handleKeyDown = evt => {
+        if (['Enter', 'Tab', ','].includes(evt.key)) {
+            evt.preventDefault();
+            if (onSave) {
+                onSave();
+            }
+        }
+    };
+
+    const renderControl = (type, inputProps) => {
+        inputProps = { ...inputProps, height: 30, variant: 'standard', display: 'simple', style: { margin: 0 } };
+        switch (type) {
+            case 'email':
+                return <EmailInput {...inputProps} />;
+            case 'password':
+                return <PasswordInput {...inputProps} />;
+            case 'number':
+                return <NumberInput {...inputProps} />;
+            case 'datetime':
+                return <TextInput type="datetime-local" {...inputProps} />;
+            case 'date':
+                return <TextInput type="date" {...inputProps} />;
+            case 'time':
+                return <TextInput type="time" {...inputProps} />;
+            case 'checkbox':
+                return <CheckboxInput {...inputProps} />;
+            case 'image':
+                return <ImageInput size={{ width: 30, height: 30 }} {...inputProps} />;
+            // case 'multi-image': {
+            //     return <MultiImagePicker {...inputProps} />;
+            // }
+            case 'icon':
+                return <IconInput {...inputProps} />;
+            case 'file':
+                return <ImageInput size={{ width: 30, height: 30 }} {...inputProps} />;
+            case 'list':
+                return <ListInput {...inputProps} />;
+            case 'table':
+                return <ObjectInput {...inputProps} />;
+            case 'chip':
+                return <ChipInput {...inputProps} />;
+            case 'color':
+                return <ColorInput {...inputProps} />;
+            default:
+                return <TextInput type={type} {...inputProps} />;
+        }
+    };
+
+    const renderTableInput = () => {
+        if (type == 'INPUT') {
+            return (
+                <TableRow className={classes.inputTableRow}>
+                    {multi ? <TableCell></TableCell> : null}
+                    {inputFields.map((field, index) => {
+                        const { type, ...inputProps } = field;
+                        if (!type || field.id == 'id' || field.name == 'id') {
+                            return <TableCell key={`ip-cell-${index}`}></TableCell>;
+                        }
+                        inputProps.key = field.id + '_' + index;
+                        inputProps.name = field.name || field.id;
+                        inputProps.onChange = event => handleValueChange(field, event);
+                        if (index == inputFields.length - 1) {
+                            inputProps.onKeyDown = handleKeyDown;
+                        }
+                        return (
+                            <TableCell style={{ backgroundColor: 'inherit' }} key={`ip-cell-${inputProps.key}`}>
+                                {renderControl(type, inputProps)}
+                            </TableCell>
+                        );
+                    })}
+                    <TableCell>
+                        <IconButton onClick={handleSave} style={{ marginTop: 6 }}>
+                            <Icon color="primary">input</Icon>
+                        </IconButton>
+                    </TableCell>
+                </TableRow>
+            );
+        }
+        return <></>;
+    };
+
     return (
         <TableContainer>
             <Table size={multi ? 'small' : 'medium'} className={classes.root} {...tableProps}>
@@ -185,6 +309,7 @@ const DataTable = (props: DataTableProps) => {
                                     indeterminate={rootState === 'indeterminate'}
                                     checked={rootState === 'checked'}
                                     value="root"
+                                    color="primary"
                                     onChange={handleRootClick}
                                 />
                             </TableCell>
@@ -192,9 +317,11 @@ const DataTable = (props: DataTableProps) => {
                         {fields.map((field, index) => (
                             <HeaderCell key={field.name + '-' + index} sort={sort} onSortChange={handleSortChange} field={field} />
                         ))}
+                        {type == 'INPUT' ? <TableCell></TableCell> : null}
                     </TableRow>
                 </TableHead>
                 <TableBody className={classes.tableBody}>
+                    {renderTableInput()}
                     {items && items.length > 0 ? (
                         items.map((row, dataIdx) => {
                             let pointerStyle = {
@@ -218,17 +345,13 @@ const DataTable = (props: DataTableProps) => {
                                 >
                                     {multi ? (
                                         <TableCell align="center" style={{ maxWidth: 64 }}>
-                                            <Checkbox
-                                                checked={marked}
-                                                onChange={() => handleCheck(row)}
-                                                value={row.id || dataIdx}
-                                                color="secondary"
-                                            />
+                                            <Checkbox checked={marked} onChange={() => handleCheck(row)} value={row.id || dataIdx} color="primary" />
                                         </TableCell>
                                     ) : null}
                                     {fields.map((field, index) => (
                                         <Cell key={field.name + '-' + index} rowIndex={dataIdx} field={field} data={row} />
                                     ))}
+                                    {type == 'INPUT' ? <TableCell></TableCell> : null}
                                 </TableRow>
                             );
                         })
@@ -244,6 +367,7 @@ const DataTable = (props: DataTableProps) => {
                     <TableFooter className={classes.tableFooter}>
                         <TableRow>
                             <PaginationBar
+                                className={classes.footerRow}
                                 colSpan={multi ? fields.length + 1 : fields.length}
                                 total={total}
                                 pageSize={pageSize}
