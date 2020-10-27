@@ -9,7 +9,7 @@ import ImagePreview from '../../fragment/file/ImagePreview';
 import FileGrid from '../../fragment/file/FileGrid';
 import { MultiUpload } from '../../fragment/file/MultiUpload';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     header: {
         flex: 1,
         borderBottom: '1px solid ' + theme.palette.divider,
@@ -42,7 +42,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const File = props => {
+const File = (props) => {
     const classes = styles();
 
     const [loading, setLoading] = React.useState(false);
@@ -55,7 +55,7 @@ const File = props => {
     const [preview, setPreview] = React.useState(null);
     const [showUploadDialog, setShowUploadDialog] = React.useState(false);
 
-    const handleError = error => {
+    const handleError = (error) => {
         setError(error.message || error.title || 'Please check your internet connection and try again.');
         setLoading(false);
     };
@@ -87,12 +87,12 @@ const File = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
-    const handleRemove = file => {
+    const handleRemove = (file) => {
         setRemoveData(file);
         setQuestion('Are you sure to remove file : ' + file.name + '.' + file.extension + ' ?');
     };
 
-    const handleItemClick = file => {
+    const handleItemClick = (file) => {
         setPreview(file);
     };
 
@@ -101,11 +101,11 @@ const File = props => {
     };
 
     //Remove Data if confirmation is Yes
-    const handleQuestionDialog = status => {
+    const handleQuestionDialog = (status) => {
         if (status && removeData) {
             setLoading(true);
             FileApi.removeById(removeData.id)
-                .then(response => {
+                .then((response) => {
                     loadData(0, paging.pageSize, paging.sort);
                 })
                 .catch(handleError);
@@ -114,11 +114,11 @@ const File = props => {
         setRemoveData(null);
     };
 
-    const handleUpload = result => {
+    const handleUpload = (result) => {
         if (result && result.length > 0) {
             setLoading(true);
             FileApi.upload(result, false)
-                .then(response => {
+                .then((response) => {
                     loadData(0, paging.pageSize, paging.sort);
                 })
                 .catch(handleError);
@@ -142,7 +142,7 @@ const File = props => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" justify="center">
-                        <SearchInput onSearch={value => setSearch(value)} placeholder="Search Files" />
+                        <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
                         <Button
@@ -166,8 +166,8 @@ const File = props => {
                                     total={paging.total}
                                     pageSize={paging.pageSize}
                                     currentPage={paging.currentPage}
-                                    onPageChange={newPage => loadData(newPage, paging.pageSize)}
-                                    onPageSizeChange={size => loadData(0, size)}
+                                    onPageChange={(newPage) => loadData(newPage, paging.pageSize)}
+                                    onPageSizeChange={(size) => loadData(0, size)}
                                 />
                             </TableRow>
                         </TableFooter>

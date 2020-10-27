@@ -9,7 +9,7 @@ import { STORAGE_KEYS } from '../../config/Constant';
 import { primary, secondary } from '../../config/Theme';
 import FormatManager from '../../util/FormatManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -40,19 +40,19 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const Profile = props => {
+const Profile = (props) => {
     const classes = styles();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleError = error => {
+    const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
     const [user, setUser] = useState(() => {
         ProfileApi.getProfile()
-            .then(data => {
+            .then((data) => {
                 if (!data.currentToken) {
                     data.currentToken = user.currentToken;
                 }
@@ -75,7 +75,7 @@ const Profile = props => {
     });
     const [noti, setNoti] = useState('');
 
-    const handleSubmit = async form => {
+    const handleSubmit = async (form) => {
         setLoading(true);
         try {
             let profile = {

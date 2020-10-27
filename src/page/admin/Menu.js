@@ -37,7 +37,7 @@ export const MENU_TABLE_FIELDS = [
     },
 ];
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -91,7 +91,7 @@ const INIT_MENU = {
     parentId: null,
 };
 
-const Menu = props => {
+const Menu = (props) => {
     const classes = styles();
 
     const [error, setError] = React.useState('');
@@ -101,7 +101,7 @@ const Menu = props => {
     const [selectedMenu, setSelectedMenu] = React.useState(INIT_MENU);
     //const AVAILABLE_PATHS = PrivateRoute.map(r => r.path);
 
-    const handleError = error => {
+    const handleError = (error) => {
         setError(error.message || error.title || 'Please check your internet connection and try again.');
         setLoading(false);
     };
@@ -114,7 +114,7 @@ const Menu = props => {
         return await RoleApi.getPaging(currentPage, pageSize, sort, search);
     };
 
-    const handleImport = async result => {
+    const handleImport = async (result) => {
         return MenuApi.importData(result);
     };
 
@@ -131,7 +131,7 @@ const Menu = props => {
         return [];
     });
 
-    const handleSubmit = async form => {
+    const handleSubmit = async (form) => {
         if (!window.navigator.onLine) {
             setError('Please check your internet connection and try again.');
             return;
@@ -148,7 +148,7 @@ const Menu = props => {
             menu.id = selectedMenu.id;
             menu.version = selectedMenu.version;
             MenuApi.modifyById(selectedMenu.id, menu)
-                .then(response => {
+                .then((response) => {
                     loadData();
                     setSelectedMenu(INIT_MENU);
                     setNoti('Modified menu : ' + response.id + '.');
@@ -156,7 +156,7 @@ const Menu = props => {
                 .catch(handleError);
         } else {
             MenuApi.addNew(menu)
-                .then(response => {
+                .then((response) => {
                     loadData();
                     setSelectedMenu(INIT_MENU);
                     setNoti('Created new menu : ' + response.id + '.');
@@ -165,15 +165,15 @@ const Menu = props => {
         }
     };
 
-    const handleClickMenu = menu => {
+    const handleClickMenu = (menu) => {
         if (menu.parentId && menu.parentId > 0) {
             //Find Parent Menu
             const findParent = (childMenu, menuList) => {
-                let parentMenu = menuList.find(m => m.id === menu.parentId);
+                let parentMenu = menuList.find((m) => m.id === menu.parentId);
                 if (parentMenu) {
                     setSelectedMenu({ ...childMenu, parent: parentMenu });
                 } else {
-                    menuList.forEach(m => {
+                    menuList.forEach((m) => {
                         if (m.items) {
                             findParent(childMenu, m.items);
                         }
@@ -193,7 +193,7 @@ const Menu = props => {
         }
         setSelectedMenu(newMenu);
     };
-    const handleQuestionDialog = result => {
+    const handleQuestionDialog = (result) => {
         if (result && selectedMenu && selectedMenu.id) {
             setLoading(true);
             MenuApi.removeById(selectedMenu.id)
@@ -259,7 +259,7 @@ const Menu = props => {
             type: 'table',
             fields: MENU_TABLE_FIELDS,
             onLoadData: handleParentMenuData,
-            onLoadItem: item => item,
+            onLoadItem: (item) => item,
             value: selectedMenu.parent,
         },
         {
@@ -271,7 +271,7 @@ const Menu = props => {
             required: true,
             fields: ROLE_TABLE_FIELDS,
             onLoadData: handleRoleData,
-            onLoadItem: item => item.name,
+            onLoadItem: (item) => item.name,
             values: selectedMenu.roles,
         },
         {
@@ -304,7 +304,7 @@ const Menu = props => {
                                 <TreeMenu menus={data} onClickItem={handleClickMenu} />
                             </Grid>
                             <Grid container item>
-                                <ImportMenu fields={fields.map(f => f.id)} onImportItems={handleImport} className={classes.newButton} />
+                                <ImportMenu fields={fields.map((f) => f.id)} onImportItems={handleImport} className={classes.newButton} />
                             </Grid>
                         </Grid>
                         <Grid className={classes.inputBox} container item md={7} sm={12} xs={12} justify="flex-end" alignContent="flex-start">

@@ -16,7 +16,7 @@ import {
 import { ErrorTheme } from '../../config/Theme';
 import FileApi from '../../api/FileApi';
 
-const FileInfoField = props => {
+const FileInfoField = (props) => {
     const { label, value, ...rest } = props;
     return (
         <Grid container {...rest}>
@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
-const style = makeStyles(theme => ({
+const style = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(0.5),
         position: 'relative',

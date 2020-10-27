@@ -8,7 +8,7 @@ import AuthApi from '../../api/AuthApi';
 import MasterForm from '../../fragment/MasterForm';
 import { STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -39,7 +39,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const Register = props => {
+const Register = (props) => {
     const classes = styles();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ const Register = props => {
                 sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Register success! Please log in to continue.');
                 history.push('/login');
             })
-            .catch(error => {
+            .catch((error) => {
                 setLoading(false);
                 setError(error.message || error.title || 'Please check your internet connection and try again.');
             });

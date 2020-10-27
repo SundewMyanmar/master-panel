@@ -9,7 +9,7 @@ import { STORAGE_KEYS, FACEBOOK } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         backgroundColor: theme.palette.background.paper,
         paddingLeft: theme.spacing(3),
@@ -69,7 +69,7 @@ const loginFields = [
     },
 ];
 
-const Login = props => {
+const Login = (props) => {
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -82,7 +82,7 @@ const Login = props => {
 
     const classes = styles();
 
-    const handleError = error => {
+    const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
@@ -94,7 +94,7 @@ const Login = props => {
         // }
         setLoading(true);
         AuthApi.authByUserAndPassword(form)
-            .then(data => {
+            .then((data) => {
                 sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(data));
                 history.push('/');
             })

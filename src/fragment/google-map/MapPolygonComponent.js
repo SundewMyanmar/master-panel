@@ -28,13 +28,13 @@ const MapPolygonComponent = (props: MapPolygonComponent) => {
     const [focusPolygon, setFocusPolygon] = useState(null);
     const [clickedPolygon, setClickedPolygon] = useState(null);
 
-    const handleOnClick = pg => {
+    const handleOnClick = (pg) => {
         if (onClick) onClick(pg);
     };
 
     var polygonElements =
         polygons &&
-        polygons.map(pg => (
+        polygons.map((pg) => (
             <Polygon
                 onClick={() => {
                     console.log('PG', pg);
@@ -68,9 +68,9 @@ const MapPolygonComponent = (props: MapPolygonComponent) => {
                             <InfoBox position={focusPosition} options={{ closeBoxURL: ``, enableEventPropagation: true }}>
                                 <div style={rawStyles.infoBox}>
                                     <div style={rawStyles.infoText}>
-                                        {`${focusPolygon && focusPolygon.VT} ${focusPolygon &&
-                                            focusPolygon.VT_MYA_M3 &&
-                                            ' - ' + focusPolygon.VT_MYA_M3}`}
+                                        {`${focusPolygon && focusPolygon.VT} ${
+                                            focusPolygon && focusPolygon.VT_MYA_M3 && ' - ' + focusPolygon.VT_MYA_M3
+                                        }`}
                                         <br />
                                         {`${focusPolygon && focusPolygon.TS}`}
                                         <br />

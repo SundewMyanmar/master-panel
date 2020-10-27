@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonProps, Button, Icon, makeStyles } from '@material-ui/core';
 import ImportDialog from './ImportDialog';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(0.5),
     },
@@ -12,7 +12,7 @@ type ImportMenuProps = {
     ...ButtonProps,
     label?: string,
     title?: string,
-    onImportItems?: data => void,
+    onImportItems?: (data) => void,
     fields: Array,
 };
 
@@ -21,14 +21,14 @@ const ImportMenu = (props: ImportMenuProps) => {
     const classes = styles();
     const [showImport, setShowImport] = React.useState(false);
 
-    const handleClose = result => {
+    const handleClose = (result) => {
         if (result && result.length > 0) {
             onImportItems(result);
         }
         setShowImport(false);
     };
 
-    const importablFields = fields.map(field => ({ name: field, label: field }));
+    const importablFields = fields.map((field) => ({ name: field, label: field }));
 
     return (
         <>
@@ -42,7 +42,7 @@ const ImportMenu = (props: ImportMenuProps) => {
 };
 
 ImportMenu.defaultProps = {
-    onImportItems: data => console.warn('Undefined onImportItems => ', data),
+    onImportItems: (data) => console.warn('Undefined onImportItems => ', data),
 };
 
 export default ImportMenu;

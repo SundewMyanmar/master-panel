@@ -10,7 +10,7 @@ import { ROLE_TABLE_FIELDS } from './Role';
 import FileApi from '../../api/FileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -29,7 +29,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const UserDetail = props => {
+const UserDetail = (props) => {
     const classes = styles();
     const history = useHistory();
     const { id } = useParams();
@@ -41,7 +41,7 @@ const UserDetail = props => {
         return await RoleApi.getPaging(currentPage, pageSize, sort, search);
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
@@ -49,11 +49,11 @@ const UserDetail = props => {
     const [detail, setDetail] = useState(() => {
         setLoading(true);
         UserApi.getById(id)
-            .then(data => {
+            .then((data) => {
                 setDetail(data);
                 setUpdate(true);
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.code !== 'HTTP_406') {
                     handleError(error);
                 } else {
@@ -64,7 +64,7 @@ const UserDetail = props => {
         return {};
     });
 
-    const handleSubmit = async form => {
+    const handleSubmit = async (form) => {
         if (!window.navigator.onLine) {
             setError('Please check your internet connection and try again.');
             return;
@@ -99,7 +99,7 @@ const UserDetail = props => {
             user.password = 'default_password';
             user.version = detail.version;
             UserApi.modifyById(id, user)
-                .then(response => {
+                .then((response) => {
                     setLoading(false);
                     sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Modified user : ' + response.id + ' .');
                     history.push('/user');
@@ -107,7 +107,7 @@ const UserDetail = props => {
                 .catch(handleError);
         } else {
             UserApi.addNew(user)
-                .then(response => {
+                .then((response) => {
                     setLoading(false);
                     sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Created new user : ' + response.id + ' .');
                     history.push('/user');
@@ -174,7 +174,7 @@ const UserDetail = props => {
             required: true,
             fields: ROLE_TABLE_FIELDS,
             onLoadData: handleRoleData,
-            onLoadItem: item => item.name,
+            onLoadItem: (item) => item.name,
             values: detail.roles,
         },
         {

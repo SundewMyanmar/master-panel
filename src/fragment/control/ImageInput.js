@@ -22,7 +22,7 @@ type ImageInputProps = {
     onChange: (image: Object | string) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         cursor: 'pointer',
         position: 'relative',
@@ -114,7 +114,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleCloseMenu = item => {
+    const handleCloseMenu = (item) => {
         if (item.id === 'gallery') {
             setShowFile(true);
         } else if (item.id === 'upload') {
@@ -124,7 +124,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setShowMenu(false);
     };
 
-    const handleCloseFile = result => {
+    const handleCloseFile = (result) => {
         setShowFile(false);
         if (result === false) {
             return;
@@ -134,13 +134,13 @@ const ImagePicker = (props: ImageInputProps) => {
         handleChange(result, url);
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         setShowFile(false);
         setShowMenu(false);
         setError(error);
     };
 
-    const handleImageChange = event => {
+    const handleImageChange = (event) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
@@ -152,7 +152,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleRemove = event => {
+    const handleRemove = (event) => {
         handleChange(null, null);
         if (onRemove) onRemove(index);
     };

@@ -15,8 +15,6 @@ import {
     ColorInput,
     TabControl,
 } from './control';
-import { background } from '../config/Theme';
-import { MultiImagePicker } from './control/ImageInput';
 import { TextInputProps } from './control/TextInput';
 
 export type Field = {
@@ -40,7 +38,7 @@ export type MasterFormProps = {
     onKeyDown: () => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         backgroundColor: theme.palette.background.paper,
     },
@@ -53,7 +51,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const classes = styles();
     const { type, variant, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
 
-    const handleFormSubmit = event => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
         let allow = true;
 
@@ -80,7 +78,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
     };
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e) => {
         if (onKeyDown) {
             onKeyDown(e);
         }
@@ -126,8 +124,8 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
     };
 
-    const renderTab = datas => {
-        datas = datas.map(data => {
+    const renderTab = (datas) => {
+        datas = datas.map((data) => {
             if (data.fields) data.content = renderGrid(data.fields);
 
             return data;
@@ -135,7 +133,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         return <TabControl {...rest} centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
     };
 
-    const renderGrid = datas => {
+    const renderGrid = (datas) => {
         return (
             <Grid
                 style={{ backgroundColor: 'inherit' }}
@@ -147,10 +145,10 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     const { type, ...inputProps } = field;
                     inputProps.key = field.id + '_' + index;
                     inputProps.name = field.name || field.id;
-                    inputProps.onChange = event => handleValueChange(field, event);
+                    inputProps.onChange = (event) => handleValueChange(field, event);
 
                     if (field.onValidate) {
-                        inputProps.onValidate = event => field.onValidate(event, form);
+                        inputProps.onValidate = (event) => field.onValidate(event, form);
                     }
 
                     return (

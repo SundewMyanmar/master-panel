@@ -7,7 +7,7 @@ import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
 import { STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -26,7 +26,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const RoleDetail = props => {
+const RoleDetail = (props) => {
     const classes = styles();
     const history = useHistory();
     const { id } = useParams();
@@ -34,7 +34,7 @@ const RoleDetail = props => {
     const [error, setError] = useState('');
     const [isUpdate, setUpdate] = useState(id > 0);
 
-    const handleError = error => {
+    const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
@@ -42,10 +42,10 @@ const RoleDetail = props => {
     const [detail, setDetail] = useState(() => {
         setLoading(true);
         RoleApi.getById(id)
-            .then(data => {
+            .then((data) => {
                 setDetail(data);
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.code !== 'HTTP_406') {
                     handleError(error);
                 } else {
@@ -66,7 +66,7 @@ const RoleDetail = props => {
             form.id = id;
             form.version = detail.version;
             RoleApi.modifyById(id, form)
-                .then(response => {
+                .then((response) => {
                     setLoading(false);
                     sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Modified role : ${response.id} .`);
                     history.push('/role');
@@ -74,7 +74,7 @@ const RoleDetail = props => {
                 .catch(handleError);
         } else {
             RoleApi.addNew(form)
-                .then(response => {
+                .then((response) => {
                     setLoading(false);
                     sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Created new role : ${response.id} .`);
                     history.push('/role');

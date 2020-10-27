@@ -38,5 +38,5 @@ export default function QuestionDialog(props: QuestionDialogProps) {
 }
 
 QuestionDialog.defaultProps = {
-    onClose: result => console.warn('Undefined onClose => ', result),
+    onClose: (result) => console.warn('Undefined onClose => ', result),
 };

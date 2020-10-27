@@ -3,7 +3,7 @@ import React from 'react';
 import { ButtonProps, Button, Icon, Menu, MenuItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { BATCH_ACTION_MENU } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     menuIcon: {
         color: theme.palette.primary.dark,
         display: 'inline-flex',
@@ -30,14 +30,14 @@ const ActionMenu = (props: ActionMenuProps) => {
         setAnchorEl(null);
     };
 
-    const handleClick = item => {
+    const handleClick = (item) => {
         setAnchorEl(null);
         onMenuItemClick(item);
     };
 
     return (
         <>
-            <Button onClick={event => setAnchorEl(event.currentTarget)} variant="contained" aria-label="Batch Actions" {...buttonProps}>
+            <Button onClick={(event) => setAnchorEl(event.currentTarget)} variant="contained" aria-label="Batch Actions" {...buttonProps}>
                 {label ? label : 'Action'}
                 <Icon>arrow_drop_down</Icon>
             </Button>
@@ -58,7 +58,7 @@ const ActionMenu = (props: ActionMenuProps) => {
 };
 
 ActionMenu.defaultProps = {
-    onMenuItemClick: item => console.warn('Undefined onMenuItemClick => ', item),
+    onMenuItemClick: (item) => console.warn('Undefined onMenuItemClick => ', item),
 };
 
 export default ActionMenu;

@@ -8,7 +8,7 @@ import AuthApi from '../../api/AuthApi';
 import { AlertDialog, LoadingDialog } from '../../fragment/message';
 import { STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -39,7 +39,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const ForgetPassword = props => {
+const ForgetPassword = (props) => {
     const classes = styles();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -54,12 +54,12 @@ const ForgetPassword = props => {
         const callbackUrl = window.location.origin + '/auth/resetPassword';
 
         AuthApi.forgetPassword({ ...form, callback: callbackUrl })
-            .then(data => {
+            .then((data) => {
                 setLoading(false);
                 sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, data.message);
                 history.push('/login');
             })
-            .catch(error => {
+            .catch((error) => {
                 setLoading(false);
                 setError(error.message || error.title || 'Please check your internet connection and try again.');
             });

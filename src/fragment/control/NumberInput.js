@@ -16,7 +16,7 @@ const VALIDATE_REGEX = {
 export default function NumberInput(props: Props) {
     const { onValidate, ...rest } = props;
 
-    const handleValidation = event => {
+    const handleValidation = (event) => {
         const value = event.target.value;
 
         const regex = VALIDATE_REGEX[props.valid];

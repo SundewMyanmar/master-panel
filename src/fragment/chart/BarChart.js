@@ -16,7 +16,7 @@ export type SDBarChartProps = {
     mode: 'default' | 'minimal',
 };
 
-const SDBarChart = props => {
+const SDBarChart = (props) => {
     const { mode, data, width, height, title, xKey, yKey, dataKeys, legendIcon, layout } = props;
     const { theme } = props;
 
@@ -58,7 +58,7 @@ const SDBarChart = props => {
         <ResponsiveContainer width={width || '80%'} height={height || 280}>
             {mode == 'minimal' ? (
                 <BarChart data={data}>
-                    {dataKeys.map(key => {
+                    {dataKeys.map((key) => {
                         return <Bar key={`bc-${key.key}`} dataKey={key.key} fill={key.color} />;
                     })}
                 </BarChart>
@@ -72,15 +72,15 @@ const SDBarChart = props => {
                         contentStyle={{ backgroundColor: theme.palette.background.default, opacity: 0.7 }}
                         labelStyle={{ color: theme.palette.text.primary }}
                         itemStyle={{ color: theme.palette.text.primary }}
-                        formatter={function(value) {
+                        formatter={function (value) {
                             return `${value}`;
                         }}
-                        labelFormatter={function(value) {
+                        labelFormatter={function (value) {
                             return `${value}`;
                         }}
                     />
                     <Legend iconType={legendIcon || 'rect'} align="right" verticalAlign="top" height={36} />
-                    {dataKeys.map(key => {
+                    {dataKeys.map((key) => {
                         return <Bar key={`bc-${key.key}`} dataKey={key.key} fill={key.color} />;
                     })}
                 </BarChart>

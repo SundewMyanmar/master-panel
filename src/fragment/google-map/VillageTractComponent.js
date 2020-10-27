@@ -6,11 +6,11 @@ import DATA from '../google-map/yangon-boundaries-mimu-v9.2.1.json';
 
 //TODO: multi select, selected area highlight
 
-const VillageTractComponent = props => {
+const VillageTractComponent = (props) => {
     var villageTracts = [];
     console.log('data', DATA.features);
 
-    const modifyCoordinates = coordinates => {
+    const modifyCoordinates = (coordinates) => {
         /**
          * x1, the lowest x coordinate
          * y1, the lowest y coordinate
@@ -22,7 +22,7 @@ const VillageTractComponent = props => {
             y1 = null,
             y2 = null;
 
-        const data = coordinates[0].map(co => {
+        const data = coordinates[0].map((co) => {
             if (!x1) x1 = co[1];
             if (!x2) x2 = co[1];
             if (!y1) y1 = co[0];
@@ -44,7 +44,7 @@ const VillageTractComponent = props => {
         };
     };
 
-    var polygonElements = DATA.features.map(dt => {
+    var polygonElements = DATA.features.map((dt) => {
         const coords = dt.geometry.coordinates[0];
         const mdfCoords = modifyCoordinates(coords);
         return {

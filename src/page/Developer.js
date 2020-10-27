@@ -5,7 +5,7 @@ import { AlertDialog, LoadingDialog } from '../fragment/message';
 import { TextInput, ListInput } from '../fragment/control';
 import ApiManager from '../util/ApiManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -36,24 +36,24 @@ const styles = makeStyles(theme => ({
 
 const apiManager = new ApiManager('/');
 
-const Developer = props => {
+const Developer = (props) => {
     const classes = styles();
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
     const [form, setForm] = React.useState({});
     const [output, setOutput] = React.useState({});
 
-    const handleError = error => {
+    const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
-    const handleResult = result => {
+    const handleResult = (result) => {
         setLoading(false);
         setOutput(result);
     };
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         form[event.target.name] = event.target.value;
         setForm(form);
     };
@@ -62,28 +62,16 @@ const Developer = props => {
         setLoading(true);
         switch (form.type) {
             case 'GET':
-                apiManager
-                    .get(form.url, apiManager.getHeaders(true))
-                    .then(handleResult)
-                    .catch(handleError);
+                apiManager.get(form.url, apiManager.getHeaders(true)).then(handleResult).catch(handleError);
                 break;
             case 'POST':
-                apiManager
-                    .post(form.url, JSON.parse(form.body), apiManager.getHeaders(true))
-                    .then(handleResult)
-                    .catch(handleError);
+                apiManager.post(form.url, JSON.parse(form.body), apiManager.getHeaders(true)).then(handleResult).catch(handleError);
                 break;
             case 'PUT':
-                apiManager
-                    .put(form.url, JSON.parse(form.body), apiManager.getHeaders(true))
-                    .then(handleResult)
-                    .catch(handleError);
+                apiManager.put(form.url, JSON.parse(form.body), apiManager.getHeaders(true)).then(handleResult).catch(handleError);
                 break;
             case 'DELETE':
-                apiManager
-                    .delete(form.url, JSON.parse(form.body), apiManager.getHeaders(true))
-                    .then(handleResult)
-                    .catch(handleError);
+                apiManager.delete(form.url, JSON.parse(form.body), apiManager.getHeaders(true)).then(handleResult).catch(handleError);
                 break;
             default:
                 setLoading(false);

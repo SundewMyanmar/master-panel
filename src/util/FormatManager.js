@@ -2,7 +2,7 @@ import moment from 'moment';
 import chroma from 'chroma-js';
 
 export default class FormatManager {
-    static tryParseJson = text => {
+    static tryParseJson = (text) => {
         try {
             const jsonObj = JSON.parse(text);
             if (jsonObj && typeof jsonObj === 'object') {
@@ -15,7 +15,7 @@ export default class FormatManager {
         }
     };
 
-    static defaultNull = input => {
+    static defaultNull = (input) => {
         if (typeof input === 'undefined') {
             return null;
         }
@@ -27,20 +27,20 @@ export default class FormatManager {
         return moment.unix(unixTS).format(format);
     };
 
-    static validURL = str => {
+    static validURL = (str) => {
         var pattern = new RegExp(
             '^(https?:\\/\\/)?' + // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
                 '(\\#[-a-z\\d_]*)?$',
             'i',
         ); // fragment locator
         return !!pattern.test(str);
     };
 
-    static buildCSV = input => {
+    static buildCSV = (input) => {
         if (typeof input === 'boolean') {
             return '"' + input + '"';
         }
@@ -52,37 +52,37 @@ export default class FormatManager {
         return '"' + input.replace(/["]/g, '""') + '"';
     };
 
-    static toTimestamp = date => {
+    static toTimestamp = (date) => {
         return moment(date).valueOf();
     };
 
-    static snakeToCamel = str => {
-        return str.replace(/([-_][a-z])/g, word => word.toUpperCase().replace('_', ''));
+    static snakeToCamel = (str) => {
+        return str.replace(/([-_][a-z])/g, (word) => word.toUpperCase().replace('_', ''));
     };
 
-    static camelToSnake = str => {
-        return str.replace(/([A-Z])/g, word => '_' + word.toLowerCase()).replace(/^_/, '');
+    static camelToSnake = (str) => {
+        return str.replace(/([A-Z])/g, (word) => '_' + word.toLowerCase()).replace(/^_/, '');
     };
 
-    static camelToReadable = str => {
+    static camelToReadable = (str) => {
         return str
             .match(/^[a-z]+|[A-Z][a-z]*/g)
-            .map(function(x) {
+            .map(function (x) {
                 return x[0].toUpperCase() + x.substr(1).toLowerCase();
             })
             .join(' ');
     };
 
-    static readableToSnake = str => {
+    static readableToSnake = (str) => {
         return str.toLowerCase().replace(/\s/g, '_');
     };
 
-    static ValidateEmail = mail => {
+    static ValidateEmail = (mail) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(mail);
     };
 
-    static ValidateUser = user => {
+    static ValidateUser = (user) => {
         return /^[a-zA-Z0-9\\.]*$/.test(user);
     };
 
@@ -105,14 +105,14 @@ export default class FormatManager {
         return Math.abs(date1 - date2) / 36e5;
     };
 
-    static thousandSeparator = input => {
+    static thousandSeparator = (input) => {
         return parseFloat(input).toLocaleString('en');
     };
 
-    static hex2Rgb = e => {
+    static hex2Rgb = (e) => {
         if (!e) return null;
         let t = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        e = e.replace(t, function(e, t, r, o) {
+        e = e.replace(t, function (e, t, r, o) {
             return t + t + r + r + o + o;
         });
         let r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);
@@ -125,24 +125,20 @@ export default class FormatManager {
             : null;
     };
 
-    static rgb2Hex = e => {
+    static rgb2Hex = (e) => {
         let t = Math.round(e.b) + 256 * Math.round(e.g) + 65536 * Math.round(e.r);
         return '#' + ('000000' + t.toString(16)).substr(-6);
     };
 
-    static lightenHex = hex => {
-        return chroma(hex)
-            .brighten()
-            .hex();
+    static lightenHex = (hex) => {
+        return chroma(hex).brighten().hex();
     };
 
-    static darkenHex = hex => {
-        return chroma(hex)
-            .darken()
-            .hex();
+    static darkenHex = (hex) => {
+        return chroma(hex).darken().hex();
     };
 
-    static contrastText = hex => {
+    static contrastText = (hex) => {
         let c = hex.substring(1); // strip #
         let rgb = parseInt(c, 16); // convert rrggbb to decimal
         let r = (rgb >> 16) & 0xff; // extract red
@@ -157,7 +153,7 @@ export default class FormatManager {
         return '#000';
     };
 
-    static generateThemeColors = hex => {
+    static generateThemeColors = (hex) => {
         return {
             main: hex,
             light: this.darkenHex(hex),

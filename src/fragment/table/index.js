@@ -62,7 +62,7 @@ export type DataTableProps = {
     onError?: (error: Object | string) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         flex: 1,
     },
@@ -88,7 +88,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const SelectionCheckbox = makeStyles(theme => ({
+const SelectionCheckbox = makeStyles((theme) => ({
     root: {
         color: theme.palette.primary.contrastText,
         '&$checked': {
@@ -143,7 +143,7 @@ const DataTable = (props: DataTableProps) => {
             if (!item) {
                 continue;
             }
-            const existIdx = selectedData.findIndex(x => x.id === item.id);
+            const existIdx = selectedData.findIndex((x) => x.id === item.id);
             if (existIdx >= 0) {
                 found++;
             }
@@ -157,30 +157,30 @@ const DataTable = (props: DataTableProps) => {
         // eslint-disable-next-line
     }, [items, selectedData]);
 
-    const handleRootClick = event => {
+    const handleRootClick = (event) => {
         if (!multi) {
             return;
         }
-        let updateSelection = selectedData.filter(x => items.findIndex(item => item.id === x.id) < 0);
+        let updateSelection = selectedData.filter((x) => items.findIndex((item) => item.id === x.id) < 0);
         if (event.target.checked) {
             updateSelection = [...updateSelection, ...items];
         }
         onSelectionChange(updateSelection);
     };
 
-    const handleCheck = item => {
+    const handleCheck = (item) => {
         if (!multi) {
             onSelectionChange(item);
             return;
         }
 
-        const existIdx = selectedData.findIndex(x => x.id === item.id);
-        const updateSelection = existIdx < 0 ? [...selectedData, item] : selectedData.filter(x => x.id !== item.id);
+        const existIdx = selectedData.findIndex((x) => x.id === item.id);
+        const updateSelection = existIdx < 0 ? [...selectedData, item] : selectedData.filter((x) => x.id !== item.id);
 
         onSelectionChange(updateSelection);
     };
 
-    const handlePageChange = page => {
+    const handlePageChange = (page) => {
         onPageChange({
             page: page,
             pageSize: pageSize,
@@ -188,7 +188,7 @@ const DataTable = (props: DataTableProps) => {
         });
     };
 
-    const handlePageSizeChange = pageSize => {
+    const handlePageSizeChange = (pageSize) => {
         onPageChange({
             page: 0,
             pageSize: pageSize,
@@ -196,7 +196,7 @@ const DataTable = (props: DataTableProps) => {
         });
     };
 
-    const handleSortChange = sortString => {
+    const handleSortChange = (sortString) => {
         onPageChange({
             page: currentPage,
             pageSize: pageSize,
@@ -216,7 +216,7 @@ const DataTable = (props: DataTableProps) => {
         }
     };
 
-    const handleKeyDown = evt => {
+    const handleKeyDown = (evt) => {
         if (['Enter', 'Tab', ','].includes(evt.key)) {
             evt.preventDefault();
             if (onSave) {
@@ -276,7 +276,7 @@ const DataTable = (props: DataTableProps) => {
                         }
                         inputProps.key = field.id + '_' + index;
                         inputProps.name = field.name || field.id;
-                        inputProps.onChange = event => handleValueChange(field, event);
+                        inputProps.onChange = (event) => handleValueChange(field, event);
                         if (index == inputFields.length - 1) {
                             inputProps.onKeyDown = handleKeyDown;
                         }
@@ -329,7 +329,7 @@ const DataTable = (props: DataTableProps) => {
                             };
 
                             const marked = multi
-                                ? selectedData.findIndex(x => x.id === row.id) >= 0
+                                ? selectedData.findIndex((x) => x.id === row.id) >= 0
                                 : selectedData && selectedData.id && row.id === selectedData.id;
 
                             return (
@@ -393,8 +393,8 @@ DataTable.defaultProps = {
     sort: 'id:Desc',
     noData: 'There is no data.',
     disablePaging: false,
-    onPageChange: newPaged => console.warn('Undefined onPageChange => ', newPaged),
-    onSelectionChange: result => console.warn('Undefined onSelectionChange => ', result),
+    onPageChange: (newPaged) => console.warn('Undefined onPageChange => ', newPaged),
+    onSelectionChange: (result) => console.warn('Undefined onSelectionChange => ', result),
 };
 
 export default DataTable;

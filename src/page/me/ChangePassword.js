@@ -6,7 +6,7 @@ import MasterForm from '../../fragment/MasterForm';
 import ProfileApi from '../../api/ProfileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -58,7 +58,7 @@ const changePasswordFields = [
     },
 ];
 
-const ChangePassword = props => {
+const ChangePassword = (props) => {
     const classes = styles();
     const history = useHistory();
     const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
@@ -79,12 +79,12 @@ const ChangePassword = props => {
         };
 
         ProfileApi.changePassword(data)
-            .then(response => {
+            .then((response) => {
                 sessionStorage.clear();
                 sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Password has changed! Please log in with new password.');
                 history.push('/login');
             })
-            .catch(error => {
+            .catch((error) => {
                 setLoading(false);
                 setError(error.message || error.title || 'Please check your internet connection and try again.');
             });

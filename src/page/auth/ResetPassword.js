@@ -8,7 +8,7 @@ import { AlertDialog, LoadingDialog } from '../../fragment/message';
 import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         backgroundColor: theme.palette.background.paper,
         paddingLeft: theme.spacing(3),
@@ -48,7 +48,7 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const ResetPassword = props => {
+const ResetPassword = (props) => {
     const classes = styles();
     const location = useLocation();
     const history = useHistory();
@@ -73,12 +73,12 @@ const ResetPassword = props => {
         };
 
         AuthApi.resetPassword(requestData)
-            .then(data => {
+            .then((data) => {
                 setLoading(false);
                 sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Welcome ${data.displayName}.`);
                 history.push('/login');
             })
-            .catch(error => {
+            .catch((error) => {
                 setLoading(false);
                 setError(error.message || error.title || 'Please check your internet connection and try again.');
             });

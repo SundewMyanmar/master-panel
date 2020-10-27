@@ -21,7 +21,7 @@ class SwaggerApi extends ApiManager {
                     const { tags, ...info } = route[method];
                     for (let i = 0; i < tags.length; i++) {
                         const cleanPath = path.replace(/\{\?[^}/]+}/g, '');
-                        const idx = modules.findIndex(m => m.name === tags[i]);
+                        const idx = modules.findIndex((m) => m.name === tags[i]);
                         if (idx >= 0) {
                             let module = modules[idx];
                             if (!module.count) {
@@ -32,7 +32,7 @@ class SwaggerApi extends ApiManager {
                             }
                             module.count = module.count + 1;
                             const supportedMethod = { http: method, ...info };
-                            const routeIdx = module.routes.findIndex(r => r.path === cleanPath);
+                            const routeIdx = module.routes.findIndex((r) => r.path === cleanPath);
                             if (routeIdx >= 0) {
                                 const existRoute = module.routes[routeIdx];
                                 existRoute.supportedMethods.push(supportedMethod);

@@ -26,7 +26,7 @@ export const ROLE_TABLE_FIELDS = [
     },
 ];
 
-const Role = props => {
+const Role = (props) => {
     const history = useHistory();
 
     const [error, setError] = React.useState('');
@@ -35,7 +35,7 @@ const Role = props => {
         return flashMessage || '';
     });
 
-    const handleError = error => {
+    const handleError = (error) => {
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
@@ -49,24 +49,24 @@ const Role = props => {
         return {};
     };
 
-    const handleRemoveData = async removeData => {
+    const handleRemoveData = async (removeData) => {
         console.log('Remove IDs => ', typeof removeData === 'object');
         if (removeData && removeData.id) {
             return RoleApi.removeById(removeData.id);
         } else if (Array.isArray(removeData) && removeData.length > 0) {
             console.log('Remove IDs => ', Array.isArray(removeData) && removeData.length > 0);
-            const removeIds = removeData.map(item => item.id);
+            const removeIds = removeData.map((item) => item.id);
             return RoleApi.removeAll(removeIds);
         }
     };
 
-    const handleDetail = item => {
+    const handleDetail = (item) => {
         let url = '/role/detail/';
         url += item ? item.id : 0;
         history.push(url);
     };
 
-    const handleImport = async result => {
+    const handleImport = async (result) => {
         return RoleApi.importData(result);
     };
 

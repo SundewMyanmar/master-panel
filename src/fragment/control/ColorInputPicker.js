@@ -18,6 +18,6 @@ import {
 import SearchInput from './SearchInput';
 import ColorInput from '../table';
 
-const ColorInputPicker = props => {
+const ColorInputPicker = (props) => {
     //TODO: Color Picker Dialog
 };

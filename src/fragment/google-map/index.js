@@ -36,7 +36,7 @@ export const rawStyles = {
     },
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     markerLabel: { backgroundColor: 'yellow', fontSize: '18px', padding: '0px', borderRadius: 5, opacity: 0.8 },
 
     ...rawStyles,
@@ -75,15 +75,15 @@ const MapComponent = compose(
     const classes = styles();
     const { defaultZoom, defaultCenter, childElement, allowDrawing, drawingModes, onMarkerComplete, onCircleComplete, onPolygonComplete } = props;
 
-    const handleOnMarkerComplete = mk => {
+    const handleOnMarkerComplete = (mk) => {
         if (onMarkerComplete) onMarkerComplete(mk);
     };
 
-    const handleOnCircleComplete = cc => {
+    const handleOnCircleComplete = (cc) => {
         if (onCircleComplete) onCircleComplete(cc);
     };
 
-    const handleOnPolygonComplete = pg => {
+    const handleOnPolygonComplete = (pg) => {
         if (onPolygonComplete) onPolygonComplete(pg);
     };
 

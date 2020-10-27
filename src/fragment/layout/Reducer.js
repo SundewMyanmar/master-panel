@@ -6,15 +6,15 @@ export const ACTIONS = {
 
 const modifiedOpenIds = (state, id) => {
     const openIds = state.openIds;
-    const idx = openIds.findIndex(x => x === id);
+    const idx = openIds.findIndex((x) => x === id);
     if (idx < 0) {
         return { ...state, openIds: [...openIds, id] };
     }
 
-    return { ...state, openIds: openIds.filter(x => x !== id) };
+    return { ...state, openIds: openIds.filter((x) => x !== id) };
 };
 
-const modifiedHideMenu = state => {
+const modifiedHideMenu = (state) => {
     const newHideMenu = !state.hideMenu;
     return { ...state, openIds: [], hideMenu: newHideMenu };
 };

@@ -5,7 +5,7 @@ import { MarkerClusterer } from 'react-google-maps/lib/components/addons/MarkerC
 import MapComponent from '../google-map';
 
 //TODO: Add edit and remove Func for markers
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     markerLabel: {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
@@ -30,7 +30,7 @@ export const MarkerComponent = (props: MarkerComonentProps) => {
     const classes = styles();
     const { position, description, onClick } = props;
     const [showMarkerInfo, setShowMarkerInfo] = useState(false);
-    const handleMarkerClick = pos => {
+    const handleMarkerClick = (pos) => {
         setShowMarkerInfo(!showMarkerInfo);
 
         if (onClick) {
@@ -77,7 +77,7 @@ const MapMarkerComponent = (props: MapMarkerComponentProps) => {
     const { markers, allowCluster, clustererGridSize, drawingModes, onMarkerComplete } = props;
 
     var markerElements =
-        markers && markers.map(m => <MarkerComponent key={`marker-${markers.indexOf(m)}`} description={m.description} position={m} />);
+        markers && markers.map((m) => <MarkerComponent key={`marker-${markers.indexOf(m)}`} description={m.description} position={m} />);
 
     if (allowCluster)
         markerElements = (

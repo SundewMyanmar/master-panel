@@ -25,9 +25,9 @@ export const USER_TABLE_FIELDS = [
         name: 'roles',
         align: 'left',
         label: 'Roles',
-        onLoad: item => {
+        onLoad: (item) => {
             if (item.roles && item.roles.length > 0) {
-                return item.roles.map(role => LangManager.translateToUni(role.name)).join(', ');
+                return item.roles.map((role) => LangManager.translateToUni(role.name)).join(', ');
             }
             return 'No Role';
         },
@@ -57,7 +57,7 @@ export const USER_TABLE_FIELDS = [
         type: 'bool',
         sortable: true,
         width: 50,
-        onLoad: item => item.facebookId,
+        onLoad: (item) => item.facebookId,
     },
     {
         name: 'status',
@@ -66,10 +66,10 @@ export const USER_TABLE_FIELDS = [
         type: 'bool',
         sortable: 'true',
         width: 50,
-        onLoad: item => item.status.toLowerCase() === 'active',
+        onLoad: (item) => item.status.toLowerCase() === 'active',
     },
 ];
-const User = props => {
+const User = (props) => {
     const history = useHistory();
     const theme = useTheme();
 
@@ -80,11 +80,11 @@ const User = props => {
     });
     const [resetForm, setResetForm] = useState(null);
 
-    const handleError = error => {
+    const handleError = (error) => {
         setAlert(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
-    const handleImport = async result => {
+    const handleImport = async (result) => {
         return UserApi.importData(result);
     };
 
@@ -97,16 +97,16 @@ const User = props => {
         }
     };
 
-    const handleRemoveData = async removeData => {
+    const handleRemoveData = async (removeData) => {
         if (typeof removeData === 'object') {
             return await UserApi.removeById(removeData.id);
         } else if (Array.isArray(removeData) && removeData.length > 0) {
-            const removeIds = removeData.map(item => item.id);
+            const removeIds = removeData.map((item) => item.id);
             return await UserApi.removeAll(removeIds);
         }
     };
 
-    const handleDetail = item => {
+    const handleDetail = (item) => {
         let url = '/user/detail/';
         url += item ? item.id : 0;
         history.push(url);
@@ -119,7 +119,7 @@ const User = props => {
                 break;
             case 'cleanToken':
                 UserApi.cleanToken(data.id)
-                    .then(response => {
+                    .then((response) => {
                         setNoti(response.message);
                     })
                     .catch(handleError);
@@ -138,7 +138,7 @@ const User = props => {
         };
 
         UserApi.resetPassword(resetForm.id, data)
-            .then(response => {
+            .then((response) => {
                 setNoti('Succesfully changed password for ' + response.displayName);
                 setResetForm(null);
             })
@@ -170,7 +170,7 @@ const User = props => {
 
     const resetPasswordTitle = resetForm ? 'Reset password for ' + resetForm.displayName : 'Reset password for Htoonlin';
 
-    const gridFields = USER_TABLE_FIELDS.map(f => f.name);
+    const gridFields = USER_TABLE_FIELDS.map((f) => f.name);
 
     return (
         <React.Fragment>
