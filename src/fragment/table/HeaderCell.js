@@ -8,7 +8,7 @@ export type HeaderCellProps = {
     onSortChange?: (field: TableField, sort: 'ASC' | 'DESC') => string,
 };
 
-const headerStyles = makeStyles((theme) => ({
+const headerStyles = makeStyles(theme => ({
     root: {
         color: theme.palette.primary.contrastText,
         '&$active': {

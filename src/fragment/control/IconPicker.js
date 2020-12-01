@@ -30,7 +30,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
-const itemStyles = makeStyles((theme) => ({
+const itemStyles = makeStyles(theme => ({
     root: {
         ...theme.mixins.gutters(),
         borderRadius: 0,
@@ -83,7 +83,7 @@ const itemStyles = makeStyles((theme) => ({
     },
 }));
 
-const IconDisplay = (props) => {
+const IconDisplay = props => {
     const classes = itemStyles();
     const { onIconClick, selectedData, filter, multi, icons, id, name } = props;
 
@@ -94,7 +94,7 @@ const IconDisplay = (props) => {
     let filterIcons = icons;
 
     if (filter.length > 0) {
-        filterIcons = icons.filter((icon) => icon.name.toLowerCase().search(filter.toLowerCase()) !== -1);
+        filterIcons = icons.filter(icon => icon.name.toLowerCase().search(filter.toLowerCase()) !== -1);
     }
 
     if (filterIcons.length <= 0) {
@@ -112,7 +112,7 @@ const IconDisplay = (props) => {
                         return null;
                     }
 
-                    const isMarked = multi ? selectedData.findIndex((x) => x === icon.ligature) >= 0 : selectedData === icon.ligature;
+                    const isMarked = multi ? selectedData.findIndex(x => x === icon.ligature) >= 0 : selectedData === icon.ligature;
                     return (
                         <Paper
                             className={isMarked ? classes.markedIconButton : classes.iconButton}
@@ -134,7 +134,7 @@ const IconDisplay = (props) => {
     );
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     content: {
         padding: 0,
         margin: 0,
@@ -170,13 +170,13 @@ const IconPicker = (props: IconPickerProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedData, show]);
 
-    const handleClick = (item) => {
+    const handleClick = item => {
         if (!multi) {
             onClose(item.ligature);
             return;
         }
-        const existIdx = checked.findIndex((x) => x === item.ligature);
-        const updateSelection = existIdx < 0 ? [...checked, item.ligature] : checked.filter((x) => x !== item.ligature);
+        const existIdx = checked.findIndex(x => x === item.ligature);
+        const updateSelection = existIdx < 0 ? [...checked, item.ligature] : checked.filter(x => x !== item.ligature);
         setChecked(updateSelection);
     };
 
@@ -191,7 +191,7 @@ const IconPicker = (props: IconPickerProps) => {
                             </Typography>
                         </Grid>
                         <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justify="center" alignContent="flex-start">
-                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Icons" />
+                            <SearchInput onSearch={value => setSearch(value)} placeholder="Search Icons" />
                         </Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
                             <Tooltip title="Close Dialog">
@@ -240,7 +240,7 @@ const IconPicker = (props: IconPickerProps) => {
 IconPicker.defaultProps = {
     title: 'Icon Browser',
     selectedData: [],
-    onError: (error) => console.warn(error),
+    onError: error => console.warn(error),
 };
 
 export default IconPicker;

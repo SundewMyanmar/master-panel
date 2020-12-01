@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(1),
     },
@@ -79,7 +79,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: accept,
-        onDrop: (acceptedFiles) => {
+        onDrop: acceptedFiles => {
             const newFiles = acceptedFiles.map((file, idx) =>
                 Object.assign(file, {
                     preview: URL.createObjectURL(file),
@@ -93,7 +93,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
     React.useEffect(
         () => () => {
             // Make sure to revoke the data uris to avoid memory leaks
-            files.forEach((file) => {
+            files.forEach(file => {
                 if (file.preview) {
                     URL.revokeObjectURL(file.preview);
                 }
@@ -102,8 +102,8 @@ export const MultiUpload = (props: MultiUploadProps) => {
         [files],
     );
 
-    const handleClose = (status) => {
-        const uploadFiles = files.map((file) => {
+    const handleClose = status => {
+        const uploadFiles = files.map(file => {
             URL.revokeObjectURL(file.preview);
             delete file.preview;
             return file;
@@ -116,10 +116,10 @@ export const MultiUpload = (props: MultiUploadProps) => {
         setFiles([]);
     };
 
-    const handleRemove = (file) => {
+    const handleRemove = file => {
         // Make sure to revoke the data uris to avoid memory leaks
         URL.revokeObjectURL(file.preview);
-        const updatedFiles = files.filter((f) => f.id !== file.id);
+        const updatedFiles = files.filter(f => f.id !== file.id);
         console.log('Updated Files => ', updatedFiles);
         setFiles(updatedFiles);
     };
@@ -172,5 +172,5 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
 MultiUpload.defaultProps = {
     accept: 'image/*',
-    onClose: (result) => console.warn('Undefined onClose =>', result),
+    onClose: result => console.warn('Undefined onClose =>', result),
 };

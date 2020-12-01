@@ -26,16 +26,22 @@ export type ChipInputProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles((theme) => ({
-    root: {},
-    label: (props) => ({
+const styles = makeStyles(theme => ({
+    root: {
+        backgroundColor: 'inherit',
+    },
+    chipTextInput: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    label: props => ({
         backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
     }),
     chipTextField: { position: 'relative', flex: 1, paddingRight: 14, paddingLeft: 1 },
-    content: (props) => ({
+    content: props => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0.5, 0.5, 0.5),
@@ -74,22 +80,34 @@ const ChipInput = (props: ChipInputProps) => {
             if (splitData) {
                 setItems(splitData);
             }
+            if (onChange) {
+                onChange({
+                    target: {
+                        type: 'chip',
+                        name: id || name,
+                        value: inputData,
+                    },
+                });
+            }
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleKeyDown = (evt) => {
+    const handleKeyDown = evt => {
         if (['Enter', 'Tab', ','].includes(evt.key)) {
             evt.preventDefault();
             let chip = newChip;
+            console.log('chip', chip);
             if (chip) {
                 setItems([...items, chip]);
                 setNewChip('');
                 if (onChange) {
                     onChange({
                         target: {
-                            value: items.join(),
+                            type: 'chip',
+                            name: id || name,
+                            value: [...items, chip].join(),
                         },
                     });
                 }
@@ -97,7 +115,7 @@ const ChipInput = (props: ChipInputProps) => {
         }
     };
 
-    const handleTextChange = (event) => {
+    const handleTextChange = event => {
         const data = event.target.value;
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
@@ -111,12 +129,12 @@ const ChipInput = (props: ChipInputProps) => {
         setNewChip(data);
     };
 
-    const handlePaste = (evt) => {
+    const handlePaste = evt => {
         evt.preventDefault();
         var pasteValue = evt.clipboardData.getData('text');
         if (currentInput.current && pasteValue !== currentInput.current.value) {
             currentInput.current.value = pasteValue;
-            handleTextChange({ target: currentInput.current });
+            handleTextChange({ type: 'chip', name: id || name, target: currentInput.current });
         }
     };
 
@@ -126,13 +144,15 @@ const ChipInput = (props: ChipInputProps) => {
         if (onChange) {
             onChange({
                 target: {
+                    type: 'chip',
+                    name: id || name,
                     value: items.join(),
                 },
             });
         }
     };
 
-    const buildInputIcon = (icon) => {
+    const buildInputIcon = icon => {
         if (icon) {
             return {
                 startAdornment: (
@@ -172,7 +192,7 @@ const ChipInput = (props: ChipInputProps) => {
 
     return (
         <>
-            <FormControl variant="outlined" margin="normal" fullWidth className={classes.root}>
+            <FormControl id={id || name} name={name || id} variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
                     {label} {props.required ? '*' : ''}
                 </InputLabel>
@@ -182,6 +202,7 @@ const ChipInput = (props: ChipInputProps) => {
                             <div className={classes.chipTextField}>{displayBox()}</div>
                             {disableInsert || (
                                 <TextField
+                                    className={classes.chipTextInput}
                                     margin="normal"
                                     fullWidth
                                     InputLabelProps={{
@@ -189,8 +210,6 @@ const ChipInput = (props: ChipInputProps) => {
                                     }}
                                     placeholder={inputPlaceholder}
                                     {...rest}
-                                    id={id || name}
-                                    name={name || id}
                                     inputRef={currentInput}
                                     onKeyDown={handleKeyDown}
                                     onChange={handleTextChange}

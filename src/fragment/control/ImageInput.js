@@ -22,7 +22,7 @@ type ImageInputProps = {
     onChange: (image: Object | string) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     container: {
         cursor: 'pointer',
         position: 'relative',
@@ -50,6 +50,9 @@ const styles = makeStyles((theme) => ({
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.background.paper,
         border: 0,
+    },
+    image: {
+        backgroundColor: theme.palette.common.lightGray,
     },
 }));
 
@@ -89,7 +92,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setPreview(url);
         setImage(result);
 
-        if (onChange) {
+        if (onChange && result && url) {
             var obj = {
                 target: {
                     id: id || name,
@@ -114,7 +117,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleCloseMenu = (item) => {
+    const handleCloseMenu = item => {
         if (item.id === 'gallery') {
             setShowFile(true);
         } else if (item.id === 'upload') {
@@ -124,7 +127,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setShowMenu(false);
     };
 
-    const handleCloseFile = (result) => {
+    const handleCloseFile = result => {
         setShowFile(false);
         if (result === false) {
             return;
@@ -134,13 +137,13 @@ const ImagePicker = (props: ImageInputProps) => {
         handleChange(result, url);
     };
 
-    const handleError = (error) => {
+    const handleError = error => {
         setShowFile(false);
         setShowMenu(false);
         setError(error);
     };
 
-    const handleImageChange = (event) => {
+    const handleImageChange = event => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
@@ -152,14 +155,19 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleRemove = (event) => {
-        handleChange(null, null);
+    const handleRemove = event => {
         if (onRemove) onRemove(index);
+        handleChange(null, null);
     };
 
     const visibility = !disabledRemove && preview ? 'visible' : 'hidden';
 
     const img = preview ? preview : `/${'images/upload.png'}`;
+    const objectFit = preview
+        ? {}
+        : {
+              objectFit: 'contain',
+          };
 
     return (
         <>
@@ -173,12 +181,14 @@ const ImagePicker = (props: ImageInputProps) => {
                 <img
                     onClick={handleImageClick}
                     src={img}
+                    className={classes.image}
                     alt={preview && preview.id ? preview.name : 'Uploaded Image'}
                     style={{
+                        ...objectFit,
                         maxWidth: size.width,
                         maxHeight: size.height,
-                        width: 'auto',
-                        height: 'auto',
+                        width: size.width,
+                        height: size.height,
                     }}
                 />
                 <input

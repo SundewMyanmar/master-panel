@@ -23,7 +23,7 @@ type UserMenuProps = {
     image?: string | Object,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     avatar: {
         color: theme.palette.secondary.contrastText,
         backgroundColor: theme.palette.secondary.main,
@@ -57,7 +57,7 @@ const UserMenu = (props: UserMenuProps) => {
         setAnchorEl(null);
     };
 
-    const handleClick = (item) => {
+    const handleClick = item => {
         if (item.id === 'sys-logout') {
             sessionStorage.clear();
         }
@@ -78,7 +78,7 @@ const UserMenu = (props: UserMenuProps) => {
     return (
         <>
             <Tooltip title={name} aria-label={name}>
-                <IconButton size="small" onClick={(event) => setAnchorEl(event.currentTarget)}>
+                <IconButton size="small" onClick={event => setAnchorEl(event.currentTarget)}>
                     {imageUrl ? (
                         <Avatar className={classes.avatar} alt={name} src={imageUrl} />
                     ) : (

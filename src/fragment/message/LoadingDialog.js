@@ -5,7 +5,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
-const loadingStyle = makeStyles((theme) => ({
+const loadingStyle = makeStyles(theme => ({
     progress: {
         display: 'block',
         textAlign: 'center',

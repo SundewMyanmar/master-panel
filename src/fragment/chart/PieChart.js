@@ -20,7 +20,7 @@ const SDPieChart = (props: SDPieChartProps) => {
     const { theme } = props;
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const renderActiveShape = (props) => {
+    const renderActiveShape = props => {
         const RADIAN = Math.PI / 180;
         const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
 
@@ -88,7 +88,7 @@ const SDPieChart = (props: SDPieChartProps) => {
                         {...pieType}
                         onMouseEnter={(data, index) => setActiveIndex(index)}
                     >
-                        {data.map((d) => {
+                        {data.map(d => {
                             return <Cell key={`c-${d.name}`} fill={d.color} />;
                         })}
                     </Pie>

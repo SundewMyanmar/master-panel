@@ -41,7 +41,7 @@ const SDLineChart = (props: SDLineChartProps) => {
                         bottom: 0,
                     }}
                 >
-                    {dataKeys.map((key) => {
+                    {dataKeys.map(key => {
                         return <Line key={`ak-${key.key}`} type="linear" dataKey={key.key} stroke={key.color} />;
                     })}
                 </LineChart>
@@ -74,15 +74,15 @@ const SDLineChart = (props: SDLineChartProps) => {
                         contentStyle={{ backgroundColor: theme.palette.background.default, opacity: 0.7 }}
                         labelStyle={{ color: theme.palette.text.primary }}
                         itemStyle={{ color: theme.palette.text.primary }}
-                        formatter={function (value) {
+                        formatter={function(value) {
                             return `${value}`;
                         }}
-                        labelFormatter={function (value) {
+                        labelFormatter={function(value) {
                             return `${value}`;
                         }}
                     />
                     <Legend iconType={legendIcon || 'rect'} align="right" verticalAlign="top" height={36} />
-                    {dataKeys.map((key) => {
+                    {dataKeys.map(key => {
                         return <Line key={`ak-${key.key}`} type="linear" dataKey={key.key} stroke={key.color} />;
                     })}
                 </LineChart>

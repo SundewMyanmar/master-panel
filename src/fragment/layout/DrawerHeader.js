@@ -8,7 +8,7 @@ type DrawerHeaderProps = {
     onMenuClick?: () => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.secondary.light,
         backgroundRepeat: 'no-repeat',

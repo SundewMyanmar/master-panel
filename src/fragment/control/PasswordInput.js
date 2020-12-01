@@ -16,7 +16,7 @@ export default function PasswordInput(props: Props) {
     const [showPassword, setShowPassword] = React.useState(false);
     const { onValidate, variant, ...rest } = props;
 
-    const handleValidation = (event) => {
+    const handleValidation = event => {
         const value = event.target.value;
         const regex = STRENGTH_REGEX[props.strength];
         let error = '';

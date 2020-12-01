@@ -11,7 +11,7 @@ export type SearchIpnutProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     closeButton: {
         color: theme.palette.text.primary,
     },
@@ -33,14 +33,14 @@ export default function SearchInput(props: SearchIpnutProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleTextChange = (event) => {
+    const handleTextChange = event => {
         setSearch(event.target.value);
         if (onChange) {
             onChange(event);
         }
     };
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = event => {
         if (event.keyCode === 13) {
             if (onSearch) {
                 onSearch(search);

@@ -11,7 +11,7 @@ export const TreeCollapseIcon = (expand, onClick) => {
     );
 };
 
-const useTreeItemStyles = makeStyles((theme) => ({
+const useTreeItemStyles = makeStyles(theme => ({
     root: {
         '&:focus > $content $label, &$selected > $content $label': {
             color: theme.palette.primary.contrastText,
@@ -53,7 +53,7 @@ const useTreeItemStyles = makeStyles((theme) => ({
     },
 }));
 
-export const DefaultTreeItem = (props) => {
+export const DefaultTreeItem = props => {
     const classes = useTreeItemStyles();
     //Unused property need to add for remove in DOM.
     const { nodeId, label, icon, onClick, onCollapseClick, items, divider, parentId, createdBy, modifiedBy, createdAt, modifiedAt, ...other } = props;
@@ -113,7 +113,7 @@ type TreeMenuProps = {
     onClickItem?: (item: Object) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         height: 216,
         flexGrow: 1,
@@ -131,9 +131,9 @@ const TreeMenu = (props: TreeMenuProps) => {
         setExpandedNodes(expNodes);
     }, [menus]);
 
-    const handleCollapseItemClick = (nodeId) => {
-        const existIdx = expandedNodes.findIndex((x) => x === nodeId);
-        const updateNodes = existIdx < 0 ? [...expandedNodes, nodeId] : expandedNodes.filter((x) => x !== nodeId);
+    const handleCollapseItemClick = nodeId => {
+        const existIdx = expandedNodes.findIndex(x => x === nodeId);
+        const updateNodes = existIdx < 0 ? [...expandedNodes, nodeId] : expandedNodes.filter(x => x !== nodeId);
 
         setExpandedNodes(updateNodes);
     };
@@ -161,7 +161,7 @@ const TreeMenu = (props: TreeMenuProps) => {
 };
 
 TreeMenu.defaultProps = {
-    onClickItem: (item) => console.warn('Undefined onClickItem => ', item),
+    onClickItem: item => console.warn('Undefined onClickItem => ', item),
 };
 
 export default TreeMenu;

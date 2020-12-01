@@ -10,7 +10,7 @@ type Props = {
 export default function EmailInput(props: Props) {
     const { variant, onValidate, ...rest } = props;
 
-    const validateEmail = (event) => {
+    const validateEmail = event => {
         const value = event.target.value;
         let error = '';
         if (!FormatManager.ValidateEmail(value)) {

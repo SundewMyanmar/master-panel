@@ -7,6 +7,7 @@ import {
     Link,
     Card,
     CardHeader,
+    CardActions,
     CardContent,
     IconButton,
     Button,
@@ -16,7 +17,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { common } from '../config/Theme';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         paddingTop: theme.spacing(1),
     },
@@ -103,7 +104,7 @@ const MasterCard = (props: MasterCardProps) => {
                                         {title}
                                     </Typography>
                                     {breadCrumbs
-                                        ? breadCrumbs.map((bc) => {
+                                        ? breadCrumbs.map(bc => {
                                               return (
                                                   <Link
                                                       key={`bc-${bc.name}`}
@@ -127,7 +128,7 @@ const MasterCard = (props: MasterCardProps) => {
                         action={
                             <>
                                 {actions
-                                    ? actions.map((ac) => {
+                                    ? actions.map(ac => {
                                           let ico = {
                                               color: ac.color ? ac.color : color || common.white,
                                           };

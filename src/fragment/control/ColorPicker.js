@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     content: {
         padding: 0,
         margin: 0,
@@ -66,13 +66,13 @@ const ColorPicker = (props: ColorPickerProps) => {
         if (value) setColor(value);
     }, [value, show]);
 
-    const handleChange = (newColor) => {
+    const handleChange = newColor => {
         setColor(newColor);
 
         if (onClose) onClose(newColor.hex);
     };
 
-    const handleChangeComplete = (newColor) => {
+    const handleChangeComplete = newColor => {
         setColor(newColor);
     };
 
@@ -145,7 +145,7 @@ const ColorPicker = (props: ColorPickerProps) => {
 ColorPicker.defaultProps = {
     title: 'Color Browser',
     value: '#fff',
-    onError: (error) => console.warn(error),
+    onError: error => console.warn(error),
 };
 
 export default ColorPicker;

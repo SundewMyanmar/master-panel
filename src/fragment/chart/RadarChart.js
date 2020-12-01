@@ -40,7 +40,7 @@ const SDRadarChart = (props: SDRadarChartProps) => {
                     <PolarGrid />
                     <PolarAngleAxis dataKey={aKey} tick={{ fill: theme.palette.text.primary }} />
                     <PolarRadiusAxis {...domain} />
-                    {dataKeys.map((key) => {
+                    {dataKeys.map(key => {
                         return <Radar key={`rk-${key.key}`} name={key.key} dataKey={key.key} stroke={key.color} fill={key.color} fillOpacity={0.3} />;
                     })}
                 </RadarChart>

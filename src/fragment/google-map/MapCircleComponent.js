@@ -21,13 +21,13 @@ export type MapCircleComponentProps = {
 const MapCircleComponent = (props: MapCircleComponentProps) => {
     const { drawingModes, circles, circleOptions, draggable, onClick, onCircleComplete } = props;
 
-    const handelOnClick = (cc) => {
+    const handelOnClick = cc => {
         if (onClick) onclick(cc);
     };
 
     const circleElements =
         circles &&
-        circles.map((cc) => (
+        circles.map(cc => (
             <Circle
                 key={`circle-${circles.indexOf(cc)}`}
                 defaultCenter={cc.defaultCenter}

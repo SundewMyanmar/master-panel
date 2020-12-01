@@ -35,13 +35,13 @@ export default class MapControl extends React.Component {
 
         render(
             <div
-                ref={(el) => {
+                ref={el => {
                     if (!this.renderedOnce) {
                         this.el = el;
                         this.map.controls[controlPosition].push(el);
                     } else if (el && this.el && el !== this.el) {
                         this.el.innerHTML = '';
-                        [].slice.call(el.childNodes).forEach((child) => this.el.appendChild(child));
+                        [].slice.call(el.childNodes).forEach(child => this.el.appendChild(child));
                     }
                     this.renderedOnce = true;
                 }}

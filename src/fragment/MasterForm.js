@@ -7,6 +7,7 @@ import {
     PasswordInput,
     NumberInput,
     ImageInput,
+    MultiImageInput,
     CheckboxInput,
     ListInput,
     ObjectInput,
@@ -14,7 +15,9 @@ import {
     ChipInput,
     ColorInput,
     TabControl,
+    DraftEditorInput,
 } from './control';
+import { background } from '../config/Theme';
 import { TextInputProps } from './control/TextInput';
 
 export type Field = {
@@ -32,13 +35,14 @@ export type MasterFormProps = {
     fields: Array<Field>,
     grid: GridProps,
     type: 'form' | 'tab',
+    initialData: Object,
     onWillSubmit?: (form: Object) => boolean,
     onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
     onChange: () => void,
     onKeyDown: () => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     container: {
         backgroundColor: theme.palette.background.paper,
     },
@@ -49,9 +53,14 @@ const styles = makeStyles((theme) => ({
 const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const [form, setForm] = useState({});
     const classes = styles();
-    const { type, variant, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
+    const { initialData, type, variant, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
 
-    const handleFormSubmit = (event) => {
+    React.useEffect(() => {
+        console.log('master init', initialData);
+        setForm({ ...form, ...initialData });
+    }, [initialData]);
+
+    const handleFormSubmit = event => {
         event.preventDefault();
         let allow = true;
 
@@ -64,9 +73,17 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
     };
 
-    const handleValueChange = (field, event) => {
+    const handleValueChange = (field, event, index) => {
         if (field.type === 'checkbox') {
-            form[event.target.name] = event.target.checked;
+            form[field.id] = event.target.checked;
+        } else if (field.type === 'multi-image') {
+            if (!form[field.id]) form[field.id] = [];
+
+            if (!form[field.id][index]) {
+                form[field.id].push(event.target.value);
+            } else {
+                form[field.id][index] = event.target.value;
+            }
         } else {
             form[event.target.name] = event.target.value;
         }
@@ -74,11 +91,11 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         setForm(form);
 
         if (onChange) {
-            onChange(event);
+            onChange(event, index);
         }
     };
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
         if (onKeyDown) {
             onKeyDown(e);
         }
@@ -104,9 +121,9 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 return <CheckboxInput {...inputProps} />;
             case 'image':
                 return <ImageInput {...inputProps} />;
-            // case 'multi-image': {
-            //     return <MultiImagePicker {...inputProps} />;
-            // }
+            case 'multi-image': {
+                return <MultiImageInput {...inputProps} />;
+            }
             case 'icon':
                 return <IconInput {...inputProps} />;
             case 'file':
@@ -119,21 +136,24 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 return <ChipInput {...inputProps} />;
             case 'color':
                 return <ColorInput {...inputProps} />;
+            case 'draft-editor':
+                return <DraftEditorInput {...inputProps} />;
             default:
                 return <TextInput type={type} {...inputProps} />;
         }
     };
 
-    const renderTab = (datas) => {
-        datas = datas.map((data) => {
+    const renderTab = datas => {
+        datas = datas.map(data => {
             if (data.fields) data.content = renderGrid(data.fields);
 
             return data;
         });
-        return <TabControl {...rest} centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
+
+        return <TabControl centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
     };
 
-    const renderGrid = (datas) => {
+    const renderGrid = datas => {
         return (
             <Grid
                 style={{ backgroundColor: 'inherit' }}
@@ -145,10 +165,10 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     const { type, ...inputProps } = field;
                     inputProps.key = field.id + '_' + index;
                     inputProps.name = field.name || field.id;
-                    inputProps.onChange = (event) => handleValueChange(field, event);
+                    inputProps.onChange = (event, index) => handleValueChange(field, event, index);
 
                     if (field.onValidate) {
-                        inputProps.onValidate = (event) => field.onValidate(event, form);
+                        inputProps.onValidate = event => field.onValidate(event, form);
                     }
 
                     return (
@@ -171,6 +191,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
 
 MasterForm.defaultProps = {
     type: 'form',
+    initialData: {},
 };
 
 export default MasterForm;

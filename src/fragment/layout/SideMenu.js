@@ -94,19 +94,19 @@ const FolderMenu = (props: ChildMenuGroupProps) => {
     );
 };
 
-const ItemStyles = makeStyles((theme) => ({
-    root: (props) => ({
+const ItemStyles = makeStyles(theme => ({
+    root: props => ({
         paddingLeft: props.hideMenu ? 15 : theme.spacing(2 * (props.parentCount + 1)),
         borderRight: !props.hideMenu && props.selected ? '4px solid ' + theme.palette.primary.light : null,
     }),
-    menuIcon: (props) => ({
+    menuIcon: props => ({
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
         width: 27,
         display: 'inline-flex',
         flexShrink: 0,
         minWidth: theme.spacing(3),
     }),
-    menuText: (props) => ({
+    menuText: props => ({
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
     }),
 }));
@@ -135,13 +135,13 @@ const DefaultMenuItem = (props: MenuItemProps) => {
     } = props;
 
     const isFolder = items && items.length > 0;
-    const open = state.openIds.findIndex((x) => x === props.id) >= 0;
+    const open = state.openIds.findIndex(x => x === props.id) >= 0;
     const isSelect = location.pathname === path;
 
     const [anchorEl, setAnchorEl] = useState(null);
     const classes = ItemStyles({ parentCount: props.parentCount, selected: isSelect, hideMenu: state.hideMenu });
 
-    const handleClick = (event) => {
+    const handleClick = event => {
         if (isFolder) {
             dispatch({
                 type: ACTIONS.MODIFIED_OPEN_IDS,
@@ -204,7 +204,7 @@ const DefaultMenuItem = (props: MenuItemProps) => {
     );
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         overflowY: 'auto',
         overflowX: 'auto',
@@ -222,7 +222,7 @@ const SideMenu = (props: SideMenuProps) => {
     const { hideMenu, menus } = props.state;
     const [search, setSearch] = useState('');
 
-    const handleClick = (menu) => {
+    const handleClick = menu => {
         if (props.onItemClick) {
             props.onItemClick(menu);
         }
@@ -230,8 +230,8 @@ const SideMenu = (props: SideMenuProps) => {
 
     let filterMenus = menus;
 
-    const searchMenu = (list) => {
-        list.forEach((item) => {
+    const searchMenu = list => {
+        list.forEach(item => {
             if (item.label.startsWith(search)) {
                 filterMenus = [...filterMenus, item];
             } else if (item.items && item.items.length > 0) {
@@ -250,7 +250,7 @@ const SideMenu = (props: SideMenuProps) => {
             {hideMenu ? null : (
                 <>
                     <div className={classes.searchBox}>
-                        <SearchInput onSearch={(value) => setSearch(value)} />
+                        <SearchInput onSearch={value => setSearch(value)} />
                     </div>
                     <Divider />
                 </>

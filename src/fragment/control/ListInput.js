@@ -12,10 +12,11 @@ export type SelectListProps = {
     onLoadItem?: (item: Object) => string,
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => string,
     onChange: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => void,
+    disabled: boolean,
 };
 
 const ListInput = (props: SelectListProps) => {
-    const { variant, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
+    const { variant, disabled, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(value);
@@ -54,7 +55,7 @@ const ListInput = (props: SelectListProps) => {
         }
     };
 
-    const buildInputIcon = (inputProps) => {
+    const buildInputIcon = inputProps => {
         if (icon) {
             inputProps.startAdornment = (
                 <InputAdornment position="start">
@@ -65,7 +66,7 @@ const ListInput = (props: SelectListProps) => {
         return inputProps;
     };
 
-    const buildInputField = (params) => {
+    const buildInputField = params => {
         const { InputProps, InputLabelProps, ...otherParams } = params;
         const placeholder = 'Choose ' + FormatManager.camelToReadable(id || name);
 
@@ -115,6 +116,7 @@ const ListInput = (props: SelectListProps) => {
             id={id || name}
             name={name || id}
             options={data}
+            disabled={disabled}
             getOptionLabel={onLoadItem}
             onChange={handleChange}
             popupIcon={<Icon color="primary">arrow_drop_down</Icon>}
@@ -126,7 +128,7 @@ const ListInput = (props: SelectListProps) => {
 };
 
 ListInput.defaultProps = {
-    onLoadItem: (item) => item.toString(),
+    onLoadItem: item => item.toString(),
 };
 
 export default ListInput;

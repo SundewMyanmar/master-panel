@@ -79,7 +79,7 @@ const Cell = (props: CellProps) => {
 
     return (
         <TableCell color="secondary" align={field.align} style={field.minWidth ? { minWidth: field.minWidth } : null} {...cellProps}>
-            {cellValue || '-'}
+            {cellValue || cellValue === 0 ? cellValue : '-'}
         </TableCell>
     );
 };

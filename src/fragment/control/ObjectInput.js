@@ -21,17 +21,17 @@ export type ObjectInputProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         backgroundColor: 'inherit',
     },
-    label: (props) => ({
+    label: props => ({
         backgroundColor: 'inherit', //theme.palette.background.paper,
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.text.primary,
     }),
-    content: (props) => ({
+    content: props => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0, 0.5, 1.5),
@@ -42,6 +42,9 @@ const styles = makeStyles((theme) => ({
     }),
     openIcon: {
         color: theme.palette.text.primary,
+    },
+    disabledOpenIcon: {
+        color: theme.palette.common.gray,
     },
     chip: {
         margin: theme.spacing(0.5, 0.5, 0.5, 0),
@@ -99,11 +102,10 @@ const ObjectInput = (props: ObjectInputProps) => {
         if (selectedData !== inputData) {
             handleClose(inputData);
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values, value]);
 
-    const handleClose = (result) => {
+    const handleClose = result => {
         setShowTable(false);
         if (result === false) {
             return;
@@ -139,16 +141,16 @@ const ObjectInput = (props: ObjectInputProps) => {
         }
     };
 
-    const handleRemove = (item) => {
+    const handleRemove = item => {
         if (!multi) {
             handleClose(null);
             return;
         }
-        let updateSelection = selectedData.filter((x) => x.id !== item.id);
+        let updateSelection = selectedData.filter(x => x.id !== item.id);
         handleClose(updateSelection);
     };
 
-    const handleError = (error) => {
+    const handleError = error => {
         setShowTable(false);
         setError(error);
     };
@@ -219,7 +221,7 @@ const ObjectInput = (props: ObjectInputProps) => {
                 onClose={handleClose}
                 onError={handleError}
                 selectedData={selectedData}
-                onSelectionChange={(result) => setSelectedData(result)}
+                onSelectionChange={result => setSelectedData(result)}
             />
             <FormControl {...rest} variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
@@ -241,11 +243,18 @@ const ObjectInput = (props: ObjectInputProps) => {
                             </div>
                         </Grid>
                         <Grid className={classes.actionButton} container item xs={2} sm={2} justify="flex-end" alignItems="center">
-                            {disabledLoad || (
-                                <IconButton disableRipple onClick={() => setShowTable(true)} className={classes.openIcon} aria-label="Choose">
+                            {
+                                <IconButton
+                                    disableRipple
+                                    onClick={() => {
+                                        disabledLoad || setShowTable(true);
+                                    }}
+                                    className={!disabledLoad ? classes.openIcon : classes.disabledOpenIcon}
+                                    aria-label="Choose"
+                                >
                                     <Icon>open_in_new</Icon>
                                 </IconButton>
-                            )}
+                            }
                         </Grid>
                     </Grid>
                 </Paper>
@@ -256,7 +265,7 @@ const ObjectInput = (props: ObjectInputProps) => {
 };
 
 ObjectInput.defaultProps = {
-    onLoadItem: (item) => {
+    onLoadItem: item => {
         console.warn('Undefined OnLoadItem => ', item);
         return item.id;
     },

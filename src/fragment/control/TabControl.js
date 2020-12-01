@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Icon, AppBar, Tabs, Tab, Box } from '@material-ui/core';
 import { common } from '../../config/Theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
         width: '100%',
@@ -51,7 +51,7 @@ export const TabPanel = (props: TabPanelProps) => {
     );
 };
 
-const a11yProps = (index) => {
+const a11yProps = index => {
     return {
         id: `scrollable-force-tab-${index}`,
         'aria-controls': `scrollable-force-tabpanel-${index}`,
@@ -75,6 +75,7 @@ const TabControl = (props: TabScrollButtonProps) => {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+
         if (onChange) onChange(event, newValue);
     };
 
@@ -121,7 +122,7 @@ const TabControl = (props: TabScrollButtonProps) => {
             </Tabs>
             {/* </AppBar> */}
             {tabs &&
-                tabs.map((tab) => (
+                tabs.map(tab => (
                     <TabPanel className={classes.tabPanel} key={`tab-content-${tabs.indexOf(tab)}`} value={value} index={tabs.indexOf(tab)}>
                         {tab.content}
                     </TabPanel>

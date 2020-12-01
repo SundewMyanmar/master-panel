@@ -15,7 +15,7 @@ export type FormDialogProps = {
     onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     buttonContainer: {
         padding: theme.spacing(2, 0),
     },

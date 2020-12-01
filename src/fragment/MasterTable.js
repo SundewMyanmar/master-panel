@@ -9,8 +9,10 @@ import DataAction from './table/DataAction';
 import FormatManager from '../util/FormatManager';
 import ImportMenu from './table/ImportMenu';
 import { Field } from './MasterForm';
+import ScrollBar from './control/ScrollBar';
+import { text, error } from '../config/Theme';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     header: {
         flex: 1,
         // backgroundColor:theme.palette.primary.main,
@@ -72,8 +74,25 @@ export type MasterTableProps = {
     type: 'TABLE' | 'INPUT',
     hideSearch?: Boolean,
     hideDataActions?: Boolean,
+    hideActionMenu?: Boolean,
+    hideImportMenu?: Boolean,
     hideCRUD?: Boolean,
 };
+
+export const defaultActions = [
+    {
+        id: 'edit',
+        label: 'Edit',
+        icon: 'edit',
+        color: text.primary,
+    },
+    {
+        id: 'remove',
+        label: 'Remove',
+        icon: 'delete',
+        color: error.main,
+    },
+];
 
 const MasterTable = (props: MasterTableProps) => {
     const classes = styles();
@@ -99,6 +118,8 @@ const MasterTable = (props: MasterTableProps) => {
         onImport,
         hideSearch,
         hideDataActions,
+        hideActionMenu,
+        hideImportMenu,
         hideCRUD,
     } = props;
 
@@ -109,7 +130,7 @@ const MasterTable = (props: MasterTableProps) => {
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
 
-    if (!hideDataActions && importFields.findIndex((f) => f === 'version') < 0) {
+    if (!hideDataActions && importFields.findIndex(f => f === 'version') < 0) {
         importFields.push('version');
     }
 
@@ -136,12 +157,12 @@ const MasterTable = (props: MasterTableProps) => {
 
     const exportCSV = async () => {
         setLoading(true);
-        let csv = importFields.map((field) => FormatManager.buildCSV(field)).join(',') + '\n';
+        let csv = importFields.map(field => FormatManager.buildCSV(field)).join(',') + '\n';
         console.log('csv', selectedData);
-        selectedData.forEach((data) => {
+        selectedData.forEach(data => {
             csv +=
                 importFields
-                    .map((field) => {
+                    .map(field => {
                         let value = data[field] || '';
                         if (typeof data[field] === 'boolean') value = data[field];
 
@@ -185,7 +206,7 @@ const MasterTable = (props: MasterTableProps) => {
     const [paging, setPaging] = useState(() => {
         return {
             currentPage: 0,
-            pageSize: 5,
+            pageSize: 10,
             total: 0,
             data: [],
             sort: 'id:ASC',
@@ -236,11 +257,11 @@ const MasterTable = (props: MasterTableProps) => {
         );
     };
 
-    const handlePageChange = (pagination) => {
+    const handlePageChange = pagination => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
     };
 
-    const handleImport = (data) => {
+    const handleImport = data => {
         console.log('import', data);
         setLoading(true);
         if (onImport) {
@@ -253,11 +274,11 @@ const MasterTable = (props: MasterTableProps) => {
         }
     };
 
-    const handleSelectionChange = (result) => {
+    const handleSelectionChange = result => {
         setSelectedData(result);
     };
 
-    const handleActionMenu = (menuItem) => {
+    const handleActionMenu = menuItem => {
         switch (menuItem.id) {
             case 'uncheck_all':
                 setSelectedData([]);
@@ -270,7 +291,7 @@ const MasterTable = (props: MasterTableProps) => {
                 break;
             case 'remove':
                 if (selectedData.length > 0) {
-                    const ids = selectedData.map((item) => item.id);
+                    const ids = selectedData.map(item => item.id);
                     setQuestion('Are you sure to remove [' + ids.join(', ') + '] items?');
                     setRemoveData(selectedData);
                 }
@@ -293,35 +314,20 @@ const MasterTable = (props: MasterTableProps) => {
     };
 
     //Remove Data if confirmation is Yes
-    const handleQuestionDialog = (status) => {
+    const handleQuestionDialog = status => {
         if (status && removeData) {
             setLoading(true);
             onRemove(removeData)
-                .then((data) => {
+                .then(data => {
                     setSelectedData([]);
                     loadData(0, paging.pageSize, paging.sort);
                 })
-                .catch((error) => onError(error))
+                .catch(error => onError(error))
                 .finally(() => setLoading(false));
         }
         setQuestion('');
         setRemoveData(null);
     };
-
-    const defaultActions = [
-        {
-            id: 'edit',
-            label: 'Edit',
-            icon: 'edit',
-            color: theme.palette.text.primary,
-        },
-        {
-            id: 'remove',
-            label: 'Remove',
-            icon: 'delete',
-            color: theme.palette.error.main,
-        },
-    ];
 
     const actions = [...moreActions, ...(hideCRUD ? [] : defaultActions)];
 
@@ -331,7 +337,7 @@ const MasterTable = (props: MasterTableProps) => {
         label: '@',
         minWidth: 50,
         type: 'raw',
-        onLoad: (item) => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
+        onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
     };
     let fields_with_action = [];
     if (actions.length > 0) {
@@ -351,17 +357,19 @@ const MasterTable = (props: MasterTableProps) => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justify="center">
-                        {hideSearch || <SearchInput value={search} onSearch={(value) => setSearch(value)} placeholder="Search Files" />}
+                        {hideSearch || <SearchInput value={search} onSearch={value => setSearch(value)} placeholder="Search Files" />}
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
                         {hideDataActions || (
                             <>
-                                <ActionMenu
-                                    onMenuItemClick={handleActionMenu}
-                                    disabled={!selectedData || selectedData.length < 1}
-                                    label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
-                                />
-                                <ImportMenu fields={importFields} onImportItems={handleImport} className={classes.newButton} />
+                                {hideActionMenu || (
+                                    <ActionMenu
+                                        onMenuItemClick={handleActionMenu}
+                                        disabled={!selectedData || selectedData.length < 1}
+                                        label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
+                                    />
+                                )}
+                                {hideImportMenu || <ImportMenu fields={importFields} onImportItems={handleImport} className={classes.newButton} />}
                             </>
                         )}
                         {hideCRUD || (
@@ -382,6 +390,7 @@ const MasterTable = (props: MasterTableProps) => {
                         onInputChange={onInputChange}
                         value={value}
                         onSave={onSave}
+                        onEdit={onEdit}
                         total={paging.total}
                         pageSize={paging.pageSize}
                         currentPage={paging.currentPage}
@@ -404,11 +413,13 @@ MasterTable.defaultProps = {
     hideSearch: false,
     hideCRUD: false,
     hideDataActions: false,
+    hideActionMenu: false,
+    hideImportMenu: false,
     type: 'TABLE',
     onAddNew: () => console.warn('Undefined onAddNew'),
-    onEdit: (item) => console.warn('Undefined onEdit => ', item),
-    onError: (error) => console.warn('Undefined onError => ', error),
-    onItemAction: (item) => console.warn('Undefined Item Action => ', item),
+    onEdit: item => console.warn('Undefined onEdit => ', item),
+    onError: error => console.warn('Undefined onError => ', error),
+    onItemAction: item => console.warn('Undefined Item Action => ', item),
 };
 
 export default MasterTable;

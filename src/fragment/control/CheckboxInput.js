@@ -24,7 +24,7 @@ const CheckboxInput = (props: CheckboxInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checked]);
 
-    const handleChange = (event) => {
+    const handleChange = event => {
         setState(event.target.checked);
         if (onChange && event) {
             onChange(event);

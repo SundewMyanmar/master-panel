@@ -30,7 +30,7 @@ export default function QuestionDialog(props: QuestionDialogProps) {
                     <Icon>done</Icon> Ok
                 </Button>
                 <Button onClick={() => onClose(false)} variant="contained" color="default">
-                    <Icon>done</Icon> Cancel
+                    <Icon>close</Icon> Cancel
                 </Button>
             </DialogActions>
         </Dialog>
@@ -38,5 +38,5 @@ export default function QuestionDialog(props: QuestionDialogProps) {
 }
 
 QuestionDialog.defaultProps = {
-    onClose: (result) => console.warn('Undefined onClose => ', result),
+    onClose: result => console.warn('Undefined onClose => ', result),
 };

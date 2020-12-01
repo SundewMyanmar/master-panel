@@ -27,7 +27,7 @@ const TextInput = (props: TextInputProps) => {
 
     //Set value if props.value changed.
     React.useEffect(() => {
-        const newValue = FormatManager.defaultNull(value) || '';
+        const newValue = FormatManager.defaultNull(value) || value === 0 ? value : '';
 
         if (currentInput.current && newValue !== currentInput.current.value) {
             currentInput.current.value = newValue;
@@ -38,7 +38,7 @@ const TextInput = (props: TextInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleTextChange = (event) => {
+    const handleTextChange = event => {
         const data = event.target.value;
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
@@ -54,7 +54,7 @@ const TextInput = (props: TextInputProps) => {
         }
     };
 
-    const buildInputIcon = (icon) => {
+    const buildInputIcon = icon => {
         if (icon) {
             return {
                 startAdornment: (

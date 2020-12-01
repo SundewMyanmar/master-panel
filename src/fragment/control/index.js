@@ -5,6 +5,7 @@ import EmailInput from './EmailInput';
 import SearchInput from './SearchInput';
 import NumberInput from './NumberInput';
 import ImageInput from './ImageInput';
+import MultiImageInput from './MultiImageInput';
 import CheckboxInput from './CheckboxInput';
 import ListInput from './ListInput';
 import ObjectInput from './ObjectInput';
@@ -14,6 +15,7 @@ import ColorInput from './ColorInput';
 import TabControl from './TabControl';
 import GridControl from './GridControl';
 import InfoCard from './InfoCard';
+import DraftEditorInput from './DraftEditorInput';
 
 export {
     Copyright,
@@ -21,6 +23,7 @@ export {
     NumberInput,
     PasswordInput,
     ImageInput,
+    MultiImageInput,
     EmailInput,
     SearchInput,
     CheckboxInput,
@@ -32,4 +35,5 @@ export {
     TabControl,
     GridControl,
     InfoCard,
+    DraftEditorInput,
 };
