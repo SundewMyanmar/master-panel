@@ -17,7 +17,7 @@ export default class LangManager {
         };
     };
 
-    static translateToUni = (content) => {
+    static translateToUni = content => {
         return this.translateText(content, 'uni');
     };
 

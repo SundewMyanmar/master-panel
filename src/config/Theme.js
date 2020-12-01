@@ -1,67 +1,91 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 export const common = {
-    white: '#FFF',
-    black: '#09090B',
+    white: '#fff',
+    black: '#616161',
     gray: '#b9c1c5',
     brown: '#5d4037',
     google: '#DC4E41',
     facebook: '#4267B2',
+    link: '#738fd6',
+    lightGray: '#e9eef1',
 };
 
 export const primary = {
-    main: '#38486b', //'#4c5059',
-    light: '#94a1ca',
-    dark: '#0a2140',
-    contrastText: '#fff',
+    main: '#c00000',
+    light: '#fb4c2e',
+    dark: '#880000',
+    contrastText: '#ffffff',
+};
+
+export const darkPrimary = {
+    main: '#880000',
+    light: '#bf3f2a',
+    dark: '#560000',
+    contrastText: '#ffffff',
 };
 
 export const secondary = {
-    main: '#008F78', //'#d9c6b0',
-    light: '#4fc0a7',
-    dark: '#00614c',
-    contrastText: '#fff',
+    main: '#39992f',
+    light: '#6ecb5d',
+    dark: '#006a00',
+    contrastText: '#ffffff',
+};
+
+export const darkSecondary = {
+    main: '#26861c',
+    light: '#5db74b',
+    dark: '#005800',
+    contrastText: '#ffffff',
 };
 
 export const error = {
-    main: '#e04646',
-    light: '#ff7972',
-    dark: '#a8001e',
-    contrastText: '#fff',
+    main: '#b71c1c',
+    light: '#f05545',
+    dark: '#7f0000',
+    contrastText: '#ffffff',
 };
 
 export const warning = {
-    main: '#ffb630',
-    light: '#ffe864',
-    dark: '#c78600',
-    contrastText: '#fff',
+    main: '#eeb327',
+    light: '#ffe55d',
+    dark: '#b78400',
+    contrastText: '#000000',
 };
 
 export const info = {
     main: '#019ac7',
     light: '#5ccbfa',
     dark: '#006c96',
-    contrastText: '#fff',
+    contrastText: '#000000',
 };
 
 export const success = {
-    main: '#3ea725',
-    light: '#74d957',
-    dark: '#007700',
-    contrastText: '#fff',
+    main: '#257d4a',
+    light: '#58ad76',
+    dark: '#005021',
+    contrastText: '#ffffff',
 };
 
 export const background = {
-    default: '#ebedf2',
-    paper: '#ffffff',
+    default: '#fbf2f2',
+    paper: '#FFFFFF',
 };
 
 export const text = {
-    primary: '#0D0D0D',
+    primary: '#05162a',
     secondary: primary.dark,
     active: primary.contrastText,
     disabled: 'rgba(0, 0, 0, 0.38)',
     hint: 'rgba(0, 0, 0, 0.38)',
+};
+
+export const darkText = {
+    primary: '#f1f2f3',
+    secondary: darkPrimary.contrastText,
+    active: darkPrimary.contrastText,
+    disabled: 'rgba(255, 255, 255, 0.38)',
+    hint: 'rgba(255, 255, 255, 0.38)',
 };
 
 export const action = {
@@ -70,6 +94,15 @@ export const action = {
     hover: primary.light,
     hoverOpacity: 0.42,
     selected: primary.main,
+    selectedOpacity: 0.55,
+};
+
+export const darkAction = {
+    active: darkPrimary.contrastText,
+    activeOpactiy: 1,
+    hover: darkPrimary.light,
+    hoverOpacity: 0.42,
+    selected: darkPrimary.main,
     selectedOpacity: 0.55,
 };
 
@@ -128,8 +161,69 @@ export default createMuiTheme({
     },
     overrides: {
         MuiTableRow: {
-            selected: {
-                backgroundColor: info.light,
+            root: {
+                '&$selected,&$selected:hover': { backgroundColor: primary.light },
+            },
+        },
+        MuiTableCell: {
+            root: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+            sizeSmall: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+            sizeMedium: {
+                padding: '6px 24px 6px 16px',
+                maxHeight: 40,
+                height: 40,
+            },
+        },
+    },
+});
+
+export const DarkTheme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        common: common,
+        primary: darkPrimary,
+        error: error,
+        warning: warning,
+        info: info,
+        success: success,
+        secondary: darkSecondary,
+        // background: background,
+        text: darkText,
+        // divider: '#E0E0E2',
+        action: darkAction,
+    },
+    typography: {
+        htmlFontSize: 18,
+    },
+    overrides: {
+        MuiTableRow: {
+            root: {
+                '&$selected,&$selected:hover': { backgroundColor: darkPrimary.light },
+            },
+        },
+        MuiTableCell: {
+            root: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+            sizeSmall: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+            sizeMedium: {
+                padding: '6px 24px 6px 16px',
+                maxHeight: 40,
+                height: 40,
             },
         },
     },

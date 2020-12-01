@@ -146,6 +146,7 @@ export default class ApiManager {
     }
 
     async modifyById(id, data) {
+        console.log('handle submit', data, id);
         const response = await this.put('/' + id, data, this.getHeaders(true));
         return response;
     }
