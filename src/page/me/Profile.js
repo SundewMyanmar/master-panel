@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router';
-import { Typography, Container, makeStyles, Paper, Avatar, Icon, Button } from '@material-ui/core';
+import { Typography, Container, makeStyles, Paper, Avatar, Icon, Button, FormControl, InputLabel } from '@material-ui/core';
 import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
 import MasterForm from '../../fragment/MasterForm';
 import FileApi from '../../api/FileApi';
@@ -9,7 +9,10 @@ import { STORAGE_KEYS } from '../../config/Constant';
 import { primary, secondary } from '../../config/Theme';
 import FormatManager from '../../util/FormatManager';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
+    root: {
+        backgroundColor: 'inherit',
+    },
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -40,19 +43,19 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const Profile = (props) => {
+const Profile = props => {
     const classes = styles();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleError = (error) => {
+    const handleError = error => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
     const [user, setUser] = useState(() => {
         ProfileApi.getProfile()
-            .then((data) => {
+            .then(data => {
                 if (!data.currentToken) {
                     data.currentToken = user.currentToken;
                 }
@@ -75,7 +78,7 @@ const Profile = (props) => {
     });
     const [noti, setNoti] = useState('');
 
-    const handleSubmit = async (form) => {
+    const handleSubmit = async form => {
         setLoading(true);
         try {
             let profile = {
@@ -99,7 +102,7 @@ const Profile = (props) => {
             if (form.image && form.image.id) {
                 profile.profileImage = form.image;
             } else if (form.image && !form.image.id) {
-                const fileResponse = await FileApi.upload(form.image, false);
+                const fileResponse = await FileApi.upload(form.image, true);
                 if (fileResponse) {
                     profile.profileImage = fileResponse;
                 }
@@ -131,7 +134,7 @@ const Profile = (props) => {
             id: 'image',
             type: 'image',
             enableFilePicker: true,
-            value: user ? user.profileImage : null,
+            value: user.profileImage || null,
             size: { width: 256, height: 256 },
         },
         {
@@ -159,28 +162,28 @@ const Profile = (props) => {
             value: user ? user.email : '',
             disabled: true,
         },
-        {
-            id: 'primary',
-            label: 'Primary Color',
-            required: false,
-            type: 'color',
-            value: user ? user.primary : '',
-        },
-        {
-            id: 'secondary',
-            label: 'Secondary Color',
-            required: false,
-            type: 'color',
-            value: user ? user.secondary : '',
-        },
-        {
-            id: 'darkMode',
-            label: 'Dark Mode',
-            required: false,
-            type: 'checkbox',
-            value: user ? user.darkMode : false,
-            checked: user ? (user.darkMode ? true : false) : false,
-        },
+        // {
+        //     id: 'primary',
+        //     label: 'Primary Color',
+        //     required: false,
+        //     type: 'color',
+        //     value: user ? user.primary : '',
+        // },
+        // {
+        //     id: 'secondary',
+        //     label: 'Secondary Color',
+        //     required: false,
+        //     type: 'color',
+        //     value: user ? user.secondary : '',
+        // },
+        // {
+        //     id: 'darkMode',
+        //     label: 'Dark Mode',
+        //     required: false,
+        //     type: 'checkbox',
+        //     value: user ? user.darkMode : false,
+        //     checked: user ? (user.darkMode ? true : false) : false,
+        // },
     ];
 
     const userName = user.displayName || 'Unknown';

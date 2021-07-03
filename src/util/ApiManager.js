@@ -64,6 +64,16 @@ export default class ApiManager {
         return (this.apiURL + url).replace(/([^:]\/)\/+/g, '$1');
     }
 
+    customLink(url, isPublic) {
+        let result = this.buildUrl(url);
+        if (!isPublic) {
+            const user = this.getUserInfo();
+            result += '?accessToken=' + user.currentToken;
+        }
+
+        return result;
+    }
+
     async get(url, headers) {
         try {
             console.log('Headers =>', headers);

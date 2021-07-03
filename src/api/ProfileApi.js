@@ -23,6 +23,34 @@ class ProfileApi extends ApiManager {
         const response = await this.delete('/cleanToken', this.getHeaders(true));
         return response;
     }
+
+    async refreshToken(tokenString) {
+        const response = await this.post(
+            '/refreshToken',
+            {
+                deviceId: this.getDeviceId(),
+                deviceOS: this.getDeviceOS(),
+                firebaseMessagingToken: tokenString,
+            },
+            this.getHeaders(true),
+        );
+        return response;
+    }
+
+    async setupMfa(enable, type) {
+        const response = await this.get(`/enableMfa/${enable}?type=${type}`, this.getHeaders(true));
+        return response;
+    }
+
+    async verifyMfa(totp) {
+        const response = await this.get(`/verifyMfa/${totp}`, this.getHeaders(true));
+        return response;
+    }
+
+    async resendMfa() {
+        const response = await this.get(`/resendMfa`, this.getHeaders(true));
+        return response;
+    }
 }
 
 export default new ProfileApi();

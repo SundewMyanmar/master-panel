@@ -1,13 +1,13 @@
-export const APP_NAME = 'Master Panel';
+export const APP_NAME = 'master-panel';
 export const APP_VERSION = '1.5';
 
 const URLS = {
     development: 'http://localhost:8080/',
-    production: 'http://192.168.8.140:8080/',
+    production: 'http://localhost:8080/',
 };
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
 
-export const SESSION_TIMEOUT = 1000 * 3600 * 20; //20 Minutes
+export const SESSION_TIMEOUT = 1000 * 60 * 15; //15 Minutes
 
 export const GOOGLE_API_KEYS = '';
 
@@ -17,6 +17,21 @@ export const STORAGE_KEYS = {
     MENU: '@com.sdm.MAIN_MENU',
     TABLE_SESSION: '@com.sdm.TABLE_SESS',
     FLASH_MESSAGE: '@com.sdm.FLASH_MESSAGE',
+    THEME: '@com.sdm.THEME',
+    FCM_TOKEN: '@com.sdm.FCM_TOKEN',
+};
+
+export const VAPID_KEY = '';
+
+export const FCM_CONFIG = {
+    apiKey: '',
+    authDomain: '',
+    databaseURL: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+    measurementId: '',
 };
 
 export const SUPPORTED_LANGUAGE = [
@@ -111,14 +126,14 @@ export const USER_PROFILE_MENU = {
         {
             id: 'profile-1',
             label: 'Profile',
-            icon: 'face',
+            icon: 'account_circle',
             path: '/profile',
         },
         {
             id: 'profile-2',
-            label: 'Change Password',
-            icon: 'vpn_key',
-            path: '/changePassword',
+            label: 'Security',
+            icon: 'security',
+            path: '/security',
         },
         process.env.NODE_ENV === 'development'
             ? {
@@ -149,3 +164,5 @@ export const DEFAULT_SIDE_MENU = [
     },
     USER_PROFILE_MENU,
 ];
+
+export const GENERAL_STATUS = ['ACTIVE', 'PENDING', 'CANCEL'];

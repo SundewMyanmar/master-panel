@@ -4,7 +4,7 @@ import ForgetPassword from '../page/auth/ForgetPassword';
 import ResetPassword from '../page/auth/ResetPassword';
 
 import Profile from '../page/me/Profile';
-import ChangePassword from '../page/me/ChangePassword';
+import Security from '../page/me/Security';
 
 import Dashboard from '../page/Dashboard';
 import User from '../page/admin/User';
@@ -20,7 +20,7 @@ import Developer from '../page/Developer';
 export const PrivateRoute = [
     { path: '/', page: Dashboard },
     { path: '/profile', page: Profile },
-    { path: '/changePassword', page: ChangePassword },
+    { path: '/security', page: Security },
     { path: '/user', page: User },
     { path: '/user/detail/:id', page: UserDetail },
     { path: '/role', page: Role },

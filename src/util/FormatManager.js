@@ -172,11 +172,25 @@ export default class FormatManager {
     };
 
     static randomColor = () => {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
+        let letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
+    };
+
+    static createTimer = (value, interval, onChange) => {
+        // Update the count down every 1 second
+        let distance = value;
+        let x = setInterval(function() {
+            distance--;
+            if (distance < 0) {
+                clearInterval(x);
+                if (onChange) onChange(null);
+            } else {
+                if (onChange) onChange(distance);
+            }
+        }, interval);
     };
 }

@@ -15,6 +15,10 @@ import ColorInput from './ColorInput';
 import TabControl from './TabControl';
 import GridControl from './GridControl';
 import InfoCard from './InfoCard';
+import TinyEditorInput from './TinyEditorInput';
+import DateTimeInput from './DateTimeInput';
+import SwitchInput from './SwitchInput';
+import OTPDialog from './OTPDialog';
 import DraftEditorInput from './DraftEditorInput';
 
 export {
@@ -35,5 +39,9 @@ export {
     TabControl,
     GridControl,
     InfoCard,
+    TinyEditorInput,
+    DateTimeInput,
+    SwitchInput,
+    OTPDialog,
     DraftEditorInput,
 };

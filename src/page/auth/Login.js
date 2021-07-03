@@ -1,13 +1,25 @@
-import React, { useState, createRef } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Container, CssBaseline, Avatar, Grid, Button, Link, Box, MuiThemeProvider, makeStyles } from '@material-ui/core';
-
+import { isSafari } from 'react-device-detect';
 import Copyright from '../../fragment/control/Copyright';
 import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
+import { OTPDialog } from '../../fragment/control';
 import AuthApi from '../../api/AuthApi';
-import { STORAGE_KEYS, FACEBOOK } from '../../config/Constant';
+import { STORAGE_KEYS, FACEBOOK, FCM_CONFIG, VAPID_KEY } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
+import firebase from 'firebase';
+
+// let FIREBASE_MESSAGING;
+// console.log('is safari', isSafari);
+// if (!isSafari) {
+//     if (!firebase.apps.length) {
+//         console.log('! safari INIT');
+//         firebase.initializeApp(FCM_CONFIG);
+//     }
+//     FIREBASE_MESSAGING = firebase.messaging();
+// }
 
 const styles = makeStyles((theme) => ({
     container: {
@@ -37,8 +49,8 @@ const styles = makeStyles((theme) => ({
         height: 150,
     },
     image: {
-        width: 120,
-        height: 120,
+        width: 148,
+        height: 148,
     },
     submit: {
         margin: theme.spacing(2, 0, 2),
@@ -77,26 +89,79 @@ const Login = (props) => {
         const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
         return flashMessage || '';
     });
-
+    const [showMfa, setShowMfa] = useState(false);
     const submitButton = createRef();
+    const [data, setData] = useState(null);
 
     const classes = styles();
+
+    // useEffect(() => {
+    //     if (!isSafari && !localStorage.getItem(STORAGE_KEYS.FCM_TOKEN)) {
+    //         FIREBASE_MESSAGING.getToken({ vapidKey: VAPID_KEY }).then(payload => {
+    //             console.log('FCM payload', payload);
+    //             localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, payload);
+    //         });
+    //     }
+    // }, []);
 
     const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
-    const handleSubmit = (event, form) => {
-        // if (!window.navigator.onLine) {
-        //     setError('Please check your internet connection and try again.');
-        //     return;
-        // }
+    const handleMfaSubmit = (code) => {
+        if (!window.navigator.onLine) {
+            setError('Please check your internet connection and try again.');
+            return;
+        }
         setLoading(true);
-        AuthApi.authByUserAndPassword(form)
-            .then((data) => {
-                sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(data));
+
+        let firebaseToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
+        if (firebaseToken) data.firebaseMessagingToken = firebaseToken;
+
+        AuthApi.authByUserAndPasswordAndMfa({
+            ...data,
+            mfa: code,
+        })
+            .then((result) => {
+                setShowMfa(false);
+                sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(result));
                 history.push('/');
+                setLoading(false);
+            })
+            .catch(handleError);
+    };
+    const handleMfaResend = () => {
+        handleSubmit(null, data);
+    };
+
+    const handleChange = (event) => {
+        setData({
+            ...data,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const handleSubmit = (event, form) => {
+        if (!window.navigator.onLine) {
+            setError('Please check your internet connection and try again.');
+            return;
+        }
+        setLoading(true);
+
+        let firebaseToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
+        if (firebaseToken) form.firebaseMessagingToken = firebaseToken;
+
+        AuthApi.authByUserAndPassword(form)
+            .then((result) => {
+                console.log('auth data', result);
+                if (result.currentToken) {
+                    sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(result));
+                    history.push('/');
+                } else {
+                    setShowMfa(true);
+                    setLoading(false);
+                }
             })
             .catch(handleError);
     };
@@ -137,14 +202,15 @@ const Login = (props) => {
                         <Typography component="h1" variant="h5">
                             Sign In
                         </Typography>
+                        <OTPDialog show={showMfa} onShow={setShowMfa} onSubmit={handleMfaSubmit} onResend={handleMfaResend}></OTPDialog>;
                         {facebookLogin()}
-                        <MasterForm fields={loginFields} onSubmit={handleSubmit}>
+                        <MasterForm fields={loginFields} onChange={handleChange} onSubmit={handleSubmit}>
                             <Button type="submit" ref={submitButton} fullWidth variant="contained" color="primary" className={classes.submit}>
                                 Sign In
                             </Button>
                         </MasterForm>
                         <Grid container>
-                            <Grid item xs>
+                            {/* <Grid item xs>
                                 <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
                                     Forgot password?
                                 </Link>
@@ -153,7 +219,7 @@ const Login = (props) => {
                                 <Link href="/#/auth/register" color="textSecondary" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </div>
                 </Box>
