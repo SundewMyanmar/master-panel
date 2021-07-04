@@ -2,6 +2,7 @@ import { API, STORAGE_KEYS } from '../config/Constant';
 import { v4 as uuid } from 'uuid';
 import Axios from 'axios';
 import { osName, osVersion } from 'react-device-detect';
+
 export default class ApiManager {
     get apiUrl() {
         return this.apiUrl;

@@ -38,7 +38,7 @@ class AuthApi extends ApiManager {
         super('auth');
     }
 
-    async setAuth(data): Auth {
+    async setAuth(data: Auth) {
         return {
             deviceId: this.getDeviceId(),
             deviceOS: this.getDeviceOS(),
@@ -70,7 +70,19 @@ class AuthApi extends ApiManager {
         return response;
     }
 
-    async authByFacebook(accessToken: string) {}
+    async authByFacebook(accessToken: string) {
+        const data = await this.setAuth({ accessToken: accessToken });
+        const headers = await this.getHeaders(false);
+        const response = await this.post('/facebook', data, headers);
+        return response;
+    }
+
+    async authByGoogle(accessToken: string) {
+        const data = await this.setAuth({ accessToken: accessToken });
+        const headers = await this.getHeaders(false);
+        const response = await this.post('/google', data, headers);
+        return response;
+    }
 
     async resetPassword(request: ResetPassword) {
         const response = await this.post('/resetPassword', request, this.getHeaders(false));

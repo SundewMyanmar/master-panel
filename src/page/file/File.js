@@ -42,7 +42,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const File = (props) => {
+const File = () => {
     const classes = styles();
 
     const [loading, setLoading] = React.useState(false);
@@ -105,7 +105,7 @@ const File = (props) => {
         if (status && removeData) {
             setLoading(true);
             FileApi.removeById(removeData.id)
-                .then((response) => {
+                .then(() => {
                     loadData(0, paging.pageSize, paging.sort);
                 })
                 .catch(handleError);
@@ -118,7 +118,7 @@ const File = (props) => {
         if (result && result.length > 0) {
             setLoading(true);
             FileApi.upload(result, false)
-                .then((response) => {
+                .then(() => {
                     loadData(0, paging.pageSize, paging.sort);
                 })
                 .catch(handleError);

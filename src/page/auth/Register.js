@@ -39,7 +39,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const Register = (props) => {
+const Register = () => {
     const classes = styles();
     const history = useHistory();
     const [loading, setLoading] = useState(false);

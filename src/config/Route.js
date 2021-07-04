@@ -38,10 +38,6 @@ export const PublicRoute = [
         page: Login,
     },
     {
-        path: '/auth/register',
-        page: Register,
-    },
-    {
         path: '/auth/forgetPassword',
         page: ForgetPassword,
     },

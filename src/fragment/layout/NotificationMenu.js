@@ -25,7 +25,7 @@ type NotificationMenuProps = {
     anchorHorizontal: 'left' | 'right',
 };
 
-const StyledBadge = withStyles(theme => ({
+const StyledBadge = withStyles((theme) => ({
     badge: {
         backgroundColor: theme.palette.error.main,
         padding: '0 4px',
@@ -33,7 +33,7 @@ const StyledBadge = withStyles(theme => ({
     },
 }))(Badge);
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     avatar: {
         color: theme.palette.secondary.contrastText,
         backgroundColor: theme.palette.secondary.main,
@@ -73,13 +73,13 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         setAnchorEl(null);
     };
 
-    const handleClick = item => {};
+    const handleClick = (item) => {};
 
-    const createSkeleton = count => {
+    const createSkeleton = (count) => {
         var result = [];
         for (let i = 0; i < count; i++) {
             result.push(
-                <MenuItem key={'skeleton-01'}>
+                <MenuItem key={'skeleton-' + i}>
                     <ListItemIcon className={classes.menuIcon}>
                         <Skeleton variant="circle" width={32} height={32} />
                     </ListItemIcon>
@@ -117,7 +117,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
     return (
         <>
             <Tooltip title={name} aria-label={name}>
-                <IconButton onClick={event => setAnchorEl(event.currentTarget)}>
+                <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}>
                     <StyledBadge anchorOrigin={anchorOrigin} badgeContent={4} color="secondary">
                         <Icon>{icon || 'notifications'}</Icon>
                     </StyledBadge>
@@ -153,7 +153,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                             </ListItemIcon>
                             <ListItemText className={classes.menuText}>
                                 <Typography variant="subtitle2" gutterBottom>
-                                    {`${FormatManager.formatDate(item.date, 'YYYY-MM-DD')} : ${item.detail1}`}
+                                    {`${FormatManager.formatDate(item.date, 'yyyy-MM-dd')} : ${item.detail1}`}
                                 </Typography>
                                 <Typography className={classes.menuDetail} variant="caption" display="block" gutterBottom>
                                     {item.detail2}

@@ -17,7 +17,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { common } from '../config/Theme';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         paddingTop: theme.spacing(1),
     },
@@ -100,11 +100,11 @@ const MasterCard = (props: MasterCardProps) => {
                                     }
                                     aria-label="breadcrumb"
                                 >
-                                    <Typography variant="h6" color="textPrimary" style={{ color: color || common.gray }}>
+                                    <Typography variant="h6" color="primary" style={{ color: color || common.gray }}>
                                         {title}
                                     </Typography>
                                     {breadCrumbs
-                                        ? breadCrumbs.map(bc => {
+                                        ? breadCrumbs.map((bc) => {
                                               return (
                                                   <Link
                                                       key={`bc-${bc.name}`}
@@ -128,7 +128,7 @@ const MasterCard = (props: MasterCardProps) => {
                         action={
                             <>
                                 {actions
-                                    ? actions.map(ac => {
+                                    ? actions.map((ac) => {
                                           let ico = {
                                               color: ac.color ? ac.color : color || common.white,
                                           };

@@ -69,7 +69,7 @@ export const USER_TABLE_FIELDS = [
         onLoad: (item) => item.status.toLowerCase() === 'active',
     },
 ];
-const User = (props) => {
+const User = () => {
     const history = useHistory();
     const theme = useTheme();
 

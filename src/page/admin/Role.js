@@ -26,7 +26,7 @@ export const ROLE_TABLE_FIELDS = [
     },
 ];
 
-const Role = (props) => {
+const Role = () => {
     const history = useHistory();
 
     const [error, setError] = React.useState('');

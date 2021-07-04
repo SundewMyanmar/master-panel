@@ -55,7 +55,7 @@ const ListInput = (props: SelectListProps) => {
         }
     };
 
-    const buildInputIcon = inputProps => {
+    const buildInputIcon = (inputProps) => {
         if (icon) {
             inputProps.startAdornment = (
                 <InputAdornment position="start">
@@ -66,7 +66,7 @@ const ListInput = (props: SelectListProps) => {
         return inputProps;
     };
 
-    const buildInputField = params => {
+    const buildInputField = (params) => {
         const { InputProps, InputLabelProps, ...otherParams } = params;
         const placeholder = 'Choose ' + FormatManager.camelToReadable(id || name);
 
@@ -128,7 +128,7 @@ const ListInput = (props: SelectListProps) => {
 };
 
 ListInput.defaultProps = {
-    onLoadItem: item => item.toString(),
+    onLoadItem: (item) => item.toString(),
 };
 
 export default ListInput;

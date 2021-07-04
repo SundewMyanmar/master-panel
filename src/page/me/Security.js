@@ -25,7 +25,7 @@ import MasterForm from '../../fragment/MasterForm';
 import ProfileApi from '../../api/ProfileApi';
 import { APP_NAME, STORAGE_KEYS } from '../../config/Constant';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         width: '100%',
         margin: theme.spacing(3),
@@ -102,7 +102,7 @@ const changePasswordFields = [
     },
 ];
 
-const Security = props => {
+const Security = () => {
     const classes = styles();
     const history = useHistory();
     const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
@@ -112,7 +112,7 @@ const Security = props => {
     const [mfa, setMfa] = React.useState(user);
     const [showMfa, setShowMfa] = React.useState(false);
 
-    const handleAccordion = panel => (event, isExpanded) => {
+    const handleAccordion = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
@@ -130,25 +130,25 @@ const Security = props => {
         };
 
         ProfileApi.changePassword(data)
-            .then(response => {
+            .then(() => {
                 sessionStorage.clear();
                 sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Password has changed! Please log in with new password.');
                 history.push('/login');
             })
-            .catch(error => {
+            .catch((error) => {
                 setLoading(false);
                 setError(error.message || error.title || 'Please check your internet connection and try again.');
             });
     };
 
-    const handleMfaChange = event => {
+    const handleMfaChange = (event) => {
         setMfa({
             ...mfa,
             mfaType: event.target.value,
         });
     };
 
-    const handleMfaSubmit = code => {
+    const handleMfaSubmit = (code) => {
         setLoading(true);
         ProfileApi.verifyMfa(code)
             .then(() => {
@@ -169,7 +169,7 @@ const Security = props => {
         ProfileApi.resendMfa();
     };
 
-    const handleMfaConfirm = value => {
+    const handleMfaConfirm = (value) => {
         if (value) {
             if (!['EMAIL', 'SMS', 'APP'].includes(mfa.mfaType)) {
                 setError('Please choose verification type.');

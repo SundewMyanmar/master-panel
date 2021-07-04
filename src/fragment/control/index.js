@@ -19,7 +19,6 @@ import TinyEditorInput from './TinyEditorInput';
 import DateTimeInput from './DateTimeInput';
 import SwitchInput from './SwitchInput';
 import OTPDialog from './OTPDialog';
-import DraftEditorInput from './DraftEditorInput';
 
 export {
     Copyright,
@@ -43,5 +42,4 @@ export {
     DateTimeInput,
     SwitchInput,
     OTPDialog,
-    DraftEditorInput,
 };

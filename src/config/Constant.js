@@ -1,5 +1,5 @@
 export const APP_NAME = 'master-panel';
-export const APP_VERSION = '1.5';
+export const APP_VERSION = '1.6';
 
 const URLS = {
     development: 'http://localhost:8080/',
@@ -10,6 +10,13 @@ export const API = process.env.NODE_ENV === 'development' ? URLS.development : U
 export const SESSION_TIMEOUT = 1000 * 60 * 15; //15 Minutes
 
 export const GOOGLE_API_KEYS = '';
+
+export const GOOGLE_AUTH_OPTIONS = {
+    scopes: ['email'],
+    webClientId: '332664396318-vef0mc89a6pk1cuiq6m2qj0j8r7f0evf.apps.googleusercontent.com',
+};
+
+export const TINY_EDITOR_API_KEY = 'vwm860x0xtl1z0q99yy3bqhv79eawa40fx4h2ewwob23seb8';
 
 export const STORAGE_KEYS = {
     CURRENT_USER: '@com.sdm.CURRENT_USER',
@@ -23,16 +30,17 @@ export const STORAGE_KEYS = {
 
 export const VAPID_KEY = '';
 
-export const FCM_CONFIG = {
-    apiKey: '',
-    authDomain: '',
-    databaseURL: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
-    measurementId: '',
-};
+// export const FCM_CONFIG = {
+//     apiKey: '',
+//     authDomain: '',
+//     databaseURL: '',
+//     projectId: '',
+//     storageBucket: '',
+//     messagingSenderId: '',
+//     appId: '',
+//     measurementId: '',
+// };
+export const FCM_CONFIG = null;
 
 export const SUPPORTED_LANGUAGE = [
     { code: 'en', label: 'English' },

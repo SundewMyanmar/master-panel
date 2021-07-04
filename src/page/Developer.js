@@ -36,7 +36,7 @@ const styles = makeStyles((theme) => ({
 
 const apiManager = new ApiManager('/');
 
-const Developer = (props) => {
+const Developer = () => {
     const classes = styles();
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');

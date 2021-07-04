@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router';
-import { Typography, Container, makeStyles, Paper, Avatar, Icon, Button, FormControl, InputLabel } from '@material-ui/core';
+import { Typography, Container, makeStyles, Paper, Avatar, Icon, Button } from '@material-ui/core';
 import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
 import MasterForm from '../../fragment/MasterForm';
 import FileApi from '../../api/FileApi';
@@ -9,7 +9,7 @@ import { STORAGE_KEYS } from '../../config/Constant';
 import { primary, secondary } from '../../config/Theme';
 import FormatManager from '../../util/FormatManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'inherit',
     },
@@ -43,19 +43,19 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const Profile = props => {
+const Profile = () => {
     const classes = styles();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleError = error => {
+    const handleError = (error) => {
         setLoading(false);
         setError(error.message || error.title || 'Please check your internet connection and try again.');
     };
 
     const [user, setUser] = useState(() => {
         ProfileApi.getProfile()
-            .then(data => {
+            .then((data) => {
                 if (!data.currentToken) {
                     data.currentToken = user.currentToken;
                 }
@@ -78,7 +78,7 @@ const Profile = props => {
     });
     const [noti, setNoti] = useState('');
 
-    const handleSubmit = async form => {
+    const handleSubmit = async (form) => {
         setLoading(true);
         try {
             let profile = {

@@ -9,31 +9,31 @@ import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS, FACEBOOK, FCM_CONFIG, VAPID_KEY } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
-// let FIREBASE_MESSAGING;
-// console.log('is safari', isSafari);
-// if (!isSafari) {
-//     if (!firebase.apps.length) {
-//         console.log('! safari INIT');
-//         firebase.initializeApp(FCM_CONFIG);
-//     }
-//     FIREBASE_MESSAGING = firebase.messaging();
-// }
+let FIREBASE_MESSAGING = null;
+
+if (!isSafari && FCM_CONFIG) {
+    if (!firebase.apps.length) {
+        console.log('! safari INIT');
+        firebase.initializeApp(FCM_CONFIG);
+    }
+    FIREBASE_MESSAGING = firebase.messaging();
+}
 
 const styles = makeStyles((theme) => ({
     container: {
         backgroundColor: theme.palette.background.paper,
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3),
+        paddingLeft: theme.spacing(5),
+        paddingRight: theme.spacing(5),
         paddingBottom: theme.spacing(0.5),
         marginBottom: theme.spacing(4),
         borderRadius: 4,
         boxShadow: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
     },
     paper: {
-        paddingTop: theme.spacing(2),
-        marginTop: theme.spacing(8),
+        paddingTop: theme.spacing(3),
+        marginTop: theme.spacing(10),
         marginBottom: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
@@ -45,12 +45,12 @@ const styles = makeStyles((theme) => ({
         backgroundColor: theme.palette.common.white,
         color: theme.palette.primary.contrastText,
         border: '2px solid ' + theme.palette.secondary.main,
-        width: 150,
-        height: 150,
+        width: 100,
+        height: 100,
     },
     image: {
-        width: 148,
-        height: 148,
+        width: 96,
+        height: 96,
     },
     submit: {
         margin: theme.spacing(2, 0, 2),
@@ -81,7 +81,7 @@ const loginFields = [
     },
 ];
 
-const Login = (props) => {
+const Login = () => {
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -95,14 +95,14 @@ const Login = (props) => {
 
     const classes = styles();
 
-    // useEffect(() => {
-    //     if (!isSafari && !localStorage.getItem(STORAGE_KEYS.FCM_TOKEN)) {
-    //         FIREBASE_MESSAGING.getToken({ vapidKey: VAPID_KEY }).then(payload => {
-    //             console.log('FCM payload', payload);
-    //             localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, payload);
-    //         });
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (FIREBASE_MESSAGING && !isSafari && !localStorage.getItem(STORAGE_KEYS.FCM_TOKEN)) {
+            FIREBASE_MESSAGING.getToken({ vapidKey: VAPID_KEY }).then((payload) => {
+                console.log('FCM payload', payload);
+                localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, payload);
+            });
+        }
+    }, []);
 
     const handleError = (error) => {
         setLoading(false);
@@ -191,26 +191,32 @@ const Login = (props) => {
             <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <LoadingDialog show={loading} />
 
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <Box className={classes.container} boxShadow={2}>
                     <CssBaseline />
                     <div className={classes.paper}>
                         <Avatar className={classes.avatar}>
-                            {/* <Icon>lock_out_lined_icon</Icon> */}
                             <img src="/images/logo.png" className={classes.image} />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign In
+                            Welcome
                         </Typography>
-                        <OTPDialog show={showMfa} onShow={setShowMfa} onSubmit={handleMfaSubmit} onResend={handleMfaResend}></OTPDialog>;
+                        <OTPDialog show={showMfa} onShow={setShowMfa} onSubmit={handleMfaSubmit} onResend={handleMfaResend}></OTPDialog>
                         {facebookLogin()}
                         <MasterForm fields={loginFields} onChange={handleChange} onSubmit={handleSubmit}>
                             <Button type="submit" ref={submitButton} fullWidth variant="contained" color="primary" className={classes.submit}>
                                 Sign In
                             </Button>
+                            <Grid container justify="flex-end">
+                                <Grid item>
+                                    <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </Grid>
+                            </Grid>
                         </MasterForm>
-                        <Grid container>
-                            {/* <Grid item xs>
+                        {/* <Grid container>
+                            <Grid item xs>
                                 <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
                                     Forgot password?
                                 </Link>
@@ -219,8 +225,8 @@ const Login = (props) => {
                                 <Link href="/#/auth/register" color="textSecondary" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
-                            </Grid> */}
-                        </Grid>
+                            </Grid>
+                        </Grid> */}
                     </div>
                 </Box>
                 <Box>

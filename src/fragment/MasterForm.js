@@ -1,4 +1,3 @@
-// @flow
 import React, { useState } from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
 import {
@@ -15,9 +14,9 @@ import {
     ChipInput,
     ColorInput,
     TabControl,
-    DraftEditorInput,
+    TinyEditorInput,
+    DateTimeInput,
 } from './control';
-import { background } from '../config/Theme';
 import { TextInputProps } from './control/TextInput';
 
 export type Field = {
@@ -42,7 +41,7 @@ export type MasterFormProps = {
     onKeyDown: () => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         backgroundColor: theme.palette.background.paper,
     },
@@ -53,14 +52,14 @@ const styles = makeStyles(theme => ({
 const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const [form, setForm] = useState({});
     const classes = styles();
-    const { initialData, type, variant, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
+    const { initialData, type, variant, spacing, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
 
     React.useEffect(() => {
-        console.log('master init', initialData);
         setForm({ ...form, ...initialData });
+        // eslint-disable-next-line
     }, [initialData]);
 
-    const handleFormSubmit = event => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
         let allow = true;
 
@@ -78,7 +77,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
             form[field.id] = event.target.checked;
         } else if (field.type === 'multi-image') {
             if (!form[field.id]) form[field.id] = [];
-
+            console.log('master imagegg', form, field);
             if (!form[field.id][index]) {
                 form[field.id].push(event.target.value);
             } else {
@@ -95,7 +94,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
     };
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e) => {
         if (onKeyDown) {
             onKeyDown(e);
         }
@@ -112,11 +111,11 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
             case 'number':
                 return <NumberInput {...inputProps} />;
             case 'datetime':
-                return <TextInput type="datetime-local" {...inputProps} />;
+                return <DateTimeInput type="datetime" {...inputProps} />;
             case 'date':
-                return <TextInput type="date" {...inputProps} />;
+                return <DateTimeInput type="date" {...inputProps} />;
             case 'time':
-                return <TextInput type="time" {...inputProps} />;
+                return <DateTimeInput type="time" {...inputProps} />;
             case 'checkbox':
                 return <CheckboxInput {...inputProps} />;
             case 'image':
@@ -136,15 +135,15 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 return <ChipInput {...inputProps} />;
             case 'color':
                 return <ColorInput {...inputProps} />;
-            case 'draft-editor':
-                return <DraftEditorInput {...inputProps} />;
+            case 'editor':
+                return <TinyEditorInput {...inputProps} />;
             default:
                 return <TextInput type={type} {...inputProps} />;
         }
     };
 
-    const renderTab = datas => {
-        datas = datas.map(data => {
+    const renderTab = (datas) => {
+        datas = datas.map((data) => {
             if (data.fields) data.content = renderGrid(data.fields);
 
             return data;
@@ -153,11 +152,12 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         return <TabControl centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
     };
 
-    const renderGrid = datas => {
+    const renderGrid = (datas) => {
         return (
             <Grid
                 style={{ backgroundColor: 'inherit' }}
                 direction={direction || 'column'}
+                spacing={spacing || 0}
                 container
                 alignItems={direction === 'row' ? 'center' : 'stretch'}
             >
@@ -168,7 +168,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     inputProps.onChange = (event, index) => handleValueChange(field, event, index);
 
                     if (field.onValidate) {
-                        inputProps.onValidate = event => field.onValidate(event, form);
+                        inputProps.onValidate = (event) => field.onValidate(event, form);
                     }
 
                     return (

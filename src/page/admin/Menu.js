@@ -91,7 +91,7 @@ const INIT_MENU = {
     parentId: null,
 };
 
-const Menu = (props) => {
+const Menu = () => {
     const classes = styles();
 
     const [error, setError] = React.useState('');

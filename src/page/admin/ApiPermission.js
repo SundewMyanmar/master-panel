@@ -62,7 +62,7 @@ const isPatternMatch = (pattern1, pattern2) => {
     return pattern1 === pattern2 || pattern1.replace(regexPattern, '%') === pattern2 || pattern1 === pattern2.replace(regexPattern, '%');
 };
 
-const ApiPermission = (props) => {
+const ApiPermission = () => {
     const classes = styles();
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');

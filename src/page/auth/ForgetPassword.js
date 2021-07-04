@@ -39,7 +39,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const ForgetPassword = (props) => {
+const ForgetPassword = () => {
     const classes = styles();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -101,7 +101,7 @@ const ForgetPassword = (props) => {
                         <Grid container justify="flex-end">
                             <Grid item>
                                 <Link href="/#/login" color="textSecondary" variant="body2">
-                                    Remember your password? Sign in
+                                    Remember your password?
                                 </Link>
                             </Grid>
                         </Grid>

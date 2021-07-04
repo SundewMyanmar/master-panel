@@ -1,6 +1,5 @@
 import * as React from 'react';
-import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
+import LuxonUtils from '@date-io/luxon';
 import { DateTimePicker, MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
 import { InputProps, InputAdornment, Icon, makeStyles, Grid } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
@@ -16,17 +15,17 @@ export type DateTimeInputProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'inherit',
     },
-    label: props => ({
+    label: (props) => ({
         backgroundColor: 'inherit', //theme.palette.background.paper,
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.text.primary,
     }),
-    content: props => ({
+    content: (props) => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0, 0.5, 1.5),
@@ -68,7 +67,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
     const [error, setError] = React.useState('');
 
     const classes = styles();
-    const handleDateChange = date => {
+    const handleDateChange = (date) => {
         setSelectedDate(date);
         let event = {
             target: {
@@ -124,7 +123,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={date => handleDateChange(date)}
+                    onChange={(date) => handleDateChange(date)}
                 />
             );
         } else if (type === 'datetime') {
@@ -152,7 +151,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={date => handleDateChange(date)}
+                    onChange={(date) => handleDateChange(date)}
                 />
             );
         } else {
@@ -181,7 +180,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={date => handleDateChange(date)}
+                    onChange={(date) => handleDateChange(date)}
                 />
             );
         }
@@ -189,7 +188,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
 
     return (
         <>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <MuiPickersUtilsProvider utils={LuxonUtils}>
                 <Grid container justify="space-around">
                     {renderDateControl()}
                 </Grid>

@@ -18,17 +18,17 @@ export type IconInputProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'inherit',
     },
-    label: props => ({
+    label: (props) => ({
         backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
     }),
-    content: props => ({
+    content: (props) => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0, 0.5, 1.5),
@@ -97,7 +97,7 @@ const IconInput = (props: IconInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values, value]);
 
-    const handleClose = result => {
+    const handleClose = (result) => {
         setShowIcons(false);
         if (result === false) {
             return;
@@ -133,16 +133,16 @@ const IconInput = (props: IconInputProps) => {
         }
     };
 
-    const handleRemove = item => {
+    const handleRemove = (item) => {
         if (!multi) {
             handleClose(null);
             return;
         }
-        let updateSelection = selectedData.filter(x => x.id !== item.id);
+        let updateSelection = selectedData.filter((x) => x.id !== item.id);
         handleClose(updateSelection);
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         setShowIcons(false);
         setError(error);
     };
@@ -213,7 +213,11 @@ const IconInput = (props: IconInputProps) => {
                 <Paper {...variantProps} variant="outlined" classes={{ root: classes.content }}>
                     <Grid container style={{ ...borderProps }}>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
+                            {icon ? (
+                                <Icon color="primary" className={classes.icon}>
+                                    {icon}
+                                </Icon>
+                            ) : null}
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="text"

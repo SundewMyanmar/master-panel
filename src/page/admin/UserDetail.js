@@ -29,7 +29,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const UserDetail = (props) => {
+const UserDetail = () => {
     const classes = styles();
     const history = useHistory();
     const { id } = useParams();

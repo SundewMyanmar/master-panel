@@ -26,7 +26,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const RoleDetail = (props) => {
+const RoleDetail = () => {
     const classes = styles();
     const history = useHistory();
     const { id } = useParams();

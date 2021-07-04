@@ -1,9 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 export const common = {
-    white: '#fff',
-    black: '#616161',
-    gray: '#b9c1c5',
+    white: '#ffffff',
+    black: '#343A40',
+    gray: '#6C757D',
     brown: '#5d4037',
     google: '#DC4E41',
     facebook: '#4267B2',
@@ -12,63 +12,63 @@ export const common = {
 };
 
 export const primary = {
-    main: '#c00000',
-    light: '#fb4c2e',
-    dark: '#880000',
+    main: '#3c4c59',
+    light: '#677886',
+    dark: '#142430',
     contrastText: '#ffffff',
 };
 
 export const darkPrimary = {
-    main: '#880000',
-    light: '#bf3f2a',
-    dark: '#560000',
+    main: '#0D0D0D',
+    light: '#343434',
+    dark: '#000000',
     contrastText: '#ffffff',
 };
 
 export const secondary = {
-    main: '#39992f',
-    light: '#6ecb5d',
-    dark: '#006a00',
-    contrastText: '#ffffff',
+    main: '#d7cdc3',
+    light: '#fffff6',
+    dark: '#a69c93',
+    contrastText: '#000000',
 };
 
 export const darkSecondary = {
-    main: '#26861c',
-    light: '#5db74b',
-    dark: '#005800',
-    contrastText: '#ffffff',
+    main: '#d7cdc3',
+    light: '#fffff6',
+    dark: '#a69c93',
+    contrastText: '#000000',
 };
 
 export const error = {
-    main: '#b71c1c',
-    light: '#f05545',
-    dark: '#7f0000',
+    main: '#dc3545',
+    light: '#ff6b70',
+    dark: '#a3001e',
     contrastText: '#ffffff',
 };
 
 export const warning = {
-    main: '#eeb327',
-    light: '#ffe55d',
-    dark: '#b78400',
+    main: '#ffc107',
+    light: '#fff350',
+    dark: '#c79100',
     contrastText: '#000000',
 };
 
 export const info = {
-    main: '#019ac7',
-    light: '#5ccbfa',
-    dark: '#006c96',
-    contrastText: '#000000',
+    main: '#17a2b8',
+    light: '#60d4ea',
+    dark: '#007388',
+    contrastText: '#ffffff',
 };
 
 export const success = {
-    main: '#257d4a',
-    light: '#58ad76',
-    dark: '#005021',
+    main: '#28a745',
+    light: '#64da73',
+    dark: '#007717',
     contrastText: '#ffffff',
 };
 
 export const background = {
-    default: '#fbf2f2',
+    default: '#F8F9FA',
     paper: '#FFFFFF',
 };
 
@@ -81,8 +81,8 @@ export const text = {
 };
 
 export const darkText = {
-    primary: '#f1f2f3',
-    secondary: darkPrimary.contrastText,
+    primary: darkPrimary.contrastText,
+    secondary: darkSecondary.contrastText,
     active: darkPrimary.contrastText,
     disabled: 'rgba(255, 255, 255, 0.38)',
     hint: 'rgba(255, 255, 255, 0.38)',
@@ -176,11 +176,6 @@ export default createMuiTheme({
                 maxHeight: 30,
                 height: 30,
             },
-            sizeMedium: {
-                padding: '6px 24px 6px 16px',
-                maxHeight: 40,
-                height: 40,
-            },
         },
     },
 });
@@ -219,11 +214,6 @@ export const DarkTheme = createMuiTheme({
                 padding: '0px 4px 0px 4px',
                 maxHeight: 30,
                 height: 30,
-            },
-            sizeMedium: {
-                padding: '6px 24px 6px 16px',
-                maxHeight: 40,
-                height: 40,
             },
         },
     },

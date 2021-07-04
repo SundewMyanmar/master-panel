@@ -20,7 +20,7 @@ const DRAWER_SMALL_SIZE: number = 64;
 
 const MIN_WIDTH_TO_HIDE = 1060;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
@@ -142,16 +142,16 @@ const Layout = (props: LayoutProps) => {
         const menus = await MenuApi.getCurrentUserMenu();
         if (menus && menus.data.length > 0) {
             const uniqueMenus = menus.data.reduce((unique, o) => {
-                if (!unique.some(obj => obj.id === o.id)) {
+                if (!unique.some((obj) => obj.id === o.id)) {
                     unique.push(o);
                 }
                 return unique;
             }, []);
 
-            let mainMenu = uniqueMenus.filter(m => !m.parentId);
+            let mainMenu = uniqueMenus.filter((m) => !m.parentId);
 
             //Recurrsively sort menus
-            const sortMenu = items =>
+            const sortMenu = (items) =>
                 items.sort((a, b) => {
                     if (a.items && a.items.length > 0) {
                         sortMenu(a.items);
@@ -189,7 +189,7 @@ const Layout = (props: LayoutProps) => {
                     <div />
                     <div>
                         <NotificationMenu name="Notifications" />
-                        {/* <NotificationMenu name="New Orders" icon="shopping_cart" /> */}
+
                         <Tooltip title={mode === 'DARK' ? 'Toggle Light Mode' : 'Toggle Dark Mode'}>
                             <IconButton
                                 aria-label="delete"
@@ -208,7 +208,7 @@ const Layout = (props: LayoutProps) => {
                             role={
                                 user.roles &&
                                 user.roles
-                                    .map(function(elem) {
+                                    .map(function (elem) {
                                         return elem.name;
                                     })
                                     .join(', ')
@@ -251,7 +251,7 @@ const Layout = (props: LayoutProps) => {
                                     exact
                                     key={index}
                                     path={route.path}
-                                    render={props => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
+                                    render={(props) => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
                                 />
                             );
                         })}

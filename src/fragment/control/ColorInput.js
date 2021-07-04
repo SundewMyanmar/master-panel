@@ -15,11 +15,11 @@ export type ColorInputProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
     },
-    label: props => ({
+    label: (props) => ({
         backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
@@ -28,7 +28,7 @@ const styles = makeStyles(theme => ({
     openIcon: {
         color: theme.palette.text.primary,
     },
-    content: props => ({
+    content: (props) => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0, 0.5, 1.5),
@@ -66,7 +66,7 @@ const ColorInput = (props: ColorInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleClose = result => {
+    const handleClose = (result) => {
         setShowColor(false);
 
         if (result) setColor(result || color);
@@ -100,7 +100,7 @@ const ColorInput = (props: ColorInputProps) => {
         }
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         setShowColor(false);
         setError(error);
     };

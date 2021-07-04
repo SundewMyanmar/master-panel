@@ -46,7 +46,7 @@ export const BooleanCell = (field, data) => {
         checked = onLoad(data);
     }
 
-    return <Icon color={checked ? 'textPrimary' : 'error'}>{checked ? 'check' : 'close'}</Icon>;
+    return <Icon color={checked ? 'primary' : 'error'}>{checked ? 'check' : 'close'}</Icon>;
 };
 
 const Cell = (props: CellProps) => {

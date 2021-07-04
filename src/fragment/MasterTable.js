@@ -9,10 +9,9 @@ import DataAction from './table/DataAction';
 import FormatManager from '../util/FormatManager';
 import ImportMenu from './table/ImportMenu';
 import { Field } from './MasterForm';
-import ScrollBar from './control/ScrollBar';
 import { text, error } from '../config/Theme';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     header: {
         flex: 1,
         // backgroundColor:theme.palette.primary.main,
@@ -130,7 +129,7 @@ const MasterTable = (props: MasterTableProps) => {
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
 
-    if (!hideDataActions && importFields.findIndex(f => f === 'version') < 0) {
+    if (!hideDataActions && importFields.findIndex((f) => f === 'version') < 0) {
         importFields.push('version');
     }
 
@@ -157,12 +156,12 @@ const MasterTable = (props: MasterTableProps) => {
 
     const exportCSV = async () => {
         setLoading(true);
-        let csv = importFields.map(field => FormatManager.buildCSV(field)).join(',') + '\n';
+        let csv = importFields.map((field) => FormatManager.buildCSV(field)).join(',') + '\n';
         console.log('csv', selectedData);
-        selectedData.forEach(data => {
+        selectedData.forEach((data) => {
             csv +=
                 importFields
-                    .map(field => {
+                    .map((field) => {
                         let value = data[field] || '';
                         if (typeof data[field] === 'boolean') value = data[field];
 
@@ -179,7 +178,7 @@ const MasterTable = (props: MasterTableProps) => {
                     .join(',') + '\n';
         });
 
-        const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'YYYYMMDD_hhmmss') + '.csv';
+        const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'yyyyMMdd_HHmmss') + '.csv';
 
         const blob = new Blob([decodeURIComponent(encodeURI(csv))], {
             type: 'text/csv;charset=UTF-8;header=present',
@@ -192,7 +191,7 @@ const MasterTable = (props: MasterTableProps) => {
     const exportJson = async () => {
         setLoading(true);
         const json = JSON.stringify(selectedData);
-        const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'YYYYMMDD_hhmmss') + '.json';
+        const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'yyyyMMdd_HHmmss') + '.json';
 
         const blob = new Blob([decodeURIComponent(encodeURI(json))], {
             type: 'data:application/json;charset=UTF-8',
@@ -257,11 +256,11 @@ const MasterTable = (props: MasterTableProps) => {
         );
     };
 
-    const handlePageChange = pagination => {
+    const handlePageChange = (pagination) => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
     };
 
-    const handleImport = data => {
+    const handleImport = (data) => {
         console.log('import', data);
         setLoading(true);
         if (onImport) {
@@ -274,11 +273,11 @@ const MasterTable = (props: MasterTableProps) => {
         }
     };
 
-    const handleSelectionChange = result => {
+    const handleSelectionChange = (result) => {
         setSelectedData(result);
     };
 
-    const handleActionMenu = menuItem => {
+    const handleActionMenu = (menuItem) => {
         switch (menuItem.id) {
             case 'uncheck_all':
                 setSelectedData([]);
@@ -291,7 +290,7 @@ const MasterTable = (props: MasterTableProps) => {
                 break;
             case 'remove':
                 if (selectedData.length > 0) {
-                    const ids = selectedData.map(item => item.id);
+                    const ids = selectedData.map((item) => item.id);
                     setQuestion('Are you sure to remove [' + ids.join(', ') + '] items?');
                     setRemoveData(selectedData);
                 }
@@ -314,15 +313,15 @@ const MasterTable = (props: MasterTableProps) => {
     };
 
     //Remove Data if confirmation is Yes
-    const handleQuestionDialog = status => {
+    const handleQuestionDialog = (status) => {
         if (status && removeData) {
             setLoading(true);
             onRemove(removeData)
-                .then(data => {
+                .then((data) => {
                     setSelectedData([]);
                     loadData(0, paging.pageSize, paging.sort);
                 })
-                .catch(error => onError(error))
+                .catch((error) => onError(error))
                 .finally(() => setLoading(false));
         }
         setQuestion('');
@@ -337,7 +336,7 @@ const MasterTable = (props: MasterTableProps) => {
         label: '@',
         minWidth: 50,
         type: 'raw',
-        onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
+        onLoad: (item) => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
     };
     let fields_with_action = [];
     if (actions.length > 0) {
@@ -357,7 +356,7 @@ const MasterTable = (props: MasterTableProps) => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justify="center">
-                        {hideSearch || <SearchInput value={search} onSearch={value => setSearch(value)} placeholder="Search Files" />}
+                        {hideSearch || <SearchInput value={search} onSearch={(value) => setSearch(value)} placeholder="Search Files" />}
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
                         {hideDataActions || (
@@ -417,9 +416,9 @@ MasterTable.defaultProps = {
     hideImportMenu: false,
     type: 'TABLE',
     onAddNew: () => console.warn('Undefined onAddNew'),
-    onEdit: item => console.warn('Undefined onEdit => ', item),
-    onError: error => console.warn('Undefined onError => ', error),
-    onItemAction: item => console.warn('Undefined Item Action => ', item),
+    onEdit: (item) => console.warn('Undefined onEdit => ', item),
+    onError: (error) => console.warn('Undefined onError => ', error),
+    onItemAction: (item) => console.warn('Undefined Item Action => ', item),
 };
 
 export default MasterTable;

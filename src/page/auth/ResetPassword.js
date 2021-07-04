@@ -48,7 +48,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const ResetPassword = (props) => {
+const ResetPassword = () => {
     const classes = styles();
     const location = useLocation();
     const history = useHistory();

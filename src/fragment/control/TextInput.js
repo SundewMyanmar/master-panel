@@ -38,7 +38,7 @@ const TextInput = (props: TextInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleTextChange = event => {
+    const handleTextChange = (event) => {
         const data = event.target.value;
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
@@ -54,12 +54,12 @@ const TextInput = (props: TextInputProps) => {
         }
     };
 
-    const buildInputIcon = icon => {
+    const buildInputIcon = (icon) => {
         if (icon) {
             return {
                 startAdornment: (
                     <InputAdornment position="start">
-                        <Icon>{icon}</Icon>
+                        <Icon color="primary">{icon}</Icon>
                     </InputAdornment>
                 ),
                 ...props.InputProps,

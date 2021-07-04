@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { TINY_EDITOR_API_KEY } from '../../config/Constant';
 
 export type TinyEditorInputProps = {
     id: string,
@@ -58,7 +59,7 @@ const TinyEditorInput = (props: TinyEditorInputProps) => {
                     toolbar: toolbar,
                 }}
                 //TINY Editor Key
-                apiKey="vwm860x0xtl1z0q99yy3bqhv79eawa40fx4h2ewwob23seb8"
+                apiKey={TINY_EDITOR_API_KEY}
                 onEditorChange={handleEditorChange}
             />
         </div>
