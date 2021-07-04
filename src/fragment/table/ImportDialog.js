@@ -27,7 +27,7 @@ export type ImportDialgProps = {
     onClose?: (result: Object) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     content: {
         backgroundColor: theme.palette.background.default,
         borderBottom: '1px solid ' + theme.palette.divider,
@@ -63,9 +63,9 @@ export const CsvReader = (fields, input) => {
         const row = line.replace(CSV_REGEX.seperatorCleaner, ',').replace(CSV_REGEX.trim, '');
         if (row.length > 0) {
             if (idx === 0) {
-                headers = row.split(CSV_REGEX.seperator).map(val => {
+                headers = row.split(CSV_REGEX.seperator).map((val) => {
                     const header = FormatManager.snakeToCamel(val.replace(CSV_REGEX.validName, '_'));
-                    const validIdx = fields.findIndex(f => f.name.toLowerCase() === header.toLowerCase());
+                    const validIdx = fields.findIndex((f) => f.name.toLowerCase() === header.toLowerCase());
                     if (validIdx >= 0) {
                         return fields[validIdx];
                     } else {
@@ -78,7 +78,7 @@ export const CsvReader = (fields, input) => {
                 let item = {};
                 let jsonIdx = 0;
                 headers.forEach((prop, col) => {
-                    if (prop === CSV_REGEX.invalidColumn) {
+                    if (prop === CSV_REGEX.invalidColumn || !values || !values[col]) {
                         return;
                     }
 
@@ -110,7 +110,7 @@ export default function ImportDialog(props: ImportDialgProps) {
     const [data, setData] = React.useState([]);
     const inputUpload = React.createRef();
 
-    const handleClose = isSubmit => {
+    const handleClose = (isSubmit) => {
         if (isSubmit && data && data.length > 0) {
             onClose(data);
         } else {
@@ -119,7 +119,7 @@ export default function ImportDialog(props: ImportDialgProps) {
         setData([]);
     };
 
-    const handleUploadChange = event => {
+    const handleUploadChange = (event) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             setLoading(true);
@@ -129,7 +129,6 @@ export default function ImportDialog(props: ImportDialgProps) {
                 if (file.type.endsWith('csv') || file.name.endsWith('csv')) {
                     try {
                         const csv = CsvReader(fields, fileReader.result);
-
                         setData(csv);
                     } catch (error) {
                         setMessage(error);
@@ -190,6 +189,6 @@ export default function ImportDialog(props: ImportDialgProps) {
 }
 
 ImportDialog.defaultProps = {
-    onError: error => console.warn('Undefined onError => ', error),
-    onClose: result => console.warn('Undefined onClose => ', result),
+    onError: (error) => console.warn('Undefined onError => ', error),
+    onClose: (result) => console.warn('Undefined onClose => ', result),
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withRouter } from 'react-router';
 import {
     Typography,
@@ -24,6 +24,7 @@ import { ROLE_TABLE_FIELDS } from './Role';
 import RoleApi from '../../api/RoleApi';
 import RouteApi from '../../api/RouteApi';
 import SwaggerApi from '../../api/SwaggerApi';
+import { useParams } from 'react-router-dom';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -69,6 +70,21 @@ const ApiPermission = () => {
     const [expanded, setExpanded] = React.useState([]);
     const [selectedData, setSelectedData] = React.useState([]);
     const [selectedRole, setSelectedRole] = React.useState(null);
+    const { roleId } = useParams();
+
+    useEffect(() => {
+        if (roleId > 0) {
+            RoleApi.getById(roleId)
+                .then((role) => {
+                    handleRoleChange({ target: { value: role } });
+                })
+                .catch(handleError);
+        } else {
+            setSelectedRole(null);
+        }
+
+        // eslint-disable-next-line
+    }, [roleId]);
 
     const handleError = (error) => {
         setLoading(false);
@@ -94,6 +110,8 @@ const ApiPermission = () => {
         if (!role) {
             return;
         }
+        console.log('Selected Role => ', role);
+
         setSelectedRole(role);
         RouteApi.getPermissionByRole(role.id)
             .then((allowRoutes) => {
@@ -292,6 +310,7 @@ const ApiPermission = () => {
                                 label="Role"
                                 required={true}
                                 fields={ROLE_TABLE_FIELDS}
+                                value={selectedRole}
                                 onLoadData={handleRoleData}
                                 onLoadItem={(item) => item.name}
                                 onChange={handleRoleChange}

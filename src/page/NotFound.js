@@ -38,24 +38,18 @@ const Dashboard = () => {
 
     return (
         <React.Fragment>
-            <Container component="main" maxWidth="md">
-                <CssBaseline />
-                <Paper className={classes.paper} elevation={6}>
-                    <Typography component="h1" variant="h1">
-                        404 Not Found !
-                    </Typography>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link href="/#/login" color="textSecondary" variant="body2">
-                                Back to login?
-                            </Link>
-                        </Grid>
+            <Paper className={classes.paper} elevation={6}>
+                <Typography color="error" component="h1" variant="h1">
+                    404 - Not Found !
+                </Typography>
+                <Grid container justify="flex-end">
+                    <Grid item>
+                        <Link href="/#/login" color="textSecondary" variant="body2">
+                            Back to login?
+                        </Link>
                     </Grid>
-                </Paper>
-                <Box>
-                    <Copyright />
-                </Box>
-            </Container>
+                </Grid>
+            </Paper>
         </React.Fragment>
     );
 };

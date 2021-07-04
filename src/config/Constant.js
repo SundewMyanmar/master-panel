@@ -3,7 +3,7 @@ export const APP_VERSION = '1.6';
 
 const URLS = {
     development: 'http://localhost:8080/',
-    production: 'http://localhost:8080/',
+    production: 'https://api.linnmyanmar.com.mm/dev/',
 };
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
 

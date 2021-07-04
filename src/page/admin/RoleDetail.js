@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { withRouter, useHistory, useParams } from 'react-router-dom';
-import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles } from '@material-ui/core';
+import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles, ThemeProvider } from '@material-ui/core';
 
 import { LoadingDialog, AlertDialog } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { InfoTheme } from '../../config/Theme';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -121,6 +122,11 @@ const RoleDetail = () => {
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
                                 <Icon>arrow_back</Icon> Back to List
                             </Button>
+                            <ThemeProvider theme={InfoTheme}>
+                                <Button type="button" variant="contained" color="primary" className={classes.submit} href={'/#/permission/' + id}>
+                                    <Icon>router</Icon> API Route
+                                </Button>
+                            </ThemeProvider>
                             <Button type="submit" variant="contained" color="primary" className={classes.submit}>
                                 <Icon>save</Icon> Save
                             </Button>

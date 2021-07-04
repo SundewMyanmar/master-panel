@@ -25,7 +25,12 @@ export default class FormatManager {
     //Luxon Formatting
     static formatDate = (ms, format) => {
         if (!ms) return '-';
-        DateTime.fromMillis(ms).toFormat(format);
+        if (typeof ms === 'number') {
+            return DateTime.fromMillis(ms).toFormat(format);
+        } else if (typeof ms === 'object') {
+            return DateTime.fromObject(ms).toFormat(format);
+        }
+        return ms.toLocaleString();
     };
 
     static validURL = (str) => {

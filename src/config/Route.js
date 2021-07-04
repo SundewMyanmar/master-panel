@@ -12,7 +12,6 @@ import UserDetail from '../page/admin/UserDetail';
 import Role from '../page/admin/Role';
 import RoleDetail from '../page/admin/RoleDetail';
 import Menu from '../page/admin/Menu';
-import MenuDetail from '../page/admin/MenuDetail';
 import ApiPermission from '../page/admin/ApiPermission';
 import File from '../page/file/File';
 import Developer from '../page/Developer';
@@ -26,8 +25,7 @@ export const PrivateRoute = [
     { path: '/role', page: Role },
     { path: '/role/detail/:id', page: RoleDetail },
     { path: '/menu', page: Menu },
-    { path: '/menu/detail/:id', page: MenuDetail },
-    { path: '/permission', page: ApiPermission },
+    { path: '/permission/:roleId?', page: ApiPermission },
     { path: '/file', page: File },
     { path: '/api-debug', page: Developer },
 ];

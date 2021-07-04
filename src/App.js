@@ -4,7 +4,7 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 import DefaultTheme, { DarkTheme } from './config/Theme';
 import { PublicRoute } from './config/Route';
-import NotFound from './page/NotFound';
+
 import Layout from './fragment/layout';
 import ApiManager from './util/ApiManager';
 import { STORAGE_KEYS } from './config/Constant';
@@ -36,7 +36,6 @@ export default function App() {
                     {PublicRoute.map((route, index) => (
                         <Route exact key={route + '_' + index} path={route.path} component={route.page} />
                     ))}
-                    <Route component={NotFound} />
                     <Layout mode={mode} onToggleMode={toggleMode} />
                 </Switch>
             </Router>

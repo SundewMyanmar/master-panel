@@ -14,6 +14,7 @@ import Reducer, { ACTIONS } from './Reducer';
 import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
 import MenuApi from '../../api/MenuApi';
+import NotFound from '../../page/NotFound';
 
 const DRAWER_FULL_SIZE: number = window.innerWidth > 1400 ? 300 : 260;
 const DRAWER_SMALL_SIZE: number = 64;
@@ -114,6 +115,7 @@ const Layout = (props: LayoutProps) => {
 
     const currentUser = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
     const user = currentUser.length ? JSON.parse(currentUser) : {};
+    const granted = currentUser.length && user && user.currentToken && user.currentToken.length > 0;
     const userProfileImage = FileApi.downloadLink(user.profileImage, 'small') || './images/logo.png';
     const idleTimer = useRef(null);
 
@@ -137,7 +139,7 @@ const Layout = (props: LayoutProps) => {
     });
 
     const loadMenu = async () => {
-        if (currentUser.length <= 0) return;
+        if (!granted) return;
 
         const menus = await MenuApi.getCurrentUserMenu();
         if (menus && menus.data.length > 0) {
@@ -175,6 +177,10 @@ const Layout = (props: LayoutProps) => {
         loadMenu();
         // eslint-disable-next-line
     }, []);
+
+    if (!granted) {
+        return <Redirect to="/login" />;
+    }
 
     return (
         <div className={classes.root}>
@@ -246,14 +252,7 @@ const Layout = (props: LayoutProps) => {
                     <div className={classes.appBarSpacer} />
                     <div className={classes.container}>
                         {PrivateRoute.map((route, index) => {
-                            return (
-                                <Route
-                                    exact
-                                    key={index}
-                                    path={route.path}
-                                    render={(props) => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
-                                />
-                            );
+                            return <Route exact key={index} path={route.path} render={(props) => <route.page {...props} />} />;
                         })}
                     </div>
                     <Box pt={4} className={classes.copyRight}>

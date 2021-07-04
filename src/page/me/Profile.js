@@ -116,7 +116,6 @@ const Profile = () => {
                 if (!response.currentToken) {
                     delete response.currentToken;
                 }
-                console.log('Current User => ', user);
                 const updatedData = { ...user, ...response };
                 console.log('Modified user => ', updatedData);
                 sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(updatedData));

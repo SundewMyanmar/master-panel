@@ -8,6 +8,7 @@ import MasterForm from '../../fragment/MasterForm';
 import { ROLE_TABLE_FIELDS } from './Role';
 import RoleApi from '../../api/RoleApi';
 import ImportMenu from '../../fragment/table/ImportMenu';
+import ActionMenu from '../../fragment/table/ActionMenu';
 
 export const MENU_TABLE_FIELDS = [
     {
