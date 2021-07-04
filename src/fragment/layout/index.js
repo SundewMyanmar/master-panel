@@ -1,11 +1,20 @@
-import React, { useReducer, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect, useRef, useState } from 'react';
 import { Route, useHistory, Redirect } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 import { IconButton, Icon, Tooltip, makeStyles, AppBar, Toolbar, Typography, Box, CssBaseline, Drawer, Divider, useTheme } from '@material-ui/core';
 import { PrivateRoute } from '../../config/Route';
 import clsx from 'clsx';
 import Scrollbar from '../control/ScrollBar';
-import { SESSION_TIMEOUT, STORAGE_KEYS, APP_NAME, APP_VERSION, DEFAULT_SIDE_MENU, USER_PROFILE_MENU } from '../../config/Constant';
+import {
+    SESSION_TIMEOUT,
+    STORAGE_KEYS,
+    APP_NAME,
+    APP_VERSION,
+    DEFAULT_SIDE_MENU,
+    USER_PROFILE_MENU,
+    FCM_CONFIG,
+    VAPID_KEY,
+} from '../../config/Constant';
 import { Copyright } from '../control';
 import SideMenu from './SideMenu';
 import NotificationMenu from './NotificationMenu';
@@ -14,7 +23,20 @@ import Reducer, { ACTIONS } from './Reducer';
 import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
 import MenuApi from '../../api/MenuApi';
-import NotFound from '../../page/NotFound';
+import { isSafari } from 'react-device-detect';
+import firebase from 'firebase/app';
+import ProfileApi from '../../api/ProfileApi';
+import NotificationApi from '../../api/NotificationApi';
+
+let FIREBASE_MESSAGING = null;
+
+if (!isSafari && FCM_CONFIG) {
+    if (!firebase.apps.length) {
+        console.log('! safari INIT');
+        firebase.initializeApp(FCM_CONFIG);
+    }
+    FIREBASE_MESSAGING = firebase.messaging();
+}
 
 const DRAWER_FULL_SIZE: number = window.innerWidth > 1400 ? 300 : 260;
 const DRAWER_SMALL_SIZE: number = 64;
@@ -119,8 +141,12 @@ const Layout = (props: LayoutProps) => {
     const userProfileImage = FileApi.downloadLink(user.profileImage, 'small') || './images/logo.png';
     const idleTimer = useRef(null);
 
+    const [badge, setBadge] = useState(0);
+
     const handleLogout = () => {
         sessionStorage.clear();
+        localStorage.removeItem(STORAGE_KEYS.FCM_TOKEN);
+
         history.push('/login');
     };
 
@@ -173,8 +199,54 @@ const Layout = (props: LayoutProps) => {
         }
     };
 
+    const onItemClick = async (item) => {
+        console.log('item click', item);
+        //Need to Control
+    };
+
+    const readAllNotification = () => {
+        NotificationApi.readAllMyNotifications();
+    };
+
+    const loadMoreNotification = async (paging) => {
+        var result = await NotificationApi.getMyNotifications(paging.currentPage + 1, paging.pageSize);
+        if (result.data) {
+            for (let i = 0; i < result.data.length; i++) {
+                result.data[i] = {
+                    id: result.data[i].id,
+                    image: result.data[i].imageUrl,
+                    date: result.data[i].sentAt,
+                    title: result.data[i].title,
+                    description: result.data[i].description,
+                    referenceId: result.data[i].data ? result.data[i].data.referenceId : null,
+                    isRead: result.data[i].readAt,
+                    ...result.data[i],
+                };
+            }
+
+            return result;
+        }
+        return {};
+    };
+
     useEffect(() => {
         loadMenu();
+        if (FIREBASE_MESSAGING && !isSafari) {
+            if (!localStorage.getItem(STORAGE_KEYS.FCM_TOKEN)) {
+                FIREBASE_MESSAGING.getToken({ vapidKey: VAPID_KEY }).then((payload) => {
+                    localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, payload);
+                    let tkResponse = ProfileApi.refreshToken(payload);
+                });
+            }
+
+            FIREBASE_MESSAGING.onMessage((payload) => {
+                if (payload.notification && payload.notification.badge) {
+                    setBadge(payload.notification.badge);
+                }
+                // ...
+            });
+        }
+
         // eslint-disable-next-line
     }, []);
 
@@ -184,6 +256,7 @@ const Layout = (props: LayoutProps) => {
 
     return (
         <div className={classes.root}>
+            {currentUser.length <= 0 && <Redirect to="/login" />}
             <IdleTimer ref={idleTimer} element={document} onIdle={handleLogout} debounce={1000} timeout={SESSION_TIMEOUT} />
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
@@ -194,8 +267,14 @@ const Layout = (props: LayoutProps) => {
                     </Typography>
                     <div />
                     <div>
-                        <NotificationMenu name="Notifications" />
-
+                        <NotificationMenu
+                            name="Notifications"
+                            badge={badge}
+                            onLoadMore={loadMoreNotification}
+                            onItemClick={onItemClick}
+                            onReadAll={readAllNotification}
+                        />
+                        {/* <NotificationMenu name="New Orders" icon="shopping_cart" /> */}
                         <Tooltip title={mode === 'DARK' ? 'Toggle Light Mode' : 'Toggle Dark Mode'}>
                             <IconButton
                                 aria-label="delete"
@@ -252,7 +331,14 @@ const Layout = (props: LayoutProps) => {
                     <div className={classes.appBarSpacer} />
                     <div className={classes.container}>
                         {PrivateRoute.map((route, index) => {
-                            return <Route exact key={index} path={route.path} render={(props) => <route.page {...props} />} />;
+                            return (
+                                <Route
+                                    exact
+                                    key={index}
+                                    path={route.path}
+                                    render={(props) => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
+                                />
+                            );
                         })}
                     </div>
                     <Box pt={4} className={classes.copyRight}>

@@ -137,7 +137,11 @@ const MasterTable = (props: MasterTableProps) => {
         setLoading(true);
         try {
             const result = await onLoad(currentPage, pageSize, sort, search);
-            setPaging(result);
+            if (result) {
+                setPaging(result);
+            } else {
+                onError({ message: 'There is no data.' });
+            }
         } catch (error) {
             onError(error);
         }
