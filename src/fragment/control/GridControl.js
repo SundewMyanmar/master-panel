@@ -20,7 +20,7 @@ const GridControl = (props: GridControlProps) => {
 
     return (
         <>
-            <Grid container direction={direction} justify={justify} alignItems={alignItems} spacing={spacing}>
+            <Grid container direction={direction} justifyContent={justify} alignItems={alignItems} spacing={spacing}>
                 {items
                     ? items.map((i, index) => {
                           let xs = defaultWidth;

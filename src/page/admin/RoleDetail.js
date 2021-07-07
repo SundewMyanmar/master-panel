@@ -118,7 +118,7 @@ const RoleDetail = () => {
                         Role Setup
                     </Typography>
                     <MasterForm fields={fields} onSubmit={handleSubmit}>
-                        <Grid container justify="flex-end">
+                        <Grid container justifyContent="flex-end">
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
                                 <Icon>arrow_back</Icon> Back to List
                             </Button>

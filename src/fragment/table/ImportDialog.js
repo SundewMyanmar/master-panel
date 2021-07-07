@@ -142,15 +142,15 @@ export default function ImportDialog(props: ImportDialgProps) {
     };
 
     return (
-        <Dialog fullWidth maxWidth="lg" open={show} onEscapeKeyDown={() => onClose(false)} TransitionComponent={Transition}>
+        <Dialog fullWidth maxWidth="lg" open={show} onClose={() => onClose(false)} TransitionComponent={Transition}>
             <DialogTitle className={classes.header}>
                 <Grid container>
-                    <Grid container item lg={6} md={6} sm={12} xs={12} alignItems="center" justify="flex-start">
+                    <Grid container item lg={6} md={6} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
                         <Typography color="primary" variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container item lg={6} md={6} sm={12} xs={12} alignItems="center" justify="flex-end">
+                    <Grid container item lg={6} md={6} sm={12} xs={12} alignItems="center" justifyContent="flex-end">
                         <Button
                             type="button"
                             color="secondary"

@@ -20,7 +20,7 @@ export default function QuestionDialog(props: QuestionDialogProps) {
     }
 
     return (
-        <Dialog onEscapeKeyDown={() => onClose(false)} open={show} maxWidth="sm" TransitionComponent={Transition}>
+        <Dialog onClose={() => onClose(false)} open={show} maxWidth="sm" TransitionComponent={Transition}>
             <DialogTitle id="question-dialog-title">{title}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">{message}</DialogContentText>

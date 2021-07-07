@@ -308,9 +308,9 @@ const Menu = () => {
                                 <ImportMenu fields={fields.map((f) => f.id)} onImportItems={handleImport} className={classes.newButton} />
                             </Grid>
                         </Grid>
-                        <Grid className={classes.inputBox} container item md={7} sm={12} xs={12} justify="flex-end" alignContent="flex-start">
+                        <Grid className={classes.inputBox} container item md={7} sm={12} xs={12} justifyContent="flex-end" alignContent="flex-start">
                             <MasterForm fields={fields} onSubmit={(event, form) => handleSubmit(form)}>
-                                <Grid container justify="flex-end">
+                                <Grid container justifyContent="flex-end">
                                     <Button type="button" variant="contained" color="default" onClick={handleAdd}>
                                         <Icon>add</Icon> Add New
                                     </Button>

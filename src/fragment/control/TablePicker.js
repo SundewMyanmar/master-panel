@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     content: {
         backgroundColor: theme.palette.background.default,
         borderTop: '1px solid ' + theme.palette.divider,
@@ -107,24 +107,24 @@ const TablePicker = (props: TablePickerProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [show]);
 
-    const handlePageChange = pagination => {
+    const handlePageChange = (pagination) => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
     };
 
-    const handleSelectionChange = result => {
+    const handleSelectionChange = (result) => {
         if (multi) {
             setChecked(result);
         }
     };
 
-    const handleRowClick = item => {
+    const handleRowClick = (item) => {
         if (!multi) {
             onClose(item);
             return;
         }
     };
 
-    const handleClose = action => {
+    const handleClose = (action) => {
         if (!multi) {
             onClose(false);
             return;
@@ -140,25 +140,18 @@ const TablePicker = (props: TablePickerProps) => {
 
     return (
         <>
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                onEscapeKeyDown={() => handleClose(false)}
-                onClose={() => handleClose(false)}
-                open={show}
-                TransitionComponent={Transition}
-            >
+            <Dialog fullWidth maxWidth="lg" onClose={() => handleClose(false)} open={show} TransitionComponent={Transition}>
                 <DialogTitle className={classes.header}>
                     <Grid container>
-                        <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justify="flex-start">
-                            <Typography color="textPrimary" variant="h6" component="h1" noWrap>
+                        <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
+                            <Typography color="primary" variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>
-                        <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justify="center" alignContent="flex-start">
-                            <SearchInput onSearch={value => setSearch(value)} placeholder="Search Files" />
+                        <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
+                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
                         </Grid>
-                        <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
+                        <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
                             <Tooltip title="Close Dialog">
                                 <IconButton size="small" className={classes.closeButton} onClick={() => handleClose(false)} aria-label="Close">
                                     <Icon>close</Icon>
@@ -202,8 +195,8 @@ TablePicker.defaultProps = {
     title: 'Data List',
     selectedData: [],
     multi: false,
-    onError: error => console.warn('Undefined onError => ', error),
-    onSelectionChange: result => console.warn('Undefined onSelectionChange => ', result),
+    onError: (error) => console.warn('Undefined onError => ', error),
+    onSelectionChange: (result) => console.warn('Undefined onSelectionChange => ', result),
 };
 
 export default TablePicker;

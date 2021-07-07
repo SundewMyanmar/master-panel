@@ -33,19 +33,19 @@ const OTPDialog = (props: OTPDialogProps) => {
     const [code, setCode] = useState('');
     const [timer, setTimer] = useState(null);
 
-    const handleTimerChange = value => {
+    const handleTimerChange = (value) => {
         console.log('timer change', value);
         setTimer(value);
     };
 
-    const handleOnShow = value => {
+    const handleOnClose = (value) => {
         if (onShow) {
             onShow(value);
             setCode('');
         }
     };
 
-    const handleCodeChange = event => {
+    const handleCodeChange = (event) => {
         setCode(event.target.value);
     };
 
@@ -70,24 +70,17 @@ const OTPDialog = (props: OTPDialogProps) => {
         );
 
     return (
-        <Dialog
-            maxWidth="xs"
-            fullWidth={false}
-            open={show}
-            onEscapeKeyDown={() => handleOnShow(false)}
-            onClose={() => handleOnShow(false)}
-            TransitionComponent={Transition}
-        >
+        <Dialog maxWidth="xs" fullWidth={false} open={show} onClose={() => handleOnClose(false)} TransitionComponent={Transition}>
             <DialogTitle>
                 <Grid container>
-                    <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justify="flex-start">
+                    <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">
                         <Typography color="primary" variant="h6" component="h1" noWrap>
                             OTP Verification
                         </Typography>
                     </Grid>
-                    <Grid container item lg={1} md={1} sm={1} xs={1} alignItems="center" justify="flex-end">
+                    <Grid container item lg={1} md={1} sm={1} xs={1} alignItems="center" justifyContent="flex-end">
                         <Tooltip title="Close Dialog">
-                            <IconButton size="small" color="primary" onClick={() => handleOnShow(false)} aria-label="Close">
+                            <IconButton size="small" color="primary" onClick={() => handleOnClose(false)} aria-label="Close">
                                 <Icon>close</Icon>
                             </IconButton>
                         </Tooltip>

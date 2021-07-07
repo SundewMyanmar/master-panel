@@ -136,15 +136,15 @@ const File = () => {
             {preview ? <ImagePreview show={preview != null} data={preview} onRemove={handleRemove} onClose={handleClosePreview} /> : null}
             <Paper className={classes.root} elevation={6}>
                 <Grid container className={classes.header}>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} justify="flex-start" alignContent="center">
+                    <Grid container item lg={4} md={4} sm={6} xs={12} justifyContent="flex-start" alignContent="center">
                         <Typography color="primary" variant="h6" component="h1" noWrap>
                             File Manager
                         </Typography>
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" justify="center">
+                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" justifyContent="center">
                         <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
+                    <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justifyContent="flex-end">
                         <Button
                             onClick={() => setShowUploadDialog(true)}
                             variant="contained"

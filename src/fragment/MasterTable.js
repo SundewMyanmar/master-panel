@@ -354,15 +354,15 @@ const MasterTable = (props: MasterTableProps) => {
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Paper className={classes.root} elevation={6}>
                 <Grid container className={classes.header}>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} justify="flex-start" alignContent="center" alignItems="center">
+                    <Grid container item lg={4} md={4} sm={6} xs={12} justifyContent="flex-start" alignContent="center" alignItems="center">
                         <Typography className={classes.headerTitle} variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justify="center">
+                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
                         {hideSearch || <SearchInput value={search} onSearch={(value) => setSearch(value)} placeholder="Search Files" />}
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justify="flex-end">
+                    <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justifyContent="flex-end">
                         {hideDataActions || (
                             <>
                                 {hideActionMenu || (

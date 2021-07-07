@@ -126,7 +126,7 @@ const Register = () => {
                         </Button>
                     </MasterForm>
 
-                    <Grid container justify="flex-end">
+                    <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Link href="/#/login" color="textSecondary" variant="body2">
                                 Already have an account? Sign in

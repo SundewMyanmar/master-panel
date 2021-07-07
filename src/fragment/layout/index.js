@@ -24,7 +24,7 @@ import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
 import MenuApi from '../../api/MenuApi';
 import { isSafari } from 'react-device-detect';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import ProfileApi from '../../api/ProfileApi';
 import NotificationApi from '../../api/NotificationApi';
 
@@ -212,7 +212,7 @@ const Layout = (props: LayoutProps) => {
 
     const loadMoreNotification = async (paging) => {
         var result = await NotificationApi.getMyNotifications(paging.currentPage + 1, paging.pageSize);
-        console.log('more notification',result);
+        console.log('more notification', result);
         if (result.data) {
             for (let i = 0; i < result.data.length; i++) {
                 result.data[i] = {

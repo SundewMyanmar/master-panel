@@ -215,7 +215,7 @@ const UserDetail = (props) => {
                         User Setup
                     </Typography>
                     <MasterForm fields={isUpdate ? fields : [...fields, ...newUserFields]} onSubmit={(event, form) => handleSubmit(form)}>
-                        <Grid container justify="flex-end">
+                        <Grid container justifyContent="flex-end">
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
                                 <Icon>arrow_back</Icon> Back to List
                             </Button>

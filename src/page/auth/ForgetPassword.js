@@ -98,7 +98,7 @@ const ForgetPassword = () => {
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                             Request OTP
                         </Button>
-                        <Grid container justify="flex-end">
+                        <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="/#/login" color="textSecondary" variant="body2">
                                     Remember your password?

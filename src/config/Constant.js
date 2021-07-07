@@ -2,7 +2,7 @@ export const APP_NAME = 'master-panel';
 export const APP_VERSION = '1.6';
 
 const URLS = {
-    development: /*'https://api.linnmyanmar.com.mm/dev/',*/ 'http://localhost:8080/',
+    development: 'http://localhost:8080/',
     production: 'https://api.linnmyanmar.com.mm/dev/',
 };
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;

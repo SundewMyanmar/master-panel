@@ -8,7 +8,7 @@ type DrawerHeaderProps = {
     onMenuClick?: () => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.secondary.light,
         backgroundRepeat: 'no-repeat',
@@ -35,7 +35,7 @@ const DrawerHeader = (props: DrawerHeaderProps) => {
     return (
         <div className={classes.root} style={props.image ? { backgroundImage: 'url("' + props.image + '")' } : null}>
             <div className={classes.glassBackground} style={props.hideMenu ? { padding: 0 } : { padding: theme.spacing(3) }}>
-                <Grid container alignItems="center" direction="row" justify="space-around">
+                <Grid container alignItems="center" direction="row" justifyContent="space-around">
                     {props.hideMenu ? null : (
                         <div>
                             <Typography style={{ color: theme.palette.secondary.contrastText }} variant="h6" gutterBottom>

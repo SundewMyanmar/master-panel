@@ -115,7 +115,6 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         data: [],
     });
 
-    const resetNotification = useRef(false);
     const [notiBadge, setNotiBadge] = useState('');
 
     const setPagingData = (result) => {
@@ -131,21 +130,11 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         loadMoreNotification(paging);
 
         // eslint-disable-next-line
-    }, []);
-
-    useEffect(() => {
-        if (resetNotification.current) {
-            resetNotification.current = false;
-
-            loadMoreNotification(paging);
-        }
-        // eslint-disable-next-line
     }, [paging]);
 
     useEffect(() => {
         setNotiBadge(badge);
 
-        resetNotification.current = true;
         let initPaging = {
             total: 0,
             currentPage: -1,
@@ -182,7 +171,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         var result = [];
         for (let i = 0; i < count; i++) {
             result.push(
-                <MenuItem key={'skeleton-01'}>
+                <MenuItem key={'skeleton-' + i}>
                     <ListItemIcon className={classes.menuIcon}>
                         <Skeleton variant="circle" width={32} height={32} />
                     </ListItemIcon>
@@ -218,7 +207,6 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                 </IconButton>
             </Tooltip>
             <Menu
-                id="simple-menu"
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',

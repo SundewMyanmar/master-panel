@@ -11,12 +11,12 @@ import {
     Button,
     makeStyles,
     Fade,
-    MuiThemeProvider,
+    ThemeProvider,
 } from '@material-ui/core';
 import { ErrorTheme } from '../../config/Theme';
 import FileApi from '../../api/FileApi';
 
-const FileInfoField = props => {
+const FileInfoField = (props) => {
     const { label, value, ...rest } = props;
     return (
         <Grid container {...rest}>
@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
-const style = makeStyles(theme => ({
+const style = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(0.5),
         position: 'relative',
@@ -73,14 +73,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
     };
 
     return (
-        <Dialog
-            onEscapeKeyDown={onClose}
-            open={show}
-            TransitionComponent={Transition}
-            onClose={onClose}
-            aria-labelledby="image-preview-dialog"
-            aria-describedby={data.name}
-        >
+        <Dialog open={show} TransitionComponent={Transition} onClose={onClose} aria-labelledby="image-preview-dialog" aria-describedby={data.name}>
             <div className={classes.root}>
                 <IconButton className={classes.buttonClose} size="small" color="primary" onClick={() => onClose(false)} aria-label="Close">
                     <Icon>close</Icon>
@@ -104,11 +97,11 @@ const ImagePreview = (props: ImagePreviewProps) => {
             </CardContent>
             {onRemove ? (
                 <CardActions style={{ justifyContent: 'flex-end' }}>
-                    <MuiThemeProvider theme={ErrorTheme}>
+                    <ThemeProvider theme={ErrorTheme}>
                         <Button color="primary" variant="contained" onClick={handleRemove}>
                             Delete
                         </Button>
-                    </MuiThemeProvider>
+                    </ThemeProvider>
                 </CardActions>
             ) : null}
         </Dialog>

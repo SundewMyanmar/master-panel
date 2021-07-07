@@ -12,7 +12,7 @@ import {
     Grid,
     Divider,
     IconButton,
-    MuiThemeProvider,
+    ThemeProvider,
 } from '@material-ui/core';
 import { ErrorTheme } from '../../config/Theme';
 
@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(1),
     },
@@ -79,7 +79,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: accept,
-        onDrop: acceptedFiles => {
+        onDrop: (acceptedFiles) => {
             const newFiles = acceptedFiles.map((file, idx) =>
                 Object.assign(file, {
                     preview: URL.createObjectURL(file),
@@ -93,7 +93,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
     React.useEffect(
         () => () => {
             // Make sure to revoke the data uris to avoid memory leaks
-            files.forEach(file => {
+            files.forEach((file) => {
                 if (file.preview) {
                     URL.revokeObjectURL(file.preview);
                 }
@@ -102,8 +102,8 @@ export const MultiUpload = (props: MultiUploadProps) => {
         [files],
     );
 
-    const handleClose = status => {
-        const uploadFiles = files.map(file => {
+    const handleClose = (status) => {
+        const uploadFiles = files.map((file) => {
             URL.revokeObjectURL(file.preview);
             delete file.preview;
             return file;
@@ -116,23 +116,16 @@ export const MultiUpload = (props: MultiUploadProps) => {
         setFiles([]);
     };
 
-    const handleRemove = file => {
+    const handleRemove = (file) => {
         // Make sure to revoke the data uris to avoid memory leaks
         URL.revokeObjectURL(file.preview);
-        const updatedFiles = files.filter(f => f.id !== file.id);
+        const updatedFiles = files.filter((f) => f.id !== file.id);
         console.log('Updated Files => ', updatedFiles);
         setFiles(updatedFiles);
     };
 
     return (
-        <Dialog
-            maxWidth="md"
-            fullWidth
-            open={show}
-            onClose={() => handleClose(false)}
-            onEscapeKeyDown={() => handleClose(false)}
-            TransitionComponent={Transition}
-        >
+        <Dialog maxWidth="md" fullWidth open={show} onClose={() => handleClose(false)} TransitionComponent={Transition}>
             <Container className={classes.root}>
                 <div {...getRootProps({ className: classes.container })}>
                     <input {...getInputProps()} />
@@ -143,13 +136,13 @@ export const MultiUpload = (props: MultiUploadProps) => {
                 <Grid container spacing={1}>
                     {files.map((file, idx) => {
                         return (
-                            <Grid key={file.id} container item justify="center" xs={6} sm={4} md={3} lg={2}>
+                            <Grid key={file.id} container item justifyContent="center" xs={6} sm={4} md={3} lg={2}>
                                 <div className={classes.thumbnailContainer}>
-                                    <MuiThemeProvider theme={ErrorTheme}>
+                                    <ThemeProvider theme={ErrorTheme}>
                                         <IconButton onClick={() => handleRemove(file)} className={classes.removeButton}>
                                             <Icon color="primary">delete</Icon>
                                         </IconButton>
-                                    </MuiThemeProvider>
+                                    </ThemeProvider>
                                     <img className={classes.thumbnail} src={file.preview} alt={file.name} />
                                 </div>
                             </Grid>
@@ -172,5 +165,5 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
 MultiUpload.defaultProps = {
     accept: 'image/*',
-    onClose: result => console.warn('Undefined onClose =>', result),
+    onClose: (result) => console.warn('Undefined onClose =>', result),
 };

@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     content: {
         padding: 0,
         margin: 0,
@@ -66,13 +66,13 @@ const ColorPicker = (props: ColorPickerProps) => {
         if (value) setColor(value);
     }, [value, show]);
 
-    const handleChange = newColor => {
+    const handleChange = (newColor) => {
         setColor(newColor);
 
         if (onClose) onClose(newColor.hex);
     };
 
-    const handleChangeComplete = newColor => {
+    const handleChangeComplete = (newColor) => {
         setColor(newColor);
     };
 
@@ -84,16 +84,16 @@ const ColorPicker = (props: ColorPickerProps) => {
 
     return (
         <>
-            <Dialog onEscapeKeyDown={() => onClose(false)} open={show} TransitionComponent={Transition}>
+            <Dialog onClose={() => onClose(false)} open={show} TransitionComponent={Transition}>
                 <DialogTitle className={classes.header}>
                     <Grid container>
-                        <Grid container item lg={8} md={8} sm={8} xs={12} alignItems="center" justify="flex-start">
+                        <Grid container item lg={8} md={8} sm={8} xs={12} alignItems="center" justifyContent="flex-start">
                             <Typography className={classes.titleText} variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>
 
-                        <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justify="flex-end">
+                        <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
                             <Tooltip title="Close Dialog">
                                 <IconButton size="small" className={classes.titleText} onClick={() => handleClose()} aria-label="Close">
                                     <Icon>close</Icon>
@@ -129,7 +129,7 @@ const ColorPicker = (props: ColorPickerProps) => {
                             Custom
                         </Link>
                     </Breadcrumbs>
-                    <Grid className={classes.content} container justify="center">
+                    <Grid className={classes.content} container justifyContent="center">
                         {type == 'SKETCH' ? (
                             <SketchPicker width={DEFAULT_WIDTH} color={color} onChangeComplete={handleChangeComplete} />
                         ) : (
@@ -145,7 +145,7 @@ const ColorPicker = (props: ColorPickerProps) => {
 ColorPicker.defaultProps = {
     title: 'Color Browser',
     value: '#fff',
-    onError: error => console.warn(error),
+    onError: (error) => console.warn(error),
 };
 
 export default ColorPicker;

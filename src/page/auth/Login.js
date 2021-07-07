@@ -1,6 +1,6 @@
 import React, { useState, createRef, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Typography, Container, CssBaseline, Avatar, Grid, Button, Link, Box, MuiThemeProvider, makeStyles } from '@material-ui/core';
+import { Typography, Container, CssBaseline, Avatar, Grid, Button, Link, Box, ThemeProvider, makeStyles } from '@material-ui/core';
 import { isSafari } from 'react-device-detect';
 import Copyright from '../../fragment/control/Copyright';
 import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
@@ -9,7 +9,7 @@ import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS, FACEBOOK, FCM_CONFIG, VAPID_KEY } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 let FIREBASE_MESSAGING = null;
 
@@ -173,11 +173,11 @@ const Login = () => {
 
         return (
             <>
-                <MuiThemeProvider theme={FacebookTheme}>
+                <ThemeProvider theme={FacebookTheme}>
                     <Button fullWidth variant="contained" color="primary" className={classes.loginWith}>
                         <img className={classes.logoImage} src="images/facebook.png" alt="Facebook" /> Login with Facebook
                     </Button>
-                </MuiThemeProvider>
+                </ThemeProvider>
                 <Typography color="textSecondary" variant="body2" align="center">
                     Or Login with user and password.
                 </Typography>
@@ -207,7 +207,7 @@ const Login = () => {
                             <Button type="submit" ref={submitButton} fullWidth variant="contained" color="primary" className={classes.submit}>
                                 Sign In
                             </Button>
-                            <Grid container justify="flex-end">
+                            <Grid container justifyContent="flex-end">
                                 <Grid item>
                                     <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
                                         Forgot password?

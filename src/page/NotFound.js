@@ -42,7 +42,7 @@ const Dashboard = () => {
                 <Typography color="error" component="h1" variant="h1">
                     404 - Not Found !
                 </Typography>
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                     <Grid item>
                         <Link href="/#/login" color="textSecondary" variant="body2">
                             Back to login?

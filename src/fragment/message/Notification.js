@@ -32,10 +32,10 @@ export default function NotiMessage(props: NotificationProps) {
         <Snackbar
             anchorOrigin={position}
             open={show}
-            onExited={handleFlashMessage}
             autoHideDuration={3000}
             onClose={onClose}
             TransitionComponent={Transition}
+            TransitionProps={{ onExited: handleFlashMessage }}
         >
             <Alert onClose={onClose} severity={type} variant="filled" elevation={6}>
                 {title ? <AlertTitle>{title}</AlertTitle> : null}

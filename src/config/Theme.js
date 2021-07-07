@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 
 export const common = {
     white: '#ffffff',
@@ -106,31 +106,31 @@ export const darkAction = {
     selectedOpacity: 0.55,
 };
 
-export const ErrorTheme = createMuiTheme({
+export const ErrorTheme = createTheme({
     palette: {
         primary: error,
     },
 });
 
-export const WarningTheme = createMuiTheme({
+export const WarningTheme = createTheme({
     palette: {
         primary: warning,
     },
 });
 
-export const InfoTheme = createMuiTheme({
+export const InfoTheme = createTheme({
     palette: {
         primary: info,
     },
 });
 
-export const SuccessTheme = createMuiTheme({
+export const SuccessTheme = createTheme({
     palette: {
         primary: success,
     },
 });
 
-export const FacebookTheme = createMuiTheme({
+export const FacebookTheme = createTheme({
     palette: {
         primary: {
             light: '#7694e4',
@@ -141,7 +141,7 @@ export const FacebookTheme = createMuiTheme({
     },
 });
 
-export default createMuiTheme({
+export default createTheme({
     palette: {
         type: 'light',
         common: common,
@@ -176,11 +176,6 @@ export default createMuiTheme({
                 maxHeight: 30,
                 height: 30,
             },
-            sizeMedium: {
-                padding: '6px 24px 6px 16px',
-                maxHeight: 40,
-                height: 40,
-            },
         },
         MuiPickersToolbar: {
             root: {
@@ -209,7 +204,7 @@ export default createMuiTheme({
     },
 });
 
-export const DarkTheme = createMuiTheme({
+export const DarkTheme = createTheme({
     palette: {
         type: 'dark',
         common: common,
@@ -243,11 +238,6 @@ export const DarkTheme = createMuiTheme({
                 padding: '0px 4px 0px 4px',
                 maxHeight: 30,
                 height: 30,
-            },
-            sizeMedium: {
-                padding: '6px 24px 6px 16px',
-                maxHeight: 40,
-                height: 40,
             },
         },
     },

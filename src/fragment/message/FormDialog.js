@@ -15,7 +15,7 @@ export type FormDialogProps = {
     onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     buttonContainer: {
         padding: theme.spacing(2, 0),
     },
@@ -29,12 +29,12 @@ export default function FormDialog(props: FormDialogProps) {
     const { title, onClose, onWillSubmit, onSubmit, fields, show } = props;
 
     return (
-        <Dialog maxWidth="sm" open={show} onEscapeKeyDown={() => onClose(false)} TransitionComponent={Transition}>
+        <Dialog maxWidth="sm" open={show} onClose={() => onClose(false)} TransitionComponent={Transition}>
             <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
             <Divider />
             <DialogContent>
                 <MasterForm fields={fields} onSubmit={onSubmit} onWillSubmit={onWillSubmit}>
-                    <Grid className={classes.buttonContainer} container justify="flex-end">
+                    <Grid className={classes.buttonContainer} container justifyContent="flex-end">
                         <Button type="submit" color="primary" variant="contained">
                             Submit
                         </Button>

@@ -15,7 +15,7 @@ export type AlertDialogProps = {
 export default function AlertDialog(props: AlertDialogProps) {
     const { title, message, onClose, show } = props;
     return (
-        <Dialog maxWidth="sm" open={show} onEscapeKeyDown={onClose} TransitionComponent={Transition}>
+        <Dialog maxWidth="sm" open={show} TransitionComponent={Transition} onClose={onClose}>
             <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
