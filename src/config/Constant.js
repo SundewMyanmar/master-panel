@@ -30,7 +30,7 @@ export const STORAGE_KEYS = {
 
 export const VAPID_KEY = '';
 
-export const FCM_CONFIG=null;
+export const FCM_CONFIG = null;
 // export const FCM_CONFIG = {
 //     apiKey: '',
 //     authDomain: '',
