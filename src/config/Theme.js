@@ -33,10 +33,10 @@ export const secondary = {
 };
 
 export const darkSecondary = {
-    main: '#d7cdc3',
+    main: '#6c6b6a',
     light: '#fffff6',
     dark: '#a69c93',
-    contrastText: '#000000',
+    contrastText: '#ffffff',
 };
 
 export const error = {
@@ -176,6 +176,35 @@ export default createMuiTheme({
                 maxHeight: 30,
                 height: 30,
             },
+            sizeMedium: {
+                padding: '6px 24px 6px 16px',
+                maxHeight: 40,
+                height: 40,
+            },
+        },
+        MuiPickersToolbar: {
+            root: {
+                backgroundColor: primary.dark,
+            },
+        },
+        MuiPickersDay: {
+            root: {
+                color: primary.dark,
+                '&$disabled': {
+                    color: primary.dark,
+                },
+                '&$selected': {
+                    backgroundColor: primary.dark,
+                },
+            },
+            today: {
+                color: primary.dark,
+            },
+        },
+        MuiPickersModalDialog: {
+            dialogAction: {
+                color: primary.dark,
+            },
         },
     },
 });
@@ -214,6 +243,11 @@ export const DarkTheme = createMuiTheme({
                 padding: '0px 4px 0px 4px',
                 maxHeight: 30,
                 height: 30,
+            },
+            sizeMedium: {
+                padding: '6px 24px 6px 16px',
+                maxHeight: 40,
+                height: 40,
             },
         },
     },

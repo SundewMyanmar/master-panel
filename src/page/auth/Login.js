@@ -9,7 +9,7 @@ import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS, FACEBOOK, FCM_CONFIG, VAPID_KEY } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
-import firebase from 'firebase/app';
+import firebase from 'firebase';
 
 let FIREBASE_MESSAGING = null;
 

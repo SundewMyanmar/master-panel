@@ -9,6 +9,7 @@ export type SelectListProps = {
     icon?: string,
     required: boolean,
     label: string,
+    hidePlaceHolder: boolean,
     onLoadItem?: (item: Object) => string,
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => string,
     onChange: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => void,
@@ -16,7 +17,7 @@ export type SelectListProps = {
 };
 
 const ListInput = (props: SelectListProps) => {
-    const { variant, disabled, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
+    const { variant, disabled, hidePlaceHolder, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(value);
@@ -55,7 +56,7 @@ const ListInput = (props: SelectListProps) => {
         }
     };
 
-    const buildInputIcon = (inputProps) => {
+    const buildInputIcon = inputProps => {
         if (icon) {
             inputProps.startAdornment = (
                 <InputAdornment position="start">
@@ -66,9 +67,10 @@ const ListInput = (props: SelectListProps) => {
         return inputProps;
     };
 
-    const buildInputField = (params) => {
+    const buildInputField = params => {
         const { InputProps, InputLabelProps, ...otherParams } = params;
-        const placeholder = 'Choose ' + FormatManager.camelToReadable(id || name);
+        let placeholder = 'Choose ' + FormatManager.camelToReadable(id || name);
+        placeholder = hidePlaceHolder || placeholder;
 
         return (
             <>
@@ -128,7 +130,8 @@ const ListInput = (props: SelectListProps) => {
 };
 
 ListInput.defaultProps = {
-    onLoadItem: (item) => item.toString(),
+    onLoadItem: item => item.toString(),
+    hidePlaceHolder: false,
 };
 
 export default ListInput;

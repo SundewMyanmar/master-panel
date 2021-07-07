@@ -26,7 +26,7 @@ export type ChipInputProps = {
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         backgroundColor: 'inherit',
     },
@@ -34,14 +34,14 @@ const styles = makeStyles((theme) => ({
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
     },
-    label: (props) => ({
+    label: props => ({
         backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
     }),
     chipTextField: { position: 'relative', flex: 1, paddingRight: 14, paddingLeft: 1 },
-    content: (props) => ({
+    content: props => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
         padding: theme.spacing(0.5, 0.5, 0.5, 0.5),
@@ -94,7 +94,7 @@ const ChipInput = (props: ChipInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleKeyDown = (evt) => {
+    const handleKeyDown = evt => {
         if (['Enter', 'Tab', ','].includes(evt.key)) {
             evt.preventDefault();
             let chip = newChip;
@@ -115,7 +115,7 @@ const ChipInput = (props: ChipInputProps) => {
         }
     };
 
-    const handleTextChange = (event) => {
+    const handleTextChange = event => {
         const data = event.target.value;
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
@@ -129,7 +129,7 @@ const ChipInput = (props: ChipInputProps) => {
         setNewChip(data);
     };
 
-    const handlePaste = (evt) => {
+    const handlePaste = evt => {
         evt.preventDefault();
         var pasteValue = evt.clipboardData.getData('text');
         if (currentInput.current && pasteValue !== currentInput.current.value) {
@@ -152,7 +152,7 @@ const ChipInput = (props: ChipInputProps) => {
         }
     };
 
-    const buildInputIcon = (icon) => {
+    const buildInputIcon = icon => {
         if (icon) {
             return {
                 startAdornment: (

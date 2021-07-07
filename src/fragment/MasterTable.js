@@ -251,7 +251,7 @@ const MasterTable = (props: MasterTableProps) => {
 
     const handleTableSession = () => {
         localStorage.setItem(
-            `${STORAGE_KEYS.TABLE_SESSION}.${title}`,
+            `${STORAGE_KEYS.TABLE_SESSION}.${FormatManager.readableToSnake(title)}`,
             JSON.stringify({
                 paging: paging,
                 selectedData: selectedData,

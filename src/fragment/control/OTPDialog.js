@@ -33,19 +33,19 @@ const OTPDialog = (props: OTPDialogProps) => {
     const [code, setCode] = useState('');
     const [timer, setTimer] = useState(null);
 
-    const handleTimerChange = (value) => {
+    const handleTimerChange = value => {
         console.log('timer change', value);
         setTimer(value);
     };
 
-    const handleOnShow = (value) => {
+    const handleOnShow = value => {
         if (onShow) {
             onShow(value);
             setCode('');
         }
     };
 
-    const handleCodeChange = (event) => {
+    const handleCodeChange = event => {
         setCode(event.target.value);
     };
 

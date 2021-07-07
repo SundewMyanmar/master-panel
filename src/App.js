@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/core';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 
 import DefaultTheme, { DarkTheme } from './config/Theme';
 import { PublicRoute } from './config/Route';
-
 import Layout from './fragment/layout';
 import ApiManager from './util/ApiManager';
 import { STORAGE_KEYS } from './config/Constant';
@@ -24,7 +23,8 @@ export default function App() {
         return localStorage.getItem(STORAGE_KEYS.THEME);
     });
 
-    const toggleMode = (newMode) => {
+    const toggleMode = newMode => {
+        console.log('new mode', newMode);
         localStorage.setItem(STORAGE_KEYS.THEME, newMode);
         setMode(newMode);
     };
@@ -34,9 +34,9 @@ export default function App() {
             <Router>
                 <Switch>
                     {PublicRoute.map((route, index) => (
-                        <Route exact key={route + '_' + index} path={route.path} component={route.page} />
+                        <Route exact key={index} path={route.path} component={route.page} />
                     ))}
-                    <Layout mode={mode} onToggleMode={toggleMode} />
+                    {<Layout mode={mode} onToggleMode={toggleMode} />}
                 </Switch>
             </Router>
         </ThemeProvider>

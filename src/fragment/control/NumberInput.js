@@ -1,5 +1,6 @@
 import * as React from 'react';
 import TextInput, { TextInputProps } from './TextInput';
+import Input from '@material-ui/core/Input';
 
 type Props = {
     ...TextInputProps,
@@ -15,7 +16,7 @@ const VALIDATE_REGEX = {
 
 export default function NumberInput(props: Props) {
     const { onValidate, ...rest } = props;
-
+    const type = ['integer', 'uInteger'].includes(props.valid) ? 'number' : 'text';
     const handleValidation = event => {
         const value = event.target.value;
         if (!value || value == '') return '';
@@ -31,8 +32,7 @@ export default function NumberInput(props: Props) {
 
         return error;
     };
-
-    return <TextInput type="number" onValidate={handleValidation} {...rest} />;
+    return <TextInput type={type} onValidate={handleValidation} {...rest} />;
 }
 
 NumberInput.defaultProps = {

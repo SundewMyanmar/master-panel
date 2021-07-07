@@ -1,67 +1,68 @@
 {
-  "name": "master-panel",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@date-io/luxon": "1.x",
-    "@material-ui/core": "^4.11.4",
-    "@material-ui/lab": "^4.0.0-alpha.58",
-    "@material-ui/pickers": "^3.3.10",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@tinymce/tinymce-react": "^3.12.6",
-    "axios": "^0.21.1",
-    "chroma-js": "^2.1.2",
-    "faker": "^5.5.3",
-    "firebase": "^8.7.0",
-    "luxon": "^1.27.0",
-    "react": "^17.0.2",
-    "react-color": "^2.19.3",
-    "react-custom-scrollbars": "^4.2.1",
-    "react-device-detect": "^1.17.0",
-    "react-dom": "^17.0.2",
-    "react-dropzone": "^11.3.4",
-    "react-google-maps": "^9.4.5",
-    "react-idle-timer": "^4.6.4",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "recharts": "^2.0.9",
-    "uuid": "^8.3.2",
-    "web-vitals": "^1.0.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.30.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.3.2"
-  }
+    "name": "master-panel",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@date-io/luxon": "1.x",
+        "@material-ui/core": "^4.11.4",
+        "@material-ui/lab": "^4.0.0-alpha.58",
+        "@material-ui/pickers": "^3.3.10",
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
+        "@tinymce/tinymce-react": "^3.12.6",
+        "axios": "^0.21.1",
+        "chroma-js": "^2.1.2",
+        "faker": "^5.5.3",
+        "firebase": "^8.7.0",
+        "luxon": "^1.27.0",
+        "react": "^17.0.2",
+        "react-color": "^2.19.3",
+        "react-custom-scrollbars": "^4.2.1",
+        "react-device-detect": "^1.17.0",
+        "react-dom": "^17.0.2",
+        "react-dropzone": "^11.3.4",
+        "react-google-maps": "^9.4.5",
+        "react-idle-timer": "^4.6.4",
+        "react-router-dom": "^5.2.0",
+        "react-simple-infinite-loading": "^1.1.0",
+        "react-scripts": "4.0.3",
+        "recharts": "^2.0.9",
+        "uuid": "^8.3.2",
+        "web-vitals": "^1.0.1"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.1.0",
+        "eslint": "^7.30.0",
+        "eslint-config-airbnb": "^18.2.1",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "eslint-plugin-react": "^7.24.0",
+        "eslint-plugin-react-hooks": "^4.2.0",
+        "prettier": "^2.3.2"
+    }
 }

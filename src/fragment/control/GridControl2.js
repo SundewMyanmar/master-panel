@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 
-const useStyles = makeStyles(theme => ({
-    root: { flexGrow: 1 },
-}));
+// const useStyles = makeStyles(theme => ({
+//     root: { flexGrow: 1 },
+// }));
 
 /**
  * ISSUES...
@@ -118,7 +117,7 @@ const GridControl2 = props => {
 
         for (var i = 0; i < items.length; i++) {
             let item = items[i];
-            if (rData[`r${item.row}`] == 1) {
+            if (rData[`r${item.row}`] === 1) {
                 result.push(renderColumn(item, i));
             } else {
                 let resultSpan = renderSpan(i);

@@ -17,6 +17,8 @@ type ImageInputProps = {
     disabledUpload?: boolean,
     disabledRemove?: boolean,
     value: Object | string,
+    moveIcon: String,
+    onMove: () => void,
     onUpload?: () => void,
     onRemove?: () => void,
     onChange: (image: Object | string) => void,
@@ -35,6 +37,20 @@ const styles = makeStyles(theme => ({
         top: -12,
         right: -12,
         backgroundColor: theme.palette.error.main,
+        color: 'white',
+        padding: 0,
+        width: 25,
+        height: 25,
+        fontSize: 12,
+        border: 'none',
+        cursor: 'pointer',
+        borderRadius: 40,
+    },
+    moveButton: {
+        position: 'absolute',
+        bottom: -12,
+        left: '45%',
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
         padding: 0,
         width: 25,
@@ -71,7 +87,22 @@ const MENU_LIST_ITEMS = [
 
 const ImagePicker = (props: ImageInputProps) => {
     const classes = styles();
-    const { id, index, name, size, value, enableFilePicker, disabledUpload, disabledRemove, onChange, onRemove, required, ...rest } = props;
+    const {
+        id,
+        moveIcon,
+        onMove,
+        index,
+        name,
+        size,
+        value,
+        enableFilePicker,
+        disabledUpload,
+        disabledRemove,
+        onChange,
+        onRemove,
+        required,
+        ...rest
+    } = props;
 
     const [showMenu, setShowMenu] = useState(false);
     const [showFile, setShowFile] = useState(false);
@@ -81,10 +112,30 @@ const ImagePicker = (props: ImageInputProps) => {
     const inputUpload = createRef();
 
     useEffect(() => {
+        console.log('product detail input', value);
         const imageURL = FileApi.downloadLink(value, 'small');
+
         if (imageURL && imageURL !== preview && inputUpload.current) {
             handleChange(value, imageURL);
+        } else {
+            if (value && Object.entries(value).length === 0) {
+                // handleChange(null, null);
+                setPreview(null);
+                setImage(null);
+            } else {
+                console.log('image value', value);
+                if (value && value.target) {
+                    setPreview(value.target.url);
+                    setImage(value);
+                } else {
+                    setPreview(null);
+                    setImage(null);
+                }
+            }
         }
+        // else {
+        //     handleChange(null, null);
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
@@ -92,7 +143,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setPreview(url);
         setImage(result);
 
-        if (onChange && result && url) {
+        if (onChange) {
             var obj = {
                 target: {
                     id: id || name,
@@ -160,6 +211,10 @@ const ImagePicker = (props: ImageInputProps) => {
         handleChange(null, null);
     };
 
+    const handleMove = event => {
+        if (onMove) onMove(index);
+    };
+
     const visibility = !disabledRemove && preview ? 'visible' : 'hidden';
 
     const img = preview ? preview : `/${'images/upload.png'}`;
@@ -211,6 +266,7 @@ ImagePicker.defaultProps = {
     enableFilePicker: false,
     disabledUpload: false,
     disabledRemove: false,
+    moveIcon: 'arrow_forward',
 };
 
 export default ImagePicker;

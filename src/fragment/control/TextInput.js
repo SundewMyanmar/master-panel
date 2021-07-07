@@ -10,6 +10,7 @@ export type TextInputProps = {
     icon?: string,
     required: boolean,
     label: string,
+    hidePlaceHolder: Boolean,
     variant: 'filled' | 'outlined' | 'standard',
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
@@ -21,7 +22,7 @@ const TextInput = (props: TextInputProps) => {
 
     //Remove default onChange
     //Skip onValidate props to parent componets
-    const { id, name, variant, inputRef, value, onChange, onValidate, icon, ...rest } = props;
+    const { id, name, hidePlaceHolder, placeholder, variant, inputRef, value, inputAdornment, onChange, onValidate, icon, ...rest } = props;
 
     const currentInput = inputRef || React.createRef();
 
@@ -38,7 +39,7 @@ const TextInput = (props: TextInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleTextChange = (event) => {
+    const handleTextChange = event => {
         const data = event.target.value;
         let errorText = '';
         if (props.required && (!data || data.length <= 0)) {
@@ -53,22 +54,24 @@ const TextInput = (props: TextInputProps) => {
             onChange(event);
         }
     };
-
-    const buildInputIcon = (icon) => {
+    const endAdornment = inputAdornment ? { endAdornment: inputAdornment } : {};
+    const buildInputIcon = icon => {
         if (icon) {
             return {
                 startAdornment: (
                     <InputAdornment position="start">
-                        <Icon color="primary">{icon}</Icon>
+                        <Icon>{icon}</Icon>
                     </InputAdornment>
                 ),
+                ...endAdornment,
                 ...props.InputProps,
             };
         }
         return props.InputProps;
     };
 
-    const placeholder = 'Enter ' + FormatManager.camelToReadable(id || name);
+    let placeholderText = hidePlaceHolder ? '' : placeholder;
+    if (!placeholderText) placeholderText = hidePlaceHolder ? '' : 'Enter ' + FormatManager.camelToReadable(id || name);
 
     let variantProps = { variant: variant };
     if (variant !== 'standard') {
@@ -83,12 +86,12 @@ const TextInput = (props: TextInputProps) => {
 
     return (
         <>
-            {variant == 'standard' ? (
+            {variant === 'standard' ? (
                 <InputBase
                     {...variantProps}
                     margin="normal"
                     fullWidth
-                    placeholder={placeholder}
+                    placeholder={placeholderText}
                     {...rest}
                     id={id || name}
                     name={name || id}
@@ -102,7 +105,7 @@ const TextInput = (props: TextInputProps) => {
                     {...variantProps}
                     margin="normal"
                     fullWidth
-                    placeholder={placeholder}
+                    placeholder={placeholderText}
                     {...rest}
                     id={id || name}
                     name={name || id}
@@ -118,6 +121,7 @@ const TextInput = (props: TextInputProps) => {
 
 TextInput.defaultProps = {
     variant: 'outlined',
+    hidePlaceHolder: false,
 };
 
 export default TextInput;
