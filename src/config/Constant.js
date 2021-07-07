@@ -30,16 +30,17 @@ export const STORAGE_KEYS = {
 
 export const VAPID_KEY = '';
 
-export const FCM_CONFIG = {
-    apiKey: 'AIzaSyBheTez62fKOYful0Lpz6eE5y7WVlyy3lU',
-    authDomain: 'linn-myanmar.firebaseapp.com',
-    databaseURL: 'https://linn-myanmar.firebaseio.com',
-    projectId: 'linn-myanmar',
-    storageBucket: 'linn-myanmar.appspot.com',
-    messagingSenderId: '332664396318',
-    appId: '1:332664396318:web:47b767ad80c7ddaaf8ec0f',
-    measurementId: 'G-7VH5DYDES0',
-};
+export const FCM_CONFIG=null;
+// export const FCM_CONFIG = {
+//     apiKey: '',
+//     authDomain: '',
+//     databaseURL: '',
+//     projectId: '',
+//     storageBucket: '',
+//     messagingSenderId: '',
+//     appId: '',
+//     measurementId: '',
+// };
 
 export const SUPPORTED_LANGUAGE = [
     { code: 'en', label: 'English' },
