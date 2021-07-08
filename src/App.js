@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/core';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import DefaultTheme, { DarkTheme } from './config/Theme';
 import { PublicRoute } from './config/Route';
@@ -23,7 +23,7 @@ export default function App() {
         return localStorage.getItem(STORAGE_KEYS.THEME);
     });
 
-    const toggleMode = newMode => {
+    const toggleMode = (newMode) => {
         console.log('new mode', newMode);
         localStorage.setItem(STORAGE_KEYS.THEME, newMode);
         setMode(newMode);

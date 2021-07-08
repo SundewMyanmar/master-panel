@@ -32,7 +32,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const itemStyles = makeStyles((theme) => ({
     root: {
-        ...theme.mixins.gutters(),
+        // ...theme.mixins.gutters(),
         borderRadius: 0,
         display: 'block',
     },

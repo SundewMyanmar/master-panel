@@ -209,7 +209,7 @@ const Login = () => {
                             </Button>
                             <Grid container justifyContent="flex-end">
                                 <Grid item>
-                                    <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
+                                    <Link href="/auth/forgetPassword" color="textSecondary" variant="body2">
                                         Forgot password?
                                     </Link>
                                 </Grid>
@@ -217,12 +217,12 @@ const Login = () => {
                         </MasterForm>
                         {/* <Grid container>
                             <Grid item xs>
-                                <Link href="/#/auth/forgetPassword" color="textSecondary" variant="body2">
+                                <Link href="/auth/forgetPassword" color="textSecondary" variant="body2">
                                     Forgot password?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="/#/auth/register" color="textSecondary" variant="body2">
+                                <Link href="/auth/register" color="textSecondary" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

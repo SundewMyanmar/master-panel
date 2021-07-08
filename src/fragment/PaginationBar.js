@@ -114,8 +114,8 @@ const PaginationBar = (props: PaginationBarProps) => {
             rowsPerPage={pageSize}
             labelRowsPerPage="Page Size :"
             page={currentPage}
-            onChangeRowsPerPage={handleRowsPerPageChange}
-            onChangePage={(event, newPage) => onPageChange(newPage)}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            onPageChange={(event, newPage) => onPageChange(newPage)}
             ActionsComponent={PaginationAction}
             {...paginationProps}
         />

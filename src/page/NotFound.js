@@ -44,7 +44,7 @@ const Dashboard = () => {
                 </Typography>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
-                        <Link href="/#/login" color="textSecondary" variant="body2">
+                        <Link href="/login" color="textSecondary" variant="body2">
                             Back to login?
                         </Link>
                     </Grid>

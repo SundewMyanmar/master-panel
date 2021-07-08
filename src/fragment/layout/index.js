@@ -201,9 +201,7 @@ const Layout = (props: LayoutProps) => {
 
     const onItemClick = async (item) => {
         console.log('item click', item);
-        /**
-         * Handle Notification Item Click Here
-         */
+        //Need to Control
     };
 
     const readAllNotification = () => {
@@ -212,7 +210,6 @@ const Layout = (props: LayoutProps) => {
 
     const loadMoreNotification = async (paging) => {
         var result = await NotificationApi.getMyNotifications(paging.currentPage + 1, paging.pageSize);
-        console.log('more notification', result);
         if (result.data) {
             for (let i = 0; i < result.data.length; i++) {
                 result.data[i] = {

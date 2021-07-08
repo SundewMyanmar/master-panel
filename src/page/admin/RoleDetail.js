@@ -123,7 +123,7 @@ const RoleDetail = () => {
                                 <Icon>arrow_back</Icon> Back to List
                             </Button>
                             <ThemeProvider theme={InfoTheme}>
-                                <Button type="button" variant="contained" color="primary" className={classes.submit} href={'/#/permission/' + id}>
+                                <Button type="button" variant="contained" color="primary" className={classes.submit} href={'/permission/' + id}>
                                     <Icon>router</Icon> API Route
                                 </Button>
                             </ThemeProvider>
