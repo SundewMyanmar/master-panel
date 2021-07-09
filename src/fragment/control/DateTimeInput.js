@@ -92,7 +92,6 @@ const DateTimeInput = (props: DateTimeInputProps) => {
 
     React.useEffect(() => {
         if (value) setSelectedDate(new Date(value));
-        console.log('use effect load detail', value);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
@@ -113,7 +112,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     disabled={disabledLoad}
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
-                    keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
+                    // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
                     leftArrowIcon={<Icon className={classes.icon}>keyboard_arrow_left</Icon>}
                     rightArrowIcon={<Icon className={classes.icon}>keyboard_arrow_right</Icon>}
                     InputProps={{
@@ -141,7 +140,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     disabled={disabledLoad}
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
-                    keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
+                    // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
                     leftArrowIcon={<Icon className={classes.icon}>keyboard_arrow_left</Icon>}
                     rightArrowIcon={<Icon className={classes.icon}>keyboard_arrow_right</Icon>}
                     InputProps={{
@@ -164,13 +163,13 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     inputVariant="outlined"
                     label={label || 'Date Picker'}
                     placeholder={placeholder}
-                    format="dd - MM - yyyy"
+                    format="dd - MMM - yyyy"
                     value={selectedDate}
                     disabled={disabledLoad}
                     style={{ color: 'red' }}
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
-                    keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
+                    // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
                     leftArrowIcon={<Icon className={classes.icon}>keyboard_arrow_left</Icon>}
                     rightArrowIcon={<Icon className={classes.icon}>keyboard_arrow_right</Icon>}
                     InputProps={{

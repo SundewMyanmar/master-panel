@@ -11,6 +11,9 @@ const itemStyles = makeStyles((theme) => ({
         border: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
         backgroundColor: theme.palette.background.paper,
     }),
+    content: {
+        height: '100%',
+    },
     title: {
         padding: theme.spacing(0.5, 0),
     },
@@ -19,6 +22,7 @@ const itemStyles = makeStyles((theme) => ({
         borderBottom: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
     }),
     info: (props) => ({
+        height: '100%',
         padding: theme.spacing(0.5, 1),
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText,
         backgroundColor: props.selected ? theme.palette.primary.main : theme.palette.secondary.main,
@@ -50,7 +54,7 @@ export const FileGridItem = (props: FileGridItemProps) => {
     return (
         <Grid container item justifyContent="center" xs={6} sm={4} md={3} lg={2}>
             <Card className={classes.root} elevation={3}>
-                <CardActionArea onClick={onClick}>
+                <CardActionArea className={classes.content} onClick={onClick}>
                     <CardMedia className={classes.media} image={url} title={item.name ? item.name : 'No Image'} />
                     {url && isImage ? <img src={url} alt={item.name} style={{ display: 'none' }} /> : null}
                     <CardContent style={isMarked ? { position: 'relative' } : null} className={classes.info}>

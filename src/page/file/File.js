@@ -1,13 +1,15 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { Typography, makeStyles, Paper, Icon, Grid, Button, Table, TableFooter, TableRow, TableContainer } from '@material-ui/core';
-import { Notification, AlertDialog, QuestionDialog, LoadingDialog } from '../../fragment/message';
+import { QuestionDialog } from '../../fragment/message';
 import { SearchInput } from '../../fragment/control';
 import PaginationBar from '../../fragment/PaginationBar';
 import FileApi from '../../api/FileApi';
 import ImagePreview from '../../fragment/file/ImagePreview';
 import FileGrid from '../../fragment/file/FileGrid';
 import { MultiUpload } from '../../fragment/file/MultiUpload';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 
 const styles = makeStyles((theme) => ({
     header: {
@@ -44,11 +46,9 @@ const styles = makeStyles((theme) => ({
 
 const File = () => {
     const classes = styles();
+    const dispatch = useDispatch();
 
-    const [loading, setLoading] = React.useState(false);
     const [question, setQuestion] = React.useState('');
-    const [error, setError] = React.useState('');
-    const [noti, setNoti] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [data, setData] = React.useState([]);
     const [removeData, setRemoveData] = React.useState(null);
@@ -56,12 +56,14 @@ const File = () => {
     const [showUploadDialog, setShowUploadDialog] = React.useState(false);
 
     const handleError = (error) => {
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
-        setLoading(false);
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const loadData = async (currentPage, pageSize, sort) => {
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
             const result = await FileApi.getPaging(currentPage, pageSize, sort, search);
             const { data, ...paging } = result;
@@ -70,7 +72,7 @@ const File = () => {
         } catch (error) {
             handleError(error);
         }
-        setLoading(false);
+        dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
     };
 
     const [paging, setPaging] = React.useState(() => {
@@ -103,7 +105,7 @@ const File = () => {
     //Remove Data if confirmation is Yes
     const handleQuestionDialog = (status) => {
         if (status && removeData) {
-            setLoading(true);
+            dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
             FileApi.removeById(removeData.id)
                 .then(() => {
                     loadData(0, paging.pageSize, paging.sort);
@@ -116,7 +118,7 @@ const File = () => {
 
     const handleUpload = (result) => {
         if (result && result.length > 0) {
-            setLoading(true);
+            dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
             FileApi.upload(result, false)
                 .then(() => {
                     loadData(0, paging.pageSize, paging.sort);
@@ -128,10 +130,7 @@ const File = () => {
 
     return (
         <>
-            <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
-            <LoadingDialog show={loading} />
             <MultiUpload show={showUploadDialog} onClose={handleUpload} />
             {preview ? <ImagePreview show={preview != null} data={preview} onRemove={handleRemove} onClose={handleClosePreview} /> : null}
             <Paper className={classes.root} elevation={6}>

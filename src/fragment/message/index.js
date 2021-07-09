@@ -1,7 +1,7 @@
-import Notification from './Notification';
+import FlashMessage from './FlashMessage';
 import AlertDialog from './AlertDialog';
 import LoadingDialog from './LoadingDialog';
 import QuestionDialog from './QuestionDialog';
 import FormDialog from './FormDialog';
 
-export { Notification, AlertDialog, LoadingDialog, QuestionDialog, FormDialog };
+export { FlashMessage, AlertDialog, LoadingDialog, QuestionDialog, FormDialog };

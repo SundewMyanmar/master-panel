@@ -43,7 +43,6 @@ class SwaggerApi extends ApiManager {
                     }
                 }
             }
-            console.log('Api Modules => ', modules);
             return modules;
         }
         return [];

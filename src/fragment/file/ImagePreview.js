@@ -75,7 +75,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
     return (
         <Dialog open={show} TransitionComponent={Transition} onClose={onClose} aria-labelledby="image-preview-dialog" aria-describedby={data.name}>
             <div className={classes.root}>
-                <IconButton className={classes.buttonClose} size="small" color="primary" onClick={() => onClose(false)} aria-label="Close">
+                <IconButton className={classes.buttonClose} size="small" onClick={() => onClose(false)} aria-label="Close">
                     <Icon>close</Icon>
                 </IconButton>
                 <img onLoad={handleImageLoading} width="100%" height="100%" src={url} alt={data.name} />

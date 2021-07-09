@@ -137,6 +137,8 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 return <ColorInput {...inputProps} />;
             case 'editor':
                 return <TinyEditorInput {...inputProps} />;
+            case 'custom':
+                return inputProps.control;
             default:
                 return <TextInput type={type} {...inputProps} />;
         }

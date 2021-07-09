@@ -17,6 +17,8 @@ import {
 import FileApi from '../../api/FileApi';
 import { USER_PROFILE_MENU } from '../../config/Constant';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 
 type UserMenuProps = {
     name: string,
@@ -48,6 +50,7 @@ const UserMenu = (props: UserMenuProps) => {
     const classes = styles();
     const history = useHistory();
     const theme = useTheme();
+    const dispatch = useDispatch();
     const { name, role, image } = props;
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -59,7 +62,9 @@ const UserMenu = (props: UserMenuProps) => {
 
     const handleClick = (item) => {
         if (item.id === 'sys-logout') {
-            sessionStorage.clear();
+            dispatch({
+                type: USER_REDUX_ACTIONS.LOGOUT,
+            });
         }
         setAnchorEl(null);
         history.push(item.path);

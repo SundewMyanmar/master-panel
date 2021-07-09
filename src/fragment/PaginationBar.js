@@ -91,11 +91,7 @@ const PaginationAction = (props) => {
     );
 };
 
-const styles = makeStyles((theme) => ({
-    root: {
-        background: theme.palette.common.white,
-    },
-}));
+const styles = makeStyles((theme) => ({}));
 
 const PaginationBar = (props: PaginationBarProps) => {
     const { total, pageSize, currentPage, rowsPerPage, onPageChange, onPageSizeChange, ...paginationProps } = props;
@@ -108,7 +104,6 @@ const PaginationBar = (props: PaginationBarProps) => {
 
     return (
         <TablePagination
-            className={classes.root}
             rowsPerPageOptions={rowsPerPage}
             count={total}
             rowsPerPage={pageSize}

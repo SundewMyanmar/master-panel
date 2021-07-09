@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { STORAGE_KEYS } from '../config/Constant';
 import { Typography, Paper, makeStyles, Grid, Icon, Button, useTheme } from '@material-ui/core';
 import DataTable, { TableField } from './table';
-import { QuestionDialog, LoadingDialog } from './message';
+import { QuestionDialog } from './message';
 import { SearchInput } from './control';
 import ActionMenu from './table/ActionMenu';
 import DataAction from './table/DataAction';
@@ -10,6 +10,8 @@ import FormatManager from '../util/FormatManager';
 import ImportMenu from './table/ImportMenu';
 import { Field } from './MasterForm';
 import { text, error } from '../config/Theme';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../util/AlertManager';
 
 const styles = makeStyles((theme) => ({
     header: {
@@ -96,6 +98,7 @@ export const defaultActions = [
 const MasterTable = (props: MasterTableProps) => {
     const classes = styles();
     const theme = useTheme();
+    const dispatch = useDispatch();
 
     const {
         title,
@@ -123,7 +126,6 @@ const MasterTable = (props: MasterTableProps) => {
     } = props;
 
     const [init, setInit] = useState(true);
-    const [loading, setLoading] = useState(false);
     const [question, setQuestion] = useState('');
     const [search, setSearch] = useState('');
     const [selectedData, setSelectedData] = useState([]);
@@ -134,18 +136,18 @@ const MasterTable = (props: MasterTableProps) => {
     }
 
     const loadData = async (currentPage, pageSize, sort) => {
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
             const result = await onLoad(currentPage, pageSize, sort, search);
             if (result) {
                 setPaging(result);
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
             } else {
                 onError({ message: 'There is no data.' });
             }
         } catch (error) {
             onError(error);
         }
-        setLoading(false);
     };
 
     const exportFile = (data, file) => {
@@ -159,7 +161,7 @@ const MasterTable = (props: MasterTableProps) => {
     };
 
     const exportCSV = async () => {
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         let csv = importFields.map((field) => FormatManager.buildCSV(field)).join(',') + '\n';
         console.log('csv', selectedData);
         selectedData.forEach((data) => {
@@ -189,11 +191,11 @@ const MasterTable = (props: MasterTableProps) => {
         });
         const downloadData = URL.createObjectURL(blob);
         exportFile(downloadData, fileName);
-        setLoading(false);
+        dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
     };
 
     const exportJson = async () => {
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         const json = JSON.stringify(selectedData);
         const fileName = FormatManager.readableToSnake(title) + '_' + FormatManager.formatDate(new Date(), 'yyyyMMdd_HHmmss') + '.json';
 
@@ -203,7 +205,7 @@ const MasterTable = (props: MasterTableProps) => {
         const downloadData = URL.createObjectURL(blob);
 
         exportFile(downloadData, fileName);
-        setLoading(false);
+        dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
     };
 
     const [paging, setPaging] = useState(() => {
@@ -218,9 +220,8 @@ const MasterTable = (props: MasterTableProps) => {
 
     useEffect(() => {
         async function initData() {
-            const tableData = await localStorage.getItem(`${STORAGE_KEYS.TABLE_SESSION}.${FormatManager.readableToSnake(title)}`);
+            const tableData = localStorage.getItem(`${STORAGE_KEYS.TABLE_SESSION}.${FormatManager.readableToSnake(title)}`);
             const tableJson = JSON.parse(tableData);
-            console.log('paging', tableJson);
             setInit(false);
             if (tableJson && tableJson.paging.data && tableJson.paging.data.length > 0) {
                 loadData(tableJson.paging.currentPage, tableJson.paging.pageSize, tableJson.paging.sort);
@@ -266,14 +267,14 @@ const MasterTable = (props: MasterTableProps) => {
 
     const handleImport = (data) => {
         console.log('import', data);
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         if (onImport) {
             onImport(data)
                 .then(() => {
                     loadData(0, paging.pageSize, paging.sort);
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 })
-                .catch(onError)
-                .finally(() => setLoading(false));
+                .catch(onError);
         }
     };
 
@@ -319,14 +320,14 @@ const MasterTable = (props: MasterTableProps) => {
     //Remove Data if confirmation is Yes
     const handleQuestionDialog = (status) => {
         if (status && removeData) {
-            setLoading(true);
+            dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
             onRemove(removeData)
                 .then((data) => {
                     setSelectedData([]);
                     loadData(0, paging.pageSize, paging.sort);
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 })
-                .catch((error) => onError(error))
-                .finally(() => setLoading(false));
+                .catch((error) => onError(error));
         }
         setQuestion('');
         setRemoveData(null);
@@ -350,7 +351,6 @@ const MasterTable = (props: MasterTableProps) => {
 
     return (
         <>
-            <LoadingDialog show={loading} />
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Paper className={classes.root} elevation={6}>
                 <Grid container className={classes.header}>

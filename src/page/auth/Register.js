@@ -3,10 +3,12 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, Paper, makeStyles } from '@material-ui/core';
 
 import { Copyright } from '../../fragment/control';
-import { LoadingDialog, AlertDialog } from '../../fragment/message';
 import AuthApi from '../../api/AuthApi';
 import MasterForm from '../../fragment/MasterForm';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -42,15 +44,21 @@ const styles = makeStyles((theme) => ({
 const Register = () => {
     const classes = styles();
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const dispatch = useDispatch();
+
+    const handleError = (error) => {
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
+    };
 
     const handleSubmit = (event, form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         const userData = {
             displayName: form.displayName,
@@ -61,13 +69,15 @@ const Register = () => {
 
         AuthApi.register(userData)
             .then(() => {
-                setLoading(false);
-                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Register success! Please log in to continue.');
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: 'Register success! Please log in to continue.' },
+                });
                 history.push('/login');
             })
             .catch((error) => {
-                setLoading(false);
-                setError(error.message || error.title || 'Please check your internet connection and try again.');
+                handleError(error);
             });
     };
 
@@ -109,8 +119,6 @@ const Register = () => {
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="sm">
                 <CssBaseline />
                 <Paper className={classes.paper} elevation={6}>

@@ -18,13 +18,15 @@ import {
     List,
     Divider,
 } from '@material-ui/core';
-import { AlertDialog, LoadingDialog } from '../../fragment/message';
 import { ObjectInput } from '../../fragment/control';
 import { ROLE_TABLE_FIELDS } from './Role';
 import RoleApi from '../../api/RoleApi';
 import RouteApi from '../../api/RouteApi';
 import SwaggerApi from '../../api/SwaggerApi';
 import { useParams } from 'react-router-dom';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { useDispatch } from 'react-redux';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -65,8 +67,7 @@ const isPatternMatch = (pattern1, pattern2) => {
 
 const ApiPermission = () => {
     const classes = styles();
-    const [loading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const dispatch = useDispatch();
     const [expanded, setExpanded] = React.useState([]);
     const [selectedData, setSelectedData] = React.useState([]);
     const [selectedRole, setSelectedRole] = React.useState(null);
@@ -87,15 +88,17 @@ const ApiPermission = () => {
     }, [roleId]);
 
     const handleError = (error) => {
-        setLoading(false);
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const [openApi, setOpenApi] = React.useState(() => {
         SwaggerApi.getOpenApiV2()
             .then((data) => {
                 setOpenApi(data);
-                setLoading(false);
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
             })
             .catch(handleError);
         return [];
@@ -118,7 +121,7 @@ const ApiPermission = () => {
                 const markedData = allowRoutes.data.map((route) => {
                     return route;
                 });
-                setLoading(false);
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 setSelectedData(markedData);
             })
             .catch((error) => {
@@ -138,13 +141,12 @@ const ApiPermission = () => {
             return;
         }
 
-        console.log('Selected Data => ', selectedData);
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         RouteApi.savePermissionByRole(selectedRole.id, selectedData)
             .then((savedData) => {
-                setLoading(false);
-                console.log('Response Data => ', savedData.data);
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                dispatch({ type: FLASH_REDUX_ACTIONS.SHOW, flash: { type: 'success', message: 'Save successful.' } });
                 setSelectedData(savedData.data);
             })
             .catch(handleError);
@@ -293,8 +295,6 @@ const ApiPermission = () => {
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="lg">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>

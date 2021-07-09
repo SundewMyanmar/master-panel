@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core';
 
 export type GridControlProps = {
     direction: 'row' | 'row-reverse' | 'column' | 'column-reverse',
-    justify: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly',
+    justifyContent: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly',
     alignItems: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline',
     spacing: number,
     itemPerDirection: number,
@@ -11,7 +11,7 @@ export type GridControlProps = {
 };
 
 const GridControl = (props: GridControlProps) => {
-    const { direction, justify, alignItems, spacing, itemPerDirection, items } = props;
+    const { direction, justifyContent, alignItems, spacing, itemPerDirection, items } = props;
 
     let defaultWidth = null;
     if (itemPerDirection) {
@@ -20,7 +20,7 @@ const GridControl = (props: GridControlProps) => {
 
     return (
         <>
-            <Grid container direction={direction} justifyContent={justify} alignItems={alignItems} spacing={spacing}>
+            <Grid container direction={direction} justifyContent={justifyContent} alignItems={alignItems} spacing={spacing}>
                 {items
                     ? items.map((i, index) => {
                           let xs = defaultWidth;
@@ -42,7 +42,7 @@ const GridControl = (props: GridControlProps) => {
 
 GridControl.defaultProps = {
     direction: 'row',
-    justify: 'flex-start',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
 };
 

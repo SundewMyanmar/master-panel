@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { AlertDialog, Notification, LoadingDialog, QuestionDialog } from '../../fragment/message';
+import { QuestionDialog } from '../../fragment/message';
 import MenuApi from '../../api/MenuApi';
 import TreeMenu from '../../fragment/layout/TreeMenu';
 import { Grid, Paper, Container, Avatar, Icon, Typography, Button, makeStyles } from '@material-ui/core';
@@ -9,6 +9,9 @@ import { ROLE_TABLE_FIELDS } from './Role';
 import RoleApi from '../../api/RoleApi';
 import ImportMenu from '../../fragment/table/ImportMenu';
 import ActionMenu from '../../fragment/table/ActionMenu';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 export const MENU_TABLE_FIELDS = [
     {
@@ -94,17 +97,17 @@ const INIT_MENU = {
 
 const Menu = () => {
     const classes = styles();
+    const dispatch = useDispatch();
 
-    const [error, setError] = React.useState('');
-    const [noti, setNoti] = React.useState('');
     const [question, setQuestion] = React.useState('');
-    const [loading, setLoading] = React.useState(false);
     const [selectedMenu, setSelectedMenu] = React.useState(INIT_MENU);
     //const AVAILABLE_PATHS = PrivateRoute.map(r => r.path);
 
     const handleError = (error) => {
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
-        setLoading(false);
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const handleParentMenuData = async (currentPage, pageSize, sort, search) => {
@@ -123,7 +126,7 @@ const Menu = () => {
         const result = await MenuApi.getTree('');
         if (result && result.data) {
             setData(result.data);
-            setLoading(false);
+            dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
         }
     };
 
@@ -134,10 +137,10 @@ const Menu = () => {
 
     const handleSubmit = async (form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         let menu = { ...form };
         delete menu.parent;
@@ -152,7 +155,11 @@ const Menu = () => {
                 .then((response) => {
                     loadData();
                     setSelectedMenu(INIT_MENU);
-                    setNoti('Modified menu : ' + response.id + '.');
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Modified menu : ${response.id} .` },
+                    });
                 })
                 .catch(handleError);
         } else {
@@ -160,7 +167,11 @@ const Menu = () => {
                 .then((response) => {
                     loadData();
                     setSelectedMenu(INIT_MENU);
-                    setNoti('Created new menu : ' + response.id + '.');
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Created new menu : ${response.id} .` },
+                    });
                 })
                 .catch(handleError);
         }
@@ -196,12 +207,16 @@ const Menu = () => {
     };
     const handleQuestionDialog = (result) => {
         if (result && selectedMenu && selectedMenu.id) {
-            setLoading(true);
+            dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
             MenuApi.removeById(selectedMenu.id)
                 .then(() => {
                     setSelectedMenu(INIT_MENU);
                     loadData();
-                    setNoti('Remove menu : ' + selectedMenu.id + '.');
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'warning', message: `Removed menu : ${selectedMenu.id} .` },
+                    });
                 })
                 .catch(handleError);
         }
@@ -287,10 +302,7 @@ const Menu = () => {
 
     return (
         <>
-            <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="md">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>

@@ -32,8 +32,8 @@ export const PrivateRoute = [
     { path: '/permission/:roleId?', page: ApiPermission },
     { path: '/file', page: File },
     { path: '/api-debug', page: Developer },
-    { path: '/product', page: Product },
-    { path: '/product/detail/:id', page: ProductDetail },
+    { path: '/inventory/product', page: Product },
+    { path: '/inventory/product/detail/:id', page: ProductDetail },
 ];
 
 export const PublicRoute = [

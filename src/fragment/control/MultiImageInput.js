@@ -2,13 +2,16 @@ import React, { useState, createRef, useEffect } from 'react';
 import { InputProps, IconButton, makeStyles, Icon } from '@material-ui/core';
 import ImageInput from './ImageInput';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     moveButton: {
         color: theme.palette.error.main,
     },
+    imageBlock: {
+        display: 'inline-flex',
+    },
 }));
 
-const MultiImageInput = props => {
+const MultiImageInput = (props) => {
     const classes = styles();
     const { id, name, values, onChange, onRemove, ...rest } = props;
     const [images, setImages] = useState([{}]);
@@ -18,7 +21,7 @@ const MultiImageInput = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values]);
 
-    const handleMove = idx => {
+    const handleMove = (idx) => {
         let img1 = Object.assign({}, images[idx]);
         let img2 = Object.assign({}, images[idx + 1]);
         let imgs = Object.assign([], images);
@@ -68,36 +71,32 @@ const MultiImageInput = props => {
         }
     };
 
-    const handleRemove = idx => {
+    const handleRemove = (idx) => {
+        console.log('Remove Images => ', images);
+        const updatedImages = images.slice(idx, idx + 1);
+        console.log('Updated Images => ', updatedImages);
+        setImages(updatedImages);
         if (onChange) {
             onChange(
                 {
                     target: {
                         type: 'multi-image',
                         name: id || name,
-                        value: {},
+                        value: updatedImages,
                     },
                 },
                 idx,
             );
         }
-
-        // let result = JSON.parse(JSON.stringify(images));
-        // result.splice(idx, 1);
-        // for (var i = 0; i < result.length; i++) {
-        //     console.log('remove img', idx, result[i].target);
-        // }
-        // setImages([...result]);
     };
 
     return (
-        <div>
+        <>
             {images.map((img, idx) => {
                 return (
-                    <>
+                    <div className={classes.imageBlock} key={'img_' + idx}>
                         <ImageInput
                             size={{ width: 120, height: 120 }}
-                            key={'img' + idx}
                             index={idx}
                             value={img}
                             onChange={handleChange}
@@ -105,23 +104,19 @@ const MultiImageInput = props => {
                             {...rest}
                         />
                         {idx < images.length - 2 ? (
-                            <>
-                                <IconButton
-                                    onClick={() => {
-                                        handleMove(idx);
-                                    }}
-                                    className={classes.moveButton}
-                                >
-                                    <Icon>repeat</Icon>
-                                </IconButton>
-                            </>
-                        ) : (
-                            <></>
-                        )}
-                    </>
+                            <IconButton
+                                onClick={() => {
+                                    handleMove(idx);
+                                }}
+                                className={classes.moveButton}
+                            >
+                                <Icon>repeat</Icon>
+                            </IconButton>
+                        ) : null}
+                    </div>
                 );
             })}
-        </div>
+        </>
     );
 };
 

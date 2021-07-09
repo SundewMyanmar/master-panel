@@ -1,10 +1,11 @@
 import React from 'react';
 import { withRouter, useHistory, useLocation } from 'react-router';
 import MasterTable from '../../fragment/MasterTable';
-import { AlertDialog, Notification } from '../../fragment/message';
 import ProductApi from '../../api/ProductApi';
 import { STORAGE_KEYS } from '../../config/Constant';
 import FormatManager from '../../util/FormatManager';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 
 export const PRODUCT_TABLE_FIELDS = [
     {
@@ -190,15 +191,13 @@ export const PRODUCT_TABLE_FIELDS = [
 const Product = (props) => {
     const location = useLocation();
     const history = useHistory();
-
-    const [error, setError] = React.useState('');
-    const [noti, setNoti] = React.useState(() => {
-        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
-        return flashMessage || '';
-    });
+    const dispatch = useDispatch();
 
     const handleError = (error) => {
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const handleLoadData = async (currentPage, pageSize, sort, search) => {
@@ -256,8 +255,6 @@ const Product = (props) => {
 
     return (
         <>
-            <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <MasterTable
                 hideImportMenu={true}
                 title="Products"

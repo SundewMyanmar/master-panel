@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip, IconButtonProps, IconButton, Icon, Menu, MenuItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     menuButton: {
         color: theme.palette.text.primary,
     },
@@ -46,13 +46,12 @@ const DataAction = (props: DataActionProps) => {
         setAnchorEl(null);
         onMenuItemClick(item, data);
     };
-    console.log('fields', data);
     return (
         <>
             <Tooltip title="More Actions" placement="top">
                 <IconButton
                     size="small"
-                    onClick={event => setAnchorEl(event.currentTarget)}
+                    onClick={(event) => setAnchorEl(event.currentTarget)}
                     className={classes.menuButton}
                     aria-label={id}
                     {...iconButtonProps}

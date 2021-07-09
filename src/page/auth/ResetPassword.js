@@ -4,9 +4,11 @@ import { Typography, Container, CssBaseline, Avatar, Icon, Button, Box, makeStyl
 
 import { Copyright } from '../../fragment/control';
 import MasterForm from '../../fragment/MasterForm';
-import { AlertDialog, LoadingDialog } from '../../fragment/message';
 import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     container: {
@@ -52,20 +54,25 @@ const ResetPassword = () => {
     const classes = styles();
     const location = useLocation();
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const query = new URLSearchParams(location.search);
     const token = query.get('token') || 'Invalid Token';
     const user = query.get('user') || 'Unknown';
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const handleError = (error) => {
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
+    };
 
     const handleSubmit = (event, form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         const requestData = {
             user: user,
             oldPassword: token,
@@ -74,13 +81,15 @@ const ResetPassword = () => {
 
         AuthApi.resetPassword(requestData)
             .then((data) => {
-                setLoading(false);
-                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Welcome ${data.displayName}.`);
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: `Welcome ${data.displayName}.` },
+                });
                 history.push('/login');
             })
             .catch((error) => {
-                setLoading(false);
-                setError(error.message || error.title || 'Please check your internet connection and try again.');
+                handleError(error);
             });
     };
 
@@ -110,8 +119,6 @@ const ResetPassword = () => {
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="xs">
                 <Box className={classes.container} boxShadow={2}>
                     <CssBaseline />

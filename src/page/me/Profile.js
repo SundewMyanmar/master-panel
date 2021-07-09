@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { Typography, Container, makeStyles, Paper, Avatar, Icon, Button } from '@material-ui/core';
-import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
 import MasterForm from '../../fragment/MasterForm';
 import FileApi from '../../api/FileApi';
 import ProfileApi from '../../api/ProfileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
 import { primary, secondary } from '../../config/Theme';
 import FormatManager from '../../util/FormatManager';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_REDUX_ACTIONS } from '../../util/UserManager';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     root: {
@@ -45,15 +48,17 @@ const styles = makeStyles((theme) => ({
 
 const Profile = () => {
     const classes = styles();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
 
     const handleError = (error) => {
-        setLoading(false);
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
-    const [user, setUser] = useState(() => {
+    useEffect(() => {
         ProfileApi.getProfile()
             .then((data) => {
                 if (!data.currentToken) {
@@ -61,7 +66,6 @@ const Profile = () => {
                 }
                 if (data.extras && data.extras.theme) {
                     let theme = JSON.parse(data.extras.theme);
-                    console.log('theme', theme);
                     data.primary = theme.primary.main || primary.main;
                     data.secondary = theme.secondary.main || secondary.main;
                     data.darkMode = theme.darkMode || false;
@@ -70,16 +74,14 @@ const Profile = () => {
                     data.secondary = secondary.main;
                     data.darkMode = false;
                 }
-                console.log('theme2', data);
-                setUser(data);
+                dispatch({ type: USER_REDUX_ACTIONS, profile: data });
             })
             .catch(handleError);
-        return JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || { displayName: '', email: '', phoneNumber: '', roles: [] });
-    });
-    const [noti, setNoti] = useState('');
+        // eslint-disable-next-line
+    }, []);
 
     const handleSubmit = async (form) => {
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
             let profile = {
                 id: user.id,
@@ -117,11 +119,12 @@ const Profile = () => {
                     delete response.currentToken;
                 }
                 const updatedData = { ...user, ...response };
-                console.log('Modified user => ', updatedData);
-                sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(updatedData));
-                setUser(updatedData);
-                setLoading(false);
-                setNoti('Successfully update your new profile.');
+                dispatch({ type: USER_REDUX_ACTIONS.UPDATE, profile: updatedData });
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: 'Successfully update your new profile.' },
+                });
             }
         } catch (error) {
             handleError(error);
@@ -161,37 +164,12 @@ const Profile = () => {
             value: user ? user.email : '',
             disabled: true,
         },
-        // {
-        //     id: 'primary',
-        //     label: 'Primary Color',
-        //     required: false,
-        //     type: 'color',
-        //     value: user ? user.primary : '',
-        // },
-        // {
-        //     id: 'secondary',
-        //     label: 'Secondary Color',
-        //     required: false,
-        //     type: 'color',
-        //     value: user ? user.secondary : '',
-        // },
-        // {
-        //     id: 'darkMode',
-        //     label: 'Dark Mode',
-        //     required: false,
-        //     type: 'checkbox',
-        //     value: user ? user.darkMode : false,
-        //     checked: user ? (user.darkMode ? true : false) : false,
-        // },
     ];
 
     const userName = user.displayName || 'Unknown';
 
     return (
         <>
-            <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container maxWidth="md">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>

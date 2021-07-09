@@ -17,9 +17,11 @@ export default function AlertDialog(props: AlertDialogProps) {
     return (
         <Dialog maxWidth="sm" open={show} TransitionComponent={Transition} onClose={onClose}>
             <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
-            </DialogContent>
+            {message && title !== message ? (
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
+                </DialogContent>
+            ) : null}
             <DialogActions>
                 <Button onClick={onClose} color="primary" variant="contained">
                     <Icon>done</Icon> Ok

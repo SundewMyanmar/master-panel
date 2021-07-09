@@ -3,13 +3,15 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Container, CssBaseline, Avatar, Grid, Button, Link, Box, ThemeProvider, makeStyles } from '@material-ui/core';
 import { isSafari } from 'react-device-detect';
 import Copyright from '../../fragment/control/Copyright';
-import { AlertDialog, LoadingDialog, Notification } from '../../fragment/message';
 import { OTPDialog } from '../../fragment/control';
 import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS, FACEBOOK, FCM_CONFIG, VAPID_KEY } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
 import firebase from 'firebase/app';
+import { useDispatch } from 'react-redux';
+import { USER_REDUX_ACTIONS } from '../../util/UserManager';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 
 let FIREBASE_MESSAGING = null;
 
@@ -83,15 +85,10 @@ const loginFields = [
 
 const Login = () => {
     const history = useHistory();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [noti, setNoti] = useState(() => {
-        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
-        return flashMessage || '';
-    });
     const [showMfa, setShowMfa] = useState(false);
     const submitButton = createRef();
     const [data, setData] = useState(null);
+    const dispatch = useDispatch();
 
     const classes = styles();
 
@@ -102,19 +99,24 @@ const Login = () => {
                 localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, payload);
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleError = (error) => {
-        setLoading(false);
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const handleMfaSubmit = (code) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
-        setLoading(true);
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW_LOADING,
+        });
 
         let firebaseToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
         if (firebaseToken) data.firebaseMessagingToken = firebaseToken;
@@ -125,9 +127,12 @@ const Login = () => {
         })
             .then((result) => {
                 setShowMfa(false);
-                sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(result));
+                dispatch({
+                    type: USER_REDUX_ACTIONS.LOGIN,
+                    authInfo: result,
+                });
                 history.push('/');
-                setLoading(false);
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
             })
             .catch(handleError);
     };
@@ -144,23 +149,26 @@ const Login = () => {
 
     const handleSubmit = (event, form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         let firebaseToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
         if (firebaseToken) form.firebaseMessagingToken = firebaseToken;
 
         AuthApi.authByUserAndPassword(form)
             .then((result) => {
-                console.log('auth data', result);
                 if (result.currentToken) {
-                    sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(result));
+                    dispatch({
+                        type: USER_REDUX_ACTIONS.LOGIN,
+                        authInfo: result,
+                    });
                     history.push('/');
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 } else {
                     setShowMfa(true);
-                    setLoading(false);
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 }
             })
             .catch(handleError);
@@ -187,10 +195,6 @@ const Login = () => {
 
     return (
         <>
-            <Notification show={noti ? true : false} onClose={() => setNoti(false)} type="success" title="Welcome" message={noti.message} />
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
-
             <Container component="main" maxWidth="sm">
                 <Box className={classes.container} boxShadow={2}>
                     <CssBaseline />

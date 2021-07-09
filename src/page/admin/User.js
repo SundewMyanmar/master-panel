@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import MasterTable from '../../fragment/MasterTable';
 import UserApi from '../../api/UserApi';
-import { AlertDialog, Notification } from '../../fragment/message';
 import FormDialog from '../../fragment/message/FormDialog';
 import LangManager from '../../util/LangManager';
 import { useTheme } from '@material-ui/core';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 export const USER_TABLE_FIELDS = [
     {
@@ -72,16 +74,15 @@ export const USER_TABLE_FIELDS = [
 const User = () => {
     const history = useHistory();
     const theme = useTheme();
+    const dispatch = useDispatch();
 
-    const [alert, setAlert] = useState('');
-    const [noti, setNoti] = useState(() => {
-        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
-        return flashMessage || '';
-    });
     const [resetForm, setResetForm] = useState(null);
 
     const handleError = (error) => {
-        setAlert(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const handleImport = async (result) => {
@@ -120,12 +121,16 @@ const User = () => {
             case 'cleanToken':
                 UserApi.cleanToken(data.id)
                     .then((response) => {
-                        setNoti(response.message);
+                        dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                        dispatch({
+                            type: FLASH_REDUX_ACTIONS.SHOW,
+                            flash: { type: 'success', message: response.message },
+                        });
                     })
                     .catch(handleError);
                 break;
             default:
-                setAlert('Invalid Action!');
+                handleError('Invalid Action!');
                 break;
         }
     };
@@ -139,7 +144,10 @@ const User = () => {
 
         UserApi.resetPassword(resetForm.id, data)
             .then((response) => {
-                setNoti('Succesfully changed password for ' + response.displayName);
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: 'Succesfully changed password for ' + response.displayName },
+                });
                 setResetForm(null);
             })
             .catch(handleError);
@@ -174,8 +182,6 @@ const User = () => {
 
     return (
         <React.Fragment>
-            <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
-            <AlertDialog onClose={() => setAlert('')} show={alert.length > 0} title="Message" message={alert} />
             <FormDialog
                 title={resetPasswordTitle}
                 show={resetForm !== null && resetForm.id > 0}

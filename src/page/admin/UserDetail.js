@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { withRouter, useHistory, useParams } from 'react-router-dom';
 import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles } from '@material-ui/core';
 
-import { LoadingDialog, AlertDialog } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
 import UserApi from '../../api/UserApi';
 import { ROLE_TABLE_FIELDS } from './Role';
 import FileApi from '../../api/FileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -32,9 +34,8 @@ const styles = makeStyles((theme) => ({
 const UserDetail = (props) => {
     const classes = styles();
     const history = useHistory();
+    const dispatch = useDispatch();
     const { id } = useParams();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
     const [isUpdate, setUpdate] = useState(id > 0);
 
     const handleRoleData = async (currentPage, pageSize, sort, search) => {
@@ -42,12 +43,13 @@ const UserDetail = (props) => {
     };
 
     const handleError = (error) => {
-        setLoading(false);
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const [detail, setDetail] = useState(() => {
-        setLoading(true);
         UserApi.getById(id)
             .then((data) => {
                 setDetail(data);
@@ -59,14 +61,13 @@ const UserDetail = (props) => {
                 } else {
                     setUpdate(false);
                 }
-            })
-            .finally(() => setLoading(false));
+            });
         return {};
     });
 
     const handleSubmit = async (form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
 
@@ -93,6 +94,7 @@ const UserDetail = (props) => {
         } else {
             user.profileImage = null;
         }
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         if (isUpdate) {
             user.id = detail.id;
@@ -100,22 +102,26 @@ const UserDetail = (props) => {
             user.version = detail.version;
             UserApi.modifyById(id, user)
                 .then((response) => {
-                    setLoading(false);
-                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Modified user : ' + response.id + ' .');
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Modified user : ${response.id} .` },
+                    });
                     history.push('/user');
                 })
                 .catch(handleError);
         } else {
             UserApi.addNew(user)
                 .then((response) => {
-                    setLoading(false);
-                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Created new user : ' + response.id + ' .');
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Created new user : ${response.id} .` },
+                    });
                     history.push('/user');
                 })
                 .catch(handleError);
         }
-
-        setLoading(true);
     };
 
     const newUserFields = [
@@ -204,8 +210,6 @@ const UserDetail = (props) => {
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="md">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>

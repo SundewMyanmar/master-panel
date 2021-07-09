@@ -3,7 +3,8 @@ import { InputProps, IconButton, makeStyles, Icon } from '@material-ui/core';
 import ListPicker from './ListPicker';
 import FileApi from '../../api/FileApi';
 import FilePicker from './FilePicker';
-import { AlertDialog } from '../message';
+import { useDispatch } from 'react-redux';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 
 type ImageSize = {
     width: number,
@@ -17,14 +18,12 @@ type ImageInputProps = {
     disabledUpload?: boolean,
     disabledRemove?: boolean,
     value: Object | string,
-    moveIcon: String,
-    onMove: () => void,
     onUpload?: () => void,
     onRemove?: () => void,
     onChange: (image: Object | string) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         cursor: 'pointer',
         position: 'relative',
@@ -87,32 +86,16 @@ const MENU_LIST_ITEMS = [
 
 const ImagePicker = (props: ImageInputProps) => {
     const classes = styles();
-    const {
-        id,
-        moveIcon,
-        onMove,
-        index,
-        name,
-        size,
-        value,
-        enableFilePicker,
-        disabledUpload,
-        disabledRemove,
-        onChange,
-        onRemove,
-        required,
-        ...rest
-    } = props;
+    const { id, index, name, size, value, enableFilePicker, disabledUpload, disabledRemove, onChange, onRemove, required, ...rest } = props;
+    const dispatch = useDispatch();
 
     const [showMenu, setShowMenu] = useState(false);
     const [showFile, setShowFile] = useState(false);
-    const [error, setError] = useState('');
     const [preview, setPreview] = useState('');
     const [image, setImage] = useState(value);
     const inputUpload = createRef();
 
     useEffect(() => {
-        console.log('product detail input', value);
         const imageURL = FileApi.downloadLink(value, 'small');
 
         if (imageURL && imageURL !== preview && inputUpload.current) {
@@ -133,9 +116,6 @@ const ImagePicker = (props: ImageInputProps) => {
                 }
             }
         }
-        // else {
-        //     handleChange(null, null);
-        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
@@ -168,7 +148,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleCloseMenu = item => {
+    const handleCloseMenu = (item) => {
         if (item.id === 'gallery') {
             setShowFile(true);
         } else if (item.id === 'upload') {
@@ -178,7 +158,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setShowMenu(false);
     };
 
-    const handleCloseFile = result => {
+    const handleCloseFile = (result) => {
         setShowFile(false);
         if (result === false) {
             return;
@@ -188,13 +168,16 @@ const ImagePicker = (props: ImageInputProps) => {
         handleChange(result, url);
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         setShowFile(false);
         setShowMenu(false);
-        setError(error);
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error,
+        });
     };
 
-    const handleImageChange = event => {
+    const handleImageChange = (event) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
@@ -206,13 +189,9 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleRemove = event => {
+    const handleRemove = (event) => {
         if (onRemove) onRemove(index);
         handleChange(null, null);
-    };
-
-    const handleMove = event => {
-        if (onMove) onMove(index);
     };
 
     const visibility = !disabledRemove && preview ? 'visible' : 'hidden';
@@ -226,7 +205,6 @@ const ImagePicker = (props: ImageInputProps) => {
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <FilePicker show={showFile} selectedData={image} onClose={handleCloseFile} onError={handleError} title="Choose File" />
             <ListPicker show={showMenu} onClose={handleCloseMenu} data={MENU_LIST_ITEMS} title="Choose Action" />
             <div {...rest} className={[classes.container]}>
@@ -266,7 +244,6 @@ ImagePicker.defaultProps = {
     enableFilePicker: false,
     disabledUpload: false,
     disabledRemove: false,
-    moveIcon: 'arrow_forward',
 };
 
 export default ImagePicker;

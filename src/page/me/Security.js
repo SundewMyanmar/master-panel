@@ -20,10 +20,13 @@ import { OTPDialog } from '../../fragment/control';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
-import { AlertDialog, LoadingDialog } from '../../fragment/message';
 import MasterForm from '../../fragment/MasterForm';
 import ProfileApi from '../../api/ProfileApi';
 import { APP_NAME, STORAGE_KEYS } from '../../config/Constant';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_REDUX_ACTIONS } from '../../util/UserManager';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     root: {
@@ -105,9 +108,9 @@ const changePasswordFields = [
 const Security = () => {
     const classes = styles();
     const history = useHistory();
-    const user = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER));
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const dispatch = useDispatch();
+
+    const user = useSelector((state) => state.user);
     const [expanded, setExpanded] = React.useState('changePassword');
     const [mfa, setMfa] = React.useState(user);
     const [showMfa, setShowMfa] = React.useState(false);
@@ -116,12 +119,19 @@ const Security = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const handleError = (error) => {
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
+    };
+
     const handlePwdSubmit = (event, form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         const data = {
             newPassword: form.newPassword,
@@ -131,13 +141,16 @@ const Security = () => {
 
         ProfileApi.changePassword(data)
             .then(() => {
-                sessionStorage.clear();
-                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, 'Password has changed! Please log in with new password.');
+                dispatch({ type: USER_REDUX_ACTIONS.LOGOUT });
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: 'Password has changed! Please log in with new password.' },
+                });
                 history.push('/login');
             })
             .catch((error) => {
-                setLoading(false);
-                setError(error.message || error.title || 'Please check your internet connection and try again.');
+                handleError(error);
             });
     };
 
@@ -149,19 +162,20 @@ const Security = () => {
     };
 
     const handleMfaSubmit = (code) => {
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         ProfileApi.verifyMfa(code)
             .then(() => {
                 setShowMfa(false);
-                sessionStorage.clear();
-                sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, '2-step verification setup is success! Please log in again.');
+                dispatch({ type: USER_REDUX_ACTIONS.LOGOUT });
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: '2-step verification setup is success! Please log in again.' },
+                });
                 history.push('/login');
             })
-            .catch(() => {
-                setError('Please check your internet connection and try again.');
-            })
-            .finally(() => {
-                setLoading(false);
+            .catch((error) => {
+                handleError(error);
             });
     };
 
@@ -172,20 +186,20 @@ const Security = () => {
     const handleMfaConfirm = (value) => {
         if (value) {
             if (!['EMAIL', 'SMS', 'APP'].includes(mfa.mfaType)) {
-                setError('Please choose verification type.');
+                handleError('Please choose verification type.');
                 return;
             }
             if (mfa.mfaType == 'Email' && !mfa.email) {
-                setError('You have not setup your email yet.');
+                handleError('You have not setup your email yet.');
                 return;
             }
             if (mfa.mfaType == 'SMS' && !mfa.phoneNumber) {
-                setError('You have not setup your phone yet.');
+                handleError('You have not setup your phone yet.');
                 return;
             }
         }
 
-        setLoading(true);
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         ProfileApi.setupMfa(value, mfa.mfaType)
             .then(() => {
                 if (value) {
@@ -196,12 +210,10 @@ const Security = () => {
                         mfaEnabled: false,
                     });
                 }
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
             })
-            .catch(() => {
-                setError('Please check your internet connection and try again.');
-            })
-            .finally(() => {
-                setLoading(false);
+            .catch((error) => {
+                handleError(error);
             });
     };
 
@@ -210,7 +222,6 @@ const Security = () => {
     };
 
     const renderMfa = () => {
-        console.log('mfa ', mfa);
         return (
             <Accordion expanded={expanded === 'twoFactor'} onChange={handleAccordion('twoFactor')}>
                 <AccordionSummary expandIcon={<Icon color="primary">expand_more</Icon>} aria-controls="panel1bh-content" id="panel1bh-header">
@@ -296,8 +307,6 @@ const Security = () => {
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="md">
                 <CssBaseline />
                 <Paper className={classes.paper} elevation={6}>

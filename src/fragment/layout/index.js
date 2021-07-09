@@ -27,6 +27,8 @@ import { isSafari } from 'react-device-detect';
 import firebase from 'firebase/app';
 import ProfileApi from '../../api/ProfileApi';
 import NotificationApi from '../../api/NotificationApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 
 let FIREBASE_MESSAGING = null;
 
@@ -134,19 +136,19 @@ const Layout = (props: LayoutProps) => {
     const history = useHistory();
     const classes = useStyles();
     const theme = useTheme();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
 
-    const currentUser = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
-    const user = currentUser.length ? JSON.parse(currentUser) : {};
-    const granted = currentUser.length && user && user.currentToken && user.currentToken.length > 0;
+    const granted = user && user.currentToken && user.currentToken.length > 0;
     const userProfileImage = FileApi.downloadLink(user.profileImage, 'small') || './images/logo.png';
     const idleTimer = useRef(null);
 
     const [badge, setBadge] = useState(0);
 
     const handleLogout = () => {
-        sessionStorage.clear();
-        localStorage.removeItem(STORAGE_KEYS.FCM_TOKEN);
-
+        dispatch({
+            type: USER_REDUX_ACTIONS.LOGOUT,
+        });
         history.push('/login');
     };
 
@@ -158,7 +160,7 @@ const Layout = (props: LayoutProps) => {
         onClick: handleLogout,
     };
 
-    const [state, dispatch] = useReducer(Reducer, {
+    const [state, setState] = useReducer(Reducer, {
         menus: [...DEFAULT_SIDE_MENU, logoutMenu],
         openIds: [],
         hideMenu: window.innerWidth < MIN_WIDTH_TO_HIDE,
@@ -189,7 +191,7 @@ const Layout = (props: LayoutProps) => {
 
             sortMenu(mainMenu);
 
-            dispatch({
+            setState({
                 type: ACTIONS.LOAD,
                 payload: {
                     ...state,
@@ -256,7 +258,6 @@ const Layout = (props: LayoutProps) => {
 
     return (
         <div className={classes.root}>
-            {currentUser.length <= 0 && <Redirect to="/login" />}
             <IdleTimer ref={idleTimer} element={document} onIdle={handleLogout} debounce={1000} timeout={SESSION_TIMEOUT} />
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
@@ -321,10 +322,10 @@ const Layout = (props: LayoutProps) => {
                     hideMenu={state.hideMenu}
                     image={userProfileImage}
                     name={user.displayName}
-                    onMenuClick={() => dispatch({ type: ACTIONS.SIZE_CHNGE })}
+                    onMenuClick={() => setState({ type: ACTIONS.SIZE_CHNGE })}
                 />
                 <Divider className={classes.divider} />
-                <SideMenu state={state} dispatch={dispatch} />
+                <SideMenu state={state} dispatch={setState} />
             </Drawer>
             <main className={classes.content}>
                 <Scrollbar>
@@ -336,7 +337,7 @@ const Layout = (props: LayoutProps) => {
                                     exact
                                     key={index}
                                     path={route.path}
-                                    render={(props) => (currentUser.length > 0 ? <route.page {...props} /> : <Redirect to="/login" />)}
+                                    render={(props) => (granted ? <route.page {...props} /> : <Redirect to="/login" />)}
                                 />
                             );
                         })}

@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { withRouter, useHistory, useParams } from 'react-router-dom';
 import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles, ThemeProvider } from '@material-ui/core';
 
-import { LoadingDialog, AlertDialog } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
 import { STORAGE_KEYS } from '../../config/Constant';
-import { InfoTheme } from '../../config/Theme';
+import { InfoTheme, success } from '../../config/Theme';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { useDispatch } from 'react-redux';
+import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -30,18 +32,18 @@ const styles = makeStyles((theme) => ({
 const RoleDetail = () => {
     const classes = styles();
     const history = useHistory();
+    const dispatch = useDispatch();
     const { id } = useParams();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
     const [isUpdate, setUpdate] = useState(id > 0);
 
     const handleError = (error) => {
-        setLoading(false);
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const [detail, setDetail] = useState(() => {
-        setLoading(true);
         RoleApi.getById(id)
             .then((data) => {
                 setDetail(data);
@@ -52,38 +54,40 @@ const RoleDetail = () => {
                 } else {
                     setUpdate(false);
                 }
-            })
-            .finally(() => setLoading(false));
+            });
         return {};
     });
 
     const handleSubmit = (event, form) => {
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         if (isUpdate) {
             form.id = id;
             form.version = detail.version;
             RoleApi.modifyById(id, form)
                 .then((response) => {
-                    setLoading(false);
-                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Modified role : ${response.id} .`);
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Modified role : ${response.id} .` },
+                    });
                     history.push('/role');
                 })
                 .catch(handleError);
         } else {
             RoleApi.addNew(form)
                 .then((response) => {
-                    setLoading(false);
-                    sessionStorage.setItem(STORAGE_KEYS.FLASH_MESSAGE, `Created new role : ${response.id} .`);
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Created new role : ${response.id} .` },
+                    });
                     history.push('/role');
                 })
                 .catch(handleError);
         }
-
-        setLoading(true);
     };
 
     const fields = [
@@ -106,35 +110,31 @@ const RoleDetail = () => {
     ];
 
     return (
-        <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
-            <Container component="main" maxWidth="sm">
-                <Paper className={classes.paper} elevation={6}>
-                    <Avatar className={classes.avatar}>
-                        <Icon>people</Icon>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Role Setup
-                    </Typography>
-                    <MasterForm fields={fields} onSubmit={handleSubmit}>
-                        <Grid container justifyContent="flex-end">
-                            <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                                <Icon>arrow_back</Icon> Back to List
+        <Container component="main" maxWidth="sm">
+            <Paper className={classes.paper} elevation={6}>
+                <Avatar className={classes.avatar}>
+                    <Icon>people</Icon>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Role Setup
+                </Typography>
+                <MasterForm fields={fields} onSubmit={handleSubmit}>
+                    <Grid container justifyContent="flex-end">
+                        <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
+                            <Icon>arrow_back</Icon> Back to List
+                        </Button>
+                        <ThemeProvider theme={InfoTheme}>
+                            <Button type="button" variant="contained" color="primary" className={classes.submit} href={'/permission/' + id}>
+                                <Icon>router</Icon> API Route
                             </Button>
-                            <ThemeProvider theme={InfoTheme}>
-                                <Button type="button" variant="contained" color="primary" className={classes.submit} href={'/permission/' + id}>
-                                    <Icon>router</Icon> API Route
-                                </Button>
-                            </ThemeProvider>
-                            <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                                <Icon>save</Icon> Save
-                            </Button>
-                        </Grid>
-                    </MasterForm>
-                </Paper>
-            </Container>
-        </>
+                        </ThemeProvider>
+                        <Button type="submit" variant="contained" color="primary" className={classes.submit}>
+                            <Icon>save</Icon> Save
+                        </Button>
+                    </Grid>
+                </MasterForm>
+            </Paper>
+        </Container>
     );
 };
 

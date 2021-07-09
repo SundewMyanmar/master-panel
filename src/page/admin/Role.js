@@ -1,9 +1,10 @@
 import React from 'react';
 import { withRouter, useHistory } from 'react-router';
 import MasterTable from '../../fragment/MasterTable';
-import { AlertDialog, Notification } from '../../fragment/message';
 import RoleApi from '../../api/RoleApi';
 import { STORAGE_KEYS } from '../../config/Constant';
+import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { useDispatch } from 'react-redux';
 
 export const ROLE_TABLE_FIELDS = [
     {
@@ -28,15 +29,13 @@ export const ROLE_TABLE_FIELDS = [
 
 const Role = () => {
     const history = useHistory();
-
-    const [error, setError] = React.useState('');
-    const [noti, setNoti] = React.useState(() => {
-        const flashMessage = sessionStorage.getItem(STORAGE_KEYS.FLASH_MESSAGE);
-        return flashMessage || '';
-    });
+    const dispatch = useDispatch();
 
     const handleError = (error) => {
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const handleLoadData = async (currentPage, pageSize, sort, search) => {
@@ -72,8 +71,6 @@ const Role = () => {
 
     return (
         <>
-            <Notification show={noti.length > 0} onClose={() => setNoti(false)} type="success" message={noti} />
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
             <MasterTable
                 title="Roles"
                 fields={ROLE_TABLE_FIELDS}

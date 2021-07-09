@@ -159,47 +159,45 @@ export default createTheme({
     typography: {
         htmlFontSize: 18,
     },
-    overrides: {
-        MuiTableRow: {
-            root: {
-                '&$selected,&$selected:hover': { backgroundColor: primary.light },
-            },
+    MuiTableRow: {
+        root: {
+            '&$selected,&$selected:hover': { backgroundColor: primary.light },
         },
-        MuiTableCell: {
-            root: {
-                padding: '0px 4px 0px 4px',
-                maxHeight: 30,
-                height: 30,
-            },
-            sizeSmall: {
-                padding: '0px 4px 0px 4px',
-                maxHeight: 30,
-                height: 30,
-            },
+    },
+    MuiTableCell: {
+        root: {
+            padding: '0px 4px 0px 4px',
+            maxHeight: 30,
+            height: 30,
         },
-        MuiPickersToolbar: {
-            root: {
+        sizeSmall: {
+            padding: '0px 4px 0px 4px',
+            maxHeight: 30,
+            height: 30,
+        },
+    },
+    MuiPickersToolbar: {
+        root: {
+            backgroundColor: primary.dark,
+        },
+    },
+    MuiPickersDay: {
+        root: {
+            color: primary.dark,
+            '&$disabled': {
+                color: primary.dark,
+            },
+            '&$selected': {
                 backgroundColor: primary.dark,
             },
         },
-        MuiPickersDay: {
-            root: {
-                color: primary.dark,
-                '&$disabled': {
-                    color: primary.dark,
-                },
-                '&$selected': {
-                    backgroundColor: primary.dark,
-                },
-            },
-            today: {
-                color: primary.dark,
-            },
+        today: {
+            color: primary.dark,
         },
-        MuiPickersModalDialog: {
-            dialogAction: {
-                color: primary.dark,
-            },
+    },
+    MuiPickersModalDialog: {
+        dialogAction: {
+            color: primary.dark,
         },
     },
 });
@@ -222,23 +220,21 @@ export const DarkTheme = createTheme({
     typography: {
         htmlFontSize: 18,
     },
-    overrides: {
-        MuiTableRow: {
-            root: {
-                '&$selected,&$selected:hover': { backgroundColor: darkPrimary.light },
-            },
+    MuiTableRow: {
+        root: {
+            '&$selected,&$selected:hover': { backgroundColor: darkPrimary.light },
         },
-        MuiTableCell: {
-            root: {
-                padding: '0px 4px 0px 4px',
-                maxHeight: 30,
-                height: 30,
-            },
-            sizeSmall: {
-                padding: '0px 4px 0px 4px',
-                maxHeight: 30,
-                height: 30,
-            },
+    },
+    MuiTableCell: {
+        root: {
+            padding: '0px 4px 0px 4px',
+            maxHeight: 30,
+            height: 30,
+        },
+        sizeSmall: {
+            padding: '0px 4px 0px 4px',
+            maxHeight: 30,
+            height: 30,
         },
     },
 });

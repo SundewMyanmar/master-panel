@@ -45,7 +45,7 @@ export default class ApiManager {
     }
 
     errorHandling(error) {
-        console.warn(error);
+        console.warn('Error Response => ', error.response);
         const status = error.response && error.response.status ? error.response.status : 0;
         let message = error;
         if (error.response) {

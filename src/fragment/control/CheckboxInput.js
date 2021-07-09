@@ -24,7 +24,7 @@ const CheckboxInput = (props: CheckboxInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checked]);
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         setState(event.target.checked);
         if (onChange && event) {
             onChange(event);
@@ -33,7 +33,7 @@ const CheckboxInput = (props: CheckboxInputProps) => {
 
     return (
         <FormControlLabel
-            control={<Checkbox checked={state} inputRef={currentInput} onChange={handleChange} value={value} color="primary" {...checkboxProps} />}
+            control={<Checkbox checked={state} inputRef={currentInput} onChange={handleChange} value={value} color="default" {...checkboxProps} />}
             label={label}
         />
     );

@@ -1,9 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { Typography, Container, Paper, Avatar, Icon, makeStyles, Grid, Button, Divider } from '@material-ui/core';
-import { AlertDialog, LoadingDialog } from '../fragment/message';
 import { TextInput, ListInput } from '../fragment/control';
 import ApiManager from '../util/ApiManager';
+import { ALERT_REDUX_ACTIONS } from '../util/AlertManager';
+import { useDispatch } from 'react-redux';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -38,18 +39,21 @@ const apiManager = new ApiManager('/');
 
 const Developer = () => {
     const classes = styles();
-    const [loading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState('');
     const [form, setForm] = React.useState({});
     const [output, setOutput] = React.useState({});
+    const dispatch = useDispatch();
 
     const handleError = (error) => {
-        setLoading(false);
-        setError(error.message || error.title || 'Please check your internet connection and try again.');
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW,
+            alert: error || 'Please check your internet connection and try again.',
+        });
     };
 
     const handleResult = (result) => {
-        setLoading(false);
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.HIDE,
+        });
         setOutput(result);
     };
 
@@ -59,7 +63,9 @@ const Developer = () => {
     };
 
     const handleSubmit = () => {
-        setLoading(true);
+        dispatch({
+            type: ALERT_REDUX_ACTIONS.SHOW_LOADING,
+        });
         switch (form.type) {
             case 'GET':
                 apiManager.get(form.url, apiManager.getHeaders(true)).then(handleResult).catch(handleError);
@@ -74,15 +80,15 @@ const Developer = () => {
                 apiManager.delete(form.url, JSON.parse(form.body), apiManager.getHeaders(true)).then(handleResult).catch(handleError);
                 break;
             default:
-                setLoading(false);
+                dispatch({
+                    type: ALERT_REDUX_ACTIONS.HIDE,
+                });
                 break;
         }
     };
 
     return (
         <>
-            <AlertDialog onClose={() => setError('')} show={error.length > 0} title="Error" message={error} />
-            <LoadingDialog show={loading} />
             <Container component="main" maxWidth="lg">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>
