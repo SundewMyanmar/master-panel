@@ -13,7 +13,6 @@ import {
     Icon,
     ListItemText,
     Tooltip,
-    Grid,
 } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 import InfiniteLoading from 'react-simple-infinite-loading';
@@ -35,7 +34,7 @@ type NotificationMenuProps = {
  * id,image,date,title,description,isRead
  */
 
-const StyledBadge = withStyles((theme) => ({
+const StyledBadge = withStyles(theme => ({
     badge: {
         backgroundColor: theme.palette.error.main,
         padding: '0 4px',
@@ -43,7 +42,7 @@ const StyledBadge = withStyles((theme) => ({
     },
 }))(Badge);
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     avatar: {
         color: theme.palette.secondary.contrastText,
         backgroundColor: theme.palette.secondary.main,
@@ -66,13 +65,13 @@ const styles = makeStyles((theme) => ({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
-    menuItem: (props) => ({
+    menuItem: props => ({
         borderBottom: '1px solid ' + theme.palette.divider,
         backgroundColor: !props.isRead ? theme.palette.primary.highlight : theme.palette.background.paper,
     }),
 }));
 
-const NotificationMenuItem = (props) => {
+const NotificationMenuItem = props => {
     const { item, onClick, index } = props;
     const classes = styles({ isRead: item.isRead });
 
@@ -115,10 +114,13 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         data: [],
     });
 
+    const resetNotification = useRef(false);
     const [notiBadge, setNotiBadge] = useState('');
+    const [showSkeleton, setShowSkeleton] = useState(false);
 
-    const setPagingData = (result) => {
+    const setPagingData = result => {
         if (result.data) {
+            console.log('paging data', paging.data);
             setPaging({
                 ...result,
                 data: [...paging.data, ...result.data],
@@ -128,13 +130,21 @@ const NotificationMenu = (props: NotificationMenuProps) => {
 
     useEffect(() => {
         loadMoreNotification(paging);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        // eslint-disable-next-line
+    useEffect(() => {
+        if (resetNotification.current) {
+            resetNotification.current = false;
+
+            loadMoreNotification(paging);
+        }
     }, [paging]);
 
     useEffect(() => {
         setNotiBadge(badge);
 
+        resetNotification.current = true;
         let initPaging = {
             total: 0,
             currentPage: -1,
@@ -144,12 +154,15 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         setPaging(initPaging);
     }, [badge]);
 
-    const loadMoreNotification = async (newPaging) => {
+    const loadMoreNotification = async newPaging => {
         if (onLoadMore) {
+            setShowSkeleton(true);
             var result = await onLoadMore({
                 ...newPaging,
             });
+
             setPagingData(result);
+            setShowSkeleton(false);
         }
     };
 
@@ -162,27 +175,27 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         setAnchorEl(null);
     };
 
-    const handleClick = (item) => {
+    const handleClick = item => {
         if (onItemClick) onItemClick(item);
         handleClose();
     };
 
-    const createSkeleton = (count) => {
+    const createSkeleton = count => {
         var result = [];
         for (let i = 0; i < count; i++) {
             result.push(
-                <MenuItem key={'skeleton-' + i}>
+                <MenuItem key={`skeleton-${i}`}>
                     <ListItemIcon className={classes.menuIcon}>
                         <Skeleton variant="circle" width={32} height={32} />
                     </ListItemIcon>
                     <ListItemText>
                         <Skeleton />
-                        <Skeleton height={10} width={300} />
+                        <Skeleton height={10} width={200} />
                     </ListItemText>
                 </MenuItem>,
             );
         }
-        return result;
+        return showSkeleton ? result : null;
     };
 
     let badgeContent = {};
@@ -195,7 +208,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
         <>
             <Tooltip title={name} aria-label={name}>
                 <IconButton
-                    onClick={(event) => {
+                    onClick={event => {
                         setAnchorEl(event.currentTarget);
                         if (onReadAll) onReadAll();
                         setNotiBadge('');
@@ -207,6 +220,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                 </IconButton>
             </Tooltip>
             <Menu
+                id="simple-menu"
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
@@ -222,7 +236,13 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <ScrollBar style={{ width: 500, height: 500 }}>
+                {!paging.data ||
+                    (paging.data.length <= 0 && (
+                        <MenuItem key={'skeleton-01'}>
+                            <ListItemText style={{ textAlign: 'center' }}>No Data.</ListItemText>
+                        </MenuItem>
+                    ))}
+                <ScrollBar style={{ width: 500, height: 500, top: 0 }}>
                     <InfiniteLoading
                         hasMoreItems={paging.data.length < paging.total - 1}
                         itemHeight={60}
@@ -233,6 +253,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                         {paging.data.map((item, index) => {
                             return <NotificationMenuItem key={`noti-item-${index}`} item={item} index={index} onClick={handleClick} />;
                         })}
+                        {createSkeleton(2)}
                     </InfiniteLoading>
                 </ScrollBar>
             </Menu>

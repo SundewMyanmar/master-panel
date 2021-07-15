@@ -16,6 +16,7 @@ import {
     FormControlLabel,
     Grid,
 } from '@material-ui/core';
+import { QuestionDialog } from '../../fragment/message';
 import { OTPDialog } from '../../fragment/control';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -28,7 +29,7 @@ import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         width: '100%',
         margin: theme.spacing(3),
@@ -105,17 +106,18 @@ const changePasswordFields = [
     },
 ];
 
-const Security = () => {
+const Security = props => {
     const classes = styles();
     const history = useHistory();
     const dispatch = useDispatch();
 
+    const [question,setQuestion]=useState('');
     const user = useSelector((state) => state.user);
     const [expanded, setExpanded] = React.useState('changePassword');
     const [mfa, setMfa] = React.useState(user);
     const [showMfa, setShowMfa] = React.useState(false);
 
-    const handleAccordion = (panel) => (event, isExpanded) => {
+    const handleAccordion = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
@@ -140,7 +142,7 @@ const Security = () => {
         };
 
         ProfileApi.changePassword(data)
-            .then(() => {
+            .then(response => {
                 dispatch({ type: USER_REDUX_ACTIONS.LOGOUT });
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 dispatch({
@@ -149,22 +151,28 @@ const Security = () => {
                 });
                 history.push('/login');
             })
-            .catch((error) => {
-                handleError(error);
+            .catch(error => {
+                handleError(error.message || error.title || 'Please check your internet connection and try again.');
             });
     };
 
-    const handleMfaChange = (event) => {
+    const handleMfaChange = event => {
         setMfa({
             ...mfa,
             mfaType: event.target.value,
         });
     };
 
-    const handleMfaSubmit = (code) => {
+    const handleMfaSubmit = code => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
+
+        if (!code) {
+            handleError('Please fill code.');
+            return;
+        }
+
         ProfileApi.verifyMfa(code)
-            .then(() => {
+            .then(result => {
                 setShowMfa(false);
                 dispatch({ type: USER_REDUX_ACTIONS.LOGOUT });
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
@@ -174,16 +182,16 @@ const Security = () => {
                 });
                 history.push('/login');
             })
-            .catch((error) => {
-                handleError(error);
-            });
+            .catch(() => {
+                handleError('Please check your internet connection and try again.');
+            })
     };
 
     const handleMfaResend = () => {
         ProfileApi.resendMfa();
     };
 
-    const handleMfaConfirm = (value) => {
+    const handleMfaConfirm = value => {
         if (value) {
             if (!['EMAIL', 'SMS', 'APP'].includes(mfa.mfaType)) {
                 handleError('Please choose verification type.');
@@ -212,9 +220,20 @@ const Security = () => {
                 }
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
             })
-            .catch((error) => {
-                handleError(error);
+            .catch(() => {
+                handleError('Please check your internet connection and try again.');
             });
+    };
+
+    const handleQuestionDialog = status => {
+        if (status) {
+            handleMfaConfirm(false);
+            dispatch({
+                type: FLASH_REDUX_ACTIONS.SHOW,
+                flash: { type: 'success', message: `Save success.` },
+            });
+        }
+        setQuestion('');
     };
 
     const renderMfaDialog = () => {
@@ -274,7 +293,7 @@ const Security = () => {
                                 </div>
                             </RadioGroup>
                         </FormControl>
-                        <Grid container justifyContent="flex-start">
+                        <Grid container justify="flex-start">
                             <Button
                                 onClick={() => handleMfaConfirm(true)}
                                 type="button"
@@ -286,7 +305,7 @@ const Security = () => {
                                 {mfa.mfaEnabled ? 'Save' : 'Turn On'}
                             </Button>
                             <Button
-                                onClick={() => handleMfaConfirm(false)}
+                                onClick={() => setQuestion('Are you sure to turn off 2-step verification ?')}
                                 style={{ display: mfa.mfaEnabled ? 'block' : 'none' }}
                                 type="button"
                                 variant="contained"
@@ -307,6 +326,7 @@ const Security = () => {
 
     return (
         <>
+            <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Container component="main" maxWidth="md">
                 <CssBaseline />
                 <Paper className={classes.paper} elevation={6}>

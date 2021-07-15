@@ -23,7 +23,7 @@ type ImageInputProps = {
     onChange: (image: Object | string) => void,
 };
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     container: {
         cursor: 'pointer',
         position: 'relative',
@@ -102,15 +102,13 @@ const ImagePicker = (props: ImageInputProps) => {
             handleChange(value, imageURL);
         } else {
             if (value && Object.entries(value).length === 0) {
-                // handleChange(null, null);
                 setPreview(null);
                 setImage(null);
             } else {
-                console.log('image value', value);
                 if (value && value.target) {
                     setPreview(value.target.url);
                     setImage(value);
-                } else {
+                } else if (!value) {
                     setPreview(null);
                     setImage(null);
                 }
@@ -133,7 +131,6 @@ const ImagePicker = (props: ImageInputProps) => {
                     url: url,
                 },
             };
-            console.log('img input', obj);
             onChange(obj, index);
         }
     };
@@ -148,7 +145,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleCloseMenu = (item) => {
+    const handleCloseMenu = item => {
         if (item.id === 'gallery') {
             setShowFile(true);
         } else if (item.id === 'upload') {
@@ -158,7 +155,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setShowMenu(false);
     };
 
-    const handleCloseFile = (result) => {
+    const handleCloseFile = result => {
         setShowFile(false);
         if (result === false) {
             return;
@@ -168,7 +165,7 @@ const ImagePicker = (props: ImageInputProps) => {
         handleChange(result, url);
     };
 
-    const handleError = (error) => {
+    const handleError = error => {
         setShowFile(false);
         setShowMenu(false);
         dispatch({
@@ -177,7 +174,7 @@ const ImagePicker = (props: ImageInputProps) => {
         });
     };
 
-    const handleImageChange = (event) => {
+    const handleImageChange = event => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
@@ -189,7 +186,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleRemove = (event) => {
+    const handleRemove = event => {
         if (onRemove) onRemove(index);
         handleChange(null, null);
     };

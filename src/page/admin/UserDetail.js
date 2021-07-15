@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter, useHistory, useParams } from 'react-router-dom';
-import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles } from '@material-ui/core';
+import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles, InputAdornment } from '@material-ui/core';
 
 import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
@@ -8,11 +8,12 @@ import UserApi from '../../api/UserApi';
 import { ROLE_TABLE_FIELDS } from './Role';
 import FileApi from '../../api/FileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
+import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -31,11 +32,11 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const UserDetail = (props) => {
+const UserDetail = props => {
     const classes = styles();
     const history = useHistory();
-    const dispatch = useDispatch();
     const { id } = useParams();
+    const dispatch = useDispatch();
     const [isUpdate, setUpdate] = useState(id > 0);
 
     const handleRoleData = async (currentPage, pageSize, sort, search) => {
@@ -51,29 +52,33 @@ const UserDetail = (props) => {
 
     const [detail, setDetail] = useState(() => {
         UserApi.getById(id)
-            .then((data) => {
+            .then(data => {
                 setDetail(data);
                 setUpdate(true);
             })
-            .catch((error) => {
+            .catch(error => {
                 if (error.code !== 'HTTP_406') {
                     handleError(error);
                 } else {
                     setUpdate(false);
                 }
-            });
+            })
         return {};
     });
 
-    const handleSubmit = async (form) => {
+    const handleSubmit = async form => {
         if (!window.navigator.onLine) {
             handleError('Please check your internet connection and try again.');
+            return;
+        }
+        if (!FormatManager.cleanPhoneNumber(form.phoneNumber)) {
+            handleError('Invalid phone no.');
             return;
         }
 
         let user = {
             displayName: form.displayName,
-            phoneNumber: form.phoneNumber,
+            phoneNumber: FormatManager.cleanPhoneNumber(form.phoneNumber),
             email: form.email,
             roles: form.roles,
             password: form.password,
@@ -87,7 +92,7 @@ const UserDetail = (props) => {
         if (form.image && form.image.id) {
             user.profileImage = form.image;
         } else if (form.image && !form.image.id) {
-            const fileResponse = await FileApi.upload(form.image, false);
+            const fileResponse = await FileApi.upload(form.image, true);
             if (fileResponse) {
                 user.profileImage = fileResponse;
             }
@@ -101,7 +106,7 @@ const UserDetail = (props) => {
             user.password = 'default_password';
             user.version = detail.version;
             UserApi.modifyById(id, user)
-                .then((response) => {
+                .then(response => {
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                     dispatch({
                         type: FLASH_REDUX_ACTIONS.SHOW,
@@ -112,7 +117,7 @@ const UserDetail = (props) => {
                 .catch(handleError);
         } else {
             UserApi.addNew(user)
-                .then((response) => {
+                .then(response => {
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                     dispatch({
                         type: FLASH_REDUX_ACTIONS.SHOW,
@@ -169,6 +174,13 @@ const UserDetail = (props) => {
             icon: 'phone',
             required: true,
             type: 'text',
+            InputProps: {
+                startAdornment: (
+                    <>
+                        <InputAdornment position="start"> +959 </InputAdornment>
+                    </>
+                ),
+            },
             value: detail.phoneNumber,
         },
         {
@@ -180,7 +192,7 @@ const UserDetail = (props) => {
             required: true,
             fields: ROLE_TABLE_FIELDS,
             onLoadData: handleRoleData,
-            onLoadItem: (item) => item.name,
+            onLoadItem: item => item.name,
             values: detail.roles,
         },
         {

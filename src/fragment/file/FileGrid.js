@@ -3,26 +3,25 @@ import React from 'react';
 import { Grid, GridProps, CardActionArea, Card, CardMedia, CardContent, Typography, makeStyles } from '@material-ui/core';
 import FileApi from '../../api/FileApi';
 
-const itemStyles = makeStyles((theme) => ({
-    root: (props) => ({
+const itemStyles = makeStyles(theme => ({
+    root: props => ({
         width: '100%',
         cursor: 'pointer',
         margin: theme.spacing(1),
         border: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
         backgroundColor: theme.palette.background.paper,
     }),
-    content: {
-        height: '100%',
-    },
     title: {
         padding: theme.spacing(0.5, 0),
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     },
-    media: (props) => ({
+    media: props => ({
         paddingTop: '75%', // 16:9
         borderBottom: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
     }),
-    info: (props) => ({
-        height: '100%',
+    info: props => ({
         padding: theme.spacing(0.5, 1),
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText,
         backgroundColor: props.selected ? theme.palette.primary.main : theme.palette.secondary.main,
@@ -54,7 +53,7 @@ export const FileGridItem = (props: FileGridItemProps) => {
     return (
         <Grid container item justifyContent="center" xs={6} sm={4} md={3} lg={2}>
             <Card className={classes.root} elevation={3}>
-                <CardActionArea className={classes.content} onClick={onClick}>
+                <CardActionArea onClick={onClick}>
                     <CardMedia className={classes.media} image={url} title={item.name ? item.name : 'No Image'} />
                     {url && isImage ? <img src={url} alt={item.name} style={{ display: 'none' }} /> : null}
                     <CardContent style={isMarked ? { position: 'relative' } : null} className={classes.info}>
@@ -71,23 +70,36 @@ export const FileGridItem = (props: FileGridItemProps) => {
 type FileGridProps = {
     data: Array<Object>,
     selectedData: Array<Object>,
+    showPublic: boolean,
+    showHidden: boolean,
     multi: boolean,
     onClickItem?: (file: Object) => void,
     ...GridProps,
 };
 
 const FileGrid = (props: FileGridProps) => {
-    const { data, selectedData, multi, onClickItem, ...gridProps } = props;
+    const { data, selectedData, multi, showPublic, showHidden, onClickItem, ...gridProps } = props;
 
     return (
         <Grid container {...gridProps}>
             {data && data.length > 0 ? (
                 data.map((item, index) => {
                     const isMarked = multi
-                        ? selectedData.findIndex((x) => x.id === item.id) >= 0
+                        ? selectedData.findIndex(x => x.id === item.id) >= 0
                         : selectedData && selectedData.id && selectedData.id === item.id;
 
-                    return <FileGridItem multi={multi} isMarked={isMarked} key={item.id + '-' + index} onClick={() => onClickItem(item)} {...item} />;
+                    
+                    let itemResult = (
+                        <FileGridItem multi={multi} isMarked={isMarked} key={item.id + '-' + index} onClick={() => onClickItem(item)} {...item} />
+                    );
+                    if (!showPublic && item.publicAccess) {
+                        itemResult = null;
+                    }
+                    if (!showHidden && item.status == 'HIDDEN') {
+                        itemResult = null;
+                    }
+
+                    return itemResult;
                 })
             ) : (
                 <Grid item>
@@ -101,7 +113,9 @@ const FileGrid = (props: FileGridProps) => {
 FileGrid.defaultProps = {
     data: [],
     multi: false,
-    onClickItem: (file) => console.warn('Undefined onSelectionChange => ', file),
+    showPublic: true,
+    showHidden: false,
+    onClickItem: file => console.warn('Undefined onSelectionChange => ', file),
 };
 
 export default FileGrid;

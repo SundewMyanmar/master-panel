@@ -7,7 +7,7 @@ export const ALERT_REDUX_ACTIONS = {
 };
 
 const showAlert = (alert) => {
-    let message = alert?.message || alert?.code;
+    let message = alert?.message || alert?.code || alert;
     let title = alert?.title || 'INFO';
     return { ...alert, show: true, title: title, message };
 };

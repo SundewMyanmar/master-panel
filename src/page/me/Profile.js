@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { withRouter } from 'react-router';
-import { Typography, Container, makeStyles, Paper, Avatar, Icon, Button } from '@material-ui/core';
+import { InputAdornment, Typography, Container, makeStyles, Paper, Avatar, Icon, Button } from '@material-ui/core';
 import MasterForm from '../../fragment/MasterForm';
 import FileApi from '../../api/FileApi';
 import ProfileApi from '../../api/ProfileApi';
-import { STORAGE_KEYS } from '../../config/Constant';
 import { primary, secondary } from '../../config/Theme';
 import FormatManager from '../../util/FormatManager';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +11,7 @@ import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     root: {
         backgroundColor: 'inherit',
     },
@@ -46,12 +45,12 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-const Profile = () => {
+const Profile = props => {
     const classes = styles();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
 
-    const handleError = (error) => {
+    const handleError = error => {
         dispatch({
             type: ALERT_REDUX_ACTIONS.SHOW,
             alert: error || 'Please check your internet connection and try again.',
@@ -79,6 +78,7 @@ const Profile = () => {
             .catch(handleError);
         // eslint-disable-next-line
     }, []);
+    const [noti, setNoti] = useState('');
 
     const handleSubmit = async (form) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
@@ -152,6 +152,13 @@ const Profile = () => {
             label: 'Phone number',
             icon: 'phone',
             required: true,
+            InputProps: {
+                startAdornment: (
+                    <>
+                        <InputAdornment position="start"> +959 </InputAdornment>
+                    </>
+                ),
+            },
             type: 'text',
             value: user ? user.phoneNumber : '',
             disabled: true,

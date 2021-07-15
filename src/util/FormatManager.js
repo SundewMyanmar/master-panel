@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import chroma from 'chroma-js';
 
 export default class FormatManager {
-    static tryParseJson = (text) => {
+    static tryParseJson = text => {
         try {
             const jsonObj = JSON.parse(text);
             if (jsonObj && typeof jsonObj === 'object') {
@@ -15,7 +15,7 @@ export default class FormatManager {
         }
     };
 
-    static defaultNull = (input) => {
+    static defaultNull = input => {
         if (typeof input === 'undefined') {
             return null;
         }
@@ -33,13 +33,13 @@ export default class FormatManager {
         return ms.toLocaleString();
     };
 
-    static validURL = (str) => {
+    static validURL = str => {
         var pattern = new RegExp(
             '^(https?:\\/\\/)?' + // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
                 '(\\#[-a-z\\d_]*)?$',
             'i',
         ); // fragment locator
@@ -50,7 +50,7 @@ export default class FormatManager {
         return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
     }
 
-    static buildCSV = (input) => {
+    static buildCSV = input => {
         if (typeof input === 'boolean') {
             return '"' + input + '"';
         }
@@ -79,7 +79,7 @@ export default class FormatManager {
             .join(' ');
     };
 
-    static readableToSnake = (str) => {
+    static readableToSnake = str => {
         return str.toLowerCase().replace(/\s/g, '_');
     };
 
@@ -89,7 +89,7 @@ export default class FormatManager {
         return re.test(mail);
     };
 
-    static ValidateUser = (user) => {
+    static ValidateUser = user => {
         return /^[a-zA-Z0-9\\.]*$/.test(user);
     };
 
@@ -112,14 +112,14 @@ export default class FormatManager {
         return Math.abs(date1 - date2) / 36e5;
     };
 
-    static thousandSeparator = (input) => {
+    static thousandSeparator = input => {
         return parseFloat(input).toLocaleString('en');
     };
 
-    static hex2Rgb = (e) => {
+    static hex2Rgb = e => {
         if (!e) return null;
         let t = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        e = e.replace(t, function (e, t, r, o) {
+        e = e.replace(t, function(e, t, r, o) {
             return t + t + r + r + o + o;
         });
         let r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);
@@ -132,20 +132,24 @@ export default class FormatManager {
             : null;
     };
 
-    static rgb2Hex = (e) => {
+    static rgb2Hex = e => {
         let t = Math.round(e.b) + 256 * Math.round(e.g) + 65536 * Math.round(e.r);
         return '#' + ('000000' + t.toString(16)).substr(-6);
     };
 
-    static lightenHex = (hex) => {
-        return chroma(hex).brighten().hex();
+    static lightenHex = hex => {
+        return chroma(hex)
+            .brighten()
+            .hex();
     };
 
-    static darkenHex = (hex) => {
-        return chroma(hex).darken().hex();
+    static darkenHex = hex => {
+        return chroma(hex)
+            .darken()
+            .hex();
     };
 
-    static contrastText = (hex) => {
+    static contrastText = hex => {
         let c = hex.substring(1); // strip #
         let rgb = parseInt(c, 16); // convert rrggbb to decimal
         let r = (rgb >> 16) & 0xff; // extract red
@@ -160,7 +164,7 @@ export default class FormatManager {
         return '#000';
     };
 
-    static generateThemeColors = (hex) => {
+    static generateThemeColors = hex => {
         return {
             main: hex,
             light: this.darkenHex(hex),
@@ -181,7 +185,7 @@ export default class FormatManager {
     static createTimer = (value, interval, onChange) => {
         // Update the count down every 1 second
         let distance = value;
-        let x = setInterval(function () {
+        let x = setInterval(function() {
             distance--;
             if (distance < 0) {
                 clearInterval(x);
@@ -190,5 +194,29 @@ export default class FormatManager {
                 if (onChange) onChange(distance);
             }
         }, interval);
+    };
+
+    static cleanPhoneNumber = phone => {
+        if (!phone) {
+            return false;
+        }
+        //Check Mobile Number or Not
+        const matches = phone.replace(/\s/, '').match(/^\+?(?![0][1-8]+)[0-9]{7,15}$/);
+        if (!matches || matches.length <= 0) {
+            return false;
+        }
+
+        //Clean Prefix
+        if (phone.startsWith('09')) {
+            phone = phone.substring(2, phone.length);
+        } else if (phone.startsWith('959')) {
+            phone = phone.substring(3, phone.length);
+        } else if (phone.startsWith('+959')) {
+            phone = phone.substring(4, phone.length);
+        } else if (phone.startsWith('+9509')) {
+            phone = phone.substring(5, phone.length);
+        }
+
+        return phone.trim();
     };
 }
