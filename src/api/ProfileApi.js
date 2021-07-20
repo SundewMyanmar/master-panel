@@ -36,21 +36,6 @@ class ProfileApi extends ApiManager {
         );
         return response;
     }
-
-    async setupMfa(enable, type) {
-        const response = await this.get(`/enableMfa/${enable}?type=${type}`, this.getHeaders(true));
-        return response;
-    }
-
-    async verifyMfa(totp) {
-        const response = await this.get(`/verifyMfa/${totp}`, this.getHeaders(true));
-        return response;
-    }
-
-    async resendMfa() {
-        const response = await this.get(`/resendMfa`, this.getHeaders(true));
-        return response;
-    }
 }
 
 export default new ProfileApi();

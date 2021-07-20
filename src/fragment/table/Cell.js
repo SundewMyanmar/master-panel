@@ -35,7 +35,11 @@ export const IconCell = (field, data) => {
         icon = onLoad(data);
     }
 
-    return <Icon color="primary">{icon}</Icon>;
+    return (
+        <Icon style={{ padding: 0, margin: 0 }} color="primary">
+            {icon}
+        </Icon>
+    );
 };
 
 export const BooleanCell = (field, data) => {
@@ -57,6 +61,7 @@ const Cell = (props: CellProps) => {
         return null;
     }
 
+    let cellPadding = 'normal';
     switch (field.type) {
         case 'image':
             cellValue = ImageCell(field, data);
@@ -66,9 +71,11 @@ const Cell = (props: CellProps) => {
             break;
         case 'bool':
             cellValue = BooleanCell(field, data);
+            cellPadding = 'none';
             break;
         case 'raw':
             cellValue = field.onLoad(data, rowIndex);
+            cellPadding = 'none';
             break;
         default:
             cellValue = field.onLoad
@@ -78,7 +85,13 @@ const Cell = (props: CellProps) => {
     }
 
     return (
-        <TableCell color="secondary" align={field.align} style={field.minWidth ? { minWidth: field.minWidth } : null} {...cellProps}>
+        <TableCell
+            padding={cellPadding}
+            color="secondary"
+            align={field.align}
+            style={field.minWidth ? { minWidth: field.minWidth } : null}
+            {...cellProps}
+        >
             {cellValue || cellValue === 0 ? cellValue : '-'}
         </TableCell>
     );

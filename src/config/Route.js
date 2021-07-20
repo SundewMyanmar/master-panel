@@ -4,6 +4,7 @@ import ForgetPassword from '../page/auth/ForgetPassword';
 import ResetPassword from '../page/auth/ResetPassword';
 
 import Profile from '../page/me/Profile';
+import MultiFactorAuthDetail from '../page/me/MultiFactorAuthDetail';
 import Security from '../page/me/Security';
 
 import Dashboard from '../page/Dashboard';
@@ -23,6 +24,7 @@ import ProductDetail from '../page/inventory/ProductDetail';
 export const PrivateRoute = [
     { path: '/', page: Dashboard },
     { path: '/profile', page: Profile },
+    { path: '/mfa/setup', page: MultiFactorAuthDetail },
     { path: '/security', page: Security },
     { path: '/user', page: User },
     { path: '/user/detail/:id', page: UserDetail },
