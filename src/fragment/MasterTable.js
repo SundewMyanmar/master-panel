@@ -13,7 +13,7 @@ import { text, error } from '../config/Theme';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../util/AlertManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     header: {
         flex: 1,
         // backgroundColor:theme.palette.primary.main,
@@ -135,7 +135,7 @@ const MasterTable = (props: MasterTableProps) => {
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
 
-    if (!hideDataActions && importFields.findIndex(f => f === 'version') < 0) {
+    if (!hideDataActions && importFields.findIndex((f) => f === 'version') < 0) {
         importFields.push('version');
     }
 
@@ -225,9 +225,9 @@ const MasterTable = (props: MasterTableProps) => {
     useEffect(() => {
         async function initData() {
             const tableData = await localStorage.getItem(`${STORAGE_KEYS.TABLE_SESSION}.${FormatManager.readableToSnake(title)}`);
-            
+
             const tableJson = JSON.parse(tableData);
-            
+
             setInit(false);
             if (tableJson && tableJson.paging.data && tableJson.paging.data.length > 0) {
                 loadData(tableJson.paging.currentPage, tableJson.paging.pageSize, tableJson.paging.sort);
@@ -267,7 +267,7 @@ const MasterTable = (props: MasterTableProps) => {
         );
     };
 
-    const handlePageChange = pagination => {
+    const handlePageChange = (pagination) => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
     };
 
@@ -283,11 +283,11 @@ const MasterTable = (props: MasterTableProps) => {
         }
     };
 
-    const handleSelectionChange = result => {
+    const handleSelectionChange = (result) => {
         setSelectedData(result);
     };
 
-    const handleActionMenu = menuItem => {
+    const handleActionMenu = (menuItem) => {
         switch (menuItem.id) {
             case 'uncheck_all':
                 setSelectedData([]);
@@ -300,7 +300,7 @@ const MasterTable = (props: MasterTableProps) => {
                 break;
             case 'remove':
                 if (selectedData.length > 0) {
-                    const ids = selectedData.map(item => item.id);
+                    const ids = selectedData.map((item) => item.id);
                     setQuestion('Are you sure to remove [' + ids.join(', ') + '] items?');
                     setRemoveData(selectedData);
                 }
@@ -346,7 +346,7 @@ const MasterTable = (props: MasterTableProps) => {
         label: '@',
         minWidth: 50,
         type: 'raw',
-        onLoad: item => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
+        onLoad: (item) => <DataAction onMenuItemClick={handleDataAction} actions={actions} data={item} />,
     };
     let fields_with_action = [];
     if (actions.length > 0) {
@@ -365,7 +365,7 @@ const MasterTable = (props: MasterTableProps) => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
-                        {hideSearch || <SearchInput value={search} onSearch={value => setSearch(value)} placeholder="Search Files" />}
+                        {hideSearch || <SearchInput value={search} onSearch={(value) => setSearch(value)} placeholder="Search Files" />}
                     </Grid>
                     <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justifyContent="flex-end">
                         {hideDataActions || (
@@ -415,6 +415,7 @@ const MasterTable = (props: MasterTableProps) => {
 };
 
 MasterTable.defaultProps = {
+    importFields: [],
     fields: [],
     title: 'Master Data',
     moreActions: [],
@@ -427,9 +428,9 @@ MasterTable.defaultProps = {
     showCreate: true,
     type: 'TABLE',
     onAddNew: () => console.warn('Undefined onAddNew'),
-    onEdit: item => console.warn('Undefined onEdit => ', item),
-    onError: error => console.warn('Undefined onError => ', error),
-    onItemAction: item => console.warn('Undefined Item Action => ', item),
+    onEdit: (item) => console.warn('Undefined onEdit => ', item),
+    onError: (error) => console.warn('Undefined onError => ', error),
+    onItemAction: (item) => console.warn('Undefined Item Action => ', item),
 };
 
 export default MasterTable;

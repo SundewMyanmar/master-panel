@@ -87,6 +87,7 @@ const Login = () => {
     const history = useHistory();
     const [showMfa, setShowMfa] = useState(false);
     const submitButton = createRef();
+    const [mfaInfo, setMfaInfo] = useState(null);
     const [data, setData] = useState(null);
     const dispatch = useDispatch();
 
@@ -109,37 +110,6 @@ const Login = () => {
         });
     };
 
-    const handleMfaSubmit = (code) => {
-        if (!window.navigator.onLine) {
-            handleError('Please check your internet connection and try again.');
-            return;
-        }
-        dispatch({
-            type: ALERT_REDUX_ACTIONS.SHOW_LOADING,
-        });
-
-        let firebaseToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
-        if (firebaseToken) data.firebaseMessagingToken = firebaseToken;
-
-        AuthApi.authByUserAndPasswordAndMfa({
-            ...data,
-            mfa: code,
-        })
-            .then((result) => {
-                setShowMfa(false);
-                dispatch({
-                    type: USER_REDUX_ACTIONS.LOGIN,
-                    authInfo: result,
-                });
-                history.push('/');
-                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
-            })
-            .catch(handleError);
-    };
-    const handleMfaResend = () => {
-        handleSubmit(null, data);
-    };
-
     const handleChange = (event) => {
         setData({
             ...data,
@@ -147,7 +117,7 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = (event, form) => {
+    const handleSubmit = (code = null) => {
         if (!window.navigator.onLine) {
             handleError('Please check your internet connection and try again.');
             return;
@@ -155,9 +125,15 @@ const Login = () => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         let firebaseToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
-        if (firebaseToken) form.firebaseMessagingToken = firebaseToken;
+        if (firebaseToken) data.firebaseMessagingToken = firebaseToken;
 
-        AuthApi.authByUserAndPassword(form)
+        let authData = { ...data };
+        if (code) {
+            authData.mfaCode = code;
+            authData.mfaKey = mfaInfo?.key;
+        }
+
+        AuthApi.authByUserAndPassword(authData)
             .then((result) => {
                 if (result.currentToken) {
                     dispatch({
@@ -166,8 +142,9 @@ const Login = () => {
                     });
                     history.push('/');
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
-                } else {
+                } else if (result.mfa) {
                     setShowMfa(true);
+                    setMfaInfo({ ...result.mfa, userId: result.id });
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 }
             })
@@ -205,9 +182,16 @@ const Login = () => {
                         <Typography component="h1" variant="h5">
                             Welcome
                         </Typography>
-                        <OTPDialog show={showMfa} onShow={setShowMfa} onSubmit={handleMfaSubmit} onResend={handleMfaResend}></OTPDialog>
+                        <OTPDialog
+                            userId={mfaInfo?.userId}
+                            mfaKey={mfaInfo && mfaInfo.type !== 'APP' ? mfaInfo?.key : null}
+                            mfa={mfaInfo}
+                            show={showMfa}
+                            onClose={() => setShowMfa(false)}
+                            onSubmit={handleSubmit}
+                        ></OTPDialog>
                         {facebookLogin()}
-                        <MasterForm fields={loginFields} onChange={handleChange} onSubmit={handleSubmit}>
+                        <MasterForm fields={loginFields} onChange={handleChange} onSubmit={(event, form) => handleSubmit()}>
                             <Button type="submit" ref={submitButton} fullWidth variant="contained" color="primary" className={classes.submit}>
                                 Sign In
                             </Button>

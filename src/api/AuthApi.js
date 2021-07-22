@@ -10,7 +10,8 @@ type UserAuth = {
     ...Auth,
     password: string,
     user: string,
-    mfa: string,
+    mfaKey: string,
+    mfaCode: string,
 };
 
 type UserRegistration = {
@@ -56,12 +57,6 @@ class AuthApi extends ApiManager {
     async authByUserAndPassword(request: UserAuth) {
         const data = await this.setAuth(request);
         const response = await this.post('', data, this.getHeaders(false));
-        return response;
-    }
-
-    async authByUserAndPasswordAndMfa(request: UserAuth) {
-        const data = await this.setAuth(request);
-        const response = await this.post('/verifyMfa', data, this.getHeaders(false));
         return response;
     }
 

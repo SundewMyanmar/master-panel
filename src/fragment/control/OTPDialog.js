@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -15,32 +15,47 @@ import {
 } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 import TextInput from './TextInput';
+import MfaApi from '../../api/MfaApi';
+import { useSelector } from 'react-redux';
 
 type OTPDialogProps = {
-    type: String,
+    userId: number,
+    mfaKey: string,
     show: boolean,
-    onShow: () => void,
+    onClose: () => void,
     onSubmit: () => void,
-    onResend: () => void,
 };
+
+const RESEND_TIMER = 60;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
 const OTPDialog = (props: OTPDialogProps) => {
-    const { type, show, onShow, onSubmit, onResend } = props;
+    const { show, onClose, onSubmit, mfaKey, userId } = props;
     const [code, setCode] = useState('');
-    const [timer, setTimer] = useState(null);
+    const [timer, setTimer] = useState(mfaKey ? RESEND_TIMER : 0);
 
-    const handleTimerChange = (value) => {
-        console.log('timer change', value);
-        setTimer(value);
+    const handleTimer = () => {
+        setTimer(timer - 1);
     };
 
+    useEffect(() => {
+        if (show && timer > 0) {
+            const timerId = setInterval(handleTimer, 1000);
+            return () => {
+                clearInterval(timerId);
+            };
+        }
+
+        // eslint-disable-next-line
+    }, [timer]);
+
     const handleOnClose = (value) => {
-        if (onShow) {
-            onShow(value);
+        if (onClose) {
+            onClose(value);
+            setTimer(0);
             setCode('');
         }
     };
@@ -50,9 +65,19 @@ const OTPDialog = (props: OTPDialogProps) => {
     };
 
     const handleOnResend = () => {
-        FormatManager.createTimer(60, 1000, handleTimerChange);
-        if (onResend) onResend();
-        setCode('');
+        if (mfaKey && userId) {
+            MfaApi.resend(userId, mfaKey)
+                .then((resp) => {
+                    setTimer(RESEND_TIMER);
+                    setCode('');
+                })
+                .catch((error) => {
+                    dispatch({
+                        type: ALERT_REDUX_ACTIONS.SHOW,
+                        alert: error || 'Please check your internet connection and try again.',
+                    });
+                });
+        }
     };
 
     const handleOnSubmit = () => {
@@ -60,14 +85,15 @@ const OTPDialog = (props: OTPDialogProps) => {
         setCode('');
     };
 
-    let inputAd =
-        type == 'APP' ? null : (
+    const resendButton =
+        mfaKey && userId ? (
             <InputAdornment position="end">
-                <Button disabled={timer} variant="outlined" color="secondary" aria-label="Verify" onClick={handleOnResend}>
-                    <Icon>refresh</Icon> RESEND
+                <IconButton name="refresh"></IconButton>
+                <Button disabled={timer > 0} variant="outlined" color="secondary" aria-label="Verify" onClick={handleOnResend}>
+                    <Icon>refresh</Icon> {timer > 0 ? timer + ' SEC' : 'RESEND'}
                 </Button>
             </InputAdornment>
-        );
+        ) : null;
 
     return (
         <Dialog maxWidth="xs" fullWidth={false} open={show} onClose={() => handleOnClose(false)} TransitionComponent={Transition}>
@@ -89,7 +115,6 @@ const OTPDialog = (props: OTPDialogProps) => {
             </DialogTitle>
             <DialogContent>
                 <TextInput
-                    autoFocus
                     onChange={handleCodeChange}
                     id="code"
                     name="code"
@@ -98,14 +123,15 @@ const OTPDialog = (props: OTPDialogProps) => {
                     type="text"
                     icon="new_releases"
                     value={code}
-                    inputAdornment={inputAd}
+                    inputAdornment={resendButton}
+                    autoFocus={true}
                 />
-                <Typography style={{ display: timer ? 'block' : 'none' }} color="primary" variant="overline" gutterBottom>
+                <Typography style={{ display: timer > 0 ? 'block' : 'none' }} color="primary" variant="overline" gutterBottom>
                     Please wait for {timer || ''} seconds to resend OTP again.
                 </Typography>
             </DialogContent>
             <DialogActions>
-                <Button style={{ marginRight: 14 }} onClick={handleOnSubmit} color="secondary" variant="contained" aria-label="Verify">
+                <Button style={{ marginRight: 14 }} onClick={handleOnSubmit} color="primary" variant="contained" aria-label="Verify">
                     VERIFY
                 </Button>
             </DialogActions>

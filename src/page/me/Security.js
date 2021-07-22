@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter, useHistory } from 'react-router';
 import {
+    ThemeProvider,
     Typography,
     Container,
     CssBaseline,
@@ -15,9 +16,10 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
+    IconButton,
 } from '@material-ui/core';
 import { QuestionDialog } from '../../fragment/message';
-import { OTPDialog } from '../../fragment/control';
+import { OTPDialog, TextInput } from '../../fragment/control';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -28,8 +30,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
+import MfaApi from '../../api/MfaApi';
+import DataTable from '../../fragment/table';
+import { ErrorTheme, WarningTheme } from '../../config/Theme';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         width: '100%',
         margin: theme.spacing(3),
@@ -106,26 +111,86 @@ const changePasswordFields = [
     },
 ];
 
-const Security = props => {
+export const MFA_TABLE_FIELDS = [
+    {
+        name: 'type',
+        label: 'MFA Type',
+        sortable: true,
+    },
+    {
+        name: 'key',
+        label: 'Key',
+        sortable: true,
+    },
+    {
+        name: 'default',
+        align: 'center',
+        label: 'Default MFA',
+        type: 'bool',
+        sortable: true,
+        width: 50,
+    },
+];
+
+const Security = (props) => {
     const classes = styles();
     const history = useHistory();
     const dispatch = useDispatch();
 
-    const [question,setQuestion]=useState('');
+    const [mfaPaging, setMfaPaging] = useState({
+        total: 0,
+        pageSize: 10,
+        currentPage: 0,
+        sort: 'modifiedAt:DESC',
+    });
+    const [currentMfa, setCurrentMfa] = useState(null);
+    const [showOtp, setShowOtp] = useState(false);
+
+    const [question, setQuestion] = useState('');
+    const [questionType, setQuestionType] = useState('remove');
     const user = useSelector((state) => state.user);
     const [expanded, setExpanded] = React.useState('changePassword');
-    const [mfa, setMfa] = React.useState(user);
-    const [showMfa, setShowMfa] = React.useState(false);
 
-    const handleAccordion = panel => (event, isExpanded) => {
+    const handleAccordion = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
     const handleError = (error) => {
+        console.log('Error => ', error);
         dispatch({
             type: ALERT_REDUX_ACTIONS.SHOW,
             alert: error || 'Please check your internet connection and try again.',
         });
+    };
+
+    const handleLoadMfa = async (currentPage = 0, pageSize = 10, sort = 'modifiedAt:DESC') => {
+        try {
+            const result = await MfaApi.getPaging(currentPage, pageSize, sort, '');
+            if (!result.data || result.data.length == 0) {
+                dispatch({
+                    type: USER_REDUX_ACTIONS.UPDATE,
+                    profile: { ...user, mfa: null },
+                });
+            }
+            setMfaPaging(result);
+        } catch (error) {
+            handleError(error);
+        }
+        return {};
+    };
+
+    useEffect(() => {
+        handleLoadMfa();
+
+        // eslint-disable-next-line
+    }, []);
+
+    const handleEditMfa = (item) => {
+        if (!item.default) {
+            setQuestion('Are you sure to change default 2-step verification?');
+            setQuestionType('change-default');
+        }
+        setCurrentMfa(item);
     };
 
     const handlePwdSubmit = (event, form) => {
@@ -142,7 +207,7 @@ const Security = props => {
         };
 
         ProfileApi.changePassword(data)
-            .then(response => {
+            .then((response) => {
                 dispatch({ type: USER_REDUX_ACTIONS.LOGOUT });
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 dispatch({
@@ -151,19 +216,64 @@ const Security = props => {
                 });
                 history.push('/login');
             })
-            .catch(error => {
-                handleError(error.message || error.title || 'Please check your internet connection and try again.');
+            .catch(handleError);
+    };
+
+    const handleRemoveMfa = (item) => {
+        setCurrentMfa(item);
+        setQuestionType('remove');
+        if (item.type === 'APP') {
+            setQuestion('Are you sure to remove MFA by App?');
+        } else {
+            setQuestion(`Are you sure to remove ${item.key} MFA?`);
+        }
+    };
+
+    const handleQuestionDialog = (status) => {
+        setQuestion('');
+        if (!status) {
+            return;
+        }
+        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
+        if (questionType === 'disable') {
+            MfaApi.disable()
+                .then((resp) => {
+                    dispatch({ type: USER_REDUX_ACTIONS.UPDATE, profile: { ...user, mfa: null } });
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Disabled 2-step verification. Please login again!` },
+                    });
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    history.push('/login');
+                })
+                .catch(handleError);
+        } else if (questionType === 'remove') {
+            MfaApi.remove(currentMfa.id)
+                .then((resp) => {
+                    handleLoadMfa();
+                    dispatch({
+                        type: FLASH_REDUX_ACTIONS.SHOW,
+                        flash: { type: 'success', message: `Removed MFA setting.` },
+                    });
+                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                })
+                .catch(handleError);
+        } else if (questionType === 'change-default') {
+            MfaApi.setDefault(currentMfa.id).then((resp) => {
+                dispatch({ type: USER_REDUX_ACTIONS.UPDATE, profile: { ...user, mfa: resp } });
+                dispatch({
+                    type: FLASH_REDUX_ACTIONS.SHOW,
+                    flash: { type: 'success', message: `Changed default MFA.` },
+                });
+                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                handleLoadMfa();
             });
+        } else {
+            dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+        }
     };
 
-    const handleMfaChange = event => {
-        setMfa({
-            ...mfa,
-            mfaType: event.target.value,
-        });
-    };
-
-    const handleMfaSubmit = code => {
+    const handleOtpSubmit = (code) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         if (!code) {
@@ -171,161 +281,112 @@ const Security = props => {
             return;
         }
 
-        ProfileApi.verifyMfa(code)
-            .then(result => {
-                setShowMfa(false);
-                dispatch({ type: USER_REDUX_ACTIONS.LOGOUT });
-                dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+        setShowOtp(false);
+        MfaApi.verify(code, currentMfa?.type === 'APP' ? null : currentMfa?.key)
+            .then((result) => {
+                if (currentMfa.default) {
+                    dispatch({ type: USER_REDUX_ACTIONS.UPDATE, profile: { ...user, mfa: currentMfa } });
+                }
+
                 dispatch({
                     type: FLASH_REDUX_ACTIONS.SHOW,
-                    flash: { type: 'success', message: '2-step verification setup is success! Please log in again.' },
+                    flash: { type: 'success', message: '2-step verification setup is success!.' },
                 });
-                history.push('/login');
-            })
-            .catch(() => {
-                handleError('Please check your internet connection and try again.');
-            })
-    };
-
-    const handleMfaResend = () => {
-        ProfileApi.resendMfa();
-    };
-
-    const handleMfaConfirm = value => {
-        if (value) {
-            if (!['EMAIL', 'SMS', 'APP'].includes(mfa.mfaType)) {
-                handleError('Please choose verification type.');
-                return;
-            }
-            if (mfa.mfaType == 'Email' && !mfa.email) {
-                handleError('You have not setup your email yet.');
-                return;
-            }
-            if (mfa.mfaType == 'SMS' && !mfa.phoneNumber) {
-                handleError('You have not setup your phone yet.');
-                return;
-            }
-        }
-
-        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
-        ProfileApi.setupMfa(value, mfa.mfaType)
-            .then(() => {
-                if (value) {
-                    setShowMfa(true);
-                } else {
-                    setMfa({
-                        ...mfa,
-                        mfaEnabled: false,
-                    });
-                }
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                handleLoadMfa();
             })
-            .catch(() => {
-                handleError('Please check your internet connection and try again.');
-            });
-    };
-
-    const handleQuestionDialog = status => {
-        if (status) {
-            handleMfaConfirm(false);
-            dispatch({
-                type: FLASH_REDUX_ACTIONS.SHOW,
-                flash: { type: 'success', message: `Save success.` },
-            });
-        }
-        setQuestion('');
-    };
-
-    const renderMfaDialog = () => {
-        return <OTPDialog type={mfa.mfaType} show={showMfa} onShow={setShowMfa} onSubmit={handleMfaSubmit} onResend={handleMfaResend}></OTPDialog>;
+            .catch(handleError);
     };
 
     const renderMfa = () => {
+        const fields_with_action = [
+            ...MFA_TABLE_FIELDS,
+            {
+                name: 'mfa_remove',
+                align: 'center',
+                label: '@',
+                minWidth: 50,
+                type: 'raw',
+                onLoad: (item) => (
+                    <>
+                        <ThemeProvider theme={ErrorTheme}>
+                            <IconButton size="small" onClick={() => handleRemoveMfa(item)}>
+                                <Icon color="primary">delete</Icon>
+                            </IconButton>
+                        </ThemeProvider>
+                    </>
+                ),
+            },
+        ];
         return (
             <Accordion expanded={expanded === 'twoFactor'} onChange={handleAccordion('twoFactor')}>
                 <AccordionSummary expandIcon={<Icon color="primary">expand_more</Icon>} aria-controls="panel1bh-content" id="panel1bh-header">
                     <Icon className={classes.expansionIcon}>phonelink_lock</Icon>
                     <Typography className={classes.heading}>2-Step Verification</Typography>
-                    <Chip
-                        className={classes.expansionIcon}
-                        color={mfa.mfaEnabled ? 'secondary' : 'primary'}
-                        size="small"
-                        label={mfa.mfaEnabled ? 'On' : 'Off'}
-                    />
+                    <Chip className={classes.expansionIcon} color={user.mfa ? 'secondary' : 'primary'} size="small" label={user.mfa ? 'On' : 'Off'} />
                 </AccordionSummary>
                 <AccordionDetails>
-                    <form style={{ width: '100%' }}>
-                        <FormControl component="fieldset">
-                            <RadioGroup aria-label="gender" name="gender1" value={mfa.mfaType} onChange={handleMfaChange}>
-                                <FormControlLabel value="EMAIL" control={<Radio color="primary" />} label="Email" />
-                                <Typography
-                                    style={{ display: mfa.mfaType == 'EMAIL' ? 'block' : 'none' }}
-                                    color="primary"
-                                    className={classes.radioContent}
-                                    variant="overline"
-                                    gutterBottom
-                                >
-                                    Verification codes will send Email to `{mfa.email}`.
-                                </Typography>
-
-                                <FormControlLabel value="SMS" control={<Radio color="primary" />} label="SMS Message" />
-                                <Typography
-                                    style={{ display: mfa.mfaType == 'SMS' ? 'block' : 'none' }}
-                                    color="primary"
-                                    className={classes.radioContent}
-                                    variant="overline"
-                                    gutterBottom
-                                >
-                                    Verification codes will send SMS message to `{mfa.phoneNumber}`.
-                                </Typography>
-                                <FormControlLabel value="APP" control={<Radio color="primary" />} label="Authenticator app" />
-                                <div style={{ display: mfa.mfaType == 'APP' ? 'block' : 'none' }} color="primary">
-                                    <Typography color="primary" variant="overline" gutterBottom>
-                                        <ul>
-                                            <li>Get the authenticator app from store.</li>
-                                            <li>In the App select Set up account.</li>
-                                            <li>Choose scan a barcode.</li>
-                                            <li>Enter the 6-digit code you see in the app and verify.</li>
-                                        </ul>
-                                    </Typography>
-
-                                    <img className={classes.image} src={qrCode} />
-                                </div>
-                            </RadioGroup>
-                        </FormControl>
-                        <Grid container justifyContent="flex-start">
+                    <Grid container>
+                        <Grid container item>
+                            <Typography color="primary" variant="overline" gutterBottom>
+                                Please double click to set default MFA.
+                            </Typography>
+                        </Grid>
+                        <Grid container item>
+                            <DataTable
+                                multi={false}
+                                fields={fields_with_action}
+                                items={mfaPaging.data}
+                                total={mfaPaging.total}
+                                pageSize={mfaPaging.pageSize}
+                                currentPage={mfaPaging.currentPage}
+                                sort={mfaPaging.sort}
+                                onPageChange={(page) => handleLoadMfa(page.page, page.pageSize, page.sort)}
+                                onEdit={handleEditMfa}
+                            />
+                        </Grid>
+                        <Grid justifyContent="flex-end" container item>
                             <Button
-                                onClick={() => handleMfaConfirm(true)}
-                                type="button"
-                                variant="contained"
-                                color="secondary"
-                                className={classes.submit}
-                            >
-                                <Icon>lock</Icon>
-                                {mfa.mfaEnabled ? 'Save' : 'Turn On'}
-                            </Button>
-                            <Button
-                                onClick={() => setQuestion('Are you sure to turn off 2-step verification ?')}
-                                style={{ display: mfa.mfaEnabled ? 'block' : 'none' }}
+                                onClick={() => history.push('/mfa/setup')}
                                 type="button"
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
                             >
-                                <Icon>lock_open</Icon>
-                                Turn Off
+                                <Icon>vpn_key</Icon> Add New
                             </Button>
+                            {user.mfa ? (
+                                <ThemeProvider theme={ErrorTheme}>
+                                    <Button
+                                        onClick={() => {
+                                            setQuestion('Are you sure to turn off 2-step verification?');
+                                            setQuestionType('disable');
+                                        }}
+                                        type="button"
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >
+                                        <Icon>lock</Icon> Turn Off
+                                    </Button>
+                                </ThemeProvider>
+                            ) : null}
                         </Grid>
-                    </form>
+                    </Grid>
                 </AccordionDetails>
             </Accordion>
         );
     };
 
-    const qrCode = ProfileApi.customLink('/mfa/qr', false) + '&noMargin=true&name=' + APP_NAME;
-
     return (
         <>
+            <OTPDialog
+                userId={user.id}
+                mfaKey={currentMfa?.type === 'APP' ? null : currentMfa?.key}
+                show={showOtp}
+                onClose={() => setShowOtp(false)}
+                onSubmit={handleOtpSubmit}
+            />
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Container component="main" maxWidth="md">
                 <CssBaseline />
@@ -355,7 +416,6 @@ const Security = props => {
                                 </MasterForm>
                             </AccordionDetails>
                         </Accordion>
-                        {renderMfaDialog()}
                         {renderMfa()}
                     </div>
                 </Paper>
