@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router';
-import { QuestionDialog } from '../../fragment/message';
-import TreeMenu from '../../fragment/layout/TreeMenu';
+import { QuestionDialog } from '../message';
+import TreeMenu from '../layout/TreeMenu';
 import {
     Grid,
     Paper,
@@ -19,14 +19,14 @@ import {
     Checkbox,
     ListItemText,
 } from '@material-ui/core';
-import { SearchInput } from '../../fragment/control';
-import PaginationBar from '../../fragment/PaginationBar';
+import { SearchInput } from '../control';
+import PaginationBar from '../PaginationBar';
 import FolderApi from '../../api/FolderApi';
 import FileApi from '../../api/FileApi';
-import ImagePreview from '../../fragment/file/ImagePreview';
-import FileGrid from '../../fragment/file/FileGrid';
-import FolderDialog from '../../fragment/control/FolderDialog';
-import { MultiUpload } from '../../fragment/file/MultiUpload';
+import ImagePreview from './ImagePreview';
+import FileGrid from './FileGrid';
+import FolderDialog from '../control/FolderDialog';
+import { MultiUpload } from './MultiUpload';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
@@ -48,6 +48,7 @@ const styles = makeStyles(theme => ({
         padding: theme.spacing(3),
         margin: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
     },
     treeBox: {
         overflow: 'auto',
@@ -85,20 +86,12 @@ const styles = makeStyles(theme => ({
 }));
 
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
 
 const FileManager = props => {
     const classes = styles();
-
     const dispatch = useDispatch();
+
+    const { onClose } = props;
     const [question, setQuestion] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [paging, setPaging] = React.useState(() => {
@@ -137,7 +130,7 @@ const FileManager = props => {
     const loadFiles = async (folder, currentPage, pageSize, sort) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search);
+            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden);
             const { data, ...paging } = result;
             setPaging(paging);
             console.log('file data', result);
@@ -185,6 +178,11 @@ const FileManager = props => {
 
     React.useEffect(() => {
         loadFiles(folder.id, 0, paging.pageSize, paging.sort);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showPublic, showHidden]);
+
+    React.useEffect(() => {
+        loadFiles(folder.id, 0, paging.pageSize, paging.sort);
         loadFolders();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
@@ -192,7 +190,7 @@ const FileManager = props => {
     const handleFolderSubmit = form => {
         console.log('submit folder 1', form);
         if (!window.navigator.onLine) {
-            setError('Please check your internet connection and try again.');
+            handleError('Please check your internet connection and try again.');
             return;
         }
 
@@ -256,7 +254,7 @@ const FileManager = props => {
         loadFiles(item.id, 0, paging.pageSize, paging.sort);
     };
 
-    const handleError = (error) => {
+    const handleError = error => {
         dispatch({
             type: ALERT_REDUX_ACTIONS.SHOW,
             alert: error || 'Please check your internet connection and try again.',
@@ -319,6 +317,11 @@ const FileManager = props => {
     };
 
     const handleFileClick = file => {
+        if (onClose) {
+            onClose(file);
+            return;
+        }
+
         setPreview(file);
     };
 
@@ -368,137 +371,112 @@ const FileManager = props => {
                     onClose={handleClosePreview}
                 />
             ) : null}
-            <Container component="main" maxWidth="lg">
-                <Paper className={classes.paper} elevation={6}>
-                    <Avatar className={classes.avatar}>
-                        <Icon>collections_bookmark</Icon>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        File Manager
-                    </Typography>
-                    <Grid className={classes.innerBox} container>
-                        <Grid
-                            className={classes.inputBox}
-                            container
-                            item
-                            md={3}
-                            sm={12}
-                            xs={12}
-                            alignContent="flex-start"
-                            alignItems="stretch"
-                            direction="column"
-                        >
-                            <Grid container item className={classes.treeBox}>
-                                <TreeMenu
-                                    allowCreate={true}
-                                    onCreate={handleTreeCreate}
-                                    onRemove={handleFolderRemove}
-                                    menus={folders}
-                                    showRoot={showRoot}
-                                    onClickItem={handleFolderClick}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid
-                            className={classes.inputBox}
-                            container
-                            direct
-                            item
-                            md={9}
-                            sm={12}
-                            xs={12}
-                            justify="flex-start"
-                            alignContent="flex-start"
-                        >
-                            <Grid container flex justify="flex-start" alignContent="center" direction="row" item spacing={2}>
-                                <Grid item lg={9} md={9} sm={9} xs={12}>
-                                    <SearchInput className={classes.newButton} onSearch={value => setSearch(value)} placeholder="Search Files" />
-                                </Grid>
-                                <Grid container item lg={1} md={1} sm={1} xs={12} justify="center" alignContent="center">
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        aria-label="more"
-                                        aria-controls="long-menu"
-                                        aria-haspopup="true"
-                                        onClick={handleClick}
-                                        className={classes.newButton}
-                                    >
-                                        <Icon>tune</Icon>
-                                    </Button>
-                                    <Menu
-                                        id="long-menu"
-                                        anchorEl={anchorEl}
-                                        keepMounted
-                                        open={open}
-                                        onClose={handleClose}
-                                        PaperProps={{
-                                            style: {
-                                                maxHeight: ITEM_HEIGHT * 4.5,
-                                                width: '20ch',
-                                            },
-                                        }}
-                                    >
-                                        <MenuItem key="public" value={showPublic}>
-                                            <Checkbox
-                                                color="secondary"
-                                                value={showPublic}
-                                                onChange={event => setShowPublic(event.target.checked)}
-                                                checked={showPublic}
-                                            />
-                                            <ListItemText primary="Public" />
-                                        </MenuItem>
-                                        <MenuItem key="hidden" value={showHidden}>
-                                            <Checkbox
-                                                color="secondary"
-                                                value={showHidden}
-                                                onChange={event => setShowHidden(event.target.checked)}
-                                                checked={showHidden}
-                                            />
-                                            <ListItemText primary="Hidden" />
-                                        </MenuItem>
-                                    </Menu>
-                                </Grid>
-                                <Grid item lg={2} md={2} sm={2} xs={12}>
-                                    <Button
-                                        onClick={() => setShowUploadDialog(true)}
-                                        variant="contained"
-                                        color="primary"
-                                        aria-label="Upload"
-                                        className={classes.newButton}
-                                    >
-                                        <Icon className={classes.icon}>cloud_upload</Icon> Upload
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                            <Grid container item flex>
-                                <FileGrid
-                                    showPublic={showPublic}
-                                    showHidden={showHidden}
-                                    className={classes.container}
-                                    data={files}
-                                    onClickItem={handleFileClick}
-                                />
 
-                                <Table style={{ height: '5%' }} className={classes.footer}>
-                                    <TableFooter>
-                                        <TableRow>
-                                            <PaginationBar
-                                                rowsPerPage={[12, 24, 36, 72]}
-                                                total={paging.total}
-                                                pageSize={paging.pageSize}
-                                                currentPage={paging.currentPage}
-                                                onPageChange={newPage => loadFiles(folder.id, newPage, paging.pageSize, paging.sort)}
-                                                onPageSizeChange={size => loadFiles(folder.id, 0, size, paging.sort)}
-                                            />
-                                        </TableRow>
-                                    </TableFooter>
-                                </Table>
-                            </Grid>
+            <Grid className={classes.innerBox} container>
+                <Grid
+                    className={classes.inputBox}
+                    container
+                    item
+                    md={3}
+                    sm={12}
+                    xs={12}
+                    alignContent="flex-start"
+                    alignItems="stretch"
+                    direction="column"
+                >
+                    <Grid container item className={classes.treeBox}>
+                        <TreeMenu
+                            allowCreate={true}
+                            onCreate={handleTreeCreate}
+                            onRemove={handleFolderRemove}
+                            menus={folders}
+                            showRoot={showRoot}
+                            onClickItem={handleFolderClick}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid className={classes.inputBox} container direct item md={9} sm={12} xs={12} justifyContent="flex-start" alignContent="flex-start">
+                    <Grid container flex justifyContent="flex-start" alignContent="center" direction="row" item spacing={2}>
+                        <Grid item lg={9} md={9} sm={9} xs={12}>
+                            <SearchInput className={classes.newButton} onSearch={value => setSearch(value)} placeholder="Search Files" />
+                        </Grid>
+                        <Grid container item lg={1} md={1} sm={1} xs={12} justifyContent="center" alignContent="center">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                aria-label="more"
+                                aria-controls="long-menu"
+                                aria-haspopup="true"
+                                onClick={handleClick}
+                                className={classes.newButton}
+                            >
+                                <Icon>tune</Icon>
+                            </Button>
+                            <Menu
+                                id="long-menu"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={open}
+                                onClose={handleClose}
+                                PaperProps={{
+                                    style: {
+                                        maxHeight: ITEM_HEIGHT * 4.5,
+                                        width: '20ch',
+                                    },
+                                }}
+                            >
+                                <MenuItem key="public" value={showPublic}>
+                                    <Checkbox
+                                        color="secondary"
+                                        value={showPublic}
+                                        onChange={event => setShowPublic(event.target.checked)}
+                                        checked={showPublic}
+                                    />
+                                    <ListItemText primary="Public" />
+                                </MenuItem>
+                                <MenuItem key="hidden" value={showHidden}>
+                                    <Checkbox
+                                        color="secondary"
+                                        value={showHidden}
+                                        onChange={event => setShowHidden(event.target.checked)}
+                                        checked={showHidden}
+                                    />
+                                    <ListItemText primary="Hidden" />
+                                </MenuItem>
+                            </Menu>
+                        </Grid>
+                        <Grid item lg={2} md={2} sm={2} xs={12}>
+                            <Button
+                                onClick={() => setShowUploadDialog(true)}
+                                variant="contained"
+                                color="primary"
+                                aria-label="Upload"
+                                className={classes.newButton}
+                            >
+                                <Icon className={classes.icon}>cloud_upload</Icon> Upload
+                            </Button>
                         </Grid>
                     </Grid>
-                </Paper>
-            </Container>
+                    <Grid container item flex>
+                        <FileGrid className={classes.container} data={files} onClickItem={handleFileClick} />
+
+                        <Table style={{ height: '5%' }} className={classes.footer}>
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationBar
+                                        rowsPerPage={[12, 24, 36, 72]}
+                                        total={paging.total}
+                                        pageSize={paging.pageSize}
+                                        currentPage={paging.currentPage}
+                                        onPageChange={newPage => loadFiles(folder.id, newPage, paging.pageSize, paging.sort)}
+                                        onPageSizeChange={size => loadFiles(folder.id, 0, size, paging.sort)}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </Grid>
+                </Grid>
+            </Grid>
         </>
     );
 };

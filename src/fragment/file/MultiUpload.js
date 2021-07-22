@@ -155,7 +155,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
                 <Grid container spacing={1}>
                     {files.map((file, idx) => {
                         return (
-                            <Grid key={file.id} container item justify="center" xs={4} sm={3} md={2} lg={2}>
+                            <Grid key={file.id} container item justifyContent="center" xs={4} sm={3} md={2} lg={2}>
                                 <div className={classes.thumbnailContainer}>
                                     <img className={classes.thumbnail} src={file.preview} alt={file.name} />
                                     <MuiThemeProvider theme={ErrorTheme}>

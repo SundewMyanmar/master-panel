@@ -2,7 +2,7 @@ import React, { useState, createRef, useEffect } from 'react';
 import { InputProps, IconButton, makeStyles, Icon } from '@material-ui/core';
 import ListPicker from './ListPicker';
 import FileApi from '../../api/FileApi';
-import FilePicker from './FilePicker';
+import FileManagerPicker from '../file/FileManagerPicker';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 
@@ -202,7 +202,7 @@ const ImagePicker = (props: ImageInputProps) => {
 
     return (
         <>
-            <FilePicker show={showFile} selectedData={image} onClose={handleCloseFile} onError={handleError} title="Choose File" />
+            <FileManagerPicker show={showFile} onClose={handleCloseFile} title="Choose File" />
             <ListPicker show={showMenu} onClose={handleCloseMenu} data={MENU_LIST_ITEMS} title="Choose Action" />
             <div {...rest} className={[classes.container]}>
                 <IconButton style={{ visibility: visibility }} onClick={handleRemove} className={classes.removeButton}>

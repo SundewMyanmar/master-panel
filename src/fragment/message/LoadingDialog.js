@@ -1,11 +1,8 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogContentText, CircularProgress, makeStyles, Zoom } from '@material-ui/core';
+import Transition from '../control/Transition';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Zoom in ref={ref} {...props} />;
-});
-
-const loadingStyle = makeStyles((theme) => ({
+const loadingStyle = makeStyles(theme => ({
     progress: {
         display: 'block',
         textAlign: 'center',
@@ -26,9 +23,11 @@ export default function LoadingDialog(props: LoadingDialogProps) {
             <Dialog maxWidth="sm" open={show} TransitionComponent={Transition}>
                 <DialogContent>
                     <div className={classes.progress}>
-                        <CircularProgress />
+                        <CircularProgress color="inherit" />
                     </div>
-                    <DialogContentText id="loading-dialog-description">{message}</DialogContentText>
+                    <DialogContentText color="inherit" id="loading-dialog-description">
+                        {message}
+                    </DialogContentText>
                 </DialogContent>
             </Dialog>
         </div>
@@ -36,6 +35,5 @@ export default function LoadingDialog(props: LoadingDialogProps) {
 }
 
 LoadingDialog.defaultProps = {
-    show: false,
     message: 'Please wait ...',
 };

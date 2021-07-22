@@ -8,6 +8,7 @@ import {
     IconButton,
     Icon,
     Grid,
+    makeStyles,
     Button,
     DialogTitle,
     Typography,
@@ -24,8 +25,15 @@ type FolderDialogProps = {
     onSubmit: () => void,
 };
 
+const styles = makeStyles(theme => ({
+    title: {
+        color: theme.palette.text.primary,
+    },
+}));
+
 const FolderDialog = (props: FolderDialogProps) => {
     const { data, show, onShow, onSubmit } = props;
+    const classes = styles();
 
     const handleOnShow = isShow => {
         if (onShow) onShow(isShow);
@@ -89,14 +97,14 @@ const FolderDialog = (props: FolderDialogProps) => {
         >
             <DialogTitle>
                 <Grid container>
-                    <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justify="flex-start">
-                        <Typography color="primary" variant="h6" component="h1" noWrap>
+                    <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">
+                        <Typography className={classes.title} color="primary" variant="h6" component="h1" noWrap>
                             Folder
                         </Typography>
                     </Grid>
-                    <Grid container item lg={1} md={1} sm={1} xs={1} alignItems="center" justify="flex-end">
+                    <Grid container item lg={1} md={1} sm={1} xs={1} alignItems="center" justifyContent="flex-end">
                         <Tooltip title="Close Dialog">
-                            <IconButton size="small" color="primary" onClick={() => handleOnShow(false)} aria-label="Close">
+                            <IconButton className={classes.title} size="small" color="primary" onClick={() => handleOnShow(false)} aria-label="Close">
                                 <Icon>close</Icon>
                             </IconButton>
                         </Tooltip>

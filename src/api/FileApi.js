@@ -5,12 +5,14 @@ class FileApi extends ApiManager {
         super('files');
     }
 
-    async getPagingByFolder(folder, page, size, sort, filter) {
+    async getPagingByFolder(folder, page, size, sort, filter, isPublic, isHidden) {
         if (!folder) folder = 0;
 
         let url = '/' + folder + '/folder?page=' + page + '&size=' + size;
         if (sort && sort !== '') url += '&sort=' + sort;
         if (filter && filter !== '') url += '&filter=' + filter;
+        if (isPublic && isPublic !== '') url += '&public=' + isPublic;
+        if (isHidden && isHidden !== '') url += '&hidden=' + isHidden;
 
         const response = await this.get(url, this.getHeaders(true));
         return response;

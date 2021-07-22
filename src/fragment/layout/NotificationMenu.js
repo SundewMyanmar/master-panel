@@ -139,6 +139,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
 
             loadMoreNotification(paging);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paging]);
 
     useEffect(() => {

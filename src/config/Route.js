@@ -13,7 +13,7 @@ import Role from '../page/admin/Role';
 import RoleDetail from '../page/admin/RoleDetail';
 import Menu from '../page/admin/Menu';
 import ApiPermission from '../page/admin/ApiPermission';
-import FileManager from '../page/file/FileManager';
+import File from '../page/file/File';
 import Developer from '../page/Developer';
 
 //Inventory
@@ -30,7 +30,7 @@ export const PrivateRoute = [
     { path: '/role/detail/:id', page: RoleDetail },
     { path: '/menu', page: Menu },
     { path: '/permission/:roleId?', page: ApiPermission },
-    { path: '/file', page: FileManager },
+    { path: '/file', page: File },
     { path: '/api-debug', page: Developer },
     { path: '/inventory/product', page: Product },
     { path: '/inventory/product/detail/:id', page: ProductDetail },

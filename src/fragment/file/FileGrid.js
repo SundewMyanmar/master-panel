@@ -70,15 +70,13 @@ export const FileGridItem = (props: FileGridItemProps) => {
 type FileGridProps = {
     data: Array<Object>,
     selectedData: Array<Object>,
-    showPublic: boolean,
-    showHidden: boolean,
     multi: boolean,
     onClickItem?: (file: Object) => void,
     ...GridProps,
 };
 
 const FileGrid = (props: FileGridProps) => {
-    const { data, selectedData, multi, showPublic, showHidden, onClickItem, ...gridProps } = props;
+    const { data, selectedData, multi, onClickItem, ...gridProps } = props;
 
     return (
         <Grid container {...gridProps}>
@@ -88,16 +86,10 @@ const FileGrid = (props: FileGridProps) => {
                         ? selectedData.findIndex(x => x.id === item.id) >= 0
                         : selectedData && selectedData.id && selectedData.id === item.id;
 
-                    
+                    console.log('file access', item);
                     let itemResult = (
                         <FileGridItem multi={multi} isMarked={isMarked} key={item.id + '-' + index} onClick={() => onClickItem(item)} {...item} />
                     );
-                    if (!showPublic && item.publicAccess) {
-                        itemResult = null;
-                    }
-                    if (!showHidden && item.status == 'HIDDEN') {
-                        itemResult = null;
-                    }
 
                     return itemResult;
                 })
@@ -113,8 +105,6 @@ const FileGrid = (props: FileGridProps) => {
 FileGrid.defaultProps = {
     data: [],
     multi: false,
-    showPublic: true,
-    showHidden: false,
     onClickItem: file => console.warn('Undefined onSelectionChange => ', file),
 };
 

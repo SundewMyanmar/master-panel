@@ -9,7 +9,6 @@ import {
     TableFooter,
     TableRow,
     Typography,
-    Zoom,
     LinearProgress,
     makeStyles,
     Icon,
@@ -22,6 +21,7 @@ import PaginationBar from '../PaginationBar';
 import SearchInput from './SearchInput';
 import FileApi from '../../api/FileApi';
 import FileGrid from '../file/FileGrid';
+import Transition from './Transition';
 
 type FilePickerProps = {
     show: boolean,
@@ -36,16 +36,15 @@ type FilePickerProps = {
     onClose: (result: Object | Array<Object>) => void,
 };
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Zoom in ref={ref} {...props} />;
-});
-
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
     content: {
         backgroundColor: theme.palette.background.default,
         borderTop: '1px solid ' + theme.palette.divider,
         borderBottom: '1px solid ' + theme.palette.divider,
         padding: theme.spacing(1),
+    },
+    title: {
+        color: theme.palette.text.primary,
     },
     header: {
         padding: theme.spacing(1, 2),
@@ -96,14 +95,14 @@ const FilePicker = (props: FilePickerProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
-    const handleClick = (item) => {
+    const handleClick = item => {
         if (!multi) {
             onClose(item);
             return;
         }
 
-        const existIdx = checked.findIndex((x) => x.id === item.id);
-        const updateSelection = existIdx < 0 ? [...checked, item] : checked.filter((x) => x.id !== item.id);
+        const existIdx = checked.findIndex(x => x.id === item.id);
+        const updateSelection = existIdx < 0 ? [...checked, item] : checked.filter(x => x.id !== item.id);
 
         setChecked(updateSelection);
         onSelectionChange(updateSelection);
@@ -111,20 +110,27 @@ const FilePicker = (props: FilePickerProps) => {
 
     return (
         <>
-            <Dialog fullWidth maxWidth="lg" onClose={() => onClose(false)} open={show} TransitionComponent={Transition}>
+            <Dialog
+                fullWidth
+                maxWidth="lg"
+                onEscapeKeyDown={() => onClose(false)}
+                onClose={() => onClose(false)}
+                open={show}
+                TransitionComponent={Transition}
+            >
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
-                            <Typography color="primary" variant="h6" component="h1" noWrap>
+                            <Typography className={classes.title} variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>
                         <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
-                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
+                            <SearchInput onSearch={value => setSearch(value)} placeholder="Search Files" />
                         </Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
                             <Tooltip title="Close Dialog">
-                                <IconButton size="small" color="primary" onClick={() => onClose(false)} aria-label="Close">
+                                <IconButton size="small" className={classes.title} onClick={() => onClose(false)} aria-label="Close">
                                     <Icon>close</Icon>
                                 </IconButton>
                             </Tooltip>
@@ -143,8 +149,8 @@ const FilePicker = (props: FilePickerProps) => {
                                 total={paging.total}
                                 pageSize={paging.pageSize}
                                 currentPage={paging.currentPage}
-                                onPageChange={(newPage) => loadFiles(newPage, paging.pageSize)}
-                                onPageSizeChange={(size) => loadFiles(0, size)}
+                                onPageChange={newPage => loadFiles(newPage, paging.pageSize)}
+                                onPageSizeChange={size => loadFiles(0, size)}
                             />
                         </TableRow>
                     </TableFooter>
@@ -167,8 +173,8 @@ const FilePicker = (props: FilePickerProps) => {
 FilePicker.defaultProps = {
     title: 'File Browser',
     selectedData: [],
-    onError: (error) => console.warn(error),
-    onSelectionChange: (result) => console.warn('Undefined onSelectionChange => ', result),
+    onError: error => console.warn(error),
+    onSelectionChange: result => console.warn('Undefined onSelectionChange => ', result),
 };
 
 export default FilePicker;

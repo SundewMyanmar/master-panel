@@ -34,7 +34,7 @@ const PAGINATION_BUTTONS = [
     },
 ];
 
-const actionStyles = makeStyles((theme) => ({
+const actionStyles = makeStyles(theme => ({
     root: {
         flexShrink: 0,
         marginLeft: theme.spacing(2.5),
@@ -43,11 +43,11 @@ const actionStyles = makeStyles((theme) => ({
         color: theme.palette.text.primary,
     },
 }));
-const PaginationAction = (props) => {
+const PaginationAction = props => {
     const { count, page, rowsPerPage, onChangePage } = props;
     const classes = actionStyles();
 
-    const isDisabled = (item) => {
+    const isDisabled = item => {
         const pageCount = Math.ceil(count / rowsPerPage);
         if (item.name === 'first' || item.name === 'previous') {
             return page <= 0;
@@ -57,7 +57,7 @@ const PaginationAction = (props) => {
         return false;
     };
 
-    const handlePaginationAction = (action) => {
+    const handlePaginationAction = action => {
         const pageCount = Math.ceil(count / rowsPerPage);
         let currentPage = page;
         if (action.name === 'first') {
@@ -91,12 +91,14 @@ const PaginationAction = (props) => {
     );
 };
 
-const styles = makeStyles((theme) => ({}));
+const styles = makeStyles(theme => ({
+    root: {},
+}));
 
 const PaginationBar = (props: PaginationBarProps) => {
     const { total, pageSize, currentPage, rowsPerPage, onPageChange, onPageSizeChange, ...paginationProps } = props;
     const classes = styles();
-    const handleRowsPerPageChange = (e) => {
+    const handleRowsPerPageChange = e => {
         if (onPageSizeChange) {
             onPageSizeChange(parseInt(e.target.value));
         }
@@ -104,13 +106,14 @@ const PaginationBar = (props: PaginationBarProps) => {
 
     return (
         <TablePagination
+            className={classes.root}
             rowsPerPageOptions={rowsPerPage}
             count={total}
             rowsPerPage={pageSize}
             labelRowsPerPage="Page Size :"
             page={currentPage}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            onPageChange={(event, newPage) => onPageChange(newPage)}
+            onChangeRowsPerPage={handleRowsPerPageChange}
+            onChangePage={(event, newPage) => onPageChange(newPage)}
             ActionsComponent={PaginationAction}
             {...paginationProps}
         />
@@ -122,7 +125,7 @@ PaginationBar.defaultProps = {
     total: 0,
     pageSize: 5,
     currentPage: 1,
-    onPageChange: (newPage) => console.warn('Undefined onPageChange => ', newPage),
+    onPageChange: newPage => console.warn('Undefined onPageChange => ', newPage),
 };
 
 export default PaginationBar;

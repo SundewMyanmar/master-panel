@@ -293,7 +293,7 @@ const Security = props => {
                                 </div>
                             </RadioGroup>
                         </FormControl>
-                        <Grid container justify="flex-start">
+                        <Grid container justifyContent="flex-start">
                             <Button
                                 onClick={() => handleMfaConfirm(true)}
                                 type="button"
