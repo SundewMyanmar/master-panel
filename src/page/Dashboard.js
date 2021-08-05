@@ -6,11 +6,7 @@ import {
 } from '@material-ui/core';
 
 const Dashboard = (props) => {
-    return (
-        <React.Fragment>
-            <Typography variant="h1">Welcome</Typography>
-        </React.Fragment>
-    );
+    return <Typography variant="h1">Welcome</Typography>
 };
 
 export default withTheme(withRouter(Dashboard));
