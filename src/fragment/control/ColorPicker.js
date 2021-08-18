@@ -28,7 +28,7 @@ type ColorPickerProps = {
 const DEFAULT_WIDTH = 560;
 const DEFAULT_HEIGHT = 295;
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     content: {
         padding: 0,
         margin: 0,
@@ -63,13 +63,13 @@ const ColorPicker = (props: ColorPickerProps) => {
         if (value) setColor(value);
     }, [value, show]);
 
-    const handleChange = newColor => {
+    const handleChange = (newColor) => {
         setColor(newColor);
 
         if (onClose) onClose(newColor.hex);
     };
 
-    const handleChangeComplete = newColor => {
+    const handleChangeComplete = (newColor) => {
         setColor(newColor);
     };
 
@@ -81,7 +81,7 @@ const ColorPicker = (props: ColorPickerProps) => {
 
     return (
         <>
-            <Dialog onEscapeKeyDown={() => onClose(false)} open={show} TransitionComponent={Transition}>
+            <Dialog onClose={() => onClose(false)} open={show} TransitionComponent={Transition}>
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={8} md={8} sm={8} xs={12} alignItems="center" justifyContent="flex-start">
@@ -142,7 +142,7 @@ const ColorPicker = (props: ColorPickerProps) => {
 ColorPicker.defaultProps = {
     title: 'Color Browser',
     value: '#fff',
-    onError: error => console.warn(error),
+    onError: (error) => console.warn(error),
 };
 
 export default ColorPicker;

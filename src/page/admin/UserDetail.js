@@ -12,8 +12,9 @@ import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
+import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         marginBottom: theme.spacing(4),
@@ -30,9 +31,12 @@ const styles = makeStyles(theme => ({
     submit: {
         marginLeft: theme.spacing(1),
     },
+    redContainer: {
+        backgroundColor: theme.palette.error.main,
+    },
 }));
 
-const UserDetail = props => {
+const UserDetail = (props) => {
     const classes = styles();
     const history = useHistory();
     const { id } = useParams();
@@ -49,24 +53,23 @@ const UserDetail = props => {
             alert: error || 'Please check your internet connection and try again.',
         });
     };
-
-    const [detail, setDetail] = useState(() => {
+    const [form, setForm] = useState(() => {
         UserApi.getById(id)
-            .then(data => {
-                setDetail(data);
+            .then((data) => {
+                setForm({ ...data, image: data.profileImage });
                 setUpdate(true);
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.code !== 'HTTP_406') {
                     handleError(error);
                 } else {
                     setUpdate(false);
                 }
-            })
+            });
         return {};
     });
 
-    const handleSubmit = async form => {
+    const handleSubmit = async () => {
         if (!window.navigator.onLine) {
             handleError('Please check your internet connection and try again.');
             return;
@@ -76,19 +79,21 @@ const UserDetail = props => {
             return;
         }
 
-        let user = {
-            displayName: form.displayName,
-            phoneNumber: FormatManager.cleanPhoneNumber(form.phoneNumber),
-            email: form.email,
-            roles: form.roles,
-            password: form.password,
-            status: form.status ? 'ACTIVE' : 'CANCEL',
-            extras: {
-                address: form.address || '',
-                gender: form.gender && typeof form.gender === 'string' ? form.gender : '',
-            },
-        };
-
+        // let user = {
+        //     displayName: form.displayName,
+        //     phoneNumber: FormatManager.cleanPhoneNumber(form.phoneNumber),
+        //     email: form.email,
+        //     roles: form.roles,
+        //     password: form.password,
+        //     status: form.status ? 'ACTIVE' : 'CANCEL',
+        //     extras: {
+        //         address: form.address || '',
+        //         gender: form.gender && typeof form.gender === 'string' ? form.gender : '',
+        //     },
+        // };
+        let user = { ...form };
+        user.phoneNumber = FormatManager.cleanPhoneNumber(form.phoneNumber);
+        console.log('Form => ', form);
         if (form.image && form.image.id) {
             user.profileImage = form.image;
         } else if (form.image && !form.image.id) {
@@ -102,11 +107,9 @@ const UserDetail = props => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         if (isUpdate) {
-            user.id = detail.id;
             user.password = 'default_password';
-            user.version = detail.version;
             UserApi.modifyById(id, user)
-                .then(response => {
+                .then((response) => {
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                     dispatch({
                         type: FLASH_REDUX_ACTIONS.SHOW,
@@ -117,7 +120,7 @@ const UserDetail = props => {
                 .catch(handleError);
         } else {
             UserApi.addNew(user)
-                .then(response => {
+                .then((response) => {
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                     dispatch({
                         type: FLASH_REDUX_ACTIONS.SHOW,
@@ -129,97 +132,6 @@ const UserDetail = props => {
         }
     };
 
-    const newUserFields = [
-        {
-            id: 'password',
-            label: 'Password',
-            required: true,
-            type: 'password',
-        },
-        {
-            id: 'confirmPassword',
-            label: 'Confirm Password',
-            required: true,
-            type: 'password',
-            onValidate: (event, form) => (form.password !== event.target.value ? "Password and Confirm Password doesn't match." : ''),
-        },
-    ];
-
-    const fields = [
-        {
-            id: 'image',
-            type: 'image',
-            enableFilePicker: true,
-            required: true,
-            value: detail.profileImage || null,
-        },
-        {
-            id: 'displayName',
-            label: 'Full Name',
-            icon: 'face',
-            required: true,
-            type: 'text',
-            value: detail.displayName,
-        },
-        {
-            id: 'email',
-            label: 'E-mail',
-            required: true,
-            type: 'email',
-            value: detail.email,
-        },
-        {
-            id: 'phoneNumber',
-            label: 'Phone number',
-            icon: 'phone',
-            required: true,
-            type: 'text',
-            InputProps: {
-                startAdornment: (
-                    <>
-                        <InputAdornment position="start"> +959 </InputAdornment>
-                    </>
-                ),
-            },
-            value: detail.phoneNumber,
-        },
-        {
-            id: 'roles',
-            label: 'Roles',
-            icon: 'people',
-            type: 'table',
-            multi: true,
-            required: true,
-            fields: ROLE_TABLE_FIELDS,
-            onLoadData: handleRoleData,
-            onLoadItem: item => item.name,
-            values: detail.roles,
-        },
-        {
-            id: 'gender',
-            label: 'Gender',
-            icon: 'person',
-            type: 'list',
-            data: ['Male', 'Female', 'Other'],
-            value: detail.extras ? detail.extras.gender : null,
-        },
-        {
-            id: 'address',
-            label: 'Address',
-            type: 'text',
-            multiline: true,
-            rows: '4',
-            value: detail.extras ? detail.extras.address : null,
-        },
-        {
-            id: 'status',
-            label: 'Active User?',
-            type: 'checkbox',
-            value: detail.status,
-            checked: detail.status ? detail.status.toLowerCase() === 'active' : false,
-        },
-    ];
-
     return (
         <>
             <Container component="main" maxWidth="md">
@@ -230,7 +142,143 @@ const UserDetail = props => {
                     <Typography component="h1" variant="h5">
                         User Setup
                     </Typography>
-                    <MasterForm fields={isUpdate ? fields : [...fields, ...newUserFields]} onSubmit={(event, form) => handleSubmit(form)}>
+                    <MasterForm onSubmit={(event, form) => handleSubmit(form)}>
+                        <Grid container direction="column">
+                            <Grid direction="row" spacing={10} container>
+                                <Grid lg={3} md={4} sm={6} xs={12} item>
+                                    <ImageInput
+                                        size={{ width: 200, height: 200 }}
+                                        id="image"
+                                        enableFilePicker={true}
+                                        required={true}
+                                        value={form?.profileImage}
+                                        onChange={(event) => setForm({ ...form, image: event.target.value })}
+                                    />
+                                </Grid>
+                                <Grid lg={9} md={8} sm={6} xs={12} direction="column" container item>
+                                    <Grid item>
+                                        <TextInput
+                                            id="displayName"
+                                            icon="face"
+                                            label="Full Name"
+                                            value={form?.displayName}
+                                            onChange={(event) => setForm({ ...form, displayName: event.target.value })}
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <EmailInput
+                                            id="email"
+                                            icon="face"
+                                            label="E-mail"
+                                            value={form?.email}
+                                            onChange={(event) => setForm({ ...form, email: event.target.value })}
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <TextInput
+                                            id="phoneNumber"
+                                            icon="phone"
+                                            label="Phone number"
+                                            InputProps={{
+                                                startAdornment: <InputAdornment position="start"> +959 </InputAdornment>,
+                                            }}
+                                            value={form?.phoneNumber}
+                                            onChange={(event) => setForm({ ...form, phoneNumber: event.target.value })}
+                                            required
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item>
+                                <ObjectInput
+                                    id="roles"
+                                    label="Roles"
+                                    icon="people"
+                                    onLoadData={handleRoleData}
+                                    onLoadItem={(item) => item.name}
+                                    onChange={(event) => setForm({ ...form, roles: event.target.value })}
+                                    values={form?.roles}
+                                    fields={ROLE_TABLE_FIELDS}
+                                    multi={true}
+                                    required={true}
+                                />
+                            </Grid>
+                            {isUpdate ? null : (
+                                <>
+                                    <Grid item>
+                                        <PasswordInput
+                                            id="password"
+                                            label="Password"
+                                            onChange={(event) => setForm({ ...form, password: event.target.value })}
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <PasswordInput
+                                            id="confirmPassword"
+                                            label="Confirm Password"
+                                            onChange={(event) => setForm({ ...form, confirmPassword: event.target.value })}
+                                            onValidate={(event) =>
+                                                form.password !== event.target.value ? "Password and Confirm Password doesn't match." : ''
+                                            }
+                                            required
+                                        />
+                                    </Grid>
+                                </>
+                            )}
+                            <Grid item>
+                                <ListInput
+                                    label="Gender"
+                                    id="gender"
+                                    data={['Male', 'Female', 'LGBT', 'Other']}
+                                    value={form?.extras?.gender}
+                                    onChange={(event) => {
+                                        let updateExtras = { ...form.extras };
+                                        updateExtras.gender = event.target.value;
+                                        setForm({ ...form, extras: updateExtras });
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextInput
+                                    id="address"
+                                    label="Address"
+                                    rows={4}
+                                    multiline={true}
+                                    value={form?.extras?.address}
+                                    onChange={(event) => {
+                                        let updateExtras = { ...form.extras };
+                                        updateExtras.address = event.target.value;
+                                        setForm({ ...form, extras: updateExtras });
+                                    }}
+                                />
+                            </Grid>
+                            <Grid container>
+                                <Grid lg={4} md={5} sm={12} xs={12} item>
+                                    <CheckboxInput
+                                        id="status"
+                                        label="Active User?"
+                                        value={form?.status}
+                                        onChange={(event) => {
+                                            setForm({ ...form, status: event.target.checked ? 'ACTIVE' : 'CANCEL' });
+                                        }}
+                                        checked={form.status?.toLowerCase() === 'active'}
+                                    />
+                                </Grid>
+                                <Grid lg={8} md={7} sm={12} xs={12} justifyContent="flex-end" container item>
+                                    <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
+                                        <Icon>arrow_back</Icon> Back to List
+                                    </Button>
+                                    <Button type="submit" variant="contained" color="primary" className={classes.submit}>
+                                        <Icon>save</Icon> Save
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </MasterForm>
+                    {/* <MasterForm fields={isUpdate ? fields : [...fields, ...newUserFields]} onSubmit={(event, form) => handleSubmit(form)}>
                         <Grid container justifyContent="flex-end">
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
                                 <Icon>arrow_back</Icon> Back to List
@@ -239,7 +287,7 @@ const UserDetail = props => {
                                 <Icon>save</Icon> Save
                             </Button>
                         </Grid>
-                    </MasterForm>
+                    </MasterForm> */}
                 </Paper>
             </Container>
         </>

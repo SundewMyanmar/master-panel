@@ -23,7 +23,7 @@ type ImageInputProps = {
     onChange: (image: Object | string) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     container: {
         cursor: 'pointer',
         position: 'relative',
@@ -84,7 +84,7 @@ const MENU_LIST_ITEMS = [
     },
 ];
 
-const ImagePicker = (props: ImageInputProps) => {
+const ImageInput = (props: ImageInputProps) => {
     const classes = styles();
     const { id, index, name, size, value, enableFilePicker, disabledUpload, disabledRemove, onChange, onRemove, required, ...rest } = props;
     const dispatch = useDispatch();
@@ -145,7 +145,7 @@ const ImagePicker = (props: ImageInputProps) => {
         }
     };
 
-    const handleCloseMenu = item => {
+    const handleCloseMenu = (item) => {
         if (item.id === 'gallery') {
             setShowFile(true);
         } else if (item.id === 'upload') {
@@ -155,7 +155,7 @@ const ImagePicker = (props: ImageInputProps) => {
         setShowMenu(false);
     };
 
-    const handleCloseFile = result => {
+    const handleCloseFile = (result) => {
         setShowFile(false);
         if (result === false) {
             return;
@@ -165,7 +165,7 @@ const ImagePicker = (props: ImageInputProps) => {
         handleChange(result, url);
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         setShowFile(false);
         setShowMenu(false);
         dispatch({
@@ -174,19 +174,19 @@ const ImagePicker = (props: ImageInputProps) => {
         });
     };
 
-    const handleImageChange = event => {
+    const handleImageChange = (event) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
             const fileReader = new FileReader();
-            fileReader.onload = () => {
+            fileReader.onloadend = (e) => {
                 handleChange(file, fileReader.result);
             };
             fileReader.readAsDataURL(file);
         }
     };
 
-    const handleRemove = event => {
+    const handleRemove = (event) => {
         if (onRemove) onRemove(index);
         handleChange(null, null);
     };
@@ -199,7 +199,6 @@ const ImagePicker = (props: ImageInputProps) => {
         : {
               objectFit: 'contain',
           };
-
     return (
         <>
             <FileManagerPicker show={showFile} onClose={handleCloseFile} title="Choose File" />
@@ -236,11 +235,11 @@ const ImagePicker = (props: ImageInputProps) => {
     );
 };
 
-ImagePicker.defaultProps = {
+ImageInput.defaultProps = {
     size: { width: 128, height: 128 },
     enableFilePicker: false,
     disabledUpload: false,
     disabledRemove: false,
 };
 
-export default ImagePicker;
+export default ImageInput;

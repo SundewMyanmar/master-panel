@@ -10,7 +10,7 @@ type FileManagerPickerProps = {
     onClose: (result: Object | Array<Object>) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     content: {
         backgroundColor: theme.palette.background.paper,
         borderTop: '1px solid ' + theme.palette.divider,
@@ -30,20 +30,13 @@ const FileManagerPicker = (props: FileManagerPickerProps) => {
     const classes = styles();
     const { title, show, onClose } = props;
 
-    const handleClick = item => {
+    const handleClick = (item) => {
         onClose(item);
     };
 
     return (
         <>
-            <Dialog
-                fullWidth
-                maxWidth="lg"
-                onEscapeKeyDown={() => onClose(false)}
-                onClose={() => onClose(false)}
-                open={show}
-                TransitionComponent={Transition}
-            >
+            <Dialog fullWidth maxWidth="lg" onClose={() => onClose(false)} open={show} TransitionComponent={Transition}>
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
@@ -51,7 +44,17 @@ const FileManagerPicker = (props: FileManagerPickerProps) => {
                                 {title}
                             </Typography>
                         </Grid>
-                        <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start"></Grid>
+                        <Grid
+                            container
+                            item
+                            lg={4}
+                            md={4}
+                            sm={8}
+                            xs={12}
+                            alignItems="center"
+                            justifyContent="center"
+                            alignContent="flex-start"
+                        ></Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
                             <Tooltip title="Close Dialog">
                                 <IconButton color="inherit" size="small" onClick={() => onClose(false)} aria-label="Close">

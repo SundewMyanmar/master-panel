@@ -30,20 +30,20 @@ type ListPickerProps = {
     onClose: (result: Object | Array<Object>) => void,
 };
 
-const itemStyles = makeStyles(theme => ({
+const itemStyles = makeStyles((theme) => ({
     root: {},
-    icon: props => ({
+    icon: (props) => ({
         color: props.selected ? theme.palette.text.active : theme.palette.text.primary,
         display: 'inline-flex',
         flexShrink: 0,
         minWidth: theme.spacing(4),
     }),
-    text: props => ({
+    text: (props) => ({
         color: props.selected ? theme.palette.text.active : theme.palette.text.primary,
     }),
 }));
 
-const CustomListItem = props => {
+const CustomListItem = (props) => {
     const { multi, label, icon, isMarked, onClick, ...rest } = props;
     const classes = itemStyles({ selected: isMarked });
 
@@ -62,21 +62,21 @@ const ListPicker = (props: ListPickerProps) => {
     const [checked, setChecked] = useState(props.values);
     const labeldedBy = id || name + 'list-picker';
 
-    const handleClick = item => {
+    const handleClick = (item) => {
         if (!multi) {
             onClose(item);
             return;
         }
 
-        const existIdx = checked.findIndex(x => x[idField] === item[idField]);
-        const selectedData = existIdx < 0 ? [...checked, item] : checked.filter(x => x[idField] !== item[idField]);
+        const existIdx = checked.findIndex((x) => x[idField] === item[idField]);
+        const selectedData = existIdx < 0 ? [...checked, item] : checked.filter((x) => x[idField] !== item[idField]);
 
         setChecked(selectedData);
         onChange(selectedData);
     };
 
     return (
-        <Dialog maxWidth="xs" fullWidth={multi} open={show} onEscapeKeyDown={onClose} onClose={() => onClose(false)} TransitionComponent={Transition}>
+        <Dialog maxWidth="xs" fullWidth={multi} open={show} onClose={() => onClose(false)} TransitionComponent={Transition}>
             <List
                 {...listProps}
                 component="nav"
@@ -90,7 +90,7 @@ const ListPicker = (props: ListPickerProps) => {
                 }
             >
                 {data.map((item, idx) => {
-                    const isMarked = checked.findIndex(x => x[idField] === item[idField]) >= 0;
+                    const isMarked = checked.findIndex((x) => x[idField] === item[idField]) >= 0;
                     return (
                         <CustomListItem
                             key={item[idField] + '-' + idx}
@@ -125,7 +125,7 @@ ListPicker.defaultProps = {
     labelField: 'label',
     title: '',
     values: [],
-    onChange: result => console.warn('Undefined onChange => ', result),
+    onChange: (result) => console.warn('Undefined onChange => ', result),
     onClose: () => console.log('Undefined onClose'),
 };
 

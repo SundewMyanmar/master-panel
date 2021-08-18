@@ -3,8 +3,8 @@ import React from 'react';
 import { Grid, GridProps, CardActionArea, Card, CardMedia, CardContent, Typography, makeStyles } from '@material-ui/core';
 import FileApi from '../../api/FileApi';
 
-const itemStyles = makeStyles(theme => ({
-    root: props => ({
+const itemStyles = makeStyles((theme) => ({
+    root: (props) => ({
         width: '100%',
         cursor: 'pointer',
         margin: theme.spacing(1),
@@ -17,11 +17,11 @@ const itemStyles = makeStyles(theme => ({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
-    media: props => ({
+    media: (props) => ({
         paddingTop: '75%', // 16:9
         borderBottom: '1px solid ' + (props.selected ? theme.palette.primary.main : theme.palette.divider),
     }),
-    info: props => ({
+    info: (props) => ({
         padding: theme.spacing(0.5, 1),
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText,
         backgroundColor: props.selected ? theme.palette.primary.main : theme.palette.secondary.main,
@@ -83,10 +83,9 @@ const FileGrid = (props: FileGridProps) => {
             {data && data.length > 0 ? (
                 data.map((item, index) => {
                     const isMarked = multi
-                        ? selectedData.findIndex(x => x.id === item.id) >= 0
+                        ? selectedData.findIndex((x) => x.id === item.id) >= 0
                         : selectedData && selectedData.id && selectedData.id === item.id;
 
-                    console.log('file access', item);
                     let itemResult = (
                         <FileGridItem multi={multi} isMarked={isMarked} key={item.id + '-' + index} onClick={() => onClickItem(item)} {...item} />
                     );
@@ -105,7 +104,7 @@ const FileGrid = (props: FileGridProps) => {
 FileGrid.defaultProps = {
     data: [],
     multi: false,
-    onClickItem: file => console.warn('Undefined onSelectionChange => ', file),
+    onClickItem: (file) => console.warn('Undefined onSelectionChange => ', file),
 };
 
 export default FileGrid;

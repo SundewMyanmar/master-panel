@@ -25,7 +25,7 @@ type FolderDialogProps = {
     onSubmit: () => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     title: {
         color: theme.palette.text.primary,
     },
@@ -35,11 +35,11 @@ const FolderDialog = (props: FolderDialogProps) => {
     const { data, show, onShow, onSubmit } = props;
     const classes = styles();
 
-    const handleOnShow = isShow => {
+    const handleOnShow = (isShow) => {
         if (onShow) onShow(isShow);
     };
 
-    const handleOnSubmit = form => {
+    const handleOnSubmit = (form) => {
         let result = {
             ...data,
             ...form,
@@ -87,14 +87,7 @@ const FolderDialog = (props: FolderDialogProps) => {
     ];
 
     return (
-        <Dialog
-            maxWidth="xs"
-            fullWidth={true}
-            open={show}
-            onEscapeKeyDown={() => handleOnShow(false)}
-            onClose={() => handleOnShow(false)}
-            TransitionComponent={Transition}
-        >
+        <Dialog maxWidth="xs" fullWidth={true} open={show} onClose={() => handleOnShow(false)} TransitionComponent={Transition}>
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">

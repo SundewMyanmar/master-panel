@@ -75,7 +75,7 @@ const ApiPermission = () => {
 
     useEffect(() => {
         if (roleId > 0) {
-            RoleApi.getById(roleId)
+            const loadPermissionByRoleId = RoleApi.getById(roleId)
                 .then((role) => {
                     handleRoleChange({ target: { value: role } });
                 })
@@ -83,6 +83,10 @@ const ApiPermission = () => {
         } else {
             setSelectedRole(null);
         }
+
+        return () => {
+            loadPermissionByRoleId();
+        };
 
         // eslint-disable-next-line
     }, [roleId]);

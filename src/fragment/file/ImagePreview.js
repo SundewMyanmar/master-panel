@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
-const FileInfoField = props => {
+const FileInfoField = (props) => {
     const { label, value, ...rest } = props;
     return (
         <Grid container {...rest}>
@@ -43,7 +43,7 @@ const FileInfoField = props => {
     );
 };
 
-const style = makeStyles(theme => ({
+const style = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(0.5),
         position: 'relative',
@@ -86,15 +86,15 @@ const ImagePreview = (props: ImagePreviewProps) => {
     const [selectedFolder, setSelectedFolder] = React.useState(null);
     const [newFolders, setNewFolders] = React.useState([]);
 
-    const handleFolderChange = event => {
+    const handleFolderChange = (event) => {
         setSelectedFolder(event.target.value);
     };
 
-    const handlePublicChange = event => {
+    const handlePublicChange = (event) => {
         setIsPublic(event.target.checked);
     };
 
-    const handleHiddenChange = event => {
+    const handleHiddenChange = (event) => {
         setIsHidden(event.target.checked);
     };
 
@@ -175,7 +175,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
                     <MenuItem key={'default'} value={null}>
                         (None)
                     </MenuItem>
-                    {newFolders.map(item => {
+                    {newFolders.map((item) => {
                         return (
                             <MenuItem key={item.id} value={item}>
                                 {item.fullName}
@@ -188,14 +188,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
     };
 
     return (
-        <Dialog
-            onEscapeKeyDown={onClose}
-            open={show}
-            TransitionComponent={Transition}
-            onClose={onClose}
-            aria-labelledby="image-preview-dialog"
-            aria-describedby={data.name}
-        >
+        <Dialog open={show} TransitionComponent={Transition} onClose={onClose} aria-labelledby="image-preview-dialog" aria-describedby={data.name}>
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">

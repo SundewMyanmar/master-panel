@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactDOM } from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
 import {
     TextInput,
@@ -25,14 +25,8 @@ export type Field = {
     onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, form?: Object) => string,
 };
 
-export type GridProps = {
-    row: number,
-    col: number,
-};
-
 export type MasterFormProps = {
     fields: Array<Field>,
-    grid: GridProps,
     type: 'form' | 'tab',
     initialData: Object,
     onWillSubmit?: (form: Object) => boolean,
@@ -48,16 +42,58 @@ const styles = makeStyles((theme) => ({
 }));
 
 //const CHILDREN_MAPPING = [TextInput, EmailInput, PasswordInput, NumberInput, ImageInput];
+export const PROCESSABLE_FIELDS = [
+    'TextInput',
+    'EmailInput',
+    'PasswordInput',
+    'NumberInput',
+    'ImageInput',
+    'MultiImageInput',
+    'CheckboxInput',
+    'ListInput',
+    'ObjectInput',
+    'IconInput',
+    'ChipInput',
+    'ColorInput',
+    'TabControl',
+    'TinyEditorInput',
+    'DateTimeInput',
+];
 
 const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const [form, setForm] = useState({});
     const classes = styles();
-    const { initialData, type, variant, spacing, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...rest } = props;
+    const { initialData, type, variant, spacing, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...formProps } = props;
 
     React.useEffect(() => {
         setForm({ ...form, ...initialData });
         // eslint-disable-next-line
     }, [initialData]);
+
+    //Research Code, no use
+    const findInputFields = (node) => {
+        if (!node) {
+            return null;
+        }
+        const grandChildren = node.props?.children;
+        if (grandChildren && typeof grandChildren === 'object' && Array.isArray(grandChildren)) {
+            for (let i = 0; i < grandChildren.length; i++) {
+                findInputFields(grandChildren[i]);
+            }
+        } else {
+            findInputFields(grandChildren);
+        }
+        if (typeof node === 'object' && node.type?.name && PROCESSABLE_FIELDS.includes(node.type?.name)) {
+            console.log(`Found Children [${node.type?.name}]=> `, node.props);
+            const input = document.getElementById(node.props.id);
+            if (input) {
+                console.log('Input Found => ', input);
+                input.onchange = (event) => {
+                    handleValueChange({ id: node.props.id }, event, 0);
+                };
+            }
+        }
+    };
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
@@ -77,7 +113,6 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
             form[field.id] = event.target.checked;
         } else if (field.type === 'multi-image') {
             if (!form[field.id]) form[field.id] = [];
-            console.log('master imagegg', form, field);
             if (!form[field.id][index]) {
                 form[field.id].push(event.target.value);
             } else {
@@ -144,17 +179,26 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
     };
 
-    const renderTab = (datas) => {
-        datas = datas.map((data) => {
-            if (data.fields) data.content = renderGrid(data.fields);
+    const renderTab = (inputFields) => {
+        if (!inputFields || inputFields.length <= 0) {
+            return null;
+        }
 
-            return data;
+        inputFields = inputFields.map((field) => {
+            if (field.fields) {
+                field.content = renderGrid(field.fields);
+            }
+
+            return field;
         });
 
-        return <TabControl centered variant={variant || 'fullWidth'} tabs={datas}></TabControl>;
+        return <TabControl centered variant={variant || 'fullWidth'} tabs={inputFields}></TabControl>;
     };
 
-    const renderGrid = (datas) => {
+    const renderGrid = (inputFields) => {
+        if (!inputFields || inputFields.length <= 0) {
+            return null;
+        }
         return (
             <Grid
                 style={{ backgroundColor: 'inherit' }}
@@ -163,7 +207,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                 container
                 alignItems={direction === 'row' ? 'center' : 'stretch'}
             >
-                {datas.map((field, index) => {
+                {inputFields.map((field, index) => {
                     const { type, ...inputProps } = field;
                     inputProps.key = field.id + '_' + index;
                     inputProps.name = field.name || field.id;
@@ -184,7 +228,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     };
 
     return (
-        <form style={{ width: '100%' }} {...rest} ref={ref} onKeyDown={handleKeyDown} onSubmit={handleFormSubmit}>
+        <form style={{ width: '100%' }} {...formProps} ref={ref} onKeyDown={handleKeyDown} onSubmit={handleFormSubmit}>
             {type == 'tab' ? renderTab(fields) : renderGrid(fields)}
             {children}
         </form>
