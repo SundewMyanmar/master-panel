@@ -12,10 +12,14 @@ export const common = {
 };
 
 export const primary = {
-    main: '#3c4c59',
-    light: '#677886',
-    dark: '#142430',
-    contrastText: '#ffffff',
+    // main: '#3c4c59',
+    // light: '#677886',
+    // dark: '#142430',
+    // contrastText: '#ffffff',
+    light: '#7694e4',
+    main: '#4267B2',
+    dark: '#003d82',
+    contrastText: '#fff',
 };
 
 export const darkPrimary = {
@@ -159,45 +163,75 @@ export default createTheme({
     typography: {
         htmlFontSize: 18,
     },
-    MuiTableRow: {
-        root: {
-            '&$selected,&$selected:hover': { backgroundColor: primary.light },
-        },
-    },
-    MuiTableCell: {
-        root: {
-            padding: '0px 4px 0px 4px',
-            maxHeight: 30,
-            height: 30,
-        },
-        sizeSmall: {
-            padding: '0px 4px 0px 4px',
-            maxHeight: 30,
-            height: 30,
-        },
-    },
-    MuiPickersToolbar: {
-        root: {
-            backgroundColor: primary.dark,
-        },
-    },
-    MuiPickersDay: {
-        root: {
-            color: primary.dark,
-            '&$disabled': {
-                color: primary.dark,
+    overrides: {
+        MuiInputAdornment: {
+            root: {
+                color: common.black,
             },
-            '&$selected': {
+        },
+        MuiInputBase: {
+            root: {
+                color: common.black,
+            },
+        },
+        MuiIconButton: {
+            root: {
+                color: primary.main,
+            },
+            colorPrimary: {
+                color: common.white,
+            },
+        },
+        MuiCheckbox: {
+            root: {
+                color: primary.main,
+            },
+        },
+        MuiAvatar: {
+            root: {
+                color: common.white,
+            },
+        },
+        MuiTableRow: {
+            root: {
+                '&$selected,&$selected:hover': { backgroundColor: primary.light },
+            },
+        },
+        MuiTableCell: {
+            root: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+            sizeSmall: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+        },
+        MuiPickersToolbar: {
+            root: {
                 backgroundColor: primary.dark,
             },
         },
-        today: {
-            color: primary.dark,
+        MuiPickersDay: {
+            root: {
+                color: primary.dark,
+                '&$disabled': {
+                    color: primary.dark,
+                },
+                '&$selected': {
+                    backgroundColor: primary.dark,
+                },
+            },
+            today: {
+                color: primary.dark,
+            },
         },
-    },
-    MuiPickersModalDialog: {
-        dialogAction: {
-            color: primary.dark,
+        MuiPickersModalDialog: {
+            dialogAction: {
+                color: primary.dark,
+            },
         },
     },
 });
@@ -220,21 +254,49 @@ export const DarkTheme = createTheme({
     typography: {
         htmlFontSize: 18,
     },
-    MuiTableRow: {
-        root: {
-            '&$selected,&$selected:hover': { backgroundColor: darkPrimary.light },
+    overrides: {
+        MuiCheckbox: {
+            root: {
+                color: common.white,
+            },
         },
-    },
-    MuiTableCell: {
-        root: {
-            padding: '0px 4px 0px 4px',
-            maxHeight: 30,
-            height: 30,
+        MuiIconButton: {
+            root: {
+                color: common.white,
+            },
+            label: {
+                color: common.white,
+            },
         },
-        sizeSmall: {
-            padding: '0px 4px 0px 4px',
-            maxHeight: 30,
-            height: 30,
+        MuiInputAdornment: {
+            root: {
+                color: common.white,
+            },
+        },
+        MuiAvatar: {
+            root: {
+                color: common.white,
+            },
+            colorDefault: {
+                color: common.white,
+            },
+        },
+        MuiTableRow: {
+            root: {
+                '&$selected,&$selected:hover': { backgroundColor: darkPrimary.light },
+            },
+        },
+        MuiTableCell: {
+            root: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
+            sizeSmall: {
+                padding: '0px 4px 0px 4px',
+                maxHeight: 30,
+                height: 30,
+            },
         },
     },
 });

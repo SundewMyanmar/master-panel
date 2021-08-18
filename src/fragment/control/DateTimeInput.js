@@ -34,14 +34,8 @@ const styles = makeStyles((theme) => ({
             borderColor: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
         },
     }),
-    openIcon: {
-        color: theme.palette.text.primary,
-    },
     disabledOpenIcon: {
         color: theme.palette.common.gray,
-    },
-    icon: {
-        color: theme.palette.text.primary,
     },
     placeholder: {
         color: theme.palette.text.hint,
@@ -113,8 +107,8 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
                     // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
-                    leftArrowIcon={<Icon className={classes.icon}>keyboard_arrow_left</Icon>}
-                    rightArrowIcon={<Icon className={classes.icon}>keyboard_arrow_right</Icon>}
+                    leftArrowIcon={<Icon>keyboard_arrow_left</Icon>}
+                    rightArrowIcon={<Icon>keyboard_arrow_right</Icon>}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -141,8 +135,8 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
                     // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
-                    leftArrowIcon={<Icon className={classes.icon}>keyboard_arrow_left</Icon>}
-                    rightArrowIcon={<Icon className={classes.icon}>keyboard_arrow_right</Icon>}
+                    leftArrowIcon={<Icon>keyboard_arrow_left</Icon>}
+                    rightArrowIcon={<Icon>keyboard_arrow_right</Icon>}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -170,8 +164,8 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
                     // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
-                    leftArrowIcon={<Icon className={classes.icon}>keyboard_arrow_left</Icon>}
-                    rightArrowIcon={<Icon className={classes.icon}>keyboard_arrow_right</Icon>}
+                    leftArrowIcon={<Icon>keyboard_arrow_left</Icon>}
+                    rightArrowIcon={<Icon>keyboard_arrow_right</Icon>}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

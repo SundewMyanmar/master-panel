@@ -216,7 +216,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                     }}
                 >
                     <StyledBadge anchorOrigin={anchorOrigin} {...badgeContent} color="secondary">
-                        <Icon>{icon || 'notifications'}</Icon>
+                        <Icon color="action">{icon || 'notifications'}</Icon>
                     </StyledBadge>
                 </IconButton>
             </Tooltip>

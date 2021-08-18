@@ -320,7 +320,7 @@ const Security = (props) => {
         ];
         return (
             <Accordion expanded={expanded === 'twoFactor'} onChange={handleAccordion('twoFactor')}>
-                <AccordionSummary expandIcon={<Icon color="primary">expand_more</Icon>} aria-controls="panel1bh-content" id="panel1bh-header">
+                <AccordionSummary expandIcon={<Icon>expand_more</Icon>} aria-controls="panel1bh-content" id="panel1bh-header">
                     <Icon className={classes.expansionIcon}>phonelink_lock</Icon>
                     <Typography className={classes.heading}>2-Step Verification</Typography>
                     <Chip className={classes.expansionIcon} color={user.mfa ? 'secondary' : 'primary'} size="small" label={user.mfa ? 'On' : 'Off'} />
@@ -353,7 +353,7 @@ const Security = (props) => {
                                 color="primary"
                                 className={classes.submit}
                             >
-                                <Icon>vpn_key</Icon> Add New
+                                <Icon color="action">vpn_key</Icon> Add New
                             </Button>
                             {user.mfa ? (
                                 <ThemeProvider theme={ErrorTheme}>
@@ -400,11 +400,7 @@ const Security = (props) => {
 
                     <div className={classes.root}>
                         <Accordion expanded={expanded === 'changePassword'} onChange={handleAccordion('changePassword')}>
-                            <AccordionSummary
-                                expandIcon={<Icon color="primary">expand_more</Icon>}
-                                aria-controls="panel1bh-content"
-                                id="panel1bh-header"
-                            >
+                            <AccordionSummary expandIcon={<Icon>expand_more</Icon>} aria-controls="panel1bh-content" id="panel1bh-header">
                                 <Icon className={classes.expansionIcon}>vpn_key</Icon>
                                 <Typography className={classes.heading}>Change Password</Typography>
                             </AccordionSummary>

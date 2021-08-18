@@ -41,9 +41,6 @@ const styles = makeStyles((theme) => ({
             borderColor: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
         },
     }),
-    openIcon: {
-        color: theme.palette.text.primary,
-    },
     disabledOpenIcon: {
         color: theme.palette.common.gray,
     },
@@ -234,12 +231,16 @@ const ObjectInput = (props: ObjectInputProps) => {
             />
             <FormControl style={{ ...visibility }} {...rest} variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
-                    {label} {props.required ? '*' : ''}
+                    {label}
                 </InputLabel>
                 <Paper {...variantProps} classes={{ root: classes.content }}>
                     <Grid container>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
+                            {icon ? (
+                                <Icon color="default" className={classes.icon}>
+                                    {icon}
+                                </Icon>
+                            ) : null}
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="text"
@@ -255,10 +256,11 @@ const ObjectInput = (props: ObjectInputProps) => {
                             {
                                 <IconButton
                                     disableRipple
+                                    color="default"
                                     onClick={() => {
                                         disabledLoad || setShowTable(true);
                                     }}
-                                    className={!disabledLoad ? classes.openIcon : classes.disabledOpenIcon}
+                                    className={!disabledLoad ? null : classes.disabledOpenIcon}
                                     aria-label="Choose"
                                 >
                                     <Icon>open_in_new</Icon>

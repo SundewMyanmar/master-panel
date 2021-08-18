@@ -27,7 +27,7 @@ const styles = makeStyles((theme) => ({
     container: {
         cursor: 'pointer',
         position: 'relative',
-        border: '3px solid ' + theme.palette.primary.light,
+        border: '3px solid ' + theme.palette.divider,
         display: 'inline-flex',
         margin: theme.spacing(2, 1),
     },

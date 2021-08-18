@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router';
 import { InputAdornment, Typography, Container, makeStyles, Paper, Avatar, Icon, Button } from '@material-ui/core';
 import MasterForm from '../../fragment/MasterForm';
@@ -11,7 +11,7 @@ import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'inherit',
     },
@@ -45,12 +45,12 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const Profile = props => {
+const Profile = (props) => {
     const classes = styles();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
 
-    const handleError = error => {
+    const handleError = (error) => {
         dispatch({
             type: ALERT_REDUX_ACTIONS.SHOW,
             alert: error || 'Please check your internet connection and try again.',
@@ -152,13 +152,6 @@ const Profile = props => {
             label: 'Phone number',
             icon: 'phone',
             required: true,
-            InputProps: {
-                startAdornment: (
-                    <>
-                        <InputAdornment position="start"> +959 </InputAdornment>
-                    </>
-                ),
-            },
             type: 'text',
             value: user ? user.phoneNumber : '',
             disabled: true,

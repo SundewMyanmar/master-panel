@@ -109,6 +109,7 @@ const MultiImageInput = (props) => {
                                     handleMove(idx);
                                 }}
                                 className={classes.moveButton}
+                                color="default"
                             >
                                 <Icon>repeat</Icon>
                             </IconButton>

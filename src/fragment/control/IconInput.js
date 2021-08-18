@@ -36,9 +36,6 @@ const styles = makeStyles((theme) => ({
             borderColor: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
         },
     }),
-    openIcon: {
-        color: theme.palette.text.primary,
-    },
     chip: {
         margin: theme.spacing(0.5, 0.5, 0.5, 0),
     },
@@ -225,7 +222,7 @@ const IconInput = (props: IconInputProps) => {
                             </div>
                         </Grid>
                         <Grid className={classes.actionButton} container item xs={2} sm={2} justifyContent="flex-end" alignItems="center">
-                            <IconButton disableRipple onClick={() => setShowIcons(true)} className={classes.openIcon} aria-label="Choose">
+                            <IconButton disableRipple color="default" onClick={() => setShowIcons(true)} aria-label="Choose">
                                 <Icon>open_in_new</Icon>
                             </IconButton>
                         </Grid>

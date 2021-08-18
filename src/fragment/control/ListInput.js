@@ -17,7 +17,7 @@ export type SelectListProps = {
 };
 
 const ListInput = (props: SelectListProps) => {
-    const { variant, disabled, hidePlaceHolder, label, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
+    const { variant, disabled, hidePlaceHolder, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(value);
@@ -69,7 +69,7 @@ const ListInput = (props: SelectListProps) => {
 
     const buildInputField = (params) => {
         const { InputProps, InputLabelProps, ...otherParams } = params;
-        let placeholder = 'Choose ' + FormatManager.camelToReadable(label || id || name);
+        let placeholder = 'Choose ' + props.label || FormatManager.camelToReadable(id || name);
         placeholder = hidePlaceHolder || placeholder;
 
         return (
@@ -121,9 +121,8 @@ const ListInput = (props: SelectListProps) => {
             disabled={disabled}
             getOptionLabel={onLoadItem}
             onChange={handleChange}
-            popupIcon={<Icon color="primary">arrow_drop_down</Icon>}
+            popupIcon={<Icon color="default">arrow_drop_down</Icon>}
             renderInput={buildInputField}
-            disableClearable={true}
             value={selectedItem || null}
         />
     );

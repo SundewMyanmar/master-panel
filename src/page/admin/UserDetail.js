@@ -28,6 +28,9 @@ const styles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
     },
+    avatarIcon: {
+        color: theme.palette.common.white,
+    },
     submit: {
         marginLeft: theme.spacing(1),
     },
@@ -137,7 +140,7 @@ const UserDetail = (props) => {
             <Container component="main" maxWidth="md">
                 <Paper className={classes.paper} elevation={6}>
                     <Avatar className={classes.avatar}>
-                        <Icon>account_box</Icon>
+                        <Icon color="action">account_box</Icon>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         User Setup
@@ -181,9 +184,6 @@ const UserDetail = (props) => {
                                             id="phoneNumber"
                                             icon="phone"
                                             label="Phone number"
-                                            InputProps={{
-                                                startAdornment: <InputAdornment position="start"> +959 </InputAdornment>,
-                                            }}
                                             value={form?.phoneNumber}
                                             onChange={(event) => setForm({ ...form, phoneNumber: event.target.value })}
                                             required
@@ -272,7 +272,7 @@ const UserDetail = (props) => {
                                         <Icon>arrow_back</Icon> Back to List
                                     </Button>
                                     <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                                        <Icon>save</Icon> Save
+                                        <Icon color="action">save</Icon> Save
                                     </Button>
                                 </Grid>
                             </Grid>

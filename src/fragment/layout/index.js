@@ -285,7 +285,7 @@ const Layout = (props: LayoutProps) => {
                                     }
                                 }}
                             >
-                                <Icon>{mode === 'DARK' ? 'brightness_7' : 'brightness_4'}</Icon>
+                                <Icon color="action">{mode === 'DARK' ? 'brightness_7' : 'brightness_4'}</Icon>
                             </IconButton>
                         </Tooltip>
                         <UserMenu

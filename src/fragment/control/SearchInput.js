@@ -59,7 +59,7 @@ export default function SearchInput(props: SearchIpnutProps) {
         let inputProps = {
             startAdornment: (
                 <InputAdornment position="start">
-                    <Icon color="primary">search</Icon>
+                    <Icon>search</Icon>
                 </InputAdornment>
             ),
         };

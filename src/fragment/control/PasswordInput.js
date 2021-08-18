@@ -16,7 +16,7 @@ export default function PasswordInput(props: Props) {
     const [showPassword, setShowPassword] = React.useState(false);
     const { onValidate, variant, ...rest } = props;
 
-    const handleValidation = event => {
+    const handleValidation = (event) => {
         const value = event.target.value;
         const regex = STRENGTH_REGEX[props.strength];
         let error = '';
@@ -50,7 +50,7 @@ export default function PasswordInput(props: Props) {
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton onClick={() => setShowPassword(!showPassword)} onMouseDown={() => setShowPassword(!showPassword)}>
-                            <Icon color="primary">{showPassword ? 'visibility' : 'visibility_off'}</Icon>
+                            <Icon>{showPassword ? 'visibility' : 'visibility_off'}</Icon>
                         </IconButton>
                     </InputAdornment>
                 ),

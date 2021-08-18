@@ -25,9 +25,6 @@ const styles = makeStyles((theme) => ({
         paddingRight: theme.spacing(2),
         color: props.invalid ? theme.palette.error.main : theme.palette.text.primary,
     }),
-    openIcon: {
-        color: theme.palette.text.primary,
-    },
     content: (props) => ({
         backgroundColor: 'inherit',
         minHeight: theme.spacing(6),
@@ -164,7 +161,7 @@ const ColorInput = (props: ColorInputProps) => {
                                 style={{ ...inputProps }}
                                 disableRipple
                                 onClick={() => setShowColor(true)}
-                                className={classes.openIcon}
+                                color="default"
                                 aria-label="Choose"
                             >
                                 <Icon>palette</Icon>
