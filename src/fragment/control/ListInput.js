@@ -121,7 +121,7 @@ const ListInput = (props: SelectListProps) => {
             disabled={disabled}
             getOptionLabel={onLoadItem}
             onChange={handleChange}
-            popupIcon={<Icon color="default">arrow_drop_down</Icon>}
+            popupIcon={<Icon>arrow_drop_down</Icon>}
             renderInput={buildInputField}
             value={selectedItem || null}
         />

@@ -144,7 +144,7 @@ const TablePicker = (props: TablePickerProps) => {
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
-                            <Typography color="primary" variant="h6" component="h1" noWrap>
+                            <Typography variant="h6" component="h1" noWrap>
                                 {title}
                             </Typography>
                         </Grid>

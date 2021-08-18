@@ -328,7 +328,7 @@ const Security = (props) => {
                 <AccordionDetails>
                     <Grid container>
                         <Grid container item>
-                            <Typography color="primary" variant="overline" gutterBottom>
+                            <Typography variant="overline" gutterBottom>
                                 Please double click to set default MFA.
                             </Typography>
                         </Grid>

@@ -60,7 +60,7 @@ const TextInput = (props: TextInputProps) => {
             return {
                 startAdornment: (
                     <InputAdornment position="start">
-                        <Icon color="default">{icon}</Icon>
+                        <Icon>{icon}</Icon>
                     </InputAdornment>
                 ),
                 ...endAdornment,

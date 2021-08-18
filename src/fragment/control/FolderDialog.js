@@ -91,7 +91,7 @@ const FolderDialog = (props: FolderDialogProps) => {
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">
-                        <Typography className={classes.title} color="primary" variant="h6" component="h1" noWrap>
+                        <Typography className={classes.title} variant="h6" component="h1" noWrap>
                             Folder
                         </Typography>
                     </Grid>

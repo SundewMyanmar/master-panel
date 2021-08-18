@@ -100,7 +100,7 @@ const MasterCard = (props: MasterCardProps) => {
                                     }
                                     aria-label="breadcrumb"
                                 >
-                                    <Typography variant="h6" color="primary" style={{ color: color || common.gray }}>
+                                    <Typography variant="h6" style={{ color: color || common.gray }}>
                                         {title}
                                     </Typography>
                                     {breadCrumbs

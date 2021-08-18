@@ -100,7 +100,7 @@ const OTPDialog = (props: OTPDialogProps) => {
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">
-                        <Typography color="primary" variant="h6" component="h1" noWrap>
+                        <Typography variant="h6" component="h1" noWrap>
                             OTP Verification
                         </Typography>
                     </Grid>
@@ -126,7 +126,7 @@ const OTPDialog = (props: OTPDialogProps) => {
                     inputAdornment={resendButton}
                     autoFocus={true}
                 />
-                <Typography style={{ display: timer > 0 ? 'block' : 'none' }} color="primary" variant="overline" gutterBottom>
+                <Typography style={{ display: timer > 0 ? 'block' : 'none' }} variant="overline" gutterBottom>
                     Please wait for {timer || ''} seconds to resend OTP again.
                 </Typography>
             </DialogContent>

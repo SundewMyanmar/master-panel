@@ -194,7 +194,7 @@ const MultiFactorAuthDetail = () => {
                         <FormControlLabel value="APP" control={<Radio color="primary" />} label="Authenticator app" />
                         {mfa.type === 'APP' ? (
                             <Grid className={classes.radioContent} color="primary" item>
-                                <Typography color="primary" variant="overline" gutterBottom>
+                                <Typography variant="overline" gutterBottom>
                                     <ul>
                                         <li>Get the authenticator app from store.</li>
                                         <li>In the App select Set up account.</li>

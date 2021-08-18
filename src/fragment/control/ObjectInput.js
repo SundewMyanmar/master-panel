@@ -236,11 +236,7 @@ const ObjectInput = (props: ObjectInputProps) => {
                 <Paper {...variantProps} classes={{ root: classes.content }}>
                     <Grid container>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            {icon ? (
-                                <Icon color="default" className={classes.icon}>
-                                    {icon}
-                                </Icon>
-                            ) : null}
+                            {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="text"

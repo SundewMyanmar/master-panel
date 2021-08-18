@@ -40,10 +40,6 @@ const styles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    newButton: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-    },
     avatar: {
         padding: theme.spacing(3),
         margin: theme.spacing(1),
@@ -54,15 +50,15 @@ const styles = makeStyles((theme) => ({
         overflow: 'auto',
         minHeight: 480,
         background: theme.palette.background.default,
-        padding: theme.spacing(3),
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
         border: '1px solid ' + theme.palette.divider,
-        marginBottom: 54,
         flex: 1,
     },
     innerBox: {
         marginTop: theme.spacing(2),
     },
-    inputBox: {
+    content: {
         paddingLeft: theme.spacing(1),
     },
     submit: {
@@ -79,6 +75,7 @@ const styles = makeStyles((theme) => ({
     container: {
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(1.5, 1),
+        margin: theme.spacing(1, 0),
     },
     footer: {
         backgroundColor: 'transparent',
@@ -145,7 +142,6 @@ const FileManager = (props) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
             const result = await FolderApi.getTree('');
-            console.log('folder data', result);
             let resultData = [];
             if (result && result.data) {
                 resultData = modifyFolders(result.data);
@@ -373,42 +369,30 @@ const FileManager = (props) => {
             ) : null}
 
             <Grid className={classes.innerBox} container>
-                <Grid
-                    className={classes.inputBox}
-                    container
-                    item
-                    md={3}
-                    sm={12}
-                    xs={12}
-                    alignContent="flex-start"
-                    alignItems="stretch"
-                    direction="column"
-                >
-                    <Grid container item className={classes.treeBox}>
-                        <TreeMenu
-                            allowCreate={true}
-                            onCreate={handleTreeCreate}
-                            onRemove={handleFolderRemove}
-                            menus={folders}
-                            showRoot={showRoot}
-                            onClickItem={handleFolderClick}
-                        />
-                    </Grid>
+                <Grid container item lg={3} md={4} sm={12} xs={12} className={classes.treeBox}>
+                    <TreeMenu
+                        allowCreate={true}
+                        onCreate={handleTreeCreate}
+                        onRemove={handleFolderRemove}
+                        menus={folders}
+                        showRoot={showRoot}
+                        onClickItem={handleFolderClick}
+                    />
                 </Grid>
-                <Grid className={classes.inputBox} container direct item md={9} sm={12} xs={12} justifyContent="flex-start" alignContent="flex-start">
-                    <Grid container flex justifyContent="flex-start" alignContent="center" direction="row" item spacing={2}>
-                        <Grid item lg={9} md={9} sm={9} xs={12}>
-                            <SearchInput className={classes.newButton} onSearch={(value) => setSearch(value)} placeholder="Search Files" />
+                <Grid className={classes.content} container item lg={9} md={8} sm={12} xs={12} justifyContent="flex-start" alignContent="center">
+                    <Grid container justifyContent="flex-start" alignContent="center" direction="row" item spacing={1}>
+                        <Grid item lg={9} md={7} sm={6} xs={12}>
+                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
                         </Grid>
-                        <Grid container item lg={1} md={1} sm={1} xs={12} justifyContent="center" alignContent="center">
+                        <Grid container item lg={1} md={2} sm={3} xs={12} justifyContent="center" alignContent="center">
                             <Button
+                                fullWidth
                                 variant="contained"
                                 color="primary"
                                 aria-label="more"
                                 aria-controls="long-menu"
                                 aria-haspopup="true"
                                 onClick={handleClick}
-                                className={classes.newButton}
                             >
                                 <Icon>tune</Icon>
                             </Button>
@@ -445,21 +429,15 @@ const FileManager = (props) => {
                                 </MenuItem>
                             </Menu>
                         </Grid>
-                        <Grid container item lg={2} md={2} sm={2} xs={12} justifyContent="center" alignContent="center">
-                            <Button
-                                onClick={() => setShowUploadDialog(true)}
-                                variant="contained"
-                                color="primary"
-                                aria-label="Upload"
-                                className={classes.newButton}
-                            >
+                        <Grid container item lg={2} md={3} sm={3} xs={12} justifyContent="flex-end" alignContent="center">
+                            <Button fullWidth onClick={() => setShowUploadDialog(true)} variant="contained" color="primary" aria-label="Upload">
                                 <Icon className={classes.icon}>cloud_upload</Icon> Upload
                             </Button>
                         </Grid>
                     </Grid>
-                    <Grid container item flex>
+                    <Grid container item>
                         <FileGrid className={classes.container} data={files} onClickItem={handleFileClick} />
-                        <Table style={{ height: '5%' }} className={classes.footer}>
+                        <Table className={classes.footer}>
                             <TableFooter>
                                 <TableRow>
                                     <PaginationBar
