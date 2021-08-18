@@ -31,7 +31,7 @@ import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
@@ -87,7 +87,7 @@ const styles = makeStyles(theme => ({
 
 const ITEM_HEIGHT = 48;
 
-const FileManager = props => {
+const FileManager = (props) => {
     const classes = styles();
     const dispatch = useDispatch();
 
@@ -119,7 +119,7 @@ const FileManager = props => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = event => {
+    const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -157,7 +157,7 @@ const FileManager = props => {
         dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
     };
 
-    const modifyFolders = items => {
+    const modifyFolders = (items) => {
         let newItems = [];
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
@@ -187,7 +187,7 @@ const FileManager = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
-    const handleFolderSubmit = form => {
+    const handleFolderSubmit = (form) => {
         console.log('submit folder 1', form);
         if (!window.navigator.onLine) {
             handleError('Please check your internet connection and try again.');
@@ -207,7 +207,7 @@ const FileManager = props => {
             console.log('submit folder', data);
             //TODO: update
             FolderApi.modifyById(folder.id, data)
-                .then(response => {
+                .then((response) => {
                     console.log('submit folder res', response);
                     loadFolders();
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
@@ -226,7 +226,7 @@ const FileManager = props => {
                 priority: form.priority || '0',
             };
             FolderApi.addNew(data)
-                .then(response => {
+                .then((response) => {
                     loadFolders();
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                     dispatch({
@@ -240,7 +240,7 @@ const FileManager = props => {
         setShowFolder(false);
     };
 
-    const handleTreeCreate = item => {
+    const handleTreeCreate = (item) => {
         console.log('tree create', item);
         let f = item.id ? item : {};
         if (item.parentId) f.parentId = item.parentId;
@@ -248,25 +248,25 @@ const FileManager = props => {
         setShowFolder(true);
     };
 
-    const handleFolderClick = item => {
+    const handleFolderClick = (item) => {
         console.log('tree click', item.id, item.name, item.color);
         setFolder(item.id ? item : {});
         loadFiles(item.id, 0, paging.pageSize, paging.sort);
     };
 
-    const handleError = error => {
+    const handleError = (error) => {
         dispatch({
             type: ALERT_REDUX_ACTIONS.SHOW,
             alert: error || 'Please check your internet connection and try again.',
         });
     };
 
-    const handleQuestionDialog = status => {
+    const handleQuestionDialog = (status) => {
         if (status) {
             if (removeType == 'file') {
                 dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
                 FileApi.removeById(removeData.id)
-                    .then(response => {
+                    .then((response) => {
                         loadFiles(folder.id, 0, paging.pageSize, paging.sort);
                         dispatch({
                             type: FLASH_REDUX_ACTIONS.SHOW,
@@ -278,7 +278,7 @@ const FileManager = props => {
             } else if (removeType == 'folder') {
                 dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
                 FolderApi.removeById(removeData.id)
-                    .then(response => {
+                    .then((response) => {
                         loadFolders();
                         loadFiles(null, 0, paging.pageSize, paging.sort);
                         setFolder({});
@@ -306,7 +306,7 @@ const FileManager = props => {
 
             dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
             FileApi.upload(result, isPublic, isHidden, folderId)
-                .then(response => {
+                .then((response) => {
                     console.log('upload', response);
                     loadFiles(folder.id, 0, paging.pageSize, paging.sort);
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
@@ -316,7 +316,7 @@ const FileManager = props => {
         setShowUploadDialog(false);
     };
 
-    const handleFileClick = file => {
+    const handleFileClick = (file) => {
         if (onClose) {
             onClose(file);
             return;
@@ -329,16 +329,16 @@ const FileManager = props => {
         setPreview(null);
     };
 
-    const handleFolderRemove = folder => {
+    const handleFolderRemove = (folder) => {
         setRemoveType('folder');
         setRemoveData(folder);
         setQuestion('Are you sure to remove folder : ' + folder.name + "? Folder Remove can't be undone.");
     };
 
-    const handleFileUpdate = file => {
+    const handleFileUpdate = (file) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         FileApi.modifyById(file.id, file)
-            .then(response => {
+            .then((response) => {
                 loadFiles(folder.id, 0, paging.pageSize, paging.sort);
                 dispatch({
                     type: FLASH_REDUX_ACTIONS.SHOW,
@@ -349,7 +349,7 @@ const FileManager = props => {
             .catch(handleError);
     };
 
-    const handleFileRemove = file => {
+    const handleFileRemove = (file) => {
         setRemoveType('file');
         setRemoveData(file);
         setQuestion('Are you sure to remove file : ' + file.name + '.' + file.extension + ' ?');
@@ -398,7 +398,7 @@ const FileManager = props => {
                 <Grid className={classes.inputBox} container direct item md={9} sm={12} xs={12} justifyContent="flex-start" alignContent="flex-start">
                     <Grid container flex justifyContent="flex-start" alignContent="center" direction="row" item spacing={2}>
                         <Grid item lg={9} md={9} sm={9} xs={12}>
-                            <SearchInput className={classes.newButton} onSearch={value => setSearch(value)} placeholder="Search Files" />
+                            <SearchInput className={classes.newButton} onSearch={(value) => setSearch(value)} placeholder="Search Files" />
                         </Grid>
                         <Grid container item lg={1} md={1} sm={1} xs={12} justifyContent="center" alignContent="center">
                             <Button
@@ -429,7 +429,7 @@ const FileManager = props => {
                                     <Checkbox
                                         color="secondary"
                                         value={showPublic}
-                                        onChange={event => setShowPublic(event.target.checked)}
+                                        onChange={(event) => setShowPublic(event.target.checked)}
                                         checked={showPublic}
                                     />
                                     <ListItemText primary="Public" />
@@ -438,14 +438,14 @@ const FileManager = props => {
                                     <Checkbox
                                         color="secondary"
                                         value={showHidden}
-                                        onChange={event => setShowHidden(event.target.checked)}
+                                        onChange={(event) => setShowHidden(event.target.checked)}
                                         checked={showHidden}
                                     />
                                     <ListItemText primary="Hidden" />
                                 </MenuItem>
                             </Menu>
                         </Grid>
-                        <Grid item lg={2} md={2} sm={2} xs={12}>
+                        <Grid container item lg={2} md={2} sm={2} xs={12} justifyContent="center" alignContent="center">
                             <Button
                                 onClick={() => setShowUploadDialog(true)}
                                 variant="contained"
@@ -459,7 +459,6 @@ const FileManager = props => {
                     </Grid>
                     <Grid container item flex>
                         <FileGrid className={classes.container} data={files} onClickItem={handleFileClick} />
-
                         <Table style={{ height: '5%' }} className={classes.footer}>
                             <TableFooter>
                                 <TableRow>
@@ -468,8 +467,8 @@ const FileManager = props => {
                                         total={paging.total}
                                         pageSize={paging.pageSize}
                                         currentPage={paging.currentPage}
-                                        onPageChange={newPage => loadFiles(folder.id, newPage, paging.pageSize, paging.sort)}
-                                        onPageSizeChange={size => loadFiles(folder.id, 0, size, paging.sort)}
+                                        onPageChange={(newPage) => loadFiles(folder.id, newPage, paging.pageSize, paging.sort)}
+                                        onPageSizeChange={(size) => loadFiles(folder.id, 0, size, paging.sort)}
                                     />
                                 </TableRow>
                             </TableFooter>

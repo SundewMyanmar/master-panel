@@ -199,6 +199,7 @@ const ImageInput = (props: ImageInputProps) => {
         : {
               objectFit: 'contain',
           };
+
     return (
         <>
             <FileManagerPicker show={showFile} onClose={handleCloseFile} title="Choose File" />

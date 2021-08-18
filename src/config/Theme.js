@@ -12,14 +12,10 @@ export const common = {
 };
 
 export const primary = {
-    // main: '#3c4c59',
-    // light: '#677886',
-    // dark: '#142430',
-    // contrastText: '#ffffff',
-    light: '#7694e4',
-    main: '#4267B2',
-    dark: '#003d82',
-    contrastText: '#fff',
+    main: '#3c4c59',
+    light: '#677886',
+    dark: '#142430',
+    contrastText: '#ffffff',
 };
 
 export const darkPrimary = {

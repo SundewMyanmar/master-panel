@@ -12,7 +12,7 @@ export const TreeCollapseIcon = (expand, onClick) => {
     );
 };
 
-const useTreeItemStyles = makeStyles(theme => ({
+const useTreeItemStyles = makeStyles((theme) => ({
     root: {
         '&:focus > $content $label, &$selected > $content $label': {
             color: theme.palette.primary.contrastText,
@@ -57,7 +57,7 @@ const useTreeItemStyles = makeStyles(theme => ({
     },
 }));
 
-export const DefaultTreeItem = props => {
+export const DefaultTreeItem = (props) => {
     const classes = useTreeItemStyles();
     //Unused property need to add for remove in DOM.
     const {
@@ -82,10 +82,10 @@ export const DefaultTreeItem = props => {
     } = props;
     const isCollapseable = items && items.length > 0;
     const [isHover, setIsHover] = useState(false);
-    const handleOnMouseEnter = e => {
+    const handleOnMouseEnter = (e) => {
         setIsHover(true);
     };
-    const handleOnMouseLeave = e => {
+    const handleOnMouseLeave = (e) => {
         setIsHover(false);
     };
 
@@ -116,6 +116,7 @@ export const DefaultTreeItem = props => {
                     {allowCreate && isHover && (
                         <>
                             <Icon
+                                fontSize="small"
                                 onClick={() => {
                                     if (onCreate) onCreate({ parentId: data.id });
                                 }}
@@ -123,6 +124,7 @@ export const DefaultTreeItem = props => {
                                 add
                             </Icon>
                             <Icon
+                                fontSize="small"
                                 onClick={() => {
                                     if (onCreate) onCreate(data);
                                 }}
@@ -130,6 +132,7 @@ export const DefaultTreeItem = props => {
                                 create
                             </Icon>
                             <Icon
+                                fontSize="small"
                                 onClick={() => {
                                     if (onRemove) onRemove(data);
                                 }}
@@ -177,11 +180,11 @@ type TreeMenuProps = {
     onClickItem?: (item: Object) => void,
     showRoot: boolean,
     allowCreate: boolean,
-    onCreate: item => void,
-    onRemove: item => void,
+    onCreate: (item) => void,
+    onRemove: (item) => void,
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         height: 216,
         flexGrow: 1,
@@ -199,9 +202,9 @@ const TreeMenu = (props: TreeMenuProps) => {
         setExpandedNodes(expNodes);
     }, [menus]);
 
-    const handleCollapseItemClick = nodeId => {
-        const existIdx = expandedNodes.findIndex(x => x === nodeId);
-        const updateNodes = existIdx < 0 ? [...expandedNodes, nodeId] : expandedNodes.filter(x => x !== nodeId);
+    const handleCollapseItemClick = (nodeId) => {
+        const existIdx = expandedNodes.findIndex((x) => x === nodeId);
+        const updateNodes = existIdx < 0 ? [...expandedNodes, nodeId] : expandedNodes.filter((x) => x !== nodeId);
 
         setExpandedNodes(updateNodes);
     };
@@ -255,10 +258,10 @@ const TreeMenu = (props: TreeMenuProps) => {
 };
 
 TreeMenu.defaultProps = {
-    onClickItem: item => console.warn('Undefined onClickItem => ', item),
+    onClickItem: (item) => console.warn('Undefined onClickItem => ', item),
     allowCreate: false,
-    onCreate: item => console.warn('Undefined onCreateItem => ', item),
-    onRemove: item => console.warn('Undefined onDeleteItem => ', item),
+    onCreate: (item) => console.warn('Undefined onCreateItem => ', item),
+    onRemove: (item) => console.warn('Undefined onDeleteItem => ', item),
     showRoot: false,
 };
 

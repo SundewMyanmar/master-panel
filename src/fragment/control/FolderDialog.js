@@ -106,7 +106,7 @@ const FolderDialog = (props: FolderDialogProps) => {
             </DialogTitle>
             <DialogContent>
                 <MasterForm fields={fields} onSubmit={(event, form) => handleOnSubmit(form)}>
-                    <Button type="submit" fullWidth style={{ marginTop: 8, marginBottom: 8 }} color="secondary" variant="contained" aria-label="save">
+                    <Button type="submit" fullWidth style={{ marginTop: 8, marginBottom: 8 }} color="primary" variant="contained" aria-label="save">
                         Save
                     </Button>
                 </MasterForm>

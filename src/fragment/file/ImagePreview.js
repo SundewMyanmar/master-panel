@@ -64,6 +64,7 @@ const style = makeStyles((theme) => ({
         margin: theme.spacing(1),
         justifyContent: 'flex-end',
     },
+    image: {},
 }));
 
 type ImagePreviewProps = {
@@ -188,7 +189,15 @@ const ImagePreview = (props: ImagePreviewProps) => {
     };
 
     return (
-        <Dialog open={show} TransitionComponent={Transition} onClose={onClose} aria-labelledby="image-preview-dialog" aria-describedby={data.name}>
+        <Dialog
+            fullWidth
+            open={show}
+            TransitionComponent={Transition}
+            onClose={onClose}
+            aria-labelledby="image-preview-dialog"
+            aria-describedby={data.name}
+            maxWidth="md"
+        >
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">
@@ -207,7 +216,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
             </DialogTitle>
             <Divider />
             <DialogContent>
-                <img onLoad={handleImageLoading} width="100%" height="100%" src={url} alt={data.name} />
+                <img onLoad={handleImageLoading} width="100%" className={classes.image} src={url} alt={data.name} />
                 {data ? (
                     <Grid container>
                         <FileInfoField label="Name" value={data.name + '.' + data.extension} />

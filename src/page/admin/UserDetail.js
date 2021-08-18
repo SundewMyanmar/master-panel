@@ -173,7 +173,7 @@ const UserDetail = (props) => {
                                         <EmailInput
                                             id="email"
                                             icon="face"
-                                            label="E-mail"
+                                            label="Email"
                                             value={form?.email}
                                             onChange={(event) => setForm({ ...form, email: event.target.value })}
                                             required
