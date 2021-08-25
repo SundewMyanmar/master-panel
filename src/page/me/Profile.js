@@ -120,7 +120,6 @@ const Profile = (props) => {
             };
 
             profile.extras.theme = JSON.stringify(theme);
-            console.log('profile', form);
             if (form.image && form.image.id) {
                 profile.profileImage = form.image;
             } else if (form.image && !form.image.id) {

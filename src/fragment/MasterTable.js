@@ -364,10 +364,10 @@ const MasterTable = (props: MasterTableProps) => {
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
+                    <Grid container item lg={3} md={3} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
                         {hideSearch || <SearchInput value={search} onSearch={(value) => setSearch(value)} placeholder="Search Files" />}
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={12} xs={12} alignContent="center" justifyContent="flex-end">
+                    <Grid container item lg={5} md={5} sm={12} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
                         {hideDataActions || (
                             <>
                                 {hideActionMenu || (
