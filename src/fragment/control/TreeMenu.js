@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IconButton, Icon, makeStyles, Typography } from '@material-ui/core';
 import { TreeView, TreeItem } from '@material-ui/lab';
-import { MenuProps } from './SideMenu';
+import { MenuProps } from '../layout/SideMenu';
 import { alpha } from '@material-ui/core/styles';
 
 export const TreeCollapseIcon = (expand, onClick) => {

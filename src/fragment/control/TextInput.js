@@ -89,7 +89,7 @@ const TextInput = (props: TextInputProps) => {
             {variant === 'standard' ? (
                 <InputBase
                     {...variantProps}
-                    margin="normal"
+                    margin="dense"
                     fullWidth
                     placeholder={placeholderText}
                     {...rest}

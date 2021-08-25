@@ -1,4 +1,4 @@
-import React, { useState, ReactDOM } from 'react';
+import React, { useState, ReactDOM, useEffect, useRef } from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
 import {
     TextInput,
@@ -71,32 +71,35 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     }, [initialData]);
 
     //Research Code, no use
-    const findInputFields = (node) => {
+    const findInputValues = (node) => {
         if (!node) {
             return null;
         }
+
         const grandChildren = node.props?.children;
         if (grandChildren && typeof grandChildren === 'object' && Array.isArray(grandChildren)) {
             for (let i = 0; i < grandChildren.length; i++) {
-                findInputFields(grandChildren[i]);
+                findInputValues(grandChildren[i]);
             }
         } else {
-            findInputFields(grandChildren);
+            findInputValues(grandChildren);
         }
+
         if (typeof node === 'object' && node.type?.name && PROCESSABLE_FIELDS.includes(node.type?.name)) {
-            console.log(`Found Children [${node.type?.name}]=> `, node.props);
             const input = document.getElementById(node.props.id);
             if (input) {
                 console.log('Input Found => ', input);
-                input.onchange = (event) => {
-                    handleValueChange({ id: node.props.id }, event, 0);
-                };
+                console.log(`Input Required => ${input.required}`);
+                console.log(`Get Value => ${input.value}`);
+                form[input.id] = input.value;
+                setForm(form);
             }
         }
     };
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
+
         let allow = true;
 
         if (onWillSubmit) {

@@ -115,6 +115,7 @@ const ListInput = (props: SelectListProps) => {
 
     return (
         <Autocomplete
+            fullWidth
             id={id || name}
             name={name || id}
             options={data}

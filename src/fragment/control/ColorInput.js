@@ -1,6 +1,18 @@
 /* @flow */
 import * as React from 'react';
-import { InputBase, InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, FormHelperText } from '@material-ui/core';
+import {
+    InputBase,
+    InputProps,
+    Icon,
+    Paper,
+    makeStyles,
+    FormControl,
+    InputLabel,
+    Grid,
+    IconButton,
+    FormHelperText,
+    Tooltip,
+} from '@material-ui/core';
 import ColorPicker from './ColorPicker';
 import FormatManager from '../../util/FormatManager';
 
@@ -42,31 +54,31 @@ const styles = makeStyles((theme) => ({
         width: 40,
         height: 25,
         marginRight: 6,
-        border: '1px solid ' + theme.palette.background.default,
+        border: '1px solid ' + theme.palette.background.divider,
     },
 }));
 
 const ColorInput = (props: ColorInputProps) => {
-    const { variant, display, label, id, name, inputRef, value, icon, onChange, onValidate, ...rest } = props;
+    const { variant, display, placeholder, label, id, name, inputRef, value, icon, onChange, onValidate, ...rest } = props;
     const [showColor, setShowColor] = React.useState(false);
     const [color, setColor] = React.useState('');
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
+    const [isHover, setHover] = React.useState(false);
     const classes = styles({ invalid });
     const currentInput = inputRef || React.createRef();
 
     React.useEffect(() => {
-        const inputData = FormatManager.defaultNull(value);
-        if (inputData && color !== inputData) {
-            handleClose(inputData);
+        const inputData = FormatManager.defaultNull(value) || value === 0 ? value : '';
+        if (color !== inputData) {
+            handleValueChange(inputData);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
-    const handleClose = (result) => {
+    const handleValueChange = (result) => {
         setShowColor(false);
-
-        if (result) setColor(result || color);
+        setColor(result);
 
         const hasData = (result && (result.id || result.length > 0)) || (color && color.length);
         let errorText = '';
@@ -128,35 +140,60 @@ const ColorInput = (props: ColorInputProps) => {
 
     return (
         <>
-            <ColorPicker title={'Browse ' + label} show={showColor} onClose={handleClose} onError={handleError} />
-            <FormControl {...rest} variant="outlined" margin="normal" fullWidth className={classes.root}>
+            <ColorPicker title={'Browse ' + label} show={showColor} onClose={handleValueChange} onError={handleError} />
+            <FormControl
+                {...rest}
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                className={classes.root}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+            >
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
                     {label} {props.required ? '*' : ''}
                 </InputLabel>
                 <Paper {...variantProps} variant="outlined" classes={{ root: classes.content }}>
-                    <Grid container>
-                        <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
+                    <Grid container direction="row">
+                        <Grid container item sm={8} xs={8} direction="row" className={classes.chipContainer} alignItems="center">
+                            <Icon className={classes.icon}>{icon || 'palette'}</Icon>
                             {displayBox()}
-                            <div style={{ position: 'relative', ...inputProps }}>
-                                <InputBase
-                                    margin="normal"
-                                    fullWidth
-                                    inputProps={{ 'aria-label': 'naked' }}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    placeholder={'Choose ' + label}
-                                    {...rest}
-                                    disabled
-                                    id={id || name}
-                                    name={name || id}
-                                    inputRef={currentInput}
-                                    value={color || ''}
-                                />
-                            </div>
+                            <InputBase
+                                style={{ width: '45%', ...inputProps }}
+                                margin="dense"
+                                inputProps={{ 'aria-label': 'naked' }}
+                                placeholder={placeholder || 'Choose ' + label}
+                                {...rest}
+                                disabled
+                                id={id || name}
+                                name={name || id}
+                                inputRef={currentInput}
+                                value={color || ''}
+                            />
                         </Grid>
-                        <Grid className={classes.actionButton} container item xs={2} sm={2} justifyContent="flex-end" alignItems="center">
+                        <Grid
+                            sm={4}
+                            xs={4}
+                            className={classes.actionButton}
+                            container
+                            item
+                            justifyContent="flex-end"
+                            alignItems="center"
+                            direction="row"
+                        >
+                            {color && isHover ? (
+                                <Tooltip title="Remove">
+                                    <IconButton
+                                        size="small"
+                                        style={{ ...inputProps }}
+                                        onClick={() => handleValueChange(null)}
+                                        color="default"
+                                        aria-label="Choose"
+                                    >
+                                        <Icon>close</Icon>
+                                    </IconButton>
+                                </Tooltip>
+                            ) : null}
                             <IconButton
                                 style={{ ...inputProps }}
                                 disableRipple

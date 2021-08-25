@@ -239,7 +239,7 @@ const ObjectInput = (props: ObjectInputProps) => {
                             {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
                             <div style={{ position: 'relative' }}>
                                 <input
-                                    type="text"
+                                    type="hidden"
                                     className={classes.hiddenInput}
                                     defaultValue={selectedData && (selectedData.id || selectedData.length > 0) ? JSON.stringify(selectedData) : ''}
                                     ref={currentInput}

@@ -19,13 +19,13 @@ export type IconInputProps = {
 
 const styles = makeStyles((theme) => ({
     root: {
-        backgroundColor: 'inherit',
+        backgroundColor: theme.palette.background.paper,
     },
     label: (props) => ({
         backgroundColor: 'inherit',
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(2),
-        color: props.invalid ? theme.palette.error.main : theme.palette.primary.main,
+        color: props.invalid ? theme.palette.error.main : theme.palette.text.primary,
     }),
     content: (props) => ({
         backgroundColor: 'inherit',
@@ -204,12 +204,12 @@ const IconInput = (props: IconInputProps) => {
             />
             <FormControl {...rest} variant="outlined" margin="normal" fullWidth className={classes.root}>
                 <InputLabel className={classes.label} shrink htmlFor="bootstrap-input">
-                    {label} {props.required ? '*' : ''}
+                    {label}
                 </InputLabel>
                 <Paper {...variantProps} variant="outlined" classes={{ root: classes.content }}>
                     <Grid container style={{ ...borderProps }}>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
+                            <Icon className={classes.icon}>{icon || 'eco'}</Icon>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="text"

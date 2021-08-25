@@ -5,7 +5,7 @@ const URLS = {
     development: 'http://localhost:8080/',
     production: 'https://api.linnmyanmar.com.mm/dev/',
 };
-export const API = process.env.NODE_ENV === 'production' ? URLS.development : URLS.production;
+export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
 
 export const SESSION_TIMEOUT = 1000 * 60 * 15; //15 Minutes
 

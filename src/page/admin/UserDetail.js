@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { withRouter, useHistory, useParams } from 'react-router-dom';
 import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles, InputAdornment } from '@material-ui/core';
 
@@ -12,7 +12,9 @@ import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
+import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TabControl, TextInput } from '../../fragment/control';
+import DataTable from '../../fragment/table';
+import ContactForm from '../../fragment/contact/ContactForm';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -45,6 +47,8 @@ const UserDetail = (props) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [isUpdate, setUpdate] = useState(id > 0);
+    const [contact, setContact] = useState(null);
+    const infoForm = useRef();
 
     const handleRoleData = async (currentPage, pageSize, sort, search) => {
         return await RoleApi.getPaging(currentPage, pageSize, sort, search);
@@ -77,23 +81,20 @@ const UserDetail = (props) => {
             handleError('Please check your internet connection and try again.');
             return;
         }
+
         if (!FormatManager.cleanPhoneNumber(form.phoneNumber)) {
             handleError('Invalid phone no.');
             return;
         }
 
-        // let user = {
-        //     displayName: form.displayName,
-        //     phoneNumber: FormatManager.cleanPhoneNumber(form.phoneNumber),
-        //     email: form.email,
-        //     roles: form.roles,
-        //     password: form.password,
-        //     status: form.status ? 'ACTIVE' : 'CANCEL',
-        //     extras: {
-        //         address: form.address || '',
-        //         gender: form.gender && typeof form.gender === 'string' ? form.gender : '',
-        //     },
-        // };
+        if (!form.roles || form.roles.length <= 0) {
+            dispatch({
+                type: ALERT_REDUX_ACTIONS.SHOW,
+                alert: { title: 'Required', message: 'Select one or more role.' },
+            });
+            return;
+        }
+
         let user = { ...form };
         user.phoneNumber = FormatManager.cleanPhoneNumber(form.phoneNumber);
         console.log('Form => ', form);
@@ -122,6 +123,13 @@ const UserDetail = (props) => {
                 })
                 .catch(handleError);
         } else {
+            if (form.password !== form.confirmPassword) {
+                dispatch({
+                    type: ALERT_REDUX_ACTIONS.SHOW,
+                    alert: { title: 'Invalid', message: 'Password and confirm password must be same' },
+                });
+                return;
+            }
             UserApi.addNew(user)
                 .then((response) => {
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
@@ -135,6 +143,131 @@ const UserDetail = (props) => {
         }
     };
 
+    const renderInfoForm = () => {
+        return (
+            <Grid container direction="column">
+                <Grid direction="row" spacing={10} container>
+                    <Grid lg={3} md={4} sm={6} xs={12} item>
+                        <Grid container justifyContent="center">
+                            <ImageInput
+                                size={{ width: 180, height: 180 }}
+                                id="image"
+                                enableFilePicker={true}
+                                required={true}
+                                value={form?.profileImage}
+                                onChange={(event) => setForm({ ...form, image: event.target.value })}
+                            />
+                            <CheckboxInput
+                                id="status"
+                                label="Active User?"
+                                value={form?.status}
+                                onChange={(event) => {
+                                    setForm({ ...form, status: event.target.checked ? 'ACTIVE' : 'CANCEL' });
+                                }}
+                                checked={form.status?.toLowerCase() === 'active'}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid lg={9} md={8} sm={6} xs={12} direction="column" container item>
+                        <Grid item>
+                            <TextInput
+                                id="displayName"
+                                icon="face"
+                                label="Full Name"
+                                value={form?.displayName}
+                                onChange={(event) => setForm({ ...form, displayName: event.target.value })}
+                                required
+                            />
+                        </Grid>
+                        <Grid item>
+                            <EmailInput
+                                id="email"
+                                icon="face"
+                                label="Email"
+                                value={form?.email}
+                                onChange={(event) => setForm({ ...form, email: event.target.value })}
+                                required
+                            />
+                        </Grid>
+                        <Grid item>
+                            <TextInput
+                                id="phoneNumber"
+                                icon="phone"
+                                label="Phone number"
+                                value={form?.phoneNumber}
+                                onChange={(event) => setForm({ ...form, phoneNumber: event.target.value })}
+                                required
+                            />
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    <ObjectInput
+                        variant="outlined"
+                        id="roles"
+                        label="Roles"
+                        icon="people"
+                        onLoadData={handleRoleData}
+                        onLoadItem={(item) => item.name}
+                        onChange={(event) => setForm({ ...form, roles: event.target.value })}
+                        values={form?.roles}
+                        fields={ROLE_TABLE_FIELDS}
+                        multi={true}
+                        required={true}
+                    />
+                </Grid>
+                {isUpdate ? null : (
+                    <>
+                        <Grid item>
+                            <PasswordInput
+                                id="password"
+                                label="Password"
+                                onChange={(event) => setForm({ ...form, password: event.target.value })}
+                                required
+                            />
+                        </Grid>
+                        <Grid item>
+                            <PasswordInput
+                                id="confirmPassword"
+                                label="Confirm Password"
+                                onChange={(event) => setForm({ ...form, confirmPassword: event.target.value })}
+                                onValidate={(event) => (form.password !== event.target.value ? "Password and Confirm Password doesn't match." : '')}
+                                required
+                            />
+                        </Grid>
+                    </>
+                )}
+                <Grid item>
+                    <TextInput
+                        id="note"
+                        label="Note"
+                        rows={4}
+                        multiline={true}
+                        value={form?.note}
+                        onChange={(event) => setForm({ ...form, note: event.target.value })}
+                    />
+                </Grid>
+            </Grid>
+        );
+    };
+
+    const renderContactGrid = () => {
+        return <ContactForm onChange={(data) => setForm({ ...form, contacts: data })} data={form.contacts} />;
+    };
+
+    const tabFields = [
+        {
+            label: 'Info',
+            icon: 'info',
+            content: renderInfoForm(),
+        },
+        {
+            label: 'Contacts',
+            icon: 'contacts',
+            content: renderContactGrid(),
+        },
+    ];
+
     return (
         <>
             <Container component="main" maxWidth="md">
@@ -145,149 +278,17 @@ const UserDetail = (props) => {
                     <Typography component="h1" variant="h5">
                         User Setup
                     </Typography>
-                    <MasterForm onSubmit={(event, form) => handleSubmit(form)}>
-                        <Grid container direction="column">
-                            <Grid direction="row" spacing={10} container>
-                                <Grid lg={3} md={4} sm={6} xs={12} item>
-                                    <ImageInput
-                                        size={{ width: 200, height: 200 }}
-                                        id="image"
-                                        enableFilePicker={true}
-                                        required={true}
-                                        value={form?.profileImage}
-                                        onChange={(event) => setForm({ ...form, image: event.target.value })}
-                                    />
-                                </Grid>
-                                <Grid lg={9} md={8} sm={6} xs={12} direction="column" container item>
-                                    <Grid item>
-                                        <TextInput
-                                            id="displayName"
-                                            icon="face"
-                                            label="Full Name"
-                                            value={form?.displayName}
-                                            onChange={(event) => setForm({ ...form, displayName: event.target.value })}
-                                            required
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <EmailInput
-                                            id="email"
-                                            icon="face"
-                                            label="Email"
-                                            value={form?.email}
-                                            onChange={(event) => setForm({ ...form, email: event.target.value })}
-                                            required
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextInput
-                                            id="phoneNumber"
-                                            icon="phone"
-                                            label="Phone number"
-                                            value={form?.phoneNumber}
-                                            onChange={(event) => setForm({ ...form, phoneNumber: event.target.value })}
-                                            required
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <ObjectInput
-                                    id="roles"
-                                    label="Roles"
-                                    icon="people"
-                                    onLoadData={handleRoleData}
-                                    onLoadItem={(item) => item.name}
-                                    onChange={(event) => setForm({ ...form, roles: event.target.value })}
-                                    values={form?.roles}
-                                    fields={ROLE_TABLE_FIELDS}
-                                    multi={true}
-                                    required={true}
-                                />
-                            </Grid>
-                            {isUpdate ? null : (
-                                <>
-                                    <Grid item>
-                                        <PasswordInput
-                                            id="password"
-                                            label="Password"
-                                            onChange={(event) => setForm({ ...form, password: event.target.value })}
-                                            required
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <PasswordInput
-                                            id="confirmPassword"
-                                            label="Confirm Password"
-                                            onChange={(event) => setForm({ ...form, confirmPassword: event.target.value })}
-                                            onValidate={(event) =>
-                                                form.password !== event.target.value ? "Password and Confirm Password doesn't match." : ''
-                                            }
-                                            required
-                                        />
-                                    </Grid>
-                                </>
-                            )}
-                            <Grid item>
-                                <ListInput
-                                    label="Gender"
-                                    id="gender"
-                                    data={['Male', 'Female', 'LGBT', 'Other']}
-                                    value={form?.extras?.gender}
-                                    onChange={(event) => {
-                                        let updateExtras = { ...form.extras };
-                                        updateExtras.gender = event.target.value;
-                                        setForm({ ...form, extras: updateExtras });
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TextInput
-                                    id="address"
-                                    label="Address"
-                                    rows={4}
-                                    multiline={true}
-                                    value={form?.extras?.address}
-                                    onChange={(event) => {
-                                        let updateExtras = { ...form.extras };
-                                        updateExtras.address = event.target.value;
-                                        setForm({ ...form, extras: updateExtras });
-                                    }}
-                                />
-                            </Grid>
-                            <Grid container>
-                                <Grid lg={4} md={5} sm={12} xs={12} item>
-                                    <CheckboxInput
-                                        id="status"
-                                        label="Active User?"
-                                        value={form?.status}
-                                        onChange={(event) => {
-                                            setForm({ ...form, status: event.target.checked ? 'ACTIVE' : 'CANCEL' });
-                                        }}
-                                        checked={form.status?.toLowerCase() === 'active'}
-                                    />
-                                </Grid>
-                                <Grid lg={8} md={7} sm={12} xs={12} justifyContent="flex-end" container item>
-                                    <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                                        <Icon>arrow_back</Icon> Back to List
-                                    </Button>
-                                    <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                                        <Icon color="action">save</Icon> Save
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </MasterForm>
-                    {/* <MasterForm fields={isUpdate ? fields : [...fields, ...newUserFields]} onSubmit={(event, form) => handleSubmit(form)}>
-                        <Grid container justifyContent="flex-end">
+                    <MasterForm>
+                        <TabControl tabs={tabFields} />
+                        <Grid justifyContent="flex-end" container>
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
                                 <Icon>arrow_back</Icon> Back to List
                             </Button>
-                            <Button type="submit" variant="contained" color="primary" className={classes.submit}>
-                                <Icon>save</Icon> Save
+                            <Button type="button" variant="contained" color="primary" onClick={() => handleSubmit()} className={classes.submit}>
+                                <Icon color="action">save</Icon> Save
                             </Button>
                         </Grid>
-                    </MasterForm> */}
+                    </MasterForm>
                 </Paper>
             </Container>
         </>

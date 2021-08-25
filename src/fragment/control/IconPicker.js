@@ -164,7 +164,6 @@ const IconPicker = (props: IconPickerProps) => {
     //Set value if props.value changed.
     React.useEffect(() => {
         if (show) {
-            console.log('updated selected data => ', selectedData);
             setChecked(selectedData);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

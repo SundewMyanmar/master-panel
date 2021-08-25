@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { QuestionDialog } from '../message';
-import TreeMenu from '../layout/TreeMenu';
+import TreeMenu from '../control/TreeMenu';
 import {
     Grid,
     Paper,
@@ -130,7 +130,6 @@ const FileManager = (props) => {
             const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden);
             const { data, ...paging } = result;
             setPaging(paging);
-            console.log('file data', result);
             setFiles(data);
         } catch (error) {
             handleError(error);

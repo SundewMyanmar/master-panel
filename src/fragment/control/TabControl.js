@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         width: '100%',
         backgroundColor: theme.palette.background.paper,
-        padding: 8,
+        marginBottom: theme.spacing(1),
     },
     tabControl: {
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tabPanel: {
         backgroundColor: theme.palette.background.paper,
+        borderBottom: `1px solid ${theme.palette.divider}`,
     },
 }));
 
@@ -51,7 +52,7 @@ export const TabPanel = (props: TabPanelProps) => {
     );
 };
 
-const a11yProps = (index) => {
+const allyProps = (index) => {
     return {
         id: `scrollable-force-tab-${index}`,
         'aria-controls': `scrollable-force-tabpanel-${index}`,
@@ -104,7 +105,7 @@ const TabControl = (props: TabScrollButtonProps) => {
                             label={tab.label}
                             className={classes.tabTitle}
                             icon={<Icon>{tab.icon}</Icon>}
-                            {...a11yProps(tabs.indexOf(tab))}
+                            {...allyProps(tabs.indexOf(tab))}
                             wrapped
                         />
                     ))}

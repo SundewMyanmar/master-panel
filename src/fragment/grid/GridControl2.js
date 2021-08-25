@@ -18,7 +18,7 @@ import FormatManager from '../../util/FormatManager';
  *  }
  */
 
-const GridControl2 = props => {
+const GridControl2 = (props) => {
     const { items, columns } = props;
     const [rData] = useState(() => {
         let data = {};
@@ -31,7 +31,7 @@ const GridControl2 = props => {
         return data;
     });
 
-    const calResponsive = span => {
+    const calResponsive = (span) => {
         return {
             xl: span,
             lg: span,
@@ -72,7 +72,7 @@ const GridControl2 = props => {
         };
     };
 
-    const renderSpan = idx => {
+    const renderSpan = (idx) => {
         let i = idx;
         let rlen = items[idx].rowspan;
         let clen = items[idx].colspan;

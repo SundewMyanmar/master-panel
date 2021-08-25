@@ -33,13 +33,13 @@ import { HeaderCell } from './HeaderCell';
 
 export type TableField = {
     name: string,
-    type: 'text' | 'image' | 'icon' | 'bool' | 'raw',
+    type: 'text' | 'image' | 'icon' | 'color' | 'bool' | 'raw',
     align: 'left' | 'center' | 'right',
     label: string,
     minWidth: number,
     sortable: ?boolean,
     hidden: ?boolean,
-    onLoad?: (item: Object) => Component | string,
+    onLoad?: (item: Object, index: number) => Component | string,
 };
 
 export type DataTableProps = {
@@ -54,11 +54,11 @@ export type DataTableProps = {
     sort?: string,
     multi?: boolean,
     noData?: string,
-    onEdit?: (item: Object) => void,
+    onEdit?: (item: Object, index: number) => void,
     disablePaging?: boolean,
     type: 'TABLE' | 'INPUT',
     onPageChange?: (page: number) => void,
-    onRowClick?: (item: Object) => void,
+    onRowClick?: (item: Object, index: number) => void,
     onSelectionChange?: (result: Object | Array<Object>) => void,
     onError?: (error: Object | string) => void,
 };
@@ -341,10 +341,10 @@ const DataTable = (props: DataTableProps) => {
                                     key={row.id + '-' + dataIdx}
                                     index={dataIdx}
                                     onClick={() => {
-                                        if (onRowClick) onRowClick(row);
+                                        if (onRowClick) onRowClick(row, dataIdx);
                                     }}
                                     onDoubleClick={() => {
-                                        if (onEdit) onEdit(row);
+                                        if (onEdit) onEdit(row, dataIdx);
                                     }}
                                     hover={true}
                                 >

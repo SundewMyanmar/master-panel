@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { QuestionDialog } from '../../fragment/message';
 import MenuApi from '../../api/MenuApi';
-import TreeMenu from '../../fragment/layout/TreeMenu';
+import TreeMenu from '../../fragment/control/TreeMenu';
 import { Grid, Paper, Container, Avatar, Icon, Typography, Button, makeStyles } from '@material-ui/core';
 import MasterForm from '../../fragment/MasterForm';
 import { ROLE_TABLE_FIELDS } from './Role';

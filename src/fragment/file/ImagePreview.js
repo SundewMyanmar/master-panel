@@ -63,6 +63,7 @@ const style = makeStyles((theme) => ({
     actionBar: {
         margin: theme.spacing(1),
         justifyContent: 'flex-end',
+        borderTop: '1px solid ' + theme.palette.divider,
     },
     image: {},
 }));
@@ -170,10 +171,10 @@ const ImagePreview = (props: ImagePreviewProps) => {
 
     const renderFolders = () => {
         return (
-            <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Folder</InputLabel>
-                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={selectedFolder} onChange={handleFolderChange}>
-                    <MenuItem key={'default'} value={null}>
+            <FormControl fullWidth className={classes.formControl}>
+                <InputLabel id="file-folder-select-label">Folder</InputLabel>
+                <Select labelId="file-folder-select-label" id="file-folder-select" value={selectedFolder || ''} onChange={handleFolderChange}>
+                    <MenuItem key={'default'} value={''}>
                         (None)
                     </MenuItem>
                     {newFolders.map((item) => {
@@ -232,28 +233,40 @@ const ImagePreview = (props: ImagePreviewProps) => {
             </DialogContent>
 
             <DialogActions className={classes.actionBar}>
-                {renderFolders()}
-                <FormControlLabel
-                    className={classes.checkbox}
-                    control={<Checkbox color="primary" checked={isPublic} onChange={handlePublicChange} name="isPublic" />}
-                    label="Public?"
-                />
-                <FormControlLabel
-                    className={classes.checkbox}
-                    control={<Checkbox color="primary" checked={isHidden} onChange={handleHiddenChange} name="isHidden" />}
-                    label="Hidden?"
-                />
-                <Button onClick={handleSave} variant="contained">
-                    <Icon>save</Icon> Save
-                </Button>
-
-                {onRemove ? (
-                    <MuiThemeProvider theme={ErrorTheme}>
-                        <Button color="primary" variant="contained" onClick={handleRemove}>
-                            Delete
+                <Grid container justifyContent="space-between">
+                    <Grid container item lg={6} md={6} sm={6} xs={12} spacing={3} direction="row" justifyContent="flex-start" alignItems="center">
+                        <Grid item md={6} sm={4} xs={12}>
+                            {renderFolders()}
+                        </Grid>
+                        <Grid item md={3} sm={4} xs={12}>
+                            <FormControlLabel
+                                className={classes.checkbox}
+                                control={<Checkbox color="primary" checked={isPublic} onChange={handlePublicChange} name="isPublic" />}
+                                label="Public?"
+                            />
+                        </Grid>
+                        <Grid item md={3} sm={4} xs={12}>
+                            <FormControlLabel
+                                className={classes.checkbox}
+                                control={<Checkbox color="primary" checked={isHidden} onChange={handleHiddenChange} name="isHidden" />}
+                                label="Hidden?"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container item lg={6} md={6} sm={6} xs={12} justifyContent="flex-end" alignItems="center">
+                        <Button onClick={handleSave} variant="contained">
+                            <Icon>save</Icon> Save
                         </Button>
-                    </MuiThemeProvider>
-                ) : null}
+
+                        {onRemove ? (
+                            <MuiThemeProvider theme={ErrorTheme}>
+                                <Button style={{ marginLeft: 10 }} color="primary" variant="contained" onClick={handleRemove}>
+                                    Delete
+                                </Button>
+                            </MuiThemeProvider>
+                        ) : null}
+                    </Grid>
+                </Grid>
             </DialogActions>
         </Dialog>
     );

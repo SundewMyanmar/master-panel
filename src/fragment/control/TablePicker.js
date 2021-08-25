@@ -94,7 +94,9 @@ const TablePicker = (props: TablePickerProps) => {
     }, [selectedData]);
 
     useEffect(() => {
-        loadData(0, paging.pageSize, paging.sort);
+        if (!loading) {
+            loadData(0, paging.pageSize, paging.sort);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 

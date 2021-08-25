@@ -115,7 +115,6 @@ const ApiPermission = () => {
         if (!role) {
             return;
         }
-        console.log('Selected Role => ', role);
 
         setSelectedRole(role);
         RouteApi.getPermissionByRole(role.id)
