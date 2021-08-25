@@ -75,7 +75,7 @@ const ChipInput = (props: ChipInputProps) => {
     //Set value if props.value changed.
     React.useEffect(() => {
         const inputData = FormatManager.defaultNull(value);
-        if (inputData) {
+        if (inputData !== items) {
             var splitData = inputData.split(',');
             if (splitData) {
                 setItems(splitData);

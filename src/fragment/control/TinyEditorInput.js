@@ -25,7 +25,12 @@ const TinyEditorInput = (props: TinyEditorInputProps) => {
     const toolbar = type === 'TABLE' ? `${tableToolbar}|${defaultToolbar} | help` : `${defaultToolbar}|${tableToolbar}| help`;
 
     React.useEffect(() => {
-        setEditorContent(value);
+        const newValue = FormatManager.defaultNull(value) || '';
+        if (newValue !== content) {
+            handleEditorChange(newValue, null);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const handleEditorChange = (content, editor) => {

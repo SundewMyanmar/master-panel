@@ -71,7 +71,15 @@ const ColorInput = (props: ColorInputProps) => {
     React.useEffect(() => {
         const inputData = FormatManager.defaultNull(value) || value === 0 ? value : '';
         if (color !== inputData) {
-            handleValueChange(inputData);
+            setColor(inputData);
+            if (onChange) {
+                onChange({
+                    target: {
+                        name: id || name,
+                        value: inputData,
+                    },
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);

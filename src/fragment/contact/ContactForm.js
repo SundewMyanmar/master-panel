@@ -72,6 +72,9 @@ const styles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(2),
     },
+    submit: {
+        marginLeft: theme.spacing(1),
+    },
 }));
 
 export type ContactFormProps = {
@@ -197,7 +200,7 @@ const ContactForm = (props: ContactFormProps) => {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item lg={10} md={10} sm={8} xs={12}>
+                        <Grid item lg={8} md={8} sm={6} xs={12}>
                             <TextInput
                                 id="contactValue"
                                 icon={icon || 'phone'}
@@ -209,9 +212,19 @@ const ContactForm = (props: ContactFormProps) => {
                                 required
                             />
                         </Grid>
-                        <Grid container item lg={2} md={2} sm={4} xs={12} justifyContent="flex-end" alignItems="center">
-                            <Button type="submit" size="large" variant="contained" color="primary" onClick={handleSaveContact}>
-                                <Icon>{selectedIdx < 0 ? 'add' : 'save'}</Icon> {selectedIdx < 0 ? 'Add' : 'Update'}
+                        <Grid container item direction="row" lg={4} md={4} sm={6} xs={12} justifyContent="flex-end" alignItems="center">
+                            <Button type="submit" size="large" variant="contained" color="default" onClick={() => setContact({})}>
+                                <Icon>add</Icon> New
+                            </Button>
+                            <Button
+                                type="submit"
+                                className={classes.submit}
+                                size="large"
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSaveContact}
+                            >
+                                <Icon>save</Icon> Save
                             </Button>
                         </Grid>
                     </Grid>

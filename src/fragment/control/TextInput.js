@@ -32,9 +32,12 @@ const TextInput = (props: TextInputProps) => {
 
         if (currentInput.current && newValue !== currentInput.current.value) {
             currentInput.current.value = newValue;
-            handleTextChange({
-                target: currentInput.current,
-            });
+            if (onChange) {
+                onChange({
+                    target: currentInput.current,
+                    value: newValue,
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);

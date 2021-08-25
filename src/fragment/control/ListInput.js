@@ -29,7 +29,16 @@ const ListInput = (props: SelectListProps) => {
         const newValue = FormatManager.defaultNull(value) || '';
         if (currentInput.current && newValue !== currentInput.current.value) {
             currentInput.current.value = newValue;
-            handleChange({ target: currentInput.current }, value);
+            setSelectedItem(newValue);
+            if (onChange) {
+                onChange({
+                    target: {
+                        id: id || name,
+                        name: id || name,
+                        value: newValue,
+                    },
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);

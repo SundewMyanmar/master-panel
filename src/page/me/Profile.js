@@ -72,7 +72,7 @@ const Profile = (props) => {
     const classes = styles();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
-    const [form, setForm] = useState(user);
+    const [form, setForm] = useState({ ...user, image: user.profileImage });
     const [expanded, setExpanded] = useState({
         info: true,
         contacts: false,
@@ -120,7 +120,7 @@ const Profile = (props) => {
             };
 
             profile.extras.theme = JSON.stringify(theme);
-            console.log('profile', profile);
+            console.log('profile', form);
             if (form.image && form.image.id) {
                 profile.profileImage = form.image;
             } else if (form.image && !form.image.id) {
