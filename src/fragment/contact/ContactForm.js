@@ -6,6 +6,7 @@ import DataTable from '../table';
 import { ColorInput, IconInput } from '../control';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import { validateForm } from '../../util/ValidationManager';
 
 export const CONTACT_TABLE_FIELDS = [
     {
@@ -103,27 +104,21 @@ const ContactForm = (props: ContactFormProps) => {
     };
 
     const handleSaveContact = () => {
-        if (!contact.type || contact.type.length <= 0) {
-            dispatch({
-                type: ALERT_REDUX_ACTIONS.SHOW,
-                alert: { type: 'warning', message: 'Contact type is required!' },
-            });
-            return;
-        }
-
-        if (!contact.label || contact.label.length <= 0) {
-            dispatch({
-                type: ALERT_REDUX_ACTIONS.SHOW,
-                alert: { type: 'warning', message: 'Contact Label is required!' },
-            });
-            return;
-        }
-
-        if (!contact.value || contact.value.length <= 0) {
-            dispatch({
-                type: ALERT_REDUX_ACTIONS.SHOW,
-                alert: { type: 'warning', message: 'Contact value is required!' },
-            });
+        if (
+            !validateForm(
+                contact,
+                [
+                    { fieldId: 'type', require: true },
+                    { fieldId: 'label', require: true },
+                    { fieldId: 'value', require: true },
+                ],
+                (error) =>
+                    dispatch({
+                        type: ALERT_REDUX_ACTIONS.SHOW,
+                        alert: error,
+                    }),
+            )
+        ) {
             return;
         }
 

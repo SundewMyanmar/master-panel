@@ -15,6 +15,7 @@ import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TabControl, TextInput } from '../../fragment/control';
 import DataTable from '../../fragment/table';
 import ContactForm from '../../fragment/contact/ContactForm';
+import { validateForm } from '../../util/ValidationManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -82,22 +83,25 @@ const UserDetail = (props) => {
             return;
         }
 
-        if (!FormatManager.cleanPhoneNumber(form.phoneNumber)) {
-            handleError('Invalid phone no.');
-            return;
-        }
-
-        if (!form.roles || form.roles.length <= 0) {
-            dispatch({
-                type: ALERT_REDUX_ACTIONS.SHOW,
-                alert: { title: 'Required', message: 'Select one or more role.' },
-            });
+        if (
+            !validateForm(
+                form,
+                [
+                    { fieldId: 'phoneNumber', require: true, rules: [{ type: 'phone' }] },
+                    { fieldId: 'displayName', require: true },
+                    { fieldId: 'email', require: true, rules: [{ type: 'email' }] },
+                    { fieldId: 'roles', require: true },
+                    isUpdate ? null : { fieldId: 'password', require: true, rules: [{ type: 'match', matchId: 'confirmPassword' }] },
+                ],
+                handleError,
+            )
+        ) {
             return;
         }
 
         let user = { ...form };
         user.phoneNumber = FormatManager.cleanPhoneNumber(form.phoneNumber);
-        console.log('Form => ', form);
+
         if (form.image && form.image.id) {
             user.profileImage = form.image;
         } else if (form.image && !form.image.id) {
@@ -123,13 +127,6 @@ const UserDetail = (props) => {
                 })
                 .catch(handleError);
         } else {
-            if (form.password !== form.confirmPassword) {
-                dispatch({
-                    type: ALERT_REDUX_ACTIONS.SHOW,
-                    alert: { title: 'Invalid', message: 'Password and confirm password must be same' },
-                });
-                return;
-            }
             UserApi.addNew(user)
                 .then((response) => {
                     dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
