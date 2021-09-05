@@ -7,6 +7,7 @@ import { ColorInput, IconInput } from '../control';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { validateForm } from '../../util/ValidationManager';
+import type { GridProps } from '@material-ui/core';
 
 export const CONTACT_TABLE_FIELDS = [
     {
@@ -78,10 +79,10 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-export type ContactFormProps = {
-    data?: Array<Object>,
-    onChange: (Array<Object>) => void,
-};
+export interface ContactFormProps extends GridProps {
+    data?: Array<Object>;
+    onChange: (Array<Object>) => void;
+}
 
 const ContactForm = (props: ContactFormProps) => {
     const theme = useTheme();

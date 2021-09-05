@@ -1,14 +1,14 @@
 /* @flow */
 import * as React from 'react';
-import { FormControlLabel, CheckboxProps, Checkbox } from '@material-ui/core';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
+import type { CheckboxProps } from '@material-ui/core';
 
-export type CheckboxInputProps = {
-    ...CheckboxProps,
-    label: string,
-    value: string,
-    checked: boolean,
-    required: boolean,
-};
+export interface CheckboxInputProps extends CheckboxProps {
+    label: string;
+    value: string;
+    checked: boolean;
+    required: boolean;
+}
 
 const CheckboxInput = (props: CheckboxInputProps) => {
     const { label, ...checkboxProps } = props;

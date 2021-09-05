@@ -23,18 +23,18 @@ import FileApi from '../../api/FileApi';
 import FileGrid from '../file/FileGrid';
 import Transition from './Transition';
 
-type FilePickerProps = {
-    show: boolean,
-    selectedData: Array<Object> | Object,
-    multi: boolean,
-    title?: string,
-    currentPage?: number,
-    pageSize?: number,
-    total?: number,
-    onError?: (error: Object | string) => void,
-    onSelectionChange?: (result: Object | boolean) => void,
-    onClose: (result: Object | Array<Object>) => void,
-};
+export interface FilePickerProps {
+    show: boolean;
+    selectedData: Array<Object> | Object;
+    multi: boolean;
+    title?: string;
+    currentPage?: number;
+    pageSize?: number;
+    total?: number;
+    onError?: (error: object | string) => void;
+    onSelectionChange?: (result: object | boolean) => void;
+    onClose: (result: object | Array<Object>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     content: {

@@ -1,38 +1,36 @@
 import ApiManager from '../util/ApiManager';
 
-type Auth = {
-    deviceId: string,
-    deviceOs: string,
-    firebaseMessagingToken?: string,
-};
+export interface Auth {
+    deviceId: string;
+    deviceOs: string;
+    firebaseMessagingToken?: string;
+}
 
-type UserAuth = {
-    ...Auth,
-    password: string,
-    user: string,
-    mfaKey: string,
-    mfaCode: string,
-};
+export interface UserAuth extends Auth {
+    password: string;
+    user: string;
+    mfaKey: string;
+    mfaCode: string;
+}
 
-type UserRegistration = {
-    ...Auth,
-    displayName: string,
-    email: string,
-    phoneNumber: string,
-    password: string,
-};
+export interface UserRegistration extends Auth {
+    displayName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+}
 
-type ForgetPassword = {
-    phoneNumber: string,
-    email: string,
-    callback: string,
-};
+export interface ForgetPassword {
+    phoneNumber: string;
+    email: string;
+    callback: string;
+}
 
-type ResetPassword = {
-    oldPassword: string,
-    newPassword: string,
-    user: string,
-};
+export interface ResetPassword {
+    oldPassword: string;
+    newPassword: string;
+    user: string;
+}
 
 class AuthApi extends ApiManager {
     constructor() {

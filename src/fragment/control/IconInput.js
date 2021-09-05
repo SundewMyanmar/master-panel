@@ -1,21 +1,21 @@
 /* @flow */
 import * as React from 'react';
-import { InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
+import { Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
 import IconPicker from './IconPicker';
 import FormatManager from '../../util/FormatManager';
+import type { FormLabelProps } from '@material-ui/core';
 
-export type IconInputProps = {
-    ...InputProps,
-    values?: Array<Object>,
-    value?: Object,
-    icon?: string,
-    multi?: boolean,
-    required: boolean,
-    disableRemove: boolean,
-    label: string,
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface IconInputProps extends FormLabelProps {
+    values?: Array<Object>;
+    value?: object;
+    icon?: string;
+    multi?: boolean;
+    required: boolean;
+    disableRemove: boolean;
+    label: string;
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string;
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {
@@ -224,7 +224,6 @@ const IconInput = (props: IconInputProps) => {
                                     className={classes.hiddenInput}
                                     defaultValue={selectedData && (selectedData.id || selectedData.length > 0) ? JSON.stringify(selectedData) : ''}
                                     ref={currentInput}
-                                    {...rest}
                                 />
                                 {displayBox()}
                             </div>

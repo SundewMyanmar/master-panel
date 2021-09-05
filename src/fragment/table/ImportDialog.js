@@ -16,13 +16,14 @@ import {
 import DataTable from '.';
 import FormatManager from '../../util/FormatManager';
 import Transition from '../control/Transition';
+import type { DialogProps } from '@material-ui/core';
 
-export type ImportDialgProps = {
-    show: boolean,
-    fields: Array,
-    title: string,
-    onClose?: (result: Object) => void,
-};
+export interface ImportDialgProps extends DialogProps {
+    show: boolean;
+    fields: Array;
+    title: string;
+    onClose?: (result: object) => void;
+}
 
 const styles = makeStyles((theme) => ({
     content: {

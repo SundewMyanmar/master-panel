@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { InputAdornment, Icon, IconButton } from '@material-ui/core';
-import TextInput, { TextInputProps } from './TextInput';
+import TextInput from './TextInput';
+import type { TextInputProps } from './TextInput';
 
-type Props = {
-    ...TextInputProps,
-    strength?: 'none' | 'moderate' | 'complex',
-};
+export interface PasswordInputProps extends TextInputProps {
+    strength?: 'none' | 'moderate' | 'complex';
+}
 
 const STRENGTH_REGEX = {
     complex: /(?=(.*[0-9]))(?=.*[!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/,
     moderate: /(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/,
 };
 
-export default function PasswordInput(props: Props) {
+export default function PasswordInput(props: PasswordInputProps) {
     const [showPassword, setShowPassword] = React.useState(false);
     const { onValidate, variant, ...rest } = props;
 

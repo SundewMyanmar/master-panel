@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Icon, AppBar, Tabs, Tab, Box } from '@material-ui/core';
 import { common } from '../../config/Theme';
+import type { HTMLProps } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,11 +28,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export type TabPanelProps = {
-    children: Any,
-    value: number,
-    index: number,
-};
+export interface TabPanelProps extends HTMLProps {
+    children: Any;
+    value: number;
+    index: number;
+}
 
 export const TabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
@@ -59,18 +60,18 @@ const allyProps = (index) => {
     };
 };
 
-export type TabControlProps = {
-    tabs: Object,
-    orientation: 'horizontal' | 'vertical',
-    indicatorColor: 'secondary' | 'primary',
+export interface TabControlProps extends HTMLProps {
+    tabs: object;
+    orientation: 'horizontal' | 'vertical';
+    indicatorColor: 'secondary' | 'primary';
     // textColor: 'secondary' | 'primary' | 'inherit',
-    variant: 'standard' | 'scrollable' | 'fullWidth',
-    scrollButtons: 'auto' | 'desktop' | 'on' | 'off',
-    onChange: (e, newValue) => void,
-};
+    variant: 'standard' | 'scrollable' | 'fullWidth';
+    scrollButtons: 'auto' | 'desktop' | 'on' | 'off';
+    onChange: (e, newValue) => void;
+}
 
-const TabControl = (props: TabScrollButtonProps) => {
-    const { tabs, onChange, orientation, /*textColor,*/ indicatorColor, variant, scrollButtons } = props;
+const TabControl = (props: TabControlProps) => {
+    const { tabs, onChange, orientation, /*textColor,*/ indicatorColor, variant, scrollButtons, ...rest } = props;
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -81,7 +82,7 @@ const TabControl = (props: TabScrollButtonProps) => {
     };
 
     return (
-        <div className={classes.root}>
+        <div className={classes.root} {...rest}>
             <Tabs
                 className={classes.tabControl}
                 value={value}

@@ -2,19 +2,19 @@
  * @flow
  */
 import * as React from 'react';
-import { TextField, InputBase, TextFieldProps, InputAdornment, Icon } from '@material-ui/core';
+import { TextField, InputBase, InputAdornment, Icon } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
+import type { TextFieldProps } from '@material-ui/core';
 
-export type TextInputProps = {
-    ...TextFieldProps,
-    icon?: string,
-    required: boolean,
-    label: string,
-    hidePlaceHolder: Boolean,
-    variant: 'filled' | 'outlined' | 'standard',
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface TextInputProps extends TextFieldProps {
+    icon?: string;
+    required: boolean;
+    label: string;
+    hidePlaceHolder: boolean;
+    variant: 'filled' | 'outlined' | 'standard';
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string;
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const TextInput = (props: TextInputProps) => {
     const [error, setError] = React.useState('');

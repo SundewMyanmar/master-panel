@@ -17,13 +17,14 @@ import FormatManager from '../../util/FormatManager';
 import TextInput from './TextInput';
 import Transition from './Transition';
 import MasterForm from '../MasterForm';
+import type { DialogProps } from '@material-ui/core';
 
-type FolderDialogProps = {
-    data: String,
-    show: Boolean,
-    onShow: () => void,
-    onSubmit: () => void,
-};
+export interface FolderDialogProps extends DialogProps {
+    data: string;
+    show: boolean;
+    onShow: () => void;
+    onSubmit: () => void;
+}
 
 const styles = makeStyles((theme) => ({
     title: {
@@ -32,7 +33,7 @@ const styles = makeStyles((theme) => ({
 }));
 
 const FolderDialog = (props: FolderDialogProps) => {
-    const { data, show, onShow, onSubmit } = props;
+    const { data, show, onShow, onSubmit, ...rest } = props;
     const classes = styles();
 
     const handleOnShow = (isShow) => {
@@ -87,7 +88,7 @@ const FolderDialog = (props: FolderDialogProps) => {
     ];
 
     return (
-        <Dialog maxWidth="xs" fullWidth={true} open={show} onClose={() => handleOnShow(false)} TransitionComponent={Transition}>
+        <Dialog maxWidth="xs" fullWidth={true} open={show} onClose={() => handleOnShow(false)} TransitionComponent={Transition} {...rest}>
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">

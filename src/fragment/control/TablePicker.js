@@ -16,16 +16,17 @@ import {
 } from '@material-ui/core';
 import SearchInput from './SearchInput';
 import DataTable from '../table';
+import type { DialogProps } from '@material-ui/core';
 
-type TablePickerProps = {
-    show: boolean,
-    selectedData?: Array<Object> | Object,
-    multi?: boolean,
-    fields: Array<TableField>,
-    onError?: (error: Object | string) => void,
-    onLoad?: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
-    onClose?: (result: Object | Array<Object>) => void,
-};
+export interface TablePickerProps extends DialogProps {
+    show: boolean;
+    selectedData?: Array<Object> | Object;
+    multi?: boolean;
+    fields: Array<TableField>;
+    onError?: (error: object | string) => void;
+    onLoad?: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>;
+    onClose?: (result: object | Array<Object>) => void;
+}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
@@ -141,55 +142,53 @@ const TablePicker = (props: TablePickerProps) => {
     };
 
     return (
-        <>
-            <Dialog fullWidth maxWidth="lg" onClose={() => handleClose(false)} open={show} TransitionComponent={Transition}>
-                <DialogTitle className={classes.header}>
-                    <Grid container>
-                        <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
-                            <Typography variant="h6" component="h1" noWrap>
-                                {title}
-                            </Typography>
-                        </Grid>
-                        <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
-                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
-                        </Grid>
-                        <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
-                            <Tooltip title="Close Dialog">
-                                <IconButton size="small" className={classes.closeButton} onClick={() => handleClose(false)} aria-label="Close">
-                                    <Icon>close</Icon>
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
+        <Dialog fullWidth maxWidth="lg" onClose={() => handleClose(false)} open={show} TransitionComponent={Transition}>
+            <DialogTitle className={classes.header}>
+                <Grid container>
+                    <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
+                        <Typography variant="h6" component="h1" noWrap>
+                            {title}
+                        </Typography>
                     </Grid>
-                </DialogTitle>
-                <DialogContent className={classes.content}>
-                    {loading ? <LinearProgress /> : <div className={classes.noLoading}></div>}
-                    <DataTable
-                        multi={multi}
-                        items={paging.data}
-                        fields={fields}
-                        total={paging.total}
-                        pageSize={paging.pageSize}
-                        currentPage={paging.currentPage}
-                        sort={paging.sort}
-                        selectedData={checked}
-                        onPageChange={handlePageChange}
-                        onSelectionChange={handleSelectionChange}
-                        onRowClick={multi ? null : handleRowClick}
-                    />
-                </DialogContent>
-                {multi ? (
-                    <DialogActions>
-                        <Button onClick={() => handleClose(true)} color="primary" variant="contained">
-                            <Icon>done</Icon> Ok
-                        </Button>
-                        <Button onClick={() => handleClose(false)} color="default" variant="contained">
-                            <Icon>done</Icon> Cancel
-                        </Button>
-                    </DialogActions>
-                ) : null}
-            </Dialog>
-        </>
+                    <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
+                        <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
+                    </Grid>
+                    <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
+                        <Tooltip title="Close Dialog">
+                            <IconButton size="small" className={classes.closeButton} onClick={() => handleClose(false)} aria-label="Close">
+                                <Icon>close</Icon>
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                </Grid>
+            </DialogTitle>
+            <DialogContent className={classes.content}>
+                {loading ? <LinearProgress /> : <div className={classes.noLoading}></div>}
+                <DataTable
+                    multi={multi}
+                    items={paging.data}
+                    fields={fields}
+                    total={paging.total}
+                    pageSize={paging.pageSize}
+                    currentPage={paging.currentPage}
+                    sort={paging.sort}
+                    selectedData={checked}
+                    onPageChange={handlePageChange}
+                    onSelectionChange={handleSelectionChange}
+                    onRowClick={multi ? null : handleRowClick}
+                />
+            </DialogContent>
+            {multi ? (
+                <DialogActions>
+                    <Button onClick={() => handleClose(true)} color="primary" variant="contained">
+                        <Icon>done</Icon> Ok
+                    </Button>
+                    <Button onClick={() => handleClose(false)} color="default" variant="contained">
+                        <Icon>done</Icon> Cancel
+                    </Button>
+                </DialogActions>
+            ) : null}
+        </Dialog>
     );
 };
 

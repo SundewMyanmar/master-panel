@@ -1,30 +1,18 @@
 import * as React from 'react';
-import {
-    InputProps,
-    TextField,
-    Icon,
-    Paper,
-    makeStyles,
-    FormControl,
-    InputLabel,
-    Grid,
-    Chip,
-    InputAdornment,
-    FormHelperText,
-} from '@material-ui/core';
+import { TextField, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, Chip, InputAdornment, FormHelperText } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
+import type { TextFieldProps } from '@material-ui/core';
 
-export type ChipInputProps = {
-    ...InputProps,
-    value?: Object,
-    icon?: string,
-    required: boolean,
-    label: string,
-    disableRemove?: boolean,
-    disableInsert?: boolean,
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface ChipInputProps extends TextFieldProps {
+    value?: object;
+    icon?: string;
+    required: boolean;
+    label: string;
+    disableRemove?: boolean;
+    disableInsert?: boolean;
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string;
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {

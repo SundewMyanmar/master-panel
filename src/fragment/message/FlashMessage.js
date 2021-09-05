@@ -5,16 +5,17 @@ import { STORAGE_KEYS } from '../../config/Constant';
 import { useDispatch, useSelector } from 'react-redux';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import type { SnackbarProps } from '@material-ui/core';
 
-export type Position = {
-    vertical: 'top' | 'bottom',
-    position: 'left' | 'center' | 'right',
-};
+export interface Position {
+    vertical: 'top' | 'bottom';
+    position: 'left' | 'center' | 'right';
+}
 
-export type FlashMessageProps = {
-    position?: Position,
-    type: 'success' | 'warning' | 'error' | 'info',
-};
+export interface FlashMessageProps extends SnackbarProps {
+    position?: Position;
+    type: 'success' | 'warning' | 'error' | 'info';
+}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -23,6 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FlashMessage(props: FlashMessageProps) {
     const dispatch = useDispatch();
     const flash = useSelector((state) => state.flash);
+    const { position, type, ...rest } = props;
 
     const handleFlashMessage = () => {
         dispatch({ type: FLASH_REDUX_ACTIONS.HIDE });
@@ -30,14 +32,15 @@ export default function FlashMessage(props: FlashMessageProps) {
 
     return (
         <Snackbar
-            anchorOrigin={props.position}
+            anchorOrigin={position}
             open={flash.show}
             autoHideDuration={flash.duration || 3000}
             onClose={handleFlashMessage}
             TransitionComponent={Transition}
             TransitionProps={{ onExited: handleFlashMessage }}
+            {...rest}
         >
-            <Alert onClose={handleFlashMessage} severity={flash.type || 'info'} variant="filled" elevation={6}>
+            <Alert onClose={handleFlashMessage} severity={flash.type || type || 'info'} variant="filled" elevation={6}>
                 {flash.title ? <AlertTitle>{flash.title}</AlertTitle> : null}
                 {flash.message || flash.title || flash.toString()}
             </Alert>

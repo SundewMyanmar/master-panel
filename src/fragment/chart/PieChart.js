@@ -2,25 +2,25 @@ import React, { useState } from 'react';
 import { withTheme } from '@material-ui/core';
 import { PieChart, Pie, Sector, Cell, Legend, ResponsiveContainer } from 'recharts';
 
-export type SDPieChartProps = {
-    data: Array<Object>,
-    type: 'pie' | 'donut',
-    title: String,
-    width: Any,
-    height: Any,
-    innerRadius: number,
-    outerRadius: number,
-    cx: number,
-    cy: number,
-    legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline',
-};
+export interface SDPieChartProps {
+    data: Array<Object>;
+    type: 'pie' | 'donut';
+    title: string;
+    width: Any;
+    height: Any;
+    innerRadius: number;
+    outerRadius: number;
+    cx: number;
+    cy: number;
+    legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline';
+}
 
 const SDPieChart = (props: SDPieChartProps) => {
     const { data, type, title, width, height, innerRadius, outerRadius, cx, cy, legendIcon } = props;
     const { theme } = props;
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const renderActiveShape = props => {
+    const renderActiveShape = (props) => {
         const RADIAN = Math.PI / 180;
         const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
 
@@ -88,7 +88,7 @@ const SDPieChart = (props: SDPieChartProps) => {
                         {...pieType}
                         onMouseEnter={(data, index) => setActiveIndex(index)}
                     >
-                        {data.map(d => {
+                        {data.map((d) => {
                             return <Cell key={`c-${d.name}`} fill={d.color} />;
                         })}
                     </Pie>

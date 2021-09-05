@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { TextField, TextFieldProps, InputAdornment, Icon, IconButton, makeStyles } from '@material-ui/core';
+import { TextField, InputAdornment, Icon, IconButton, makeStyles } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
+import type { TextFieldProps } from '@material-ui/core';
 
-export type SearchIpnutProps = {
-    ...TextFieldProps,
-    icon?: string,
-    required: boolean,
-    label: string,
-    onSearch?: (search: string) => void,
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface SearchIpnutProps extends TextFieldProps {
+    icon?: string;
+    required: boolean;
+    label: string;
+    onSearch?: (search: string) => void;
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     closeButton: {

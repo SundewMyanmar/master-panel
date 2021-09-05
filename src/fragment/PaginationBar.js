@@ -1,15 +1,15 @@
 import React from 'react';
-import { TablePagination, TablePaginationBaseProps, IconButton, Icon, makeStyles } from '@material-ui/core';
+import { TablePagination, IconButton, Icon, makeStyles } from '@material-ui/core';
+import type { TablePaginationProps } from '@material-ui/core';
 
-type PaginationBarProps = {
-    ...TablePaginationBaseProps,
-    rowsPerPage: Array<number>,
-    total: number,
-    pageSize: number,
-    currentPage: number,
-    onPageChange: (newPage: number) => void,
-    onPageSizeChange: (newPageSize: number) => void,
-};
+export interface PaginationBarProps extends TablePaginationProps {
+    rowsPerPage: Array<number>;
+    total: number;
+    pageSize: number;
+    currentPage: number;
+    onPageChange: (newPage: number) => void;
+    onPageSizeChange: (newPageSize: number) => void;
+}
 
 const PAGINATION_BUTTONS = [
     {

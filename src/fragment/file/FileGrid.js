@@ -1,7 +1,8 @@
 /* @flow */
 import React from 'react';
-import { Grid, GridProps, CardActionArea, Card, CardMedia, CardContent, Typography, makeStyles } from '@material-ui/core';
+import { Grid, CardActionArea, Card, CardMedia, CardContent, Typography, makeStyles } from '@material-ui/core';
 import FileApi from '../../api/FileApi';
+import type { GridProps } from '@material-ui/core';
 
 const itemStyles = makeStyles((theme) => ({
     root: (props) => ({
@@ -34,15 +35,15 @@ const itemStyles = makeStyles((theme) => ({
     },
 }));
 
-type FileGridItemProps = {
-    onClick: () => void,
-    multi: boolean,
-    isMarked: boolean,
-    name: string,
-    extension: string,
-    size: string,
-    type: string,
-};
+export interface FileGridItemProps {
+    onClick: () => void;
+    multi: boolean;
+    isMarked: boolean;
+    name: string;
+    extension: string;
+    size: string;
+    type: string;
+}
 
 export const FileGridItem = (props: FileGridItemProps) => {
     const { onClick, multi, isMarked, ...item } = props;
@@ -67,13 +68,12 @@ export const FileGridItem = (props: FileGridItemProps) => {
     );
 };
 
-type FileGridProps = {
-    data: Array<Object>,
-    selectedData: Array<Object>,
-    multi: boolean,
-    onClickItem?: (file: Object) => void,
-    ...GridProps,
-};
+export interface FileGridProps extends GridProps {
+    data: Array<Object>;
+    selectedData: Array<Object>;
+    multi: boolean;
+    onClickItem?: (file: object) => void;
+}
 
 const FileGrid = (props: FileGridProps) => {
     const { data, selectedData, multi, onClickItem, ...gridProps } = props;

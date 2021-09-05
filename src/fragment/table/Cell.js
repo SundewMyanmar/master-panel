@@ -1,16 +1,16 @@
 import React from 'react';
-import { TableCell, TableCellBaseProps, Icon, useTheme } from '@material-ui/core';
+import { TableCell, Icon, useTheme } from '@material-ui/core';
 import { TableField } from '.';
 import FileApi from '../../api/FileApi';
 import LangManager from '../../util/LangManager';
+import type { TableCellProps } from '@material-ui/core';
 
-export type CellProps = {
-    ...TableCellBaseProps,
-    type: 'text' | 'image' | 'icon' | 'color' | 'bool' | 'raw',
-    field: TableField,
-    rowIndex: int,
-    data: Object,
-};
+export interface CellProps extends TableCellProps {
+    type: 'text' | 'image' | 'icon' | 'color' | 'bool' | 'raw';
+    field: TableField;
+    rowIndex: int;
+    data: object;
+}
 
 export const ImageCell = (field, data) => {
     const { name, align, label, type, sortable, hidden, filterable, minWidth, onLoad, ...imageProps } = field;

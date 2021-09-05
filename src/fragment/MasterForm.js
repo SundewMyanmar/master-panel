@@ -17,23 +17,23 @@ import {
     TinyEditorInput,
     DateTimeInput,
 } from './control';
-import { TextInputProps } from './control/TextInput';
+import type { TextInputProps } from './control/TextInput';
+import type { FormHTMLAttributes } from 'react';
 
-export type Field = {
-    ...TextInputProps,
-    data?: Array | Object,
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, form?: Object) => string,
-};
+export interface Field extends TextInputProps {
+    data?: Array | Object;
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, form?: object) => string;
+}
 
-export type MasterFormProps = {
-    fields: Array<Field>,
-    type: 'form' | 'tab',
-    initialData: Object,
-    onWillSubmit?: (form: Object) => boolean,
-    onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: Object) => void,
-    onChange: () => void,
-    onKeyDown: () => void,
-};
+export interface MasterFormProps extends FormHTMLAttributes {
+    fields: Array<Field>;
+    type: 'form' | 'tab';
+    initialData: object;
+    onWillSubmit?: (form: object) => boolean;
+    onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: object) => void;
+    onChange: () => void;
+    onKeyDown: () => void;
+}
 
 const styles = makeStyles((theme) => ({
     container: {

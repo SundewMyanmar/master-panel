@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Component } from 'react';
 import {
     Table,
-    TableBaseProps,
     TableHead,
     TableRow,
     TableBody,
@@ -30,38 +29,38 @@ import {
 import Cell from './Cell';
 import PaginationBar from '../PaginationBar';
 import { HeaderCell } from './HeaderCell';
+import type { TableProps } from '@material-ui/core';
 
-export type TableField = {
-    name: string,
-    type: 'text' | 'image' | 'icon' | 'color' | 'bool' | 'raw',
-    align: 'left' | 'center' | 'right',
-    label: string,
-    minWidth: number,
-    sortable: ?boolean,
-    hidden: ?boolean,
-    onLoad?: (item: Object, index: number) => Component | string,
-};
+export interface TableField {
+    name: string;
+    type: 'text' | 'image' | 'icon' | 'color' | 'bool' | 'raw';
+    align: 'left' | 'center' | 'right';
+    label: string;
+    minWidth: number;
+    sortable: ?boolean;
+    hidden: ?boolean;
+    onLoad?: (item: object, index: number) => Component | string;
+}
 
-export type DataTableProps = {
-    ...TableBaseProps,
-    fields: Array<Object>,
-    inputFields: Array<Object>,
-    items: Array<Object>,
-    selectedData?: Array<Object> | Object,
-    total?: number,
-    pageSize?: number,
-    currentPage?: number,
-    sort?: string,
-    multi?: boolean,
-    noData?: string,
-    onEdit?: (item: Object, index: number) => void,
-    disablePaging?: boolean,
-    type: 'TABLE' | 'INPUT',
-    onPageChange?: (page: number) => void,
-    onRowClick?: (item: Object, index: number) => void,
-    onSelectionChange?: (result: Object | Array<Object>) => void,
-    onError?: (error: Object | string) => void,
-};
+export interface DataTableProps extends TableProps {
+    fields: Array<Object>;
+    inputFields: Array<Object>;
+    items: Array<Object>;
+    selectedData?: Array<Object> | Object;
+    total?: number;
+    pageSize?: number;
+    currentPage?: number;
+    sort?: string;
+    multi?: boolean;
+    noData?: string;
+    onEdit?: (item: object, index: number) => void;
+    disablePaging?: boolean;
+    type: 'TABLE' | 'INPUT';
+    onPageChange?: (page: number) => void;
+    onRowClick?: (item: object, index: number) => void;
+    onSelectionChange?: (result: object | Array<Object>) => void;
+    onError?: (error: object | string) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {

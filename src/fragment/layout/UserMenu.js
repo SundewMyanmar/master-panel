@@ -20,10 +20,10 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 
-type UserMenuProps = {
-    name: string,
-    image?: string | Object,
-};
+export interface UserMenuProps {
+    name: string;
+    image?: string | Object;
+}
 
 const styles = makeStyles((theme) => ({
     avatar: {

@@ -3,20 +3,20 @@ import { withTheme } from '@material-ui/core';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { DataKeyProps } from './AreaChart';
 
-export type SDBarChartProps = {
-    data: Array<Object>,
-    width: Object,
-    height: Object,
-    title: String,
-    xKey: String,
-    yKey: String,
-    dataKeys: Array<DataKeyProps>,
-    legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline',
-    layout: 'horizontal' | 'vertical',
-    mode: 'default' | 'minimal',
-};
+export interface SDBarChartProps {
+    data: Array<Object>;
+    width: object;
+    height: object;
+    title: string;
+    xKey: string;
+    yKey: string;
+    dataKeys: Array<DataKeyProps>;
+    legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline';
+    layout: 'horizontal' | 'vertical';
+    mode: 'default' | 'minimal';
+}
 
-const SDBarChart = props => {
+const SDBarChart = (props) => {
     const { mode, data, width, height, title, xKey, yKey, dataKeys, legendIcon, layout } = props;
     const { theme } = props;
 
@@ -58,7 +58,7 @@ const SDBarChart = props => {
         <ResponsiveContainer width={width || '80%'} height={height || 280}>
             {mode == 'minimal' ? (
                 <BarChart data={data}>
-                    {dataKeys.map(key => {
+                    {dataKeys.map((key) => {
                         return <Bar key={`bc-${key.key}`} dataKey={key.key} fill={key.color} />;
                     })}
                 </BarChart>
@@ -72,15 +72,15 @@ const SDBarChart = props => {
                         contentStyle={{ backgroundColor: theme.palette.background.default, opacity: 0.7 }}
                         labelStyle={{ color: theme.palette.text.primary }}
                         itemStyle={{ color: theme.palette.text.primary }}
-                        formatter={function(value) {
+                        formatter={function (value) {
                             return `${value}`;
                         }}
-                        labelFormatter={function(value) {
+                        labelFormatter={function (value) {
                             return `${value}`;
                         }}
                     />
                     <Legend iconType={legendIcon || 'rect'} align="right" verticalAlign="top" height={36} />
-                    {dataKeys.map(key => {
+                    {dataKeys.map((key) => {
                         return <Bar key={`bc-${key.key}`} dataKey={key.key} fill={key.color} />;
                     })}
                 </BarChart>

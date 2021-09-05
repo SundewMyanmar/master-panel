@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, Grid, Typography, makeStyles, Icon, Tooltip, IconButton } from '@material-ui/core';
 import Transition from '../control/Transition';
 import FileManager from './FileManager';
+import type { DialogProps } from '@material-ui/core';
 
-type FileManagerPickerProps = {
-    show: boolean,
-    title?: string,
-    onClose: (result: Object | Array<Object>) => void,
-};
+export interface FileManagerPickerProps extends DialogProps {
+    show: boolean;
+    title?: string;
+    onClose: (result: object | Array<Object>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     content: {
@@ -28,7 +29,7 @@ const styles = makeStyles((theme) => ({
 
 const FileManagerPicker = (props: FileManagerPickerProps) => {
     const classes = styles();
-    const { title, show, onClose } = props;
+    const { title, show, onClose, ...rest } = props;
 
     const handleClick = (item) => {
         onClose(item);
@@ -36,7 +37,7 @@ const FileManagerPicker = (props: FileManagerPickerProps) => {
 
     return (
         <>
-            <Dialog fullWidth maxWidth="lg" onClose={() => onClose(false)} open={show} TransitionComponent={Transition}>
+            <Dialog fullWidth maxWidth="lg" onClose={() => onClose(false)} open={show} TransitionComponent={Transition} {...rest}>
                 <DialogTitle className={classes.header}>
                     <Grid container>
                         <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">

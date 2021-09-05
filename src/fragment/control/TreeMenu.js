@@ -175,14 +175,14 @@ export const DefaultTreeItem = (props) => {
     );
 };
 
-type TreeMenuProps = {
-    menus: Array<MenuProps>,
-    onClickItem?: (item: Object) => void,
-    showRoot: boolean,
-    allowCreate: boolean,
-    onCreate: (item) => void,
-    onRemove: (item) => void,
-};
+export interface TreeMenuProps {
+    menus: Array<MenuProps>;
+    onClickItem?: (item: object) => void;
+    showRoot: boolean;
+    allowCreate: boolean;
+    onCreate: (item) => void;
+    onRemove: (item) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {

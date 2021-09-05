@@ -1,11 +1,11 @@
 import * as React from 'react';
-import TextInput, { TextInputProps } from './TextInput';
+import TextInput from './TextInput';
 import Input from '@material-ui/core/Input';
+import type { TextInputProps } from './TextInput';
 
-type Props = {
-    ...TextInputProps,
-    valid?: 'integer' | 'decimal' | 'uInteger' | 'uDecimal',
-};
+export interface NumberInputProps extends TextInputProps {
+    valid?: 'integer' | 'decimal' | 'uInteger' | 'uDecimal';
+}
 
 const VALIDATE_REGEX = {
     integer: /^-?\d+$/,
@@ -14,10 +14,10 @@ const VALIDATE_REGEX = {
     uDecimal: /^\d*(\.\d+)?$/,
 };
 
-export default function NumberInput(props: Props) {
+export default function NumberInput(props: NumberInputProps) {
     const { onValidate, ...rest } = props;
     const type = ['integer', 'uInteger'].includes(props.valid) ? 'number' : 'text';
-    const handleValidation = event => {
+    const handleValidation = (event) => {
         const value = event.target.value;
         if (!value || value == '') return '';
 

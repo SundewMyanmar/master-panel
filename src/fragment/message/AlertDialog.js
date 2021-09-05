@@ -1,16 +1,17 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Zoom, Icon } from '@material-ui/core';
+import type { DialogProps } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
 });
 
-export type AlertDialogProps = {
-    show: boolean,
-    title: string,
-    message: string,
-    onClose: () => void,
-};
+export interface AlertDialogProps extends DialogProps {
+    show: boolean;
+    title: string;
+    message: string;
+    onClose: () => void;
+}
 
 export default function AlertDialog(props: AlertDialogProps) {
     const { title, message, onClose, show } = props;

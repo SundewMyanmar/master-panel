@@ -18,12 +18,12 @@ import { SwatchesPicker, SketchPicker } from 'react-color';
 import { info } from '../../config/Theme';
 import Transition from './Transition';
 
-type ColorPickerProps = {
-    show: boolean,
-    value: string,
-    title?: string,
-    onClose: (result: boolean | Object | Array<Object>) => void,
-};
+export interface ColorPickerProps {
+    show: boolean;
+    value: string;
+    title?: string;
+    onClose: (result: boolean | Object | Array<Object>) => void;
+}
 
 const DEFAULT_WIDTH = 560;
 const DEFAULT_HEIGHT = 295;

@@ -1,16 +1,13 @@
 /* @flow */
 import * as React from 'react';
-import TextInput, { TextInputProps } from './TextInput';
+import TextInput from './TextInput';
+import type { TextInputProps } from './TextInput';
 import FormatManager from '../../util/FormatManager';
 
-type Props = {
-    ...TextInputProps,
-};
-
-export default function EmailInput(props: Props) {
+export default function EmailInput(props: TextInputProps) {
     const { variant, onValidate, ...rest } = props;
 
-    const validateEmail = event => {
+    const validateEmail = (event) => {
         const value = event.target.value;
         let error = '';
         if (!FormatManager.ValidateEmail(value)) {

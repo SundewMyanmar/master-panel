@@ -18,15 +18,15 @@ import FormatManager from '../../util/FormatManager';
 import InfiniteLoading from 'react-simple-infinite-loading';
 import ScrollBar from '../../fragment/control/ScrollBar';
 
-type NotificationMenuProps = {
-    name: string,
-    icon: string,
-    anchorVertical: 'top' | 'bottom',
-    anchorHorizontal: 'left' | 'right',
-    badge: Integer,
-    onLoadMore: object,
-    onItemClick: Object,
-};
+export interface NotificationMenuProps {
+    name: string;
+    icon: string;
+    anchorVertical: 'top' | 'bottom';
+    anchorHorizontal: 'left' | 'right';
+    badge: Integer;
+    onLoadMore: object;
+    onItemClick: object;
+}
 
 /**
  * DATA FIELDS

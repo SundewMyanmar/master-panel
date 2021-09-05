@@ -29,6 +29,7 @@ import ProfileApi from '../../api/ProfileApi';
 import NotificationApi from '../../api/NotificationApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { USER_REDUX_ACTIONS } from '../../util/UserManager';
+import type { HTMLProps } from 'react';
 
 let FIREBASE_MESSAGING = null;
 
@@ -125,10 +126,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export type LayoutProps = {
-    onToggleMode: () => void,
-    mode: 'LIGHT' | 'DARK',
-};
+export interface LayoutProps extends HTMLProps {
+    onToggleMode: () => void;
+    mode: 'LIGHT' | 'DARK';
+}
 
 const Layout = (props: LayoutProps) => {
     const { onToggleMode, mode } = props;

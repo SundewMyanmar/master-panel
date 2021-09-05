@@ -1,26 +1,26 @@
 import * as React from 'react';
-import { InputProps, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
+import { Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
 import { TableField } from '../table';
 import TablePicker from './TablePicker';
 import FormatManager from '../../util/FormatManager';
+import type { FormControlProps } from '@material-ui/core';
 
-export type ObjectInputProps = {
-    ...InputProps,
-    values?: Array<Object>,
-    value?: Object,
-    icon?: string,
-    multi?: boolean,
-    fields: Array<TableField>,
-    required: boolean,
-    label: string,
-    disableRemove?: boolean,
-    disabledLoad?: boolean,
-    hidePlaceHolder: Boolean,
-    onLoadData: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
-    onLoadItem?: (item: Object) => string,
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface ObjectInputProps extends FormControlProps {
+    values?: Array<Object>;
+    value?: object;
+    icon?: string;
+    multi?: boolean;
+    fields: Array<TableField>;
+    required: boolean;
+    label: string;
+    disableRemove?: boolean;
+    disabledLoad?: boolean;
+    hidePlaceHolder: boolean;
+    onLoadData: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>;
+    onLoadItem?: (item: object) => string;
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string;
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {
@@ -251,7 +251,6 @@ const ObjectInput = (props: ObjectInputProps) => {
                                     className={classes.hiddenInput}
                                     defaultValue={selectedData && (selectedData.id || selectedData.length > 0) ? JSON.stringify(selectedData) : ''}
                                     ref={currentInput}
-                                    {...rest}
                                 />
                                 {displayBox()}
                             </div>

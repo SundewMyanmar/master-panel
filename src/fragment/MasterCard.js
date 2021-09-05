@@ -41,30 +41,30 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-export type MasterBreadCrumb = {
-    name: String,
-    route: String,
-    icon: String,
-};
+export interface MasterBreadCrumb {
+    name: string;
+    route: string;
+    icon: string;
+}
 
-export type ActionButtons = {
-    name: String,
-    icon: String,
-    color: String,
-    type: 'text' | 'icon',
-    onClick: () => void,
-};
+export interface ActionButtons {
+    name: string;
+    icon: string;
+    color: string;
+    type: 'text' | 'icon';
+    onClick: () => void;
+}
 
-export type MasterCardProps = {
-    title: String,
-    breadCrumbs: Array<MasterBreadCrumbs>,
-    actions: Array<ActionButtons>,
-    maxWidth: 'lg' | 'md' | 'sm' | 'xl' | 'xs',
-    content: Any,
-    icon: String,
-    headerBackground: Any,
-    color: Any,
-};
+export interface MasterCardProps {
+    title: string;
+    breadCrumbs: Array<MasterBreadCrumbs>;
+    actions: Array<ActionButtons>;
+    maxWidth: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
+    content: Any;
+    icon: string;
+    headerBackground: Any;
+    color: Any;
+}
 
 const MasterCard = (props: MasterCardProps) => {
     const { title, breadCrumbs, actions, maxWidth, content, icon, headerBackground, color } = props;

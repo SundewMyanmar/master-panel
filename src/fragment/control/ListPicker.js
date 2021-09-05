@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
     Dialog,
     Zoom,
-    ListProps,
     List,
     ListSubheader,
     ListItemIcon,
@@ -15,20 +14,20 @@ import {
     Button,
 } from '@material-ui/core';
 import Transition from './Transition';
+import type { ListProps } from '@material-ui/core';
 
-type ListPickerProps = {
-    ...ListProps,
-    data: Array<Objec>,
-    show: boolean,
-    values?: Array<Object>,
-    multi: boolean,
-    title: ?string,
-    idField?: string,
-    iconField?: string,
-    labelField?: string,
-    onChange?: (result: Object | boolean) => void,
-    onClose: (result: Object | Array<Object>) => void,
-};
+export interface ListPickerProps extends ListProps {
+    data: Array<Objec>;
+    show: boolean;
+    values?: Array<Object>;
+    multi: boolean;
+    title: ?string;
+    idField?: string;
+    iconField?: string;
+    labelField?: string;
+    onChange?: (result: object | boolean) => void;
+    onClose: (result: object | Array<Object>) => void;
+}
 
 const itemStyles = makeStyles((theme) => ({
     root: {},

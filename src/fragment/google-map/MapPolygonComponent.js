@@ -5,21 +5,21 @@ import MapComponent, { rawStyles, DEFAULT_CENTER } from '../google-map';
 
 //TODO: Add edit and remove Func for polygons
 
-export type MapPolygonComponentProps = {
-    polygons: Array<Object>,
+export interface MapPolygonComponentProps {
+    polygons: Array<Object>;
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<string>,
-    polygonOptions: Object,
-    draggable: Boolean,
-    defaultZoom: number,
-    defaultCenter: Object,
-    childElement: Object,
-    allowDrawing: boolean,
-    onClick?: () => void,
-    onPolygonComplete?: () => void,
-};
+    drawingModes: Array<string>;
+    polygonOptions: object;
+    draggable: boolean;
+    defaultZoom: number;
+    defaultCenter: object;
+    childElement: object;
+    allowDrawing: boolean;
+    onClick?: () => void;
+    onPolygonComplete?: () => void;
+}
 
 const MapPolygonComponent = (props: MapPolygonComponent) => {
     const { polygons, drawingModes, polygonOptions, draggable, onClick, onPolygonComplete } = props;
@@ -28,13 +28,13 @@ const MapPolygonComponent = (props: MapPolygonComponent) => {
     const [focusPolygon, setFocusPolygon] = useState(null);
     const [clickedPolygon, setClickedPolygon] = useState(null);
 
-    const handleOnClick = pg => {
+    const handleOnClick = (pg) => {
         if (onClick) onClick(pg);
     };
 
     var polygonElements =
         polygons &&
-        polygons.map(pg => (
+        polygons.map((pg) => (
             <Polygon
                 onClick={() => {
                     console.log('PG', pg);
@@ -68,9 +68,9 @@ const MapPolygonComponent = (props: MapPolygonComponent) => {
                             <InfoBox position={focusPosition} options={{ closeBoxURL: ``, enableEventPropagation: true }}>
                                 <div style={rawStyles.infoBox}>
                                     <div style={rawStyles.infoText}>
-                                        {`${focusPolygon && focusPolygon.VT} ${focusPolygon &&
-                                            focusPolygon.VT_MYA_M3 &&
-                                            ' - ' + focusPolygon.VT_MYA_M3}`}
+                                        {`${focusPolygon && focusPolygon.VT} ${
+                                            focusPolygon && focusPolygon.VT_MYA_M3 && ' - ' + focusPolygon.VT_MYA_M3
+                                        }`}
                                         <br />
                                         {`${focusPolygon && focusPolygon.TS}`}
                                         <br />

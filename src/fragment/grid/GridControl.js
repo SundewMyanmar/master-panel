@@ -1,14 +1,14 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 
-export type GridControlProps = {
-    direction: 'row' | 'row-reverse' | 'column' | 'column-reverse',
-    justifyContent: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly',
-    alignItems: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline',
-    spacing: number,
-    itemPerDirection: number,
-    items: Array<Any>,
-};
+export interface GridControlProps {
+    direction: 'row' | 'row-reverse' | 'column' | 'column-reverse';
+    justifyContent: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
+    alignItems: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
+    spacing: number;
+    itemPerDirection: number;
+    items: Array<Any>;
+}
 
 const GridControl = (props: GridControlProps) => {
     const { direction, justifyContent, alignItems, spacing, itemPerDirection, items } = props;

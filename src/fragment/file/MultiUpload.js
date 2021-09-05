@@ -18,12 +18,13 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { ErrorTheme } from '../../config/Theme';
+import type { DialogProps } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
 });
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(1),
     },
@@ -69,30 +70,30 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-type MultiUploadProps = {
-    show: boolean,
-    accept: string,
-    onClose: (result: Array<Object>) => void,
-};
+export interface MultiUploadProps extends DialogProps {
+    show: boolean;
+    accept: string;
+    onClose: (result: Array<Object>) => void;
+}
 
 export const MultiUpload = (props: MultiUploadProps) => {
-    const { show, accept, onClose } = props;
+    const { show, accept, onClose, ...rest } = props;
     const classes = styles();
     const [files, setFiles] = React.useState([]);
     const [isPublic, setIsPublic] = React.useState(true);
     const [isHidden, setIsHidden] = React.useState(false);
 
-    const handlePublicChange = event => {
+    const handlePublicChange = (event) => {
         setIsPublic(event.target.checked);
     };
 
-    const handleHiddenChange = event => {
+    const handleHiddenChange = (event) => {
         setIsHidden(event.target.checked);
     };
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: accept,
-        onDrop: acceptedFiles => {
+        onDrop: (acceptedFiles) => {
             const newFiles = acceptedFiles.map((file, idx) =>
                 Object.assign(file, {
                     preview: URL.createObjectURL(file),
@@ -106,7 +107,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
     React.useEffect(
         () => () => {
             // Make sure to revoke the data uris to avoid memory leaks
-            files.forEach(file => {
+            files.forEach((file) => {
                 if (file.preview) {
                     URL.revokeObjectURL(file.preview);
                 }
@@ -115,8 +116,8 @@ export const MultiUpload = (props: MultiUploadProps) => {
         [files],
     );
 
-    const handleClose = status => {
-        const uploadFiles = files.map(file => {
+    const handleClose = (status) => {
+        const uploadFiles = files.map((file) => {
             URL.revokeObjectURL(file.preview);
             delete file.preview;
             return file;
@@ -129,22 +130,16 @@ export const MultiUpload = (props: MultiUploadProps) => {
         setFiles([]);
     };
 
-    const handleRemove = file => {
+    const handleRemove = (file) => {
         // Make sure to revoke the data uris to avoid memory leaks
         URL.revokeObjectURL(file.preview);
-        const updatedFiles = files.filter(f => f.id !== file.id);
+        const updatedFiles = files.filter((f) => f.id !== file.id);
         console.log('Updated Files => ', updatedFiles);
         setFiles(updatedFiles);
     };
 
     return (
-        <Dialog
-            maxWidth="md"
-            fullWidth
-            open={show}
-            onClose={() => handleClose(false)}
-            TransitionComponent={Transition}
-        >
+        <Dialog maxWidth="md" fullWidth open={show} onClose={() => handleClose(false)} TransitionComponent={Transition} {...rest}>
             <Container className={classes.root}>
                 <div {...getRootProps({ className: classes.container })}>
                     <input {...getInputProps()} />
@@ -194,5 +189,5 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
 MultiUpload.defaultProps = {
     accept: 'image/*',
-    onClose: result => console.warn('Undefined onClose =>', result),
+    onClose: (result) => console.warn('Undefined onClose =>', result),
 };

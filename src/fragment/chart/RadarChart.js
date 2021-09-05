@@ -3,12 +3,12 @@ import { withTheme } from '@material-ui/core';
 import { ResponsiveContainer, Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { DataKeyProps } from './AreaChart';
 
-export type SDRadarChartProps = {
+export interface SDRadarChartProps = {
     data: Array<Object>,
-    title: String,
-    width: Object,
-    height: Object,
-    aKey: String,
+    title: string,
+    width: object,
+    height: object,
+    aKey: string,
     dataKeys: Array<DataKeyProps>,
     maxDomain: number,
     legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline',

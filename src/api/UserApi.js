@@ -42,7 +42,7 @@ class UserApi extends ApiManager {
         return response;
     }
 
-    async resetPassword(userId: number, request: Object) {
+    async resetPassword(userId: number, request: object) {
         const response = await this.put('/resetPassword/' + userId, request, this.getHeaders(true));
         return response;
     }

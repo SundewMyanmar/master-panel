@@ -3,17 +3,17 @@ import { withTheme } from '@material-ui/core';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { DataKeyProps } from './AreaChart';
 
-export type SDLineChartProps = {
-    mode: 'default' | 'minimal',
-    data: Array<Object>,
-    width: Object,
-    height: Object,
-    title: String,
-    xKey: String,
-    yKey: String,
-    dataKeys: Array<DataKeyProps>,
-    legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline',
-};
+export interface SDLineChartProps {
+    mode: 'default' | 'minimal';
+    data: Array<Object>;
+    width: object;
+    height: object;
+    title: string;
+    xKey: string;
+    yKey: string;
+    dataKeys: Array<DataKeyProps>;
+    legendIcon: 'plainline' | 'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye' | 'plainline';
+}
 
 const SDLineChart = (props: SDLineChartProps) => {
     const { mode, data, width, height, title, xKey, yKey, dataKeys, legendIcon } = props;
@@ -41,7 +41,7 @@ const SDLineChart = (props: SDLineChartProps) => {
                         bottom: 0,
                     }}
                 >
-                    {dataKeys.map(key => {
+                    {dataKeys.map((key) => {
                         return <Line key={`ak-${key.key}`} type="linear" dataKey={key.key} stroke={key.color} />;
                     })}
                 </LineChart>
@@ -74,15 +74,15 @@ const SDLineChart = (props: SDLineChartProps) => {
                         contentStyle={{ backgroundColor: theme.palette.background.default, opacity: 0.7 }}
                         labelStyle={{ color: theme.palette.text.primary }}
                         itemStyle={{ color: theme.palette.text.primary }}
-                        formatter={function(value) {
+                        formatter={function (value) {
                             return `${value}`;
                         }}
-                        labelFormatter={function(value) {
+                        labelFormatter={function (value) {
                             return `${value}`;
                         }}
                     />
                     <Legend iconType={legendIcon || 'rect'} align="right" verticalAlign="top" height={36} />
-                    {dataKeys.map(key => {
+                    {dataKeys.map((key) => {
                         return <Line key={`ak-${key.key}`} type="linear" dataKey={key.key} stroke={key.color} />;
                     })}
                 </LineChart>

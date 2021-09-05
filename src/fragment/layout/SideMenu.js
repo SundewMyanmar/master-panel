@@ -1,39 +1,42 @@
 import React, { useState } from 'react';
-import { List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Collapse, makeStyles, Popover, PopoverProps, Tooltip } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, Icon, ListItemText, Divider, Collapse, makeStyles, Popover, Tooltip } from '@material-ui/core';
 import { useHistory, useLocation } from 'react-router-dom';
 import ScrollBar from '../control/ScrollBar';
 import SearchInput from '../control/SearchInput';
 import { ACTIONS } from './Reducer';
+import type { PopoverProps } from '@material-ui/core';
 
-export type MenuProps = {
-    id: string | number,
-    label: string,
-    icon: string,
-    onClick?: () => void,
-    path?: string,
-    items?: Array<MenuProps>,
-    divider?: boolean,
-};
+export interface MenuProps {
+    id: string | number;
+    label: string;
+    icon: string;
+    onClick?: () => void;
+    path?: string;
+    items?: Array<MenuProps>;
+    divider?: boolean;
+}
 
-type SideMenuProps = {
-    menus: Array<MenuProps>,
-    state?: Object,
-    dispatch?: () => void,
-};
+export interface SideMenuProps {
+    menus: Array<MenuProps>;
+    state?: object;
+    dispatch?: () => void;
+}
 
-type MenuItemProps = {
-    ...SideMenuProps,
-    hideMenu: boolean,
-    parentCount?: number,
-    onMenuItemClick?: (menu: MenuProps) => void,
-};
+export interface MenuItemProps extends SideMenuProps {
+    hideMenu: boolean;
+    parentCount?: number;
+    onMenuItemClick?: (menu: MenuProps) => void;
+}
 
-type ChildMenuGroupProps = {
-    ...MenuItemProps,
-    open: boolean,
-};
+export interface ChildMenuGroupProps extends MenuItemProps, PopoverProps {
+    open: boolean;
+}
 
-const PopupMenu = (props: { ...ChildMenuGroupProps, ...PopoverProps }) => {
+export interface FolderMenuProps extends MenuItemProps {
+    open: boolean;
+}
+
+const PopupMenu = (props: ChildMenuGroupProps) => {
     const { onMenuItemClick, dispatch, state, parentCount, divider, parentId, createdBy, modifiedBy, createdAt, modifiedAt, items, ...popover } =
         props;
 
@@ -61,7 +64,7 @@ const PopupMenu = (props: { ...ChildMenuGroupProps, ...PopoverProps }) => {
     );
 };
 
-const FolderMenu = (props: ChildMenuGroupProps) => {
+const FolderMenu = (props: FolderMenuProps) => {
     const parent = props.parentCount || 0;
     return (
         <>

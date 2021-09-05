@@ -17,14 +17,15 @@ import {
 } from '@material-ui/core';
 import SearchInput from './SearchInput';
 import { MATERIAL_ICONS } from '../../config/MaterialIcon';
+import type { DialogProps } from '@material-ui/core';
 
-type IconPickerProps = {
-    show: boolean,
-    selectedData: Array<string> | string,
-    multi: boolean,
-    title?: string,
-    onClose: (result: boolean | Object | Array<Object>) => void,
-};
+export interface IconPickerProps extends DialogProps {
+    show: boolean;
+    selectedData: Array<string> | string;
+    multi: boolean;
+    title?: string;
+    onClose: (result: boolean | Object | Array<Object>) => void;
+}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Zoom in ref={ref} {...props} />;
@@ -157,7 +158,7 @@ const styles = makeStyles((theme) => ({
 
 const IconPicker = (props: IconPickerProps) => {
     const classes = styles();
-    const { title, multi, selectedData, show, onClose } = props;
+    const { title, multi, selectedData, show, onClose, ...rest } = props;
     const [checked, setChecked] = useState(selectedData);
     const [search, setSearch] = useState('');
 
@@ -180,59 +181,57 @@ const IconPicker = (props: IconPickerProps) => {
     };
 
     return (
-        <>
-            <Dialog fullWidth maxWidth="lg" onClose={() => onClose(false)} open={show} TransitionComponent={Transition}>
-                <DialogTitle className={classes.header}>
-                    <Grid container>
-                        <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
-                            <Typography color="inherit" variant="h6" component="h1" noWrap>
-                                {title}
-                            </Typography>
-                        </Grid>
-                        <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
-                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Icons" />
-                        </Grid>
-                        <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
-                            <Tooltip title="Close Dialog">
-                                <IconButton color="inherit" size="small" onClick={() => onClose(false)} aria-label="Close">
-                                    <Icon color="inherit">close</Icon>
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
+        <Dialog fullWidth maxWidth="lg" onClose={() => onClose(false)} open={show} TransitionComponent={Transition} {...rest}>
+            <DialogTitle className={classes.header}>
+                <Grid container>
+                    <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" justifyContent="flex-start">
+                        <Typography color="inherit" variant="h6" component="h1" noWrap>
+                            {title}
+                        </Typography>
                     </Grid>
-                </DialogTitle>
-                <DialogContent className={classes.body}>
-                    <Grid className={classes.content} container justifyContent="center">
-                        {MATERIAL_ICONS.categories ? (
-                            MATERIAL_ICONS.categories.map((category, idx) => {
-                                return (
-                                    <IconDisplay
-                                        selectedData={checked}
-                                        multi={multi}
-                                        key={category.id + '_' + idx}
-                                        filter={search}
-                                        onIconClick={handleClick}
-                                        {...category}
-                                    />
-                                );
-                            })
-                        ) : (
-                            <p align="center">There is no icon.</p>
-                        )}
+                    <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
+                        <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Icons" />
                     </Grid>
-                </DialogContent>
-                {multi ? (
-                    <DialogActions>
-                        <Button onClick={() => onClose(checked)} color="primary" variant="contained">
-                            <Icon>done</Icon> Ok
-                        </Button>
-                        <Button onClick={() => onClose(false)} color="default" variant="contained">
-                            <Icon>close</Icon> Cancel
-                        </Button>
-                    </DialogActions>
-                ) : null}
-            </Dialog>
-        </>
+                    <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
+                        <Tooltip title="Close Dialog">
+                            <IconButton color="inherit" size="small" onClick={() => onClose(false)} aria-label="Close">
+                                <Icon color="inherit">close</Icon>
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                </Grid>
+            </DialogTitle>
+            <DialogContent className={classes.body}>
+                <Grid className={classes.content} container justifyContent="center">
+                    {MATERIAL_ICONS.categories ? (
+                        MATERIAL_ICONS.categories.map((category, idx) => {
+                            return (
+                                <IconDisplay
+                                    selectedData={checked}
+                                    multi={multi}
+                                    key={category.id + '_' + idx}
+                                    filter={search}
+                                    onIconClick={handleClick}
+                                    {...category}
+                                />
+                            );
+                        })
+                    ) : (
+                        <p align="center">There is no icon.</p>
+                    )}
+                </Grid>
+            </DialogContent>
+            {multi ? (
+                <DialogActions>
+                    <Button onClick={() => onClose(checked)} color="primary" variant="contained">
+                        <Icon>done</Icon> Ok
+                    </Button>
+                    <Button onClick={() => onClose(false)} color="default" variant="contained">
+                        <Icon>close</Icon> Cancel
+                    </Button>
+                </DialogActions>
+            ) : null}
+        </Dialog>
     );
 };
 

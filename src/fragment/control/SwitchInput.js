@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Switch, FormControlLabel } from '@material-ui/core';
+import type { SwitchProps } from '@material-ui/core';
 
-export type SwitchInputProps = {
-    label: string,
-    value: string,
-    checked: boolean,
-    required: boolean,
-    labelPlacement: 'top' | 'start' | 'end' | 'bottom',
-};
+export interface SwitchInputProps extends SwitchProps {
+    label: string;
+    value: string;
+    checked: boolean;
+    required: boolean;
+    labelPlacement: 'top' | 'start' | 'end' | 'bottom';
+}
 
 const SwitchInput = (props: SwitchInputProps) => {
     const { label, inputRef, value, checked, labelPlacement, onChange, ...switchProps } = props;
@@ -23,7 +24,7 @@ const SwitchInput = (props: SwitchInputProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checked]);
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         setState(event.target.checked);
         if (onChange && event) {
             onChange(event);

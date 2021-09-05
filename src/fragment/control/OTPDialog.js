@@ -17,14 +17,15 @@ import FormatManager from '../../util/FormatManager';
 import TextInput from './TextInput';
 import MfaApi from '../../api/MfaApi';
 import { useSelector } from 'react-redux';
+import type { DialogProps } from '@material-ui/core';
 
-type OTPDialogProps = {
-    userId: number,
-    mfaKey: string,
-    show: boolean,
-    onClose: () => void,
-    onSubmit: () => void,
-};
+export interface OTPDialogProps extends DialogProps {
+    userId: number;
+    mfaKey: string;
+    show: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+}
 
 const RESEND_TIMER = 60;
 
@@ -33,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const OTPDialog = (props: OTPDialogProps) => {
-    const { show, onClose, onSubmit, mfaKey, userId } = props;
+    const { show, onClose, onSubmit, mfaKey, userId, ...rest } = props;
     const [code, setCode] = useState('');
     const [timer, setTimer] = useState(mfaKey ? RESEND_TIMER : 0);
 
@@ -96,7 +97,7 @@ const OTPDialog = (props: OTPDialogProps) => {
         ) : null;
 
     return (
-        <Dialog maxWidth="xs" fullWidth={false} open={show} onClose={() => handleOnClose(false)} TransitionComponent={Transition}>
+        <Dialog maxWidth="xs" fullWidth={false} open={show} onClose={() => handleOnClose(false)} TransitionComponent={Transition} {...rest}>
             <DialogTitle>
                 <Grid container>
                     <Grid container item lg={11} md={11} sm={11} xs={11} alignItems="center" justifyContent="flex-start">

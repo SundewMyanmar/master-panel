@@ -36,7 +36,7 @@ export const rawStyles = {
     },
 };
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     markerLabel: { backgroundColor: 'yellow', fontSize: '18px', padding: '0px', borderRadius: 5, opacity: 0.8 },
 
     ...rawStyles,
@@ -46,19 +46,19 @@ const DEFAULT_HEIGHT = 400;
 const DEFAULT_ZOOM = 8;
 export const DEFAULT_CENTER = { lat: 16.785872, lng: 96.154541 };
 
-export type MapComponentProps = {
-    defaultZoom: number,
-    defaultCenter: Object,
-    childElement: Object,
-    allowDrawing: boolean,
+export interface MapComponentProps {
+    defaultZoom: number;
+    defaultCenter: object;
+    childElement: object;
+    allowDrawing: boolean;
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<string>,
-    onMarkerComplete?: () => void,
-    onCircleComplete?: () => void,
-    onPolygonComplete?: () => void,
-};
+    drawingModes: Array<string>;
+    onMarkerComplete?: () => void;
+    onCircleComplete?: () => void;
+    onPolygonComplete?: () => void;
+}
 
 const MapComponent = compose(
     withProps((props: MapComponentProps) => {
@@ -75,15 +75,15 @@ const MapComponent = compose(
     const classes = styles();
     const { defaultZoom, defaultCenter, childElement, allowDrawing, drawingModes, onMarkerComplete, onCircleComplete, onPolygonComplete } = props;
 
-    const handleOnMarkerComplete = mk => {
+    const handleOnMarkerComplete = (mk) => {
         if (onMarkerComplete) onMarkerComplete(mk);
     };
 
-    const handleOnCircleComplete = cc => {
+    const handleOnCircleComplete = (cc) => {
         if (onCircleComplete) onCircleComplete(cc);
     };
 
-    const handleOnPolygonComplete = pg => {
+    const handleOnPolygonComplete = (pg) => {
         if (onPolygonComplete) onPolygonComplete(pg);
     };
 

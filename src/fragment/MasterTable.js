@@ -41,46 +41,46 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-export type PaginationObject = {
-    currentPage: number,
-    pageSize: number,
-    total: number,
-    data: Array<Object>,
-    sort: string,
-};
+export interface PaginationObject {
+    currentPage: number;
+    pageSize: number;
+    total: number;
+    data: Array<Object>;
+    sort: string;
+}
 
-export type ActionProps = {
-    id: string,
-    label: string,
-    icon: string,
-};
+export interface ActionProps {
+    id: string;
+    label: string;
+    icon: string;
+}
 
-export type MasterTableProps = {
-    fields: Array<TableField>,
-    inputFields: Array<Field>,
-    importFields: Array<string>,
-    moreActions: Array<ActionProps>,
-    title?: string,
-    multi?: Boolean,
-    onInputChange?: () => void,
-    value?: Object,
-    onSave?: () => void,
-    onAddNew?: () => void,
-    onEdit: (item: Object) => void,
-    onLoad: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>,
-    onRemove: (removeData: Object | Array) => Promise<Any>,
-    onError: (error: Object | string) => void,
-    onItemAction: (item: Object, data: Object) => void,
-    onImport?: (data: Object | Any) => Promise<Any>,
-    onRowClick?: () => void,
-    type: 'TABLE' | 'INPUT',
-    hideSearch?: Boolean,
-    hideDataActions?: Boolean,
-    hideActionMenu?: Boolean,
-    hideImportMenu?: Boolean,
-    hideCRUD?: Boolean,
-    showCreate?: Boolean,
-};
+export interface MasterTableProps {
+    fields: Array<TableField>;
+    inputFields: Array<Field>;
+    importFields: Array<string>;
+    moreActions: Array<ActionProps>;
+    title?: string;
+    multi?: boolean;
+    onInputChange?: () => void;
+    value?: object;
+    onSave?: () => void;
+    onAddNew?: () => void;
+    onEdit: (item: object) => void;
+    onLoad: (currentPage: number, pageSize: number, sort: string, search: string) => Promise<Any>;
+    onRemove: (removeData: object | Array) => Promise<Any>;
+    onError: (error: object | string) => void;
+    onItemAction: (item: object, data: object) => void;
+    onImport?: (data: object | Any) => Promise<Any>;
+    onRowClick?: () => void;
+    type: 'TABLE' | 'INPUT';
+    hideSearch?: boolean;
+    hideDataActions?: boolean;
+    hideActionMenu?: boolean;
+    hideImportMenu?: boolean;
+    hideCRUD?: boolean;
+    showCreate?: boolean;
+}
 
 export const defaultActions = [
     {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Grid, Typography, IconButton, Icon, makeStyles, useTheme } from '@material-ui/core';
 
-type DrawerHeaderProps = {
-    image?: string,
-    name: string,
-    hideMenu: boolean,
-    onMenuClick?: () => void,
-};
+export interface DrawerHeaderProps {
+    image?: string;
+    name: string;
+    hideMenu: boolean;
+    onMenuClick?: () => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {

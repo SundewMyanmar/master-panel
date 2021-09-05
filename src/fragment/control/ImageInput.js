@@ -1,27 +1,27 @@
 import React, { useState, createRef, useEffect } from 'react';
-import { InputProps, IconButton, makeStyles, Icon } from '@material-ui/core';
+import { IconButton, makeStyles, Icon } from '@material-ui/core';
 import ListPicker from './ListPicker';
 import FileApi from '../../api/FileApi';
 import FileManagerPicker from '../file/FileManagerPicker';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
+import type { HTMLProps } from 'react';
 
-type ImageSize = {
-    width: number,
-    height: number,
-};
+export interface ImageSize {
+    width: number;
+    height: number;
+}
 
-type ImageInputProps = {
-    ...InputProps,
-    size: ?ImageSize,
-    enableFilePicker?: boolean,
-    disabledUpload?: boolean,
-    disabledRemove?: boolean,
-    value: Object | string,
-    onUpload?: () => void,
-    onRemove?: () => void,
-    onChange: (image: Object | string) => void,
-};
+export interface ImageInputProps extends HTMLProps {
+    size: ?ImageSize;
+    enableFilePicker?: boolean;
+    disabledUpload?: boolean;
+    disabledRemove?: boolean;
+    value: object | string;
+    onUpload?: () => void;
+    onRemove?: () => void;
+    onChange: (image: object | string) => void;
+}
 
 const styles = makeStyles((theme) => ({
     container: {

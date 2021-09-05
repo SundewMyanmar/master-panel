@@ -2,12 +2,12 @@ import { file } from '@babel/types';
 import React from 'react';
 import ApiManager from '../util/ApiManager';
 
-type MfaSetup = {
-    key: string,
-    type: 'EMAIL' | 'SMS' | 'APP',
-    totp: true,
-    main: true,
-};
+export interface MfaSetup {
+    key: string;
+    type: 'EMAIL' | 'SMS' | 'APP';
+    totp: true;
+    main: true;
+}
 
 class MfaApi extends ApiManager {
     constructor() {

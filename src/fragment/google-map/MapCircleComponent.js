@@ -4,30 +4,30 @@ import MapComponent, { rawStyles } from '.';
 
 //TODO: Add edit and remove Func for circles
 
-export type MapCircleComponentProps = {
-    circles: Array<Object>,
-    circleOptions: Object,
-    defaultZoom: number,
-    defaultCenter: Object,
-    childElement: Object,
-    allowDrawing: boolean,
+export interface MapCircleComponentProps {
+    circles: Array<Object>;
+    circleOptions: object;
+    defaultZoom: number;
+    defaultCenter: object;
+    childElement: object;
+    allowDrawing: boolean;
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<string>,
-    onCircleComplete?: () => void,
-};
+    drawingModes: Array<string>;
+    onCircleComplete?: () => void;
+}
 
 const MapCircleComponent = (props: MapCircleComponentProps) => {
     const { drawingModes, circles, circleOptions, draggable, onClick, onCircleComplete } = props;
 
-    const handelOnClick = cc => {
+    const handelOnClick = (cc) => {
         if (onClick) onclick(cc);
     };
 
     const circleElements =
         circles &&
-        circles.map(cc => (
+        circles.map((cc) => (
             <Circle
                 key={`circle-${circles.indexOf(cc)}`}
                 defaultCenter={cc.defaultCenter}

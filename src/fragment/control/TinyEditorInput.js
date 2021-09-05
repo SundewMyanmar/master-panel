@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { TINY_EDITOR_API_KEY } from '../../config/Constant';
+import type { IAllProps } from '@tinymce/tinymce-react';
+import FormatManager from '../../util/FormatManager';
 
-export type TinyEditorInputProps = {
-    id: string,
-    name: string,
-    value: string,
-    type: 'TABLE' | 'DEFAULT',
-    height: int,
-    onChange?: () => void,
-};
+export interface TinyEditorInputProps extends IAllProps {
+    id: string;
+    name: string;
+    value: string;
+    type: 'TABLE' | 'DEFAULT';
+    height: int;
+    onChange?: () => void;
+}
 
 const TinyEditorInput = (props: TinyEditorInputProps) => {
     const { id, name, value, type, height, onChange, ...rest } = props;

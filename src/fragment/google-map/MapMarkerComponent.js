@@ -5,7 +5,7 @@ import { MarkerClusterer } from 'react-google-maps/lib/components/addons/MarkerC
 import MapComponent from '../google-map';
 
 //TODO: Add edit and remove Func for markers
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     markerLabel: {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
@@ -20,17 +20,17 @@ const styles = makeStyles(theme => ({
 
 const DEFAULT_GRID_SIZE = 60;
 
-export type MarkerComonentProps = {
-    position: Object,
-    description: string,
-    onClick?: () => void,
-};
+export interface MarkerComonentProps {
+    position: object;
+    description: string;
+    onClick?: () => void;
+}
 
 export const MarkerComponent = (props: MarkerComonentProps) => {
     const classes = styles();
     const { position, description, onClick } = props;
     const [showMarkerInfo, setShowMarkerInfo] = useState(false);
-    const handleMarkerClick = pos => {
+    const handleMarkerClick = (pos) => {
         setShowMarkerInfo(!showMarkerInfo);
 
         if (onClick) {
@@ -58,26 +58,26 @@ export const MarkerComponent = (props: MarkerComonentProps) => {
     );
 };
 
-export type MapMarkerComponentProps = {
-    markers: Array<Object>,
-    allowCluster: boolean,
-    clustererGridSize: number,
-    defaultZoom: number,
-    defaultCenter: Object,
-    childElement: Object,
-    allowDrawing: boolean,
+export interface MapMarkerComponentProps {
+    markers: Array<Object>;
+    allowCluster: boolean;
+    clustererGridSize: number;
+    defaultZoom: number;
+    defaultCenter: object;
+    childElement: object;
+    allowDrawing: boolean;
     /**
      * DRAWING MODES=> 'circle' | 'marker' | 'polygon' | 'polyline' | 'rectangle'
      */
-    drawingModes: Array<string>,
-    onMarkerComplete?: () => void,
-};
+    drawingModes: Array<string>;
+    onMarkerComplete?: () => void;
+}
 
 const MapMarkerComponent = (props: MapMarkerComponentProps) => {
     const { markers, allowCluster, clustererGridSize, drawingModes, onMarkerComplete } = props;
 
     var markerElements =
-        markers && markers.map(m => <MarkerComponent key={`marker-${markers.indexOf(m)}`} description={m.description} position={m} />);
+        markers && markers.map((m) => <MarkerComponent key={`marker-${markers.indexOf(m)}`} description={m.description} position={m} />);
 
     if (allowCluster)
         markerElements = (

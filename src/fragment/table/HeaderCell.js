@@ -1,14 +1,14 @@
 import React from 'react';
 import { TableCell, TableSortLabel, makeStyles } from '@material-ui/core';
+import type { TableSortLabelProps } from '@material-ui/core';
 
-export type HeaderCellProps = {
-    ...TableSortLabelProps,
-    field: TableField,
-    sort: string,
-    onSortChange?: (field: TableField, sort: 'ASC' | 'DESC') => string,
-};
+export interface HeaderCellProps extends TableSortLabelProps {
+    field: TableField;
+    sort: string;
+    onSortChange?: (field: TableField, sort: 'ASC' | 'DESC') => string;
+}
 
-const headerStyles = makeStyles(theme => ({
+const headerStyles = makeStyles((theme) => ({
     root: {
         color: theme.palette.primary.contrastText,
         '&$active': {

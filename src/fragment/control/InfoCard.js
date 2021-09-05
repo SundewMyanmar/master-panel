@@ -3,20 +3,20 @@ import { withRouter } from 'react-router-dom';
 import { Icon, Typography, Grid, Divider, makeStyles } from '@material-ui/core';
 import { info, warning, success } from '../../config/Theme';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(1),
     },
 }));
 
-export type InfoCardProps = {
-    icon: Any,
-    title: String,
-    info: String,
-    description1: String,
-    description2: String,
-};
+export interface InfoCardProps {
+    icon: Any;
+    title: string;
+    info: string;
+    description1: string;
+    description2: string;
+}
 
 const InfoCard = (props: InfoCardProps) => {
     const classes = styles();

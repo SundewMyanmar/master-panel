@@ -24,6 +24,7 @@ import {
 } from '@material-ui/core';
 import { ErrorTheme } from '../../config/Theme';
 import FileApi from '../../api/FileApi';
+import type { DialogProps } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Fade in ref={ref} {...props} />;
@@ -68,18 +69,18 @@ const style = makeStyles((theme) => ({
     image: {},
 }));
 
-type ImagePreviewProps = {
-    show: boolean,
-    folder: Object,
-    folders: Array,
-    data: Object,
-    onClose?: () => void,
-    onUpdate?: (file: object) => void,
-    onRemove?: (file: Object) => void,
-};
+export interface ImagePreviewProps extends DialogProps {
+    show: boolean;
+    folder: object;
+    folders: Array;
+    data: object;
+    onClose?: () => void;
+    onUpdate?: (file: object) => void;
+    onRemove?: (file: object) => void;
+}
 
 const ImagePreview = (props: ImagePreviewProps) => {
-    const { show, data, folder, folders, onClose, onRemove, onUpdate } = props;
+    const { show, data, folder, folders, onClose, onRemove, onUpdate, ...rest } = props;
     const [dimension, setDimension] = React.useState(data.size);
     const isImage = data.type.startsWith('image');
     const url = FileApi.downloadLink(data, 'large') || '/res/default-image.png';
@@ -198,6 +199,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
             aria-labelledby="image-preview-dialog"
             aria-describedby={data.name}
             maxWidth="md"
+            {...rest}
         >
             <DialogTitle>
                 <Grid container>

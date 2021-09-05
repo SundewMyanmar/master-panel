@@ -5,20 +5,20 @@ export const DEFAULT_VALIDATION_PATTERNS = {
     phone: /^\+?(?![0][1-8]+)[0-9]{7,15}$/,
 };
 
-export type Rule = {
-    type: 'email' | 'phone' | 'match' | 'pattern',
-    matchId: string,
-    pattern: RegExp,
-    message: string,
-    onValidate: (form: Object) => Boolean,
-};
-export type Validator = {
-    fieldId: string,
-    require: boolean,
-    rules: Array<Rule>,
-};
+export interface Rule {
+    type: 'email' | 'phone' | 'match' | 'pattern';
+    matchId: string;
+    pattern: RegExp;
+    message: string;
+    onValidate: (form: object) => Boolean;
+}
+export interface Validator {
+    fieldId: string;
+    require: boolean;
+    rules: Array<Rule>;
+}
 
-export function validateForm(form, validators: Array<Validator>, onFailed: (error: Object) => void) {
+export function validateForm(form, validators: Array<Validator>, onFailed: (error: object) => void) {
     console.log('validate form => ', form);
     for (let i = 0; i < validators.length; i++) {
         const validator = validators[i];

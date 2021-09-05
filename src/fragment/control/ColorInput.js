@@ -1,31 +1,19 @@
 /* @flow */
 import * as React from 'react';
-import {
-    InputBase,
-    InputProps,
-    Icon,
-    Paper,
-    makeStyles,
-    FormControl,
-    InputLabel,
-    Grid,
-    IconButton,
-    FormHelperText,
-    Tooltip,
-} from '@material-ui/core';
+import { InputBase, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, FormHelperText, Tooltip } from '@material-ui/core';
 import ColorPicker from './ColorPicker';
 import FormatManager from '../../util/FormatManager';
+import type { InputBaseProps } from '@material-ui/core';
 
-export type ColorInputProps = {
-    ...InputProps,
-    value?: Object,
-    icon?: string,
-    required: boolean,
-    label: string,
-    display: 'full' | 'simple',
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string,
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface ColorInputProps extends InputBaseProps {
+    value?: object;
+    icon?: string;
+    required: boolean;
+    label: string;
+    display: 'full' | 'simple';
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string;
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {
@@ -150,7 +138,6 @@ const ColorInput = (props: ColorInputProps) => {
         <>
             <ColorPicker title={'Browse ' + label} show={showColor} onClose={handleValueChange} onError={handleError} />
             <FormControl
-                {...rest}
                 variant="outlined"
                 margin="normal"
                 fullWidth

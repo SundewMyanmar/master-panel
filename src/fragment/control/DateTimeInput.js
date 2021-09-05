@@ -1,19 +1,19 @@
 import * as React from 'react';
 import LuxonUtils from '@date-io/luxon';
 import { DateTimePicker, MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
-import { InputProps, InputAdornment, Icon, makeStyles, Grid } from '@material-ui/core';
+import { InputAdornment, Icon, makeStyles, Grid } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
+import type { DateTimePickerProps } from '@material-ui/pickers';
 
-export type DateTimeInputProps = {
-    ...InputProps,
-    value?: Object,
-    icon?: string,
-    required: boolean,
-    label: string,
-    disabledLoad?: boolean,
-    type: 'date' | 'time' | 'datetime',
-    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void,
-};
+export interface DateTimeInputProps extends DateTimePickerProps {
+    value?: object;
+    icon?: string;
+    required: boolean;
+    label: string;
+    disabledLoad?: boolean;
+    type: 'date' | 'time' | 'datetime';
+    onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+}
 
 const styles = makeStyles((theme) => ({
     root: {

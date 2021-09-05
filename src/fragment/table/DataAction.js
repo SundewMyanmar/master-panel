@@ -1,6 +1,7 @@
 import React from 'react';
-import { Tooltip, IconButtonProps, IconButton, Icon, Menu, MenuItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
+import { Tooltip, IconButton, Icon, Menu, MenuItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
+import type { IconButtonProps } from '@material-ui/core';
 
 const styles = makeStyles((theme) => ({
     menuButton: {
@@ -17,21 +18,20 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-export type ActionProps = {
-    id: string,
-    label: Object,
-    icon: Object,
-    color: Object,
-    onClick: () => void,
-};
+export interface ActionProps {
+    id: string;
+    label: object;
+    icon: object;
+    color: object;
+    onClick: () => void;
+}
 
-export type DataActionProps = {
-    ...IconButtonProps,
-    data: Object,
-    actions: Array<ActionProps>,
-    rowIndex: Int,
-    onMenuItemClick: (item: Object) => void,
-};
+export interface DataActionProps extends IconButtonProps {
+    data: object;
+    actions: Array<ActionProps>;
+    rowIndex: Int;
+    onMenuItemClick: (item: object) => void;
+}
 
 const DataAction = (props: DataActionProps) => {
     const { id, actions, data, rowIndex, onMenuItemClick, ...iconButtonProps } = props;

@@ -1,20 +1,20 @@
 import * as React from 'react';
-import { TextFieldProps, TextField, InputBase, Icon, InputAdornment } from '@material-ui/core';
+import { TextField, InputBase, Icon, InputAdornment } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import FormatManager from '../../util/FormatManager';
+import type { TextFieldProps } from '@material-ui/core';
 
-export type SelectListProps = {
-    ...TextFieldProps,
-    data: Array<Object>,
-    icon?: string,
-    required: boolean,
-    label: string,
-    hidePlaceHolder: boolean,
-    onLoadItem?: (item: Object) => string,
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => string,
-    onChange: (event: React.SyntheticEvent<HTMLInputElement>, value: Object) => void,
-    disabled: boolean,
-};
+export interface SelectListProps extends TextFieldProps {
+    data: Array<Object>;
+    icon?: string;
+    required: boolean;
+    label: string;
+    hidePlaceHolder: boolean;
+    onLoadItem?: (item: object) => string;
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>, value: object) => string;
+    onChange: (event: React.SyntheticEvent<HTMLInputElement>, value: object) => void;
+    disabled: boolean;
+}
 
 const ListInput = (props: SelectListProps) => {
     const { variant, disabled, hidePlaceHolder, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
@@ -82,43 +82,22 @@ const ListInput = (props: SelectListProps) => {
         placeholder = hidePlaceHolder || placeholder;
 
         return (
-            <>
-                {variant == 'standard' ? (
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        fullWidth
-                        placeholder={placeholder}
-                        error={invalid}
-                        helperText={error}
-                        {...otherParams}
-                        {...rest}
-                        InputProps={buildInputIcon(InputProps)}
-                        InputLabelProps={{
-                            ...InputLabelProps,
-                            shrink: true,
-                        }}
-                        inputRef={currentInput}
-                    />
-                ) : (
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        placeholder={placeholder}
-                        error={invalid}
-                        helperText={error}
-                        {...otherParams}
-                        {...rest}
-                        InputProps={buildInputIcon(InputProps)}
-                        InputLabelProps={{
-                            ...InputLabelProps,
-                            shrink: true,
-                        }}
-                        inputRef={currentInput}
-                    />
-                )}
-            </>
+            <TextField
+                variant={variant}
+                margin="normal"
+                fullWidth
+                placeholder={placeholder}
+                error={invalid}
+                helperText={error}
+                {...otherParams}
+                {...rest}
+                InputProps={buildInputIcon(InputProps)}
+                InputLabelProps={{
+                    ...InputLabelProps,
+                    shrink: true,
+                }}
+                inputRef={currentInput}
+            />
         );
     };
 
