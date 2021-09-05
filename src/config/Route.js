@@ -17,10 +17,6 @@ import ApiPermission from '../page/admin/ApiPermission';
 import File from '../page/file/File';
 import Developer from '../page/Developer';
 
-//Inventory
-import Product from '../page/inventory/Product';
-import ProductDetail from '../page/inventory/ProductDetail';
-
 export const PrivateRoute = [
     { path: '/', page: Dashboard },
     { path: '/profile', page: Profile },
@@ -34,8 +30,6 @@ export const PrivateRoute = [
     { path: '/permission/:roleId?', page: ApiPermission },
     { path: '/file', page: File },
     { path: '/api-debug', page: Developer },
-    { path: '/inventory/product', page: Product },
-    { path: '/inventory/product/detail/:id', page: ProductDetail },
 ];
 
 export const PublicRoute = [

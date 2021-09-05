@@ -225,7 +225,7 @@ const Security = (props) => {
         if (item.type === 'APP') {
             setQuestion('Are you sure to remove MFA by App?');
         } else {
-            setQuestion(`Are you sure to remove ${item.key} MFA?`);
+            setQuestion(`Are you sure to remove ${item.mfaKey} MFA?`);
         }
     };
 
@@ -282,7 +282,7 @@ const Security = (props) => {
         }
 
         setShowOtp(false);
-        MfaApi.verify(code, currentMfa?.type === 'APP' ? null : currentMfa?.key)
+        MfaApi.verify(code, currentMfa?.type === 'APP' ? null : currentMfa?.mfaKey)
             .then((result) => {
                 if (currentMfa.default) {
                     dispatch({ type: USER_REDUX_ACTIONS.UPDATE, profile: { ...user, mfa: currentMfa } });
@@ -382,7 +382,7 @@ const Security = (props) => {
         <>
             <OTPDialog
                 userId={user.id}
-                mfaKey={currentMfa?.type === 'APP' ? null : currentMfa?.key}
+                mfaKey={currentMfa?.type === 'APP' ? null : currentMfa?.mfaKey}
                 show={showOtp}
                 onClose={() => setShowOtp(false)}
                 onSubmit={handleOtpSubmit}

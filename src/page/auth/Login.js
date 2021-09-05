@@ -130,7 +130,7 @@ const Login = () => {
         let authData = { ...data };
         if (code) {
             authData.mfaCode = code;
-            authData.mfaKey = mfaInfo?.key;
+            authData.mfaKey = mfaInfo?.mfaKey;
         }
 
         AuthApi.authByUserAndPassword(authData)
@@ -184,7 +184,7 @@ const Login = () => {
                         </Typography>
                         <OTPDialog
                             userId={mfaInfo?.userId}
-                            mfaKey={mfaInfo && mfaInfo.type !== 'APP' ? mfaInfo?.key : null}
+                            mfaKey={mfaInfo && mfaInfo.type !== 'APP' ? mfaInfo?.mfaKey : null}
                             mfa={mfaInfo}
                             show={showMfa}
                             onClose={() => setShowMfa(false)}
