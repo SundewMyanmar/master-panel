@@ -150,6 +150,8 @@ const Layout = (props: LayoutProps) => {
         dispatch({
             type: USER_REDUX_ACTIONS.LOGOUT,
         });
+        sessionStorage.clear();
+        localStorage.clear();
         history.push('/login');
     };
 
