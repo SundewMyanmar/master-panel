@@ -304,7 +304,7 @@ const Menu = () => {
         <>
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Container component="main" maxWidth="md">
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon>link</Icon>
                     </Avatar>

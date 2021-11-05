@@ -111,7 +111,7 @@ const RoleDetail = () => {
 
     return (
         <Container component="main" maxWidth="sm">
-            <Paper className={classes.paper} elevation={6}>
+            <Paper className={classes.paper} elevation={3}>
                 <Avatar className={classes.avatar}>
                     <Icon>people</Icon>
                 </Avatar>

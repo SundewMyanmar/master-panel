@@ -357,7 +357,7 @@ const MasterTable = (props: MasterTableProps) => {
     return (
         <>
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
-            <Paper className={classes.root} elevation={6}>
+            <Paper className={classes.root} elevation={3}>
                 <Grid container className={classes.header}>
                     <Grid container item lg={4} md={4} sm={6} xs={12} justifyContent="flex-start" alignContent="center" alignItems="center">
                         <Typography className={classes.headerTitle} variant="h6" component="h1" noWrap>

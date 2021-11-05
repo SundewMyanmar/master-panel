@@ -121,7 +121,7 @@ const Register = () => {
         <>
             <Container component="main" maxWidth="sm">
                 <CssBaseline />
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon>description</Icon>
                     </Avatar>

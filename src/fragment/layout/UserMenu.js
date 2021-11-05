@@ -102,7 +102,7 @@ const UserMenu = (props: UserMenuProps) => {
                     vertical: 'top',
                     horizontal: 'right',
                 }}
-                elevation={0}
+                elevation={6}
                 getContentAnchorEl={null}
                 keepMounted
                 open={Boolean(anchorEl)}

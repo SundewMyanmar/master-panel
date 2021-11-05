@@ -122,7 +122,7 @@ const ImageInput = (props: ImageInputProps) => {
         setImage(result);
 
         if (onChange) {
-            var obj = {
+            const obj = {
                 target: {
                     id: id || name,
                     name: id || name,

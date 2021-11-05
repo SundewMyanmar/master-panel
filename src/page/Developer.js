@@ -90,7 +90,7 @@ const Developer = () => {
     return (
         <>
             <Container component="main" maxWidth="lg">
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon>code</Icon>
                     </Avatar>

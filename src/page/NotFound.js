@@ -38,7 +38,7 @@ const Dashboard = () => {
 
     return (
         <React.Fragment>
-            <Paper className={classes.paper} elevation={6}>
+            <Paper className={classes.paper} elevation={3}>
                 <Typography color="error" component="h1" variant="h1">
                     404 - Not Found !
                 </Typography>

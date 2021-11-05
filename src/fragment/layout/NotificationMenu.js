@@ -15,7 +15,7 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
-import InfiniteLoading from 'react-simple-infinite-loading';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import ScrollBar from '../../fragment/control/ScrollBar';
 
 export interface NotificationMenuProps {
@@ -110,7 +110,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
     const [paging, setPaging] = useState({
         total: 0,
         currentPage: -1,
-        pageSize: 20,
+        pageSize: 10,
         data: [],
     });
 
@@ -120,7 +120,6 @@ const NotificationMenu = (props: NotificationMenuProps) => {
 
     const setPagingData = (result) => {
         if (result.data) {
-            console.log('paging data', paging.data);
             setPaging({
                 ...result,
                 data: [...paging.data, ...result.data],
@@ -158,7 +157,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
     const loadMoreNotification = async (newPaging) => {
         if (onLoadMore) {
             setShowSkeleton(true);
-            var result = await onLoadMore({
+            const result = await onLoadMore({
                 ...newPaging,
             });
 
@@ -182,7 +181,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
     };
 
     const createSkeleton = (count) => {
-        var result = [];
+        const result = [];
         for (let i = 0; i < count; i++) {
             result.push(
                 <MenuItem key={`skeleton-${i}`}>
@@ -221,7 +220,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                 </IconButton>
             </Tooltip>
             <Menu
-                id="simple-menu"
+                id="notification-menu"
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
@@ -230,7 +229,7 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                     vertical: 'top',
                     horizontal: 'right',
                 }}
-                elevation={0}
+                elevation={6}
                 getContentAnchorEl={null}
                 anchorEl={anchorEl}
                 keepMounted
@@ -243,20 +242,21 @@ const NotificationMenu = (props: NotificationMenuProps) => {
                             <ListItemText style={{ textAlign: 'center' }}>No Data.</ListItemText>
                         </MenuItem>
                     ))}
-                <ScrollBar style={{ width: 500, height: 500, top: 0 }}>
-                    <InfiniteLoading
-                        hasMoreItems={paging.data.length < paging.total - 1}
-                        itemHeight={60}
-                        loadMoreItems={() => {
-                            loadMoreNotification(paging);
+                <div id="notiScroll" style={{ width: 480, height: 480, top: 0, overflowX: 'hidden', overflowY: 'auto', display: 'flex' }}>
+                    <InfiniteScroll
+                        scrollableTarget="notiScroll"
+                        dataLength={paging.data.length}
+                        hasMore={paging.data.length < paging.total - 1}
+                        loader={() => createSkeleton(1)}
+                        next={() => {
+                            loadMoreNotification({ ...paging });
                         }}
                     >
                         {paging.data.map((item, index) => {
                             return <NotificationMenuItem key={`noti-item-${index}`} item={item} index={index} onClick={handleClick} />;
                         })}
-                        {createSkeleton(2)}
-                    </InfiniteLoading>
-                </ScrollBar>
+                    </InfiniteScroll>
+                </div>
             </Menu>
         </>
     );

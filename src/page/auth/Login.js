@@ -8,7 +8,8 @@ import AuthApi from '../../api/AuthApi';
 import { STORAGE_KEYS, FACEBOOK, FCM_CONFIG, VAPID_KEY } from '../../config/Constant';
 import MasterForm from '../../fragment/MasterForm';
 import { FacebookTheme } from '../../config/Theme';
-import firebase from 'firebase/app';
+import { initializeApp } from 'firebase/app';
+import { getMessaging } from 'firebase/messaging';
 import { useDispatch } from 'react-redux';
 import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
@@ -16,11 +17,8 @@ import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 let FIREBASE_MESSAGING = null;
 
 if (!isSafari && FCM_CONFIG) {
-    if (!firebase.apps.length) {
-        console.log('! safari INIT');
-        firebase.initializeApp(FCM_CONFIG);
-    }
-    FIREBASE_MESSAGING = firebase.messaging();
+    initializeApp(FCM_CONFIG);
+    FIREBASE_MESSAGING = getMessaging();
 }
 
 const styles = makeStyles((theme) => ({

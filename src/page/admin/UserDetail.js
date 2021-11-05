@@ -268,7 +268,7 @@ const UserDetail = (props) => {
     return (
         <>
             <Container component="main" maxWidth="md">
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon color="action">account_box</Icon>
                     </Avatar>

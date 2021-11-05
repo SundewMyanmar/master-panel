@@ -4,7 +4,7 @@ import IdleTimer from 'react-idle-timer';
 import { IconButton, Icon, Tooltip, makeStyles, AppBar, Toolbar, Typography, Box, CssBaseline, Drawer, Divider, useTheme } from '@material-ui/core';
 import { PrivateRoute } from '../../config/Route';
 import clsx from 'clsx';
-import Scrollbar from '../control/ScrollBar';
+import ScrollBar from '../control/ScrollBar';
 import {
     SESSION_TIMEOUT,
     STORAGE_KEYS,
@@ -24,7 +24,8 @@ import FileApi from '../../api/FileApi';
 import UserMenu from './UserMenu';
 import MenuApi from '../../api/MenuApi';
 import { isSafari } from 'react-device-detect';
-import firebase from 'firebase/app';
+import { initializeApp } from 'firebase/app';
+import { getMessaging } from 'firebase/messaging';
 import ProfileApi from '../../api/ProfileApi';
 import NotificationApi from '../../api/NotificationApi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,11 +35,8 @@ import type { HTMLProps } from 'react';
 let FIREBASE_MESSAGING = null;
 
 if (!isSafari && FCM_CONFIG) {
-    if (!firebase.apps.length) {
-        console.log('! safari INIT');
-        firebase.initializeApp(FCM_CONFIG);
-    }
-    FIREBASE_MESSAGING = firebase.messaging();
+    const app = initializeApp(FCM_CONFIG);
+    FIREBASE_MESSAGING = getMessaging();
 }
 
 const DRAWER_FULL_SIZE: number = window.innerWidth > 1400 ? 300 : 260;
@@ -87,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
         width: DRAWER_FULL_SIZE,
         flexShrink: 0,
         whiteSpace: 'nowrap',
+        boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)',
+        borderRight: '1px solid ' + theme.palette.divider,
     },
     drawerOpen: {
         width: DRAWER_FULL_SIZE,
@@ -114,6 +114,7 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         padding: theme.spacing(1),
+        boxShadow: '4px 0px 5px ' + theme.palette.grey,
     },
     paper: {
         padding: theme.spacing(2),
@@ -214,7 +215,7 @@ const Layout = (props: LayoutProps) => {
     };
 
     const loadMoreNotification = async (paging) => {
-        var result = await NotificationApi.getMyNotifications(paging.currentPage + 1, paging.pageSize);
+        const result = await NotificationApi.getMyNotifications(paging.currentPage + 1, paging.pageSize);
         if (result.data) {
             for (let i = 0; i < result.data.length; i++) {
                 result.data[i] = {
@@ -278,10 +279,9 @@ const Layout = (props: LayoutProps) => {
                             onItemClick={onItemClick}
                             onReadAll={readAllNotification}
                         />
-                        {/* <NotificationMenu name="New Orders" icon="shopping_cart" /> */}
                         <Tooltip title={mode === 'DARK' ? 'Toggle Light Mode' : 'Toggle Dark Mode'}>
                             <IconButton
-                                aria-label="delete"
+                                aria-label="Dark Mode"
                                 onClick={() => {
                                     if (onToggleMode) {
                                         onToggleMode(mode === 'DARK' ? 'LIGHT' : 'DARK');
@@ -331,7 +331,7 @@ const Layout = (props: LayoutProps) => {
                 <SideMenu state={state} dispatch={setState} />
             </Drawer>
             <main className={classes.content}>
-                <Scrollbar>
+                <ScrollBar>
                     <div className={classes.appBarSpacer} />
                     <div className={classes.container}>
                         {PrivateRoute.map((route, index) => {
@@ -348,7 +348,7 @@ const Layout = (props: LayoutProps) => {
                     <Box pt={4} className={classes.copyRight}>
                         <Copyright />
                     </Box>
-                </Scrollbar>
+                </ScrollBar>
             </main>
         </div>
     );

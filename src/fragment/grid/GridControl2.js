@@ -115,7 +115,7 @@ const GridControl2 = (props) => {
     const renderGrid = () => {
         let result = [];
 
-        for (var i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             let item = items[i];
             if (rData[`r${item.row}`] === 1) {
                 result.push(renderColumn(item, i));

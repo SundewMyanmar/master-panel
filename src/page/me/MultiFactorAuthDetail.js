@@ -182,7 +182,7 @@ const MultiFactorAuthDetail = () => {
                 onClose={() => setShowOtp(false)}
                 onSubmit={handleOtpSubmit}
             />
-            <Paper className={classes.paper} elevation={6}>
+            <Paper className={classes.paper} elevation={3}>
                 <Avatar className={classes.avatar}>
                     <Icon>vpn_key</Icon>
                 </Avatar>

@@ -64,7 +64,7 @@ const ChipInput = (props: ChipInputProps) => {
     React.useEffect(() => {
         const inputData = FormatManager.defaultNull(value);
         if (inputData !== items) {
-            var splitData = inputData.split(',');
+            const splitData = inputData.split(',');
             if (splitData) {
                 setItems(splitData);
             }
@@ -119,7 +119,7 @@ const ChipInput = (props: ChipInputProps) => {
 
     const handlePaste = (evt) => {
         evt.preventDefault();
-        var pasteValue = evt.clipboardData.getData('text');
+        const pasteValue = evt.clipboardData.getData('text');
         if (currentInput.current && pasteValue !== currentInput.current.value) {
             currentInput.current.value = pasteValue;
             handleTextChange({ type: 'chip', name: id || name, target: currentInput.current });

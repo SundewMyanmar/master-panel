@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { Grid, Paper, Container, Avatar, Icon, Typography, makeStyles } from '@material-ui/core';
 import FileManager from '../../fragment/file/FileManager';
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
@@ -23,12 +23,12 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const File = props => {
+const File = (props) => {
     const classes = styles();
     return (
         <>
             <Container component="main" maxWidth="lg">
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon>collections_bookmark</Icon>
                     </Avatar>

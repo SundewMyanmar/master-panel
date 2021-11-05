@@ -155,7 +155,7 @@ const Profile = (props) => {
     return (
         <>
             <Container maxWidth="md">
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon>account_circle</Icon>
                     </Avatar>

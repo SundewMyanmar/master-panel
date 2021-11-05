@@ -1,7 +1,7 @@
 import React from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
-const ScrollBar = props => {
+const ScrollBar = (props) => {
     return (
         <Scrollbars {...props} autoHide universal={false} hideTracksWhenNotNeeded={true} autoHideTimeout={500} autoHideDuration={200}>
             {props.children}

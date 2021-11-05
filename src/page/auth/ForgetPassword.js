@@ -96,7 +96,7 @@ const ForgetPassword = () => {
         <>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <Paper className={classes.paper} elevation={6}>
+                <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>
                         <Icon>dialpad</Icon>
                     </Avatar>
