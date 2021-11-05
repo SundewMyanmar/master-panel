@@ -120,6 +120,7 @@ const ListInput = (props: SelectListProps) => {
 ListInput.defaultProps = {
     onLoadItem: (item) => item.toString(),
     hidePlaceHolder: false,
+    variant: 'outlined',
 };
 
 export default ListInput;

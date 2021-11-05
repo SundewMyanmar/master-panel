@@ -172,7 +172,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
 
     const renderFolders = () => {
         return (
-            <FormControl fullWidth className={classes.formControl}>
+            <FormControl fullWidth variant="standard" className={classes.formControl}>
                 <InputLabel id="file-folder-select-label">Folder</InputLabel>
                 <Select labelId="file-folder-select-label" id="file-folder-select" value={selectedFolder || ''} onChange={handleFolderChange}>
                     <MenuItem key={'default'} value={''}>
