@@ -41,12 +41,12 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-export type PdfReportViewerProps = {
-    title: String,
-    url: String,
-    scaleSize: Any,
-    onFilter: Any,
-};
+export interface PdfReportViewerProps {
+    title: String;
+    url: String;
+    scaleSize: Any;
+    onFilter: Any;
+}
 
 const PdfReportViewer = (props: PdfReportViewerProps) => {
     const { title, url, scaleSize, onFilter } = props;
