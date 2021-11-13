@@ -86,7 +86,7 @@ const ForgetPassword = () => {
         },
         {
             id: 'email',
-            label: 'E-mail',
+            label: 'Email',
             required: true,
             type: 'email',
         },
@@ -94,7 +94,7 @@ const ForgetPassword = () => {
 
     return (
         <>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <CssBaseline />
                 <Paper className={classes.paper} elevation={3}>
                     <Avatar className={classes.avatar}>

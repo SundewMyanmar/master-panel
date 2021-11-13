@@ -119,7 +119,7 @@ const FilePicker = (props: FilePickerProps) => {
                             </Typography>
                         </Grid>
                         <Grid container item lg={4} md={4} sm={8} xs={12} alignItems="center" justifyContent="center" alignContent="flex-start">
-                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
+                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search" />
                         </Grid>
                         <Grid container item lg={4} md={4} sm={4} xs={12} alignItems="center" justifyContent="flex-end">
                             <Tooltip title="Close Dialog">

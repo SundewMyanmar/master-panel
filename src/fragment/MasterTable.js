@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { STORAGE_KEYS } from '../config/Constant';
-import { Typography, Paper, makeStyles, Grid, Icon, Button, useTheme } from '@material-ui/core';
+import { Typography, Paper, makeStyles, Grid, Icon, Button, useTheme, Divider } from '@material-ui/core';
 import DataTable, { TableField } from './table';
 import { QuestionDialog } from './message';
 import { SearchInput } from './control';
@@ -18,11 +18,15 @@ const styles = makeStyles((theme) => ({
         flex: 1,
         // backgroundColor:theme.palette.primary.main,
         borderBottom: '1px solid' + theme.palette.divider,
-        padding: theme.spacing(1),
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
     },
     headerTitle: {
-        marginLeft: theme.spacing(2),
         color: theme.palette.text.primary,
+    },
+    searchBox: {
+        width: theme.spacing(32),
+        marginRight: theme.spacing(2),
     },
     newButton: {
         marginLeft: theme.spacing(1),
@@ -79,6 +83,7 @@ export interface MasterTableProps {
     hideActionMenu?: boolean;
     hideImportMenu?: boolean;
     hideCRUD?: boolean;
+    hideReload: boolean;
     showCreate?: boolean;
 }
 
@@ -126,6 +131,7 @@ const MasterTable = (props: MasterTableProps) => {
         hideActionMenu,
         hideImportMenu,
         hideCRUD,
+        hideReload,
         showCreate,
     } = props;
 
@@ -230,11 +236,11 @@ const MasterTable = (props: MasterTableProps) => {
 
             setInit(false);
             if (tableJson && tableJson.paging.data && tableJson.paging.data.length > 0) {
-                loadData(tableJson.paging.currentPage, tableJson.paging.pageSize, tableJson.paging.sort);
+                await loadData(tableJson.paging.currentPage, tableJson.paging.pageSize, tableJson.paging.sort);
                 setSelectedData(tableJson.selectedData);
                 setSearch(tableJson.search);
             } else {
-                loadData(0, paging.pageSize, paging.sort);
+                await loadData(paging.currentPage, paging.pageSize, paging.sort);
             }
         }
 
@@ -245,7 +251,8 @@ const MasterTable = (props: MasterTableProps) => {
     useEffect(() => {
         handleTableSession();
         if (!init) {
-            loadData(paging.currentPage, paging.pageSize, paging.sort);
+            //init current page to `0` when search
+            loadData(0, paging.pageSize, paging.sort);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -338,6 +345,13 @@ const MasterTable = (props: MasterTableProps) => {
         setRemoveData(null);
     };
 
+    const handleReload = () => {
+        if (onLoad) {
+            setSearch('');
+            loadData(0, paging.pageSize, paging.sort);
+        }
+    };
+
     const actions = [...moreActions, ...(hideCRUD ? [] : defaultActions)];
 
     const actionFields = {
@@ -359,15 +373,21 @@ const MasterTable = (props: MasterTableProps) => {
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Paper className={classes.root} elevation={3}>
                 <Grid container className={classes.header}>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} justifyContent="flex-start" alignContent="center" alignItems="center">
+                    <Grid container item lg={2} md={2} sm={3} xs={12} alignItems="center" alignContent="center" justifyContent="flex-start">
                         <Typography className={classes.headerTitle} variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container item lg={3} md={3} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
-                        {hideSearch || <SearchInput value={search} onSearch={(value) => setSearch(value)} placeholder="Search Files" />}
-                    </Grid>
-                    <Grid container item lg={5} md={5} sm={12} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
+                    <Grid container item lg={10} md={10} sm={9} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
+                        {hideSearch || (
+                            <SearchInput className={classes.searchBox} value={search} onSearch={(value) => setSearch(value)} placeholder="Search" />
+                        )}
+                        {hideReload || (
+                            <Button onClick={handleReload} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
+                                <Icon>cached</Icon>
+                                Reload
+                            </Button>
+                        )}
                         {hideDataActions || (
                             <>
                                 {hideActionMenu || (
@@ -422,6 +442,7 @@ MasterTable.defaultProps = {
     multi: true,
     hideSearch: false,
     hideCRUD: false,
+    hideReload: true,
     hideDataActions: false,
     hideActionMenu: false,
     hideImportMenu: false,

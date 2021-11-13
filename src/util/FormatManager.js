@@ -1,7 +1,24 @@
 import { DateTime } from 'luxon';
 import chroma from 'chroma-js';
+import print from 'print-js';
 
 export default class FormatManager {
+    static printPdf = (url, onLoadingStart, onLoadingEnd, onError) => {
+        print({
+            printable: url,
+            type: 'pdf',
+            onLoadingStart: () => {
+                if (onLoadingStart) onLoadingStart();
+            },
+            onLoadingEnd: () => {
+                if (onLoadingEnd) onLoadingEnd();
+            },
+            onError: (error) => {
+                if (onError) onError(error);
+            },
+        });
+    };
+
     static tryParseJson = (text) => {
         try {
             const jsonObj = JSON.parse(text);

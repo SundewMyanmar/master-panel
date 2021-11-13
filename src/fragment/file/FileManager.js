@@ -381,7 +381,7 @@ const FileManager = (props) => {
                 <Grid className={classes.content} container item lg={9} md={8} sm={12} xs={12} justifyContent="flex-start" alignContent="center">
                     <Grid container justifyContent="flex-start" alignContent="center" direction="row" item spacing={1}>
                         <Grid item lg={9} md={7} sm={6} xs={12}>
-                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search Files" />
+                            <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search" />
                         </Grid>
                         <Grid container item lg={1} md={2} sm={3} xs={12} justifyContent="center" alignContent="center">
                             <Button

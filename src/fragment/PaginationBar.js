@@ -121,7 +121,7 @@ const PaginationBar = (props: PaginationBarProps) => {
 };
 
 PaginationBar.defaultProps = {
-    rowsPerPage: [5, 10, 20, 50],
+    rowsPerPage: [5, 10, 20, 50, 100, 200],
     total: 0,
     pageSize: 5,
     currentPage: 1,
