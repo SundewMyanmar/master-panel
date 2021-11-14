@@ -105,7 +105,7 @@ const ForgetPassword = () => {
                     </Typography>
                     <MasterForm fields={forgetPasswordFields} onSubmit={handleSubmit}>
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                            Request OTP
+                            Submit
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>

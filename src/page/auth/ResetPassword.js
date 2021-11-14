@@ -119,7 +119,7 @@ const ResetPassword = () => {
 
     return (
         <>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <Box className={classes.container} boxShadow={2}>
                     <CssBaseline />
                     <div className={classes.paper}>

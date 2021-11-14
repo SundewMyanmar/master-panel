@@ -21,7 +21,7 @@ const styles = makeStyles((theme) => ({
         paddingLeft: theme.spacing(1),
     },
     glassBackground: {
-        background: '#6ca7b4c9',
+        background: '#556066bd',
     },
     menuIcon: {
         color: theme.palette.secondary.contrastText,

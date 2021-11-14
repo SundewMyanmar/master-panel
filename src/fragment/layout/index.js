@@ -65,45 +65,41 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
+    appBarShift: {
+        marginLeft: DRAWER_FULL_SIZE,
+        width: `calc(100% - ${DRAWER_FULL_SIZE}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
     menuButton: {
         marginRight: 36,
     },
     menuButtonHidden: {
         display: 'none',
     },
-    logo: {
-        borderRadius: 3,
-        // border: '1px solid ' + theme.palette.common.gray,
-        marginRight: theme.spacing(2),
-        backgroundColor: theme.palette.primary.contrastText,
-        padding: 2,
-    },
     title: {
         flexGrow: 1,
     },
-    drawer: {
-        width: DRAWER_FULL_SIZE,
-        flexShrink: 0,
+    drawerPaper: {
+        position: 'relative',
         whiteSpace: 'nowrap',
-        boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)',
-        borderRight: '1px solid ' + theme.palette.divider,
-    },
-    drawerOpen: {
         width: DRAWER_FULL_SIZE,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    drawerClose: {
+    drawerPaperClose: {
+        overflowX: 'hidden',
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        overflowX: 'hidden',
-        width: DRAWER_SMALL_SIZE,
+        width: theme.spacing(7),
         [theme.breakpoints.up('sm')]: {
-            width: DRAWER_SMALL_SIZE,
+            width: theme.spacing(9),
         },
     },
     appBarSpacer: theme.mixins.toolbar,
@@ -113,14 +109,23 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto',
     },
     container: {
-        padding: theme.spacing(1),
-        boxShadow: '4px 0px 5px ' + theme.palette.grey,
+        padding: theme.spacing(2),
     },
     paper: {
         padding: theme.spacing(2),
         display: 'flex',
         overflow: 'auto',
         flexDirection: 'column',
+    },
+    fixedHeight: {
+        height: 240,
+    },
+    logo: {
+        borderRadius: 3,
+        // border: '1px solid ' + theme.palette.common.gray,
+        marginRight: theme.spacing(2),
+        backgroundColor: theme.palette.primary.contrastText,
+        padding: 2,
     },
     copyRight: {
         marginBottom: theme.spacing(3),
@@ -264,7 +269,7 @@ const Layout = (props: LayoutProps) => {
         <div className={classes.root}>
             <IdleTimer ref={idleTimer} element={document} onIdle={handleLogout} debounce={1000} timeout={SESSION_TIMEOUT} />
             <CssBaseline />
-            <AppBar position="fixed" className={classes.appBar}>
+            <AppBar position="absolute" className={clsx(classes.appBar, !state.hideMenu && classes.appBarShift)} elevation={3}>
                 <Toolbar className={classes.toolbar}>
                     <img src={`/${'images/logo.png'}`} height={theme.spacing(5)} alt="SUNDEW MYANMAR" className={classes.logo} />
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
@@ -308,19 +313,12 @@ const Layout = (props: LayoutProps) => {
             </AppBar>
             <Drawer
                 variant="permanent"
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: !state.hideMenu,
-                    [classes.drawerClose]: state.hideMenu,
-                })}
                 classes={{
-                    paper: clsx({
-                        [classes.drawerOpen]: !state.hideMenu,
-                        [classes.drawerClose]: state.hideMenu,
-                    }),
+                    paper: clsx(classes.drawerPaper, state.hideMenu && classes.drawerPaperClose),
                 }}
-                style={state.hideMenu ? { width: DRAWER_SMALL_SIZE } : { width: DRAWER_FULL_SIZE }}
+                open={!state.hideMenu}
             >
-                <div className={classes.appBarSpacer} />
+                {state.hideMenu ? <div className={classes.appBarSpacer} /> : null}
                 <DrawerHeader
                     hideMenu={state.hideMenu}
                     image={userProfileImage}

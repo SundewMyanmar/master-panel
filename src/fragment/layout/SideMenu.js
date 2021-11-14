@@ -89,6 +89,7 @@ const ItemStyles = makeStyles((theme) => ({
     root: (props) => ({
         paddingLeft: props.hideMenu ? 15 : theme.spacing(2 * (props.parentCount + 1)),
         borderRight: !props.hideMenu && props.selected ? '4px solid ' + theme.palette.primary.light : null,
+        justifyContent: props.hideMenu ? 'center' : 'flex-start',
     }),
     menuItem: (props) => ({
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
@@ -99,6 +100,7 @@ const ItemStyles = makeStyles((theme) => ({
     }),
     menuIcon: (props) => ({
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
+        fontSize: props.hideMenu ? '28px' : '24px',
     }),
     menuText: (props) => ({
         color: props.selected ? theme.palette.primary.contrastText : theme.palette.text.primary,
@@ -187,9 +189,7 @@ const DefaultMenuItem = (props: MenuItemProps) => {
             >
                 <Tooltip title={label} aria-label={label}>
                     <ListItemIcon className={classes.menuItem}>
-                        <Icon className={classes.menuIcon} fontSize={state.hideMenu ? 'large' : 'medium'}>
-                            {icon}
-                        </Icon>
+                        <Icon className={classes.menuIcon}>{icon}</Icon>
                     </ListItemIcon>
                 </Tooltip>
                 {state.hideMenu ? null : <ListItemText inset={false} primary={label} className={classes.menuText} />}
