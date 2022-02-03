@@ -10,7 +10,7 @@ class SwaggerApi extends ApiManager {
         return response;
     }
 
-    async getOpenApiV2(url = 'v2/api-docs?group=All') {
+    async getOpenApiV2(url = 'v2/api-docs?group=Permit') {
         const data = await this.get(url, this.getHeaders(false));
         //Clean and modified response
         if (data) {
