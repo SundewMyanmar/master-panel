@@ -90,7 +90,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
     }, [value]);
 
     const renderDateControl = () => {
-        const placeholder = hidePlaceHolder ? '' : 'Enter ' + FormatManager.camelToReadable(id || name);
+        const placeholder = hidePlaceHolder ? '' : 'Enter ' + label || FormatManager.camelToReadable(id || name);
         if (type === 'time') {
             return (
                 <TimePicker

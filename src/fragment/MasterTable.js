@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { STORAGE_KEYS } from '../config/Constant';
-import { Typography, Paper, makeStyles, Grid, Icon, Button, useTheme, Divider } from '@material-ui/core';
+import { Typography, Paper, makeStyles, Grid, Icon, ButtonGroup, Button, Tooltip, useTheme, Divider } from '@material-ui/core';
 import DataTable, { TableField } from './table';
 import { QuestionDialog } from './message';
 import { SearchInput } from './control';
 import ActionMenu from './table/ActionMenu';
 import DataAction from './table/DataAction';
 import FormatManager from '../util/FormatManager';
-import ImportMenu from './table/ImportMenu';
+import ImportDialog from './table/ImportDialog';
 import { Field } from './MasterForm';
 import { text, error } from '../config/Theme';
 import { useDispatch } from 'react-redux';
@@ -23,12 +23,13 @@ const styles = makeStyles((theme) => ({
     },
     headerTitle: {
         color: theme.palette.text.primary,
+        textAlign: 'center',
     },
     searchBox: {
         width: theme.spacing(32),
-        marginRight: theme.spacing(2),
+        marginRight: theme.spacing(1),
     },
-    newButton: {
+    toolbar: {
         marginLeft: theme.spacing(1),
     },
     deleteButton: {
@@ -140,6 +141,7 @@ const MasterTable = (props: MasterTableProps) => {
     const [search, setSearch] = useState('');
     const [selectedData, setSelectedData] = useState([]);
     const [removeData, setRemoveData] = useState(null);
+    const [showImport, setShowImport] = useState(false);
 
     if (!hideDataActions && importFields.findIndex((f) => f === 'version') < 0) {
         importFields.push('version');
@@ -278,18 +280,6 @@ const MasterTable = (props: MasterTableProps) => {
         loadData(pagination.page, pagination.pageSize, pagination.sort);
     };
 
-    const handleImport = (data) => {
-        dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
-        if (onImport) {
-            onImport(data)
-                .then(() => {
-                    loadData(0, paging.pageSize, paging.sort);
-                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
-                })
-                .catch(onError);
-        }
-    };
-
     const handleSelectionChange = (result) => {
         setSelectedData(result);
     };
@@ -352,6 +342,21 @@ const MasterTable = (props: MasterTableProps) => {
         }
     };
 
+    const handleImport = (data) => {
+        if (data && data.length > 0) {
+            dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
+            if (onImport) {
+                onImport(data)
+                    .then(() => {
+                        loadData(0, paging.pageSize, paging.sort);
+                        dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+                    })
+                    .catch(onError);
+            }
+        }
+        setShowImport(false);
+    };
+
     const actions = [...moreActions, ...(hideCRUD ? [] : defaultActions)];
 
     const actionFields = {
@@ -370,24 +375,28 @@ const MasterTable = (props: MasterTableProps) => {
 
     return (
         <>
+            {hideImportMenu || (
+                <ImportDialog
+                    show={showImport}
+                    title={title ? title : 'Import Data'}
+                    fields={importFields.map((field) => ({ name: field, label: field }))}
+                    onClose={handleImport}
+                />
+            )}
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Paper className={classes.root} elevation={3}>
                 <Grid container className={classes.header}>
-                    <Grid container item lg={2} md={2} sm={3} xs={12} alignItems="center" alignContent="center" justifyContent="flex-start">
+                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="flex-start">
+                        {hideSearch || (
+                            <SearchInput className={classes.searchBox} value={search} onSearch={(value) => setSearch(value)} placeholder="Search" />
+                        )}
+                    </Grid>
+                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
                         <Typography className={classes.headerTitle} variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container item lg={10} md={10} sm={9} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
-                        {hideSearch || (
-                            <SearchInput className={classes.searchBox} value={search} onSearch={(value) => setSearch(value)} placeholder="Search" />
-                        )}
-                        {hideReload || (
-                            <Button onClick={handleReload} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
-                                <Icon>cached</Icon>
-                                Reload
-                            </Button>
-                        )}
+                    <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
                         {hideDataActions || (
                             <>
                                 {hideActionMenu || (
@@ -397,15 +406,37 @@ const MasterTable = (props: MasterTableProps) => {
                                         label={selectedData && selectedData.length > 0 ? selectedData.length + ' Items.' : null}
                                     />
                                 )}
-                                {hideImportMenu || <ImportMenu fields={importFields} onImportItems={handleImport} className={classes.newButton} />}
                             </>
                         )}
-                        {showCreate && (
-                            <Button onClick={onAddNew} variant="contained" color="primary" aria-label="Add New" className={classes.newButton}>
-                                <Icon>add</Icon>
-                                New
-                            </Button>
-                        )}
+                        <ButtonGroup disableElevation className={classes.toolbar}>
+                            {hideImportMenu || (
+                                <Tooltip title="Import">
+                                    <Button
+                                        type="button"
+                                        onClick={() => setShowImport(true)}
+                                        color="primary"
+                                        variant="contained"
+                                        aria-label="Import Data"
+                                    >
+                                        <Icon className={classes.icon}>cloud_upload</Icon>
+                                    </Button>
+                                </Tooltip>
+                            )}
+                            {hideReload || (
+                                <Tooltip title="Reload">
+                                    <Button onClick={handleReload} variant="contained" color="primary" aria-label="Add New">
+                                        <Icon>cached</Icon>
+                                    </Button>
+                                </Tooltip>
+                            )}
+                            {showCreate && (
+                                <Tooltip title="Create New">
+                                    <Button onClick={onAddNew} variant="contained" color="primary" aria-label="Add New">
+                                        <Icon>add</Icon>
+                                    </Button>
+                                </Tooltip>
+                            )}
+                        </ButtonGroup>
                     </Grid>
                 </Grid>
                 <Grid container item lg={12}>
@@ -442,7 +473,7 @@ MasterTable.defaultProps = {
     multi: true,
     hideSearch: false,
     hideCRUD: false,
-    hideReload: true,
+    hideReload: false,
     hideDataActions: false,
     hideActionMenu: false,
     hideImportMenu: false,

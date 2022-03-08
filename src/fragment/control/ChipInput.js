@@ -171,7 +171,7 @@ const ChipInput = (props: ChipInputProps) => {
         );
     };
 
-    const inputPlaceholder = 'Enter ' + FormatManager.camelToReadable(id || name);
+    const inputPlaceholder = 'Enter ' + label || FormatManager.camelToReadable(id || name);
 
     let variantProps = { variant: variant, elevation: 0 };
     if (variant !== 'standard') {

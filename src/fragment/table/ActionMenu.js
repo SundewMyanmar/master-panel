@@ -37,7 +37,13 @@ const ActionMenu = (props: ActionMenuProps) => {
 
     return (
         <>
-            <Button onClick={(event) => setAnchorEl(event.currentTarget)} variant="contained" aria-label="Batch Actions" {...buttonProps}>
+            <Button
+                onClick={(event) => setAnchorEl(event.currentTarget)}
+                variant="contained"
+                color="secondary"
+                aria-label="Batch Actions"
+                {...buttonProps}
+            >
                 {label ? label : 'Action'}
                 <Icon>arrow_drop_down</Icon>
             </Button>

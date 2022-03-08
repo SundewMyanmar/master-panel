@@ -74,7 +74,7 @@ const TextInput = (props: TextInputProps) => {
     };
 
     let placeholderText = hidePlaceHolder ? '' : placeholder;
-    if (!placeholderText) placeholderText = hidePlaceHolder ? '' : 'Enter ' + FormatManager.camelToReadable(props.label || name || id);
+    if (!placeholderText) placeholderText = hidePlaceHolder ? '' : 'Enter ' + props.label || FormatManager.camelToReadable(name || id);
 
     let variantProps = { variant: variant };
     if (variant !== 'standard') {
