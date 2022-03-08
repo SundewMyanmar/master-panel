@@ -196,7 +196,7 @@ const ContactForm = (props: ContactFormProps) => {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item lg={8} md={8} sm={6} xs={12}>
+                        <Grid item lg={7} md={7} sm={6} xs={12}>
                             <TextInput
                                 id="contactValue"
                                 icon={icon || 'phone'}
@@ -208,7 +208,7 @@ const ContactForm = (props: ContactFormProps) => {
                                 required
                             />
                         </Grid>
-                        <Grid container item direction="row" lg={4} md={4} sm={6} xs={12} justifyContent="flex-end" alignItems="center">
+                        <Grid container item direction="row" lg={5} md={5} sm={12} xs={12} justifyContent="flex-end" alignItems="center">
                             <Button type="submit" size="large" variant="contained" color="default" onClick={() => setContact({})}>
                                 <Icon>add</Icon> New
                             </Button>

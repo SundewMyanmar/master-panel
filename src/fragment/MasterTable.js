@@ -386,17 +386,17 @@ const MasterTable = (props: MasterTableProps) => {
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
             <Paper className={classes.root} elevation={3}>
                 <Grid container className={classes.header}>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="flex-start">
+                    <Grid container item lg={5} md={5} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="flex-start">
                         {hideSearch || (
                             <SearchInput className={classes.searchBox} value={search} onSearch={(value) => setSearch(value)} placeholder="Search" />
                         )}
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
+                    <Grid container item lg={2} md={2} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="center">
                         <Typography className={classes.headerTitle} variant="h6" component="h1" noWrap>
                             {title}
                         </Typography>
                     </Grid>
-                    <Grid container item lg={4} md={4} sm={12} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
+                    <Grid container item lg={5} md={5} sm={12} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
                         {hideDataActions || (
                             <>
                                 {hideActionMenu || (
