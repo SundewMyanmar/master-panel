@@ -179,7 +179,7 @@ const UserDetail = (props) => {
                         <Grid item>
                             <EmailInput
                                 id="email"
-                                icon="face"
+                                icon="mail"
                                 label="Email"
                                 value={form?.email}
                                 onChange={(event) => setForm({ ...form, email: event.target.value })}
