@@ -99,7 +99,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     className={classes.picker}
                     variant="inline"
                     inputVariant="outlined"
-                    label={label || 'Date Picker'}
+                    label={(label || 'Date Picker') + (required ? ' *' : '')}
                     placeholder={placeholder}
                     format="hh : mm a"
                     value={selectedDate}
@@ -127,7 +127,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     className={classes.picker}
                     variant="inline"
                     inputVariant="outlined"
-                    label={label || 'Date Picker'}
+                    label={(label || 'Date Picker') + (required ? ' *' : '')}
                     placeholder={placeholder}
                     format="dd - MM - yyyy hh : mm a"
                     value={selectedDate}
@@ -155,7 +155,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     className={classes.picker}
                     variant="inline"
                     inputVariant="outlined"
-                    label={label || 'Date Picker'}
+                    label={(label || 'Date Picker') + (required ? ' *' : '')}
                     placeholder={placeholder}
                     format="dd - MMM - yyyy"
                     value={selectedDate}
