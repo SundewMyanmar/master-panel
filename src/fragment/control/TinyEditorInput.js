@@ -28,7 +28,7 @@ const TinyEditorInput = (props: TinyEditorInputProps) => {
 
     React.useEffect(() => {
         const newValue = FormatManager.defaultNull(value) || '';
-        if (newValue !== content) {
+        if (newValue !== editorContent) {
             handleEditorChange(newValue, null);
         }
 

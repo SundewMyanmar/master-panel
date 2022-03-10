@@ -18,6 +18,7 @@ import {
     MenuItem,
     Checkbox,
     ListItemText,
+    Tooltip,
 } from '@material-ui/core';
 import { SearchInput } from '../control';
 import PaginationBar from '../PaginationBar';
@@ -384,17 +385,19 @@ const FileManager = (props) => {
                             <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search" />
                         </Grid>
                         <Grid container item lg={1} md={2} sm={3} xs={12} justifyContent="center" alignContent="center">
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                aria-label="more"
-                                aria-controls="long-menu"
-                                aria-haspopup="true"
-                                onClick={handleClick}
-                            >
-                                <Icon>tune</Icon>
-                            </Button>
+                            <Tooltip title="permission">
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    aria-label="more"
+                                    aria-controls="long-menu"
+                                    aria-haspopup="true"
+                                    onClick={handleClick}
+                                >
+                                    <Icon>tune</Icon>
+                                </Button>
+                            </Tooltip>
                             <Menu
                                 id="long-menu"
                                 anchorEl={anchorEl}
@@ -429,9 +432,11 @@ const FileManager = (props) => {
                             </Menu>
                         </Grid>
                         <Grid container item lg={2} md={3} sm={3} xs={12} justifyContent="flex-end" alignContent="center">
-                            <Button fullWidth onClick={() => setShowUploadDialog(true)} variant="contained" color="primary" aria-label="Upload">
-                                <Icon className={classes.icon}>cloud_upload</Icon> Upload
-                            </Button>
+                            <Tooltip title="Upload">
+                                <Button fullWidth onClick={() => setShowUploadDialog(true)} variant="contained" color="primary" aria-label="Upload">
+                                    <Icon className={classes.icon}>cloud_upload</Icon>
+                                </Button>
+                            </Tooltip>
                         </Grid>
                     </Grid>
                     <Grid container item>

@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
         borderBottom: `1px solid ${theme.palette.divider}`,
     },
     tabTitle: {
-        minWidth: 150,
-        minHeight: 60,
+        minWidth: 120,
+        minHeight: 48,
         flex: 'none',
         textTransform: 'none',
         color: theme.palette.text.primary,
@@ -88,8 +88,8 @@ const TabControl = (props: TabControlProps) => {
                 value={value}
                 onChange={handleChange}
                 aria-label="sundew-tab-control"
-                variant={variant || 'standard'}
-                scrollButtons={scrollButtons || 'on'}
+                variant={variant || 'scrollable'}
+                scrollButtons={scrollButtons || 'auto'}
                 indicatorColor={indicatorColor || 'secondary'}
                 // textColor={textColor || 'primary'}
                 TabIndicatorProps={{
