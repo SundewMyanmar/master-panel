@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import ContactForm from '../../fragment/contact/ContactForm';
+import ContactForm from '../../form/ContactForm';
 import { EmailInput, ImageInput, TabControl, TextInput } from '../../fragment/control';
 
 const styles = makeStyles((theme) => ({

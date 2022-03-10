@@ -43,7 +43,7 @@ if (!isSafari && FCM_CONFIG) {
 const DRAWER_FULL_SIZE: number = window.innerWidth > 1400 ? 300 : 260;
 const DRAWER_SMALL_SIZE: number = 64;
 
-const MIN_WIDTH_TO_HIDE = 1060;
+const MIN_WIDTH_TO_HIDE = 1180;
 
 const useStyles = makeStyles((theme) => ({
     root: {

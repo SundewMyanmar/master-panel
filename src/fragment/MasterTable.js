@@ -375,7 +375,7 @@ const MasterTable = (props: MasterTableProps) => {
 
     return (
         <>
-            {hideImportMenu || (
+            {hideImportMenu ? null : (
                 <ImportDialog
                     show={showImport}
                     title={title ? title : 'Import Data'}
@@ -387,7 +387,7 @@ const MasterTable = (props: MasterTableProps) => {
             <Paper className={classes.root} elevation={3}>
                 <Grid container className={classes.header}>
                     <Grid container item lg={5} md={5} sm={6} xs={12} alignItems="center" alignContent="center" justifyContent="flex-start">
-                        {hideSearch || (
+                        {hideSearch ? null : (
                             <SearchInput className={classes.searchBox} value={search} onSearch={(value) => setSearch(value)} placeholder="Search" />
                         )}
                     </Grid>
@@ -397,9 +397,9 @@ const MasterTable = (props: MasterTableProps) => {
                         </Typography>
                     </Grid>
                     <Grid container item lg={5} md={5} sm={12} xs={12} alignItems="center" alignContent="center" justifyContent="flex-end">
-                        {hideDataActions || (
+                        {hideDataActions ? null : (
                             <>
-                                {hideActionMenu || (
+                                {hideActionMenu ? null : (
                                     <ActionMenu
                                         onMenuItemClick={handleActionMenu}
                                         disabled={!selectedData || selectedData.length < 1}
@@ -409,7 +409,7 @@ const MasterTable = (props: MasterTableProps) => {
                             </>
                         )}
                         <ButtonGroup disableElevation className={classes.toolbar}>
-                            {hideImportMenu || (
+                            {hideImportMenu ? null : (
                                 <Tooltip title="Import">
                                     <Button
                                         type="button"
@@ -422,7 +422,7 @@ const MasterTable = (props: MasterTableProps) => {
                                     </Button>
                                 </Tooltip>
                             )}
-                            {hideReload || (
+                            {hideReload ? null : (
                                 <Tooltip title="Reload">
                                     <Button onClick={handleReload} variant="contained" color="primary" aria-label="Add New">
                                         <Icon>cached</Icon>

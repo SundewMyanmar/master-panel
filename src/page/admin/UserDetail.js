@@ -14,7 +14,7 @@ import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TabControl, TextInput } from '../../fragment/control';
 import DataTable from '../../fragment/table';
-import ContactForm from '../../fragment/contact/ContactForm';
+import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
 
 const styles = makeStyles((theme) => ({
@@ -143,7 +143,7 @@ const UserDetail = (props) => {
     const renderInfoForm = () => {
         return (
             <Grid container direction="column">
-                <Grid direction="row" spacing={10} container>
+                <Grid direction="row" spacing={3} container>
                     <Grid lg={3} md={4} sm={6} xs={12} item>
                         <Grid container justifyContent="center">
                             <ImageInput

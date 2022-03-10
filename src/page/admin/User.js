@@ -66,7 +66,7 @@ export const USER_TABLE_FIELDS = [
         align: 'center',
         label: 'Status',
         type: 'bool',
-        sortable: 'true',
+        sortable: true,
         width: 50,
         onLoad: (item) => item.status.toLowerCase() === 'active',
     },

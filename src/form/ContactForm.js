@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import ListInput from '../control/ListInput';
-import TextInput from '../control/TextInput';
+import ListInput from '../fragment/control/ListInput';
+import TextInput from '../fragment/control/TextInput';
 import { Container, Paper, Avatar, Icon, Typography, Grid, Button, makeStyles, useTheme, ThemeProvider, IconButton } from '@material-ui/core';
-import DataTable from '../table';
-import { ColorInput, IconInput } from '../control';
+import DataTable from '../fragment/table';
+import { ColorInput, IconInput } from '../fragment/control';
 import { useDispatch } from 'react-redux';
-import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
-import { validateForm } from '../../util/ValidationManager';
+import { ALERT_REDUX_ACTIONS } from '../util/AlertManager';
+import { validateForm } from '../util/ValidationManager';
 import type { GridProps } from '@material-ui/core';
 
 export const CONTACT_TABLE_FIELDS = [
@@ -196,7 +196,7 @@ const ContactForm = (props: ContactFormProps) => {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item lg={7} md={7} sm={6} xs={12}>
+                        <Grid item lg={7} md={7} sm={12} xs={12}>
                             <TextInput
                                 id="contactValue"
                                 icon={icon || 'phone'}
