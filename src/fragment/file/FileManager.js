@@ -33,14 +33,6 @@ import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-        padding: theme.spacing(4),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
     avatar: {
         padding: theme.spacing(3),
         margin: theme.spacing(1),

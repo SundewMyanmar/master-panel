@@ -19,9 +19,9 @@ import { validateForm } from '../../util/ValidationManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
-        marginBottom: theme.spacing(4),
-        padding: theme.spacing(4),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -275,8 +275,7 @@ const UserDetail = (props) => {
                     <Typography component="h1" variant="h5">
                         User Setup
                     </Typography>
-                    <MasterForm>
-                        <TabControl tabs={tabFields} />
+                    <MasterForm type="tab" fields={tabFields}>
                         <Grid justifyContent="flex-end" container>
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
                                 <Icon>arrow_back</Icon> Back to List
