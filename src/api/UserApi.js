@@ -1,6 +1,6 @@
 import ApiManager from '../util/ApiManager';
 import faker from 'faker';
-import { CONTACT_TYPES } from '../fragment/contact/ContactForm';
+import { CONTACT_TYPES } from '../form/ContactForm';
 
 class UserApi extends ApiManager {
     constructor() {

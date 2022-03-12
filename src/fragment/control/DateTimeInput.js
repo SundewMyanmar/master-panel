@@ -1,7 +1,7 @@
 import * as React from 'react';
 import LuxonUtils from '@date-io/luxon';
 import { DateTimePicker, MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
-import { InputAdornment, Icon, makeStyles, Grid } from '@material-ui/core';
+import { InputAdornment, Icon, makeStyles, Grid, useTheme } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 import type { DateTimePickerProps } from '@material-ui/pickers';
 
@@ -61,6 +61,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
     const [error, setError] = React.useState('');
 
     const classes = styles();
+    const theme = useTheme();
     const handleDateChange = (date) => {
         setSelectedDate(date);
         let event = {
@@ -162,7 +163,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     format="dd - MMM - yyyy"
                     value={selectedDate}
                     disabled={disabledLoad}
-                    style={{ color: 'red' }}
+                    style={{ color: theme.palette.error.main }}
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
                     // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
