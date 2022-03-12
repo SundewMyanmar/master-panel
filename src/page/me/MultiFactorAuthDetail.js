@@ -237,7 +237,7 @@ const MultiFactorAuthDetail = () => {
                     </RadioGroup>
                     <Grid className={classes.actions} container justifyContent="flex-end">
                         <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                            <Icon>arrow_back</Icon> Back to List
+                            <Icon>arrow_back</Icon> Go back
                         </Button>
                         <Button onClick={handleSetup} type="button" variant="contained" color="primary" className={classes.submit}>
                             <Icon>save</Icon> Setup

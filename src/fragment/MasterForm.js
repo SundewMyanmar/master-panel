@@ -192,7 +192,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
             return field;
         });
 
-        return <TabControl variant={variant || 'fullWidth'} tabs={inputFields}></TabControl>;
+        return <TabControl tabs={inputFields}></TabControl>;
     };
 
     const renderForm = (inputFields) => {

@@ -25,7 +25,7 @@ import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import ContactForm from '../../form/ContactForm';
-import { EmailInput, ImageInput, TabControl, TextInput } from '../../fragment/control';
+import { EmailInput, ImageInput, TextInput } from '../../fragment/control';
 
 const styles = makeStyles((theme) => ({
     root: {

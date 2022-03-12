@@ -85,7 +85,9 @@ const DateTimeInput = (props: DateTimeInputProps) => {
     };
 
     React.useEffect(() => {
-        if (value) setSelectedDate(new Date(value));
+        if (value && selectedDate !== value) {
+            setSelectedDate(new Date(value));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 

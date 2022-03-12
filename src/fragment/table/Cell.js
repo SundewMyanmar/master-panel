@@ -1,9 +1,10 @@
 import React from 'react';
-import { TableCell, Icon, useTheme } from '@material-ui/core';
+import { TableCell, Icon, useTheme, ThemeProvider } from '@material-ui/core';
 import { TableField } from '.';
 import FileApi from '../../api/FileApi';
 import LangManager from '../../util/LangManager';
 import type { TableCellProps } from '@material-ui/core';
+import { ErrorTheme, InfoTheme, SuccessTheme } from '../../config/Theme';
 
 export interface CellProps extends TableCellProps {
     type: 'text' | 'image' | 'icon' | 'color' | 'bool' | 'raw';
@@ -72,7 +73,11 @@ export const BooleanCell = (field, data) => {
         checked = onLoad(data);
     }
 
-    return <Icon color={checked ? 'primary' : 'error'}>{checked ? 'check' : 'close'}</Icon>;
+    return (
+        <ThemeProvider theme={checked ? SuccessTheme : ErrorTheme}>
+            <Icon color="primary">{checked ? 'check' : 'close'}</Icon>
+        </ThemeProvider>
+    );
 };
 
 const Cell = (props: CellProps) => {

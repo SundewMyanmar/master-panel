@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
+import { Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText, useTheme } from '@material-ui/core';
 import { TableField } from '../table';
 import TablePicker from './TablePicker';
 import FormatManager from '../../util/FormatManager';
@@ -94,6 +94,7 @@ const ObjectInput = (props: ObjectInputProps) => {
     const [invalid, setInvalid] = React.useState(false);
     const [selectedData, setSelectedData] = React.useState(FormatManager.defaultNull(multi ? values : value));
     const classes = styles({ invalid });
+    const theme = useTheme();
     const currentInput = inputRef || React.createRef();
 
     //Set value if props.value changed.
@@ -223,7 +224,6 @@ const ObjectInput = (props: ObjectInputProps) => {
     if (!visible) {
         visibility = { display: 'none' };
     }
-
     return (
         <>
             <TablePicker
@@ -244,7 +244,11 @@ const ObjectInput = (props: ObjectInputProps) => {
                 <Paper {...variantProps} classes={{ root: classes.content }}>
                     <Grid container>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            {icon ? <Icon className={classes.icon}>{icon}</Icon> : null}
+                            {icon ? (
+                                <Icon color={theme.palette.type === 'dark' ? 'default' : 'primary'} className={classes.icon}>
+                                    {icon}
+                                </Icon>
+                            ) : null}
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="hidden"
@@ -283,6 +287,7 @@ ObjectInput.defaultProps = {
         console.warn('Undefined OnLoadItem => ', item);
         return item.id;
     },
+    variant: 'outlined',
     disableRemove: false,
     disabledLoad: false,
     visible: true,

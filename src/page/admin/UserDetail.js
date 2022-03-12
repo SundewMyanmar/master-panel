@@ -12,7 +12,7 @@ import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TabControl, TextInput } from '../../fragment/control';
+import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
 import DataTable from '../../fragment/table';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
@@ -278,7 +278,7 @@ const UserDetail = (props) => {
                     <MasterForm type="tab" fields={tabFields}>
                         <Grid justifyContent="flex-end" container>
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                                <Icon>arrow_back</Icon> Back to List
+                                <Icon>arrow_back</Icon> Go back
                             </Button>
                             <Button type="button" variant="contained" color="primary" onClick={() => handleSubmit()} className={classes.submit}>
                                 <Icon color="action">save</Icon> Save
