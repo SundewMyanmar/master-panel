@@ -21,6 +21,7 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { SearchInput } from '../control';
+import ListInput from '../control/ListInput';
 import PaginationBar from '../PaginationBar';
 import FolderApi from '../../api/FolderApi';
 import FileApi from '../../api/FileApi';
@@ -32,6 +33,7 @@ import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
+const GUILD_LIST=['USER'];
 const styles = makeStyles((theme) => ({
     avatar: {
         padding: theme.spacing(3),
@@ -108,6 +110,7 @@ const FileManager = (props) => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const [fileGuild,setFileGuild]=React.useState('');
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -120,8 +123,7 @@ const FileManager = (props) => {
     const loadFiles = async (folder, currentPage, pageSize, sort) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            console.log('guild',guild);
-            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden,guild);
+            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden,fileGuild);
             const { data, ...paging } = result;
             setPaging(paging);
             setFiles(data);
@@ -134,7 +136,7 @@ const FileManager = (props) => {
     const loadFolders = async () => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            const result = await FolderApi.getTree('',guild);
+            const result = await FolderApi.getTree('',fileGuild);
             let resultData = [];
             if (result && result.data) {
                 resultData = modifyFolders(result.data);
@@ -174,7 +176,12 @@ const FileManager = (props) => {
         loadFiles(folder.id, 0, paging.pageSize, paging.sort);
         loadFolders();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
+    }, [search,fileGuild]);
+
+    React.useEffect(() => {
+        setFileGuild(guild);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [guild]);
 
     const handleFolderSubmit = (form) => {
         console.log('submit folder 1', form);
@@ -189,7 +196,7 @@ const FileManager = (props) => {
             let data = {
                 ...folder,
                 name: form.name || folder.name,
-                guild:guild,
+                guild:fileGuild,
                 color: form.color || folder.color,
                 icon: form.icon || folder.icon,
                 priority: form.priority || folder.priority,
@@ -211,7 +218,7 @@ const FileManager = (props) => {
             let data = {
                 ...folder,
                 name: form.name || 'New Folder',
-                guild:guild,
+                guild:fileGuild,
                 color: form.color || '#000',
                 icon: form.icon || 'folder',
                 priority: form.priority || '0',
@@ -296,7 +303,7 @@ const FileManager = (props) => {
             }
 
             dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
-            FileApi.upload(result, isPublic, isHidden, folderId, guild)
+            FileApi.upload(result, isPublic, isHidden, folderId, fileGuild)
                 .then((response) => {
                     console.log('upload', response);
                     loadFiles(folder.id, 0, paging.pageSize, paging.sort);
@@ -364,20 +371,33 @@ const FileManager = (props) => {
             ) : null}
 
             <Grid className={classes.innerBox} container>
-                <Grid container item lg={3} md={4} sm={12} xs={12} className={classes.treeBox}>
-                    <TreeMenu
-                        allowCreate={true}
-                        onCreate={handleTreeCreate}
-                        onRemove={handleFolderRemove}
-                        menus={folders}
-                        showRoot={showRoot}
-                        onClickItem={handleFolderClick}
-                    />
+                <Grid container item lg={3} md={4} sm={12} xs={12} >
+                    {guild ? <></> : 
+                        <ListInput
+                            label="Group"
+                            id="Group"
+                            data={GUILD_LIST}
+                            onChange={(event) => {
+                                setFileGuild(event.target.value);
+                            }}
+                        />
+                    }
+                    <div className={classes.treeBox}>
+                        <TreeMenu
+                            allowCreate={true}
+                            onCreate={handleTreeCreate}
+                            onRemove={handleFolderRemove}
+                            menus={folders}
+                            showRoot={showRoot}
+                            onClickItem={handleFolderClick}
+                        />
+                    </div>
                 </Grid>
                 <Grid className={classes.content} container item lg={9} md={8} sm={12} xs={12} justifyContent="flex-start" alignContent="flex-start">
-                    <Grid container justifyContent="flex-start" alignContent="center" direction="row" item spacing={3}>
+                    <Grid style={{marginTop:guild?0:16}} container justifyContent="flex-start" alignContent="center" direction="row" item spacing={1}>
                         <Grid item lg={9} md={7} sm={6} xs={12}>
                             <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search" />
+                            
                         </Grid>
                         <Grid container item lg={1} md={2} sm={3} xs={12} justifyContent="center" alignContent="center">
                             <Tooltip title="permission">
