@@ -1,9 +1,11 @@
+import { error } from './Theme';
+
 export const APP_NAME = 'master-panel';
 export const APP_VERSION = '1.7';
 
 const URLS = {
-    development: 'http://localhost:8080/',
-    production: 'https://api.linnmyanmar.com.mm/dev/',
+    development: 'https://api.threeinlife.com/master-api/',
+    production: 'https://api.threeinlife.com/master-api/',
 };
 
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
@@ -88,7 +90,7 @@ export const BATCH_ACTION_MENU = [
         id: 'remove',
         label: 'Remove All',
         icon: 'delete',
-        color: 'red',
+        color: error.main,
     },
 ];
 

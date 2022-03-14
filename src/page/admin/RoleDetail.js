@@ -12,9 +12,9 @@ import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
-        marginBottom: theme.spacing(4),
-        padding: theme.spacing(4),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -121,7 +121,7 @@ const RoleDetail = () => {
                 <MasterForm fields={fields} onSubmit={handleSubmit}>
                     <Grid container justifyContent="flex-end">
                         <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                            <Icon>arrow_back</Icon> Back to List
+                            <Icon>arrow_back</Icon> Go back
                         </Button>
                         <ThemeProvider theme={InfoTheme}>
                             <Button type="button" variant="contained" color="primary" className={classes.submit} href={'/permission/' + id}>

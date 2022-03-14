@@ -28,11 +28,10 @@ export interface Field extends TextInputProps {
 export interface MasterFormProps extends FormHTMLAttributes {
     fields: Array<Field>;
     type: 'form' | 'tab';
-    initialData: object;
     onWillSubmit?: (form: object) => boolean;
     onSubmit?: (event: React.SyntheticEvent<HTMLFormElement>, form: object) => void;
-    onChange: () => void;
-    onKeyDown: () => void;
+    onChange: (event: React.SyntheticEvent<HTMLFormElement>, index: number) => void;
+    onKeyDown: (event: object) => void;
 }
 
 const styles = makeStyles((theme) => ({
@@ -63,12 +62,7 @@ export const PROCESSABLE_FIELDS = [
 const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
     const [form, setForm] = useState({});
     const classes = styles();
-    const { initialData, type, variant, spacing, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...formProps } = props;
-
-    React.useEffect(() => {
-        setForm({ ...form, ...initialData });
-        // eslint-disable-next-line
-    }, [initialData]);
+    const { type, variant, spacing, direction, onWillSubmit, onSubmit, onChange, onKeyDown, children, fields, ...formProps } = props;
 
     //Research Code, no use
     const findInputValues = (node) => {
@@ -138,10 +132,10 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
     };
 
-    const renderControl = (type, inputProps) => {
-        inputProps = { ...inputProps, variant: 'outlined' };
+    const renderControl = (field, inputProps, index) => {
+        inputProps = { ...inputProps };
 
-        switch (type) {
+        switch (field.type) {
             case 'email':
                 return <EmailInput {...inputProps} />;
             case 'password':
@@ -155,6 +149,9 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
             case 'time':
                 return <DateTimeInput type="time" {...inputProps} />;
             case 'checkbox':
+                if (inputProps.checked == null) {
+                    inputProps.checked = false;
+                }
                 return <CheckboxInput {...inputProps} />;
             case 'image':
                 return <ImageInput {...inputProps} />;
@@ -189,16 +186,16 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
 
         inputFields = inputFields.map((field) => {
             if (field.fields) {
-                field.content = renderGrid(field.fields);
+                field.content = renderForm(field.fields);
             }
 
             return field;
         });
 
-        return <TabControl centered variant={variant || 'fullWidth'} tabs={inputFields}></TabControl>;
+        return <TabControl tabs={inputFields}></TabControl>;
     };
 
-    const renderGrid = (inputFields) => {
+    const renderForm = (inputFields) => {
         if (!inputFields || inputFields.length <= 0) {
             return null;
         }
@@ -216,13 +213,13 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
                     inputProps.name = field.name || field.id;
                     inputProps.onChange = (event, index) => handleValueChange(field, event, index);
 
-                    if (field.onValidate) {
+                    if (field.onValidate && field.type !== 'checkbox') {
                         inputProps.onValidate = (event) => field.onValidate(event, form);
                     }
 
                     return (
                         <Grid className={classes.container} key={`grid_${inputProps.key}`} item>
-                            {renderControl(type, inputProps)}
+                            {renderControl(field, inputProps, index)}
                         </Grid>
                     );
                 })}
@@ -232,7 +229,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
 
     return (
         <form style={{ width: '100%' }} {...formProps} ref={ref} onKeyDown={handleKeyDown} onSubmit={handleFormSubmit}>
-            {type == 'tab' ? renderTab(fields) : renderGrid(fields)}
+            {type == 'tab' ? renderTab(fields) : renderForm(fields)}
             {children}
         </form>
     );
@@ -240,7 +237,6 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
 
 MasterForm.defaultProps = {
     type: 'form',
-    initialData: {},
 };
 
 export default MasterForm;

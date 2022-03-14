@@ -8,12 +8,36 @@ export interface CheckboxInputProps extends CheckboxProps {
     value: string;
     checked: boolean;
     required: boolean;
+    onChange: (event: React.SyntheticEvent<HTMLInputElement>) => void;
 }
 
 const CheckboxInput = (props: CheckboxInputProps) => {
-    const { label, ...checkboxProps } = props;
+    const { label, inputRef, value, onChange, checked, ...checkboxProps } = props;
+    const [state, setState] = React.useState(checked);
+    const currentInput = inputRef || React.createRef();
 
-    return <FormControlLabel control={<Checkbox color="default" {...checkboxProps} />} label={label} />;
+    //Set value if props.value changed.
+    React.useEffect(() => {
+        if (currentInput.current && state !== checked) {
+            currentInput.current.checked = checked;
+            handleChange({ target: currentInput.current });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checked]);
+
+    const handleChange = (event) => {
+        setState(event.target.checked);
+        if (onChange && event) {
+            onChange(event);
+        }
+    };
+
+    return (
+        <FormControlLabel
+            control={<Checkbox checked={state} inputRef={currentInput} onChange={handleChange} value={value} color="primary" {...checkboxProps} />}
+            label={label}
+        />
+    );
 };
 
 export default CheckboxInput;

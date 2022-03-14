@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Icon, AppBar, Tabs, Tab, Box } from '@material-ui/core';
+import { Icon, AppBar, Tabs, Tab, Box, useTheme } from '@material-ui/core';
 import { common } from '../../config/Theme';
-import type { HTMLProps } from 'react';
+import { TabsProps } from '@material-ui/core/Tabs';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         width: '100%',
         backgroundColor: theme.palette.background.paper,
-        marginBottom: theme.spacing(1),
+        marginBottom: theme.spacing(2),
     },
     tabControl: {
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -20,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
         minHeight: 48,
         flex: 'none',
         textTransform: 'none',
-        color: theme.palette.text.primary,
+        color: theme.palette.text.disabled,
     },
     tabPanel: {
+        padding: theme.spacing(1, 0),
         backgroundColor: theme.palette.background.paper,
         borderBottom: `1px solid ${theme.palette.divider}`,
     },
@@ -44,11 +45,7 @@ export const TabPanel = (props: TabPanelProps) => {
             aria-labelledby={`scrollable-force-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box p={4}>
-                    <>{children}</>
-                </Box>
-            )}
+            {value === index && <Box>{children}</Box>}
         </div>
     );
 };
@@ -60,19 +57,15 @@ const allyProps = (index) => {
     };
 };
 
-export interface TabControlProps extends HTMLProps {
-    tabs: object;
-    orientation: 'horizontal' | 'vertical';
-    indicatorColor: 'secondary' | 'primary';
-    // textColor: 'secondary' | 'primary' | 'inherit',
-    variant: 'standard' | 'scrollable' | 'fullWidth';
-    scrollButtons: 'auto' | 'desktop' | 'on' | 'off';
+export interface TabControlProps extends TabsProps {
+    tabs: Array<Object>;
     onChange: (e, newValue) => void;
 }
 
 const TabControl = (props: TabControlProps) => {
-    const { tabs, onChange, orientation, /*textColor,*/ indicatorColor, variant, scrollButtons, ...rest } = props;
+    const { tabs, onChange, ...rest } = props;
     const classes = useStyles();
+    const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -82,22 +75,18 @@ const TabControl = (props: TabControlProps) => {
     };
 
     return (
-        <div className={classes.root} {...rest}>
+        <div className={classes.root}>
             <Tabs
                 className={classes.tabControl}
                 value={value}
                 onChange={handleChange}
                 aria-label="sundew-tab-control"
-                variant={variant || 'scrollable'}
-                scrollButtons={scrollButtons || 'auto'}
-                indicatorColor={indicatorColor || 'secondary'}
-                // textColor={textColor || 'primary'}
                 TabIndicatorProps={{
                     style: {
                         height: 4,
                     },
                 }}
-                orientation={orientation || 'horizontal'}
+                {...rest}
             >
                 {tabs &&
                     tabs.map((tab, index) => (
@@ -120,6 +109,13 @@ const TabControl = (props: TabControlProps) => {
                 ))}
         </div>
     );
+};
+
+TabControl.defaultProps = {
+    scrollButtons: 'auto',
+    variant: 'scrollable',
+    textColor: 'primary',
+    indicatorColor: 'primary',
 };
 
 export default TabControl;

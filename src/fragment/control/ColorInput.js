@@ -1,6 +1,6 @@
 /* @flow */
 import * as React from 'react';
-import { InputBase, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, FormHelperText, Tooltip } from '@material-ui/core';
+import { InputBase, Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, FormHelperText, Tooltip, useTheme } from '@material-ui/core';
 import ColorPicker from './ColorPicker';
 import FormatManager from '../../util/FormatManager';
 import type { InputBaseProps } from '@material-ui/core';
@@ -54,6 +54,7 @@ const ColorInput = (props: ColorInputProps) => {
     const [invalid, setInvalid] = React.useState(false);
     const [isHover, setHover] = React.useState(false);
     const classes = styles({ invalid });
+    const theme = useTheme();
     const currentInput = inputRef || React.createRef();
 
     React.useEffect(() => {
@@ -151,7 +152,9 @@ const ColorInput = (props: ColorInputProps) => {
                 <Paper {...variantProps} variant="outlined" classes={{ root: classes.content }}>
                     <Grid container direction="row">
                         <Grid container item sm={8} xs={8} direction="row" className={classes.chipContainer} alignItems="center">
-                            <Icon className={classes.icon}>{icon || 'palette'}</Icon>
+                            <Icon color={theme.palette.type === 'dark' ? 'default' : 'primary'} className={classes.icon}>
+                                {icon || 'palette'}
+                            </Icon>
                             {displayBox()}
                             <InputBase
                                 style={{ width: '45%', ...inputProps }}

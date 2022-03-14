@@ -1,6 +1,6 @@
 /* @flow */
 import * as React from 'react';
-import { Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText } from '@material-ui/core';
+import { Icon, Paper, makeStyles, FormControl, InputLabel, Grid, IconButton, Typography, Chip, FormHelperText, useTheme } from '@material-ui/core';
 import IconPicker from './IconPicker';
 import FormatManager from '../../util/FormatManager';
 import type { FormLabelProps } from '@material-ui/core';
@@ -81,6 +81,7 @@ const IconInput = (props: IconInputProps) => {
     const [invalid, setInvalid] = React.useState(false);
     const [selectedData, setSelectedData] = React.useState(FormatManager.defaultNull(multi ? values : value));
     const classes = styles({ invalid });
+    const theme = useTheme();
     const currentInput = inputRef || React.createRef();
 
     //Set value if props.value changed.
@@ -217,7 +218,9 @@ const IconInput = (props: IconInputProps) => {
                 <Paper {...variantProps} variant="outlined" classes={{ root: classes.content }}>
                     <Grid container style={{ ...borderProps }}>
                         <Grid container item xs={10} sm={10} className={classes.chipContainer} alignItems="center">
-                            <Icon className={classes.icon}>{icon || 'eco'}</Icon>
+                            <Icon color={theme.palette.type === 'dark' ? 'default' : 'primary'} className={classes.icon}>
+                                {icon || 'eco'}
+                            </Icon>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type="text"

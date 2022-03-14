@@ -73,7 +73,6 @@ const FolderDialog = (props: FolderDialogProps) => {
         {
             id: 'icon',
             label: 'Icon',
-            icon: 'navigate_next',
             required: true,
             type: 'icon',
             value: data.icon || 'folder',

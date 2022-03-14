@@ -11,16 +11,16 @@ import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TabControl, TextInput } from '../../fragment/control';
+import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
 import DataTable from '../../fragment/table';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
-        marginBottom: theme.spacing(4),
-        padding: theme.spacing(4),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -274,11 +274,10 @@ const UserDetail = (props) => {
                     <Typography component="h1" variant="h5">
                         User Setup
                     </Typography>
-                    <MasterForm>
-                        <TabControl tabs={tabFields} />
+                    <MasterForm type="tab" fields={tabFields}>
                         <Grid justifyContent="flex-end" container>
                             <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                                <Icon>arrow_back</Icon> Back to List
+                                <Icon>arrow_back</Icon> Go back
                             </Button>
                             <Button type="button" variant="contained" color="primary" onClick={() => handleSubmit()} className={classes.submit}>
                                 <Icon color="action">save</Icon> Save

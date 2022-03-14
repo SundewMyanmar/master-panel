@@ -28,9 +28,9 @@ import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 
 const styles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
-        marginBottom: theme.spacing(4),
-        padding: theme.spacing(4),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -237,7 +237,7 @@ const MultiFactorAuthDetail = () => {
                     </RadioGroup>
                     <Grid className={classes.actions} container justifyContent="flex-end">
                         <Button type="button" variant="contained" color="default" onClick={() => history.goBack()}>
-                            <Icon>arrow_back</Icon> Back to List
+                            <Icon>arrow_back</Icon> Go back
                         </Button>
                         <Button onClick={handleSetup} type="button" variant="contained" color="primary" className={classes.submit}>
                             <Icon>save</Icon> Setup

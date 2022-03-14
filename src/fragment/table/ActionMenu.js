@@ -6,13 +6,9 @@ import type { ButtonProps } from '@material-ui/core';
 
 const styles = makeStyles((theme) => ({
     menuIcon: {
-        color: theme.palette.primary.dark,
         display: 'inline-flex',
         flexShrink: 0,
         minWidth: theme.spacing(4),
-    },
-    menuText: {
-        color: theme.palette.primary.dark,
     },
 }));
 
@@ -54,7 +50,7 @@ const ActionMenu = (props: ActionMenuProps) => {
                             <ListItemIcon className={classes.menuIcon}>
                                 <Icon style={{ color: item.color }}>{item.icon}</Icon>
                             </ListItemIcon>
-                            <ListItemText inset={false} primary={item.label} className={classes.menuText} style={{ color: item.color }} />
+                            <ListItemText inset={false} primary={item.label} style={{ color: item.color }} />
                         </MenuItem>
                     );
                 })}

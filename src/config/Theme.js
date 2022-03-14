@@ -2,88 +2,93 @@ import { createTheme } from '@material-ui/core/styles';
 
 export const common = {
     white: '#ffffff',
-    black: '#343A40',
-    gray: '#6C757D',
+    black: '#000000',
+    gray: '#5d657b',
     brown: '#5d4037',
+    purple: '#9b51e0',
+    orange: '#ED683C',
     google: '#DC4E41',
     facebook: '#4267B2',
-    link: '#738fd6',
-    lightGray: '#e9eef1',
+    link: '#2953A6',
+    lightGray: '#c2cbd6',
 };
 
 export const primary = {
-    main: '#3c4c59',
-    light: '#677886',
-    dark: '#142430',
+    main: '#4d748c',
+    light: '#a8c3d5',
+    dark: '#304c5f',
     contrastText: '#ffffff',
 };
 
 export const darkPrimary = {
-    main: '#0D0D0D',
-    light: '#343434',
-    dark: '#000000',
+    main: '#3F4B59',
+    light: '#4e5e6f',
+    dark: '#2d3641',
     contrastText: '#ffffff',
 };
 
 export const secondary = {
-    main: '#d7cdc3',
-    light: '#fffff6',
-    dark: '#a69c93',
-    contrastText: '#000000',
+    main: '#735C48',
+    light: '#9c8d81',
+    dark: '#584638',
+    contrastText: '#ffffff',
 };
 
 export const darkSecondary = {
-    main: '#6c6b6a',
-    light: '#fffff6',
-    dark: '#a69c93',
+    main: '#3b2c24',
+    light: '#4a392f',
+    dark: '#1c1800',
     contrastText: '#ffffff',
 };
 
 export const error = {
-    main: '#dc3545',
-    light: '#ff6b70',
-    dark: '#a3001e',
+    main: '#C14549',
+    light: '#e35553',
+    dark: '#a23939',
     contrastText: '#ffffff',
 };
 
 export const warning = {
-    main: '#ffc107',
-    light: '#fff350',
-    dark: '#c79100',
+    main: '#F6C63C',
+    light: '#f7d35a',
+    dark: '#f4b128',
     contrastText: '#000000',
 };
 
 export const info = {
-    main: '#17a2b8',
-    light: '#60d4ea',
-    dark: '#007388',
+    main: '#0082A8',
+    light: '#1393ba',
+    dark: '#005175',
     contrastText: '#ffffff',
 };
 
 export const success = {
-    main: '#28a745',
-    light: '#64da73',
-    dark: '#007717',
+    main: '#038C5A',
+    light: '#0c9e67',
+    dark: '#015b38',
     contrastText: '#ffffff',
 };
 
 export const background = {
-    default: '#F8F9FA',
+    default: '#f4f9fc',
     paper: '#FFFFFF',
 };
 
+export const darkBackground = {
+    default: '#2A2F35',
+    paper: '#2d3641',
+};
+
 export const text = {
-    primary: '#05162a',
-    secondary: primary.dark,
-    active: primary.contrastText,
+    primary: '#262d3f',
+    secondary: '#262d3f',
     disabled: 'rgba(0, 0, 0, 0.38)',
     hint: 'rgba(0, 0, 0, 0.38)',
 };
 
 export const darkText = {
-    primary: darkPrimary.contrastText,
-    secondary: darkSecondary.contrastText,
-    active: darkPrimary.contrastText,
+    primary: '#DFEDF2',
+    secondary: '#DFEDF2',
     disabled: 'rgba(255, 255, 255, 0.38)',
     hint: 'rgba(255, 255, 255, 0.38)',
 };
@@ -105,6 +110,8 @@ export const darkAction = {
     selected: darkPrimary.main,
     selectedOpacity: 0.55,
 };
+
+export const typography = { htmlFontSize: 18 };
 
 export const ErrorTheme = createTheme({
     palette: {
@@ -153,21 +160,23 @@ export default createTheme({
         success: success,
         background: background,
         text: text,
-        divider: '#E0E0E2',
         action: action,
     },
-    typography: {
-        htmlFontSize: 18,
-    },
+    typography: typography,
     overrides: {
-        MuiInputAdornment: {
+        MuiListItemIcon: {
             root: {
-                color: common.black,
+                color: primary.dark,
             },
         },
-        MuiInputBase: {
+        MuiListItemText: {
             root: {
-                color: common.black,
+                color: primary.dark,
+            },
+        },
+        MuiInputAdornment: {
+            root: {
+                color: primary.dark,
             },
         },
         MuiIconButton: {
@@ -242,39 +251,59 @@ export const DarkTheme = createTheme({
         info: info,
         success: success,
         secondary: darkSecondary,
-        // background: background,
         text: darkText,
-        // divider: '#E0E0E2',
         action: darkAction,
+        background: darkBackground,
     },
-    typography: {
-        htmlFontSize: 18,
-    },
+    typography: typography,
     overrides: {
-        MuiCheckbox: {
-            root: {
-                color: common.white,
+        MuiTab: {
+            textColorPrimary: {
+                '&$selected,&$selected:hover': { color: darkPrimary.contrastText },
+            },
+            textColorSecondary: {
+                '&$selected,&$selected:hover': { color: darkPrimary.contrastText },
             },
         },
-        MuiIconButton: {
-            root: {
-                color: common.white,
+        MuiTabs: {
+            indicator: {
+                backgroundColor: darkPrimary.contrastText,
             },
-            label: {
-                color: common.white,
+        },
+        MuiListItemIcon: {
+            root: {
+                color: darkPrimary.contrastText,
+            },
+        },
+        MuiListItemText: {
+            root: {
+                color: darkPrimary.contrastText,
             },
         },
         MuiInputAdornment: {
             root: {
-                color: common.white,
+                color: darkPrimary.contrastText,
+            },
+        },
+        MuiCheckbox: {
+            root: {
+                color: darkPrimary.contrastText,
+            },
+        },
+        MuiIconButton: {
+            root: {
+                color: darkPrimary.contrastText,
+            },
+            label: {
+                color: darkPrimary.contrastText,
             },
         },
         MuiAvatar: {
             root: {
-                color: common.white,
+                color: darkPrimary.contrastText,
             },
             colorDefault: {
-                color: common.white,
+                color: darkPrimary.contrastText,
             },
         },
         MuiTableRow: {

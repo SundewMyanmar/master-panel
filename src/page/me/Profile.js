@@ -25,7 +25,7 @@ import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import ContactForm from '../../form/ContactForm';
-import { EmailInput, ImageInput, TabControl, TextInput } from '../../fragment/control';
+import { EmailInput, ImageInput, TextInput } from '../../fragment/control';
 
 const styles = makeStyles((theme) => ({
     root: {
@@ -34,9 +34,9 @@ const styles = makeStyles((theme) => ({
         margin: theme.spacing(3),
     },
     paper: {
-        marginTop: theme.spacing(8),
-        marginBottom: theme.spacing(4),
-        padding: theme.spacing(4),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
