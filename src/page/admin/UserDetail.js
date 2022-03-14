@@ -15,7 +15,7 @@ import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, Password
 import DataTable from '../../fragment/table';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
-
+import {GUILD} from './User'
 const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(2),
@@ -149,6 +149,7 @@ const UserDetail = (props) => {
                                 size={{ width: 180, height: 180 }}
                                 id="image"
                                 enableFilePicker={true}
+                                guild={GUILD}
                                 required={true}
                                 value={form?.profileImage}
                                 onChange={(event) => setForm({ ...form, image: event.target.value })}

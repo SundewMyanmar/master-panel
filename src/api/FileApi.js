@@ -13,7 +13,7 @@ class FileApi extends ApiManager {
         if (filter && filter !== '') url += '&filter=' + filter;
         if (isPublic && isPublic !== '') url += '&public=' + isPublic;
         if (isHidden && isHidden !== '') url += '&hidden=' + isHidden;
-        if (isHidden && isHidden !== '') url += '&guild=' + guild;
+        if (guild && guild !== '') url += '&guild=' + guild;
 
         const response = await this.get(url, this.getHeaders(true));
         return response;

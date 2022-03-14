@@ -26,7 +26,7 @@ import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import ContactForm from '../../form/ContactForm';
 import { EmailInput, ImageInput, TextInput } from '../../fragment/control';
-
+import {GUILD} from '../admin/User';
 const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'inherit',
@@ -179,6 +179,7 @@ const Profile = (props) => {
                                         <Grid md={4} sm={6} xs={12} item>
                                             <ImageInput
                                                 id="image"
+                                                guild={GUILD}
                                                 enableFilePicker={true}
                                                 value={form?.profileImage || null}
                                                 size={{ width: 200, height: 200 }}

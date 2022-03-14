@@ -4,7 +4,7 @@ export const APP_NAME = 'master-panel';
 export const APP_VERSION = '1.7';
 
 const URLS = {
-    development: 'https://api.threeinlife.com/master-api/',
+    development: 'http://localhost:8080/',
     production: 'https://api.threeinlife.com/master-api/',
 };
 

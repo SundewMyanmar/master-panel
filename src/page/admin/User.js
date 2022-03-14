@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
+export const GUILD='USER';
+
 export const USER_TABLE_FIELDS = [
     {
         name: 'id',

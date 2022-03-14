@@ -120,7 +120,8 @@ const FileManager = (props) => {
     const loadFiles = async (folder, currentPage, pageSize, sort) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden);
+            console.log('guild',guild);
+            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden,guild);
             const { data, ...paging } = result;
             setPaging(paging);
             setFiles(data);
@@ -133,7 +134,7 @@ const FileManager = (props) => {
     const loadFolders = async () => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            const result = await FolderApi.getTree('');
+            const result = await FolderApi.getTree('',guild);
             let resultData = [];
             if (result && result.data) {
                 resultData = modifyFolders(result.data);
