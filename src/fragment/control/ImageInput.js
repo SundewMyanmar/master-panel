@@ -18,6 +18,7 @@ export interface ImageInputProps extends HTMLProps {
     disabledUpload?: boolean;
     disabledRemove?: boolean;
     value: object | string;
+    guild:string;
     onUpload?: () => void;
     onRemove?: () => void;
     onChange: (image: object | string) => void;
@@ -86,7 +87,7 @@ const MENU_LIST_ITEMS = [
 
 const ImageInput = (props: ImageInputProps) => {
     const classes = styles();
-    const { id, index, name, size, value, enableFilePicker, disabledUpload, disabledRemove, onChange, onRemove, required, ...rest } = props;
+    const { id, guild, index, name, size, value, enableFilePicker, disabledUpload, disabledRemove, onChange, onRemove, required, ...rest } = props;
     const dispatch = useDispatch();
 
     const [showMenu, setShowMenu] = useState(false);
@@ -202,7 +203,7 @@ const ImageInput = (props: ImageInputProps) => {
 
     return (
         <>
-            <FileManagerPicker show={showFile} onClose={handleCloseFile} title="Choose File" />
+            <FileManagerPicker guild={guild} show={showFile} onClose={handleCloseFile} title="Choose File" />
             <ListPicker show={showMenu} onClose={handleCloseMenu} data={MENU_LIST_ITEMS} title="Choose Action" />
             <div {...rest} className={[classes.container]}>
                 <IconButton style={{ visibility: visibility }} onClick={handleRemove} className={classes.removeButton}>
@@ -241,6 +242,7 @@ ImageInput.defaultProps = {
     enableFilePicker: false,
     disabledUpload: false,
     disabledRemove: false,
+    guild:''
 };
 
 export default ImageInput;

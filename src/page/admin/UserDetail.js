@@ -6,7 +6,6 @@ import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
 import UserApi from '../../api/UserApi';
 import { ROLE_TABLE_FIELDS } from './Role';
-import FileApi from '../../api/FileApi';
 import { STORAGE_KEYS } from '../../config/Constant';
 import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
@@ -105,7 +104,7 @@ const UserDetail = (props) => {
         if (form.image && form.image.id) {
             user.profileImage = form.image;
         } else if (form.image && !form.image.id) {
-            const fileResponse = await FileApi.upload(form.image, true);
+            const fileResponse = await UserApi.fileUpload(form.image, null);
             if (fileResponse) {
                 user.profileImage = fileResponse;
             }

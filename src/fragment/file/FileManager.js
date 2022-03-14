@@ -89,7 +89,7 @@ const FileManager = (props) => {
     const classes = styles();
     const dispatch = useDispatch();
 
-    const { onClose } = props;
+    const { onClose,guild } = props;
     const [question, setQuestion] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [paging, setPaging] = React.useState(() => {
@@ -196,6 +196,7 @@ const FileManager = (props) => {
             let data = {
                 ...folder,
                 name: form.name || folder.name,
+                guild:guild,
                 color: form.color || folder.color,
                 icon: form.icon || folder.icon,
                 priority: form.priority || folder.priority,
@@ -217,6 +218,7 @@ const FileManager = (props) => {
             let data = {
                 ...folder,
                 name: form.name || 'New Folder',
+                guild:guild,
                 color: form.color || '#000',
                 icon: form.icon || 'folder',
                 priority: form.priority || '0',
@@ -301,7 +303,7 @@ const FileManager = (props) => {
             }
 
             dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
-            FileApi.upload(result, isPublic, isHidden, folderId)
+            FileApi.upload(result, isPublic, isHidden, folderId, guild)
                 .then((response) => {
                     console.log('upload', response);
                     loadFiles(folder.id, 0, paging.pageSize, paging.sort);

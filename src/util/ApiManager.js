@@ -170,4 +170,26 @@ export default class ApiManager {
         const response = await this.delete('/', ids, this.getHeaders(true));
         return response;
     }
+
+    async fileUpload(files, folder) {
+        let headers = this.getHeaders(true);
+        headers['Content-Type'] = 'multipart/form-data';
+        const formData = new FormData();
+        if (files.name) {
+            formData.append('uploadedFile', files);
+        } else {
+            for (let i = 0; i < files.length; i++) {
+                formData.append('uploadedFile', files[i]);
+            }
+        }
+
+        if (folder) formData.append('folder', folder);
+
+        const response = await this.post('/upload', formData, headers);
+        if (response.count === 1) {
+            return response.data[0];
+        }
+
+        return response;
+    }
 }

@@ -73,11 +73,12 @@ const styles = makeStyles((theme) => ({
 export interface MultiUploadProps extends DialogProps {
     show: boolean;
     accept: string;
+    guild:string;
     onClose: (result: Array<Object>) => void;
 }
 
 export const MultiUpload = (props: MultiUploadProps) => {
-    const { show, accept, onClose, ...rest } = props;
+    const { show, guild, accept, onClose, ...rest } = props;
     const classes = styles();
     const [files, setFiles] = React.useState([]);
     const [isPublic, setIsPublic] = React.useState(true);
@@ -189,5 +190,6 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
 MultiUpload.defaultProps = {
     accept: 'image/*',
+    guild:'',
     onClose: (result) => console.warn('Undefined onClose =>', result),
 };

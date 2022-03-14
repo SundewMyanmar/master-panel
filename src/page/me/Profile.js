@@ -16,7 +16,7 @@ import {
     AccordionDetails,
 } from '@material-ui/core';
 import MasterForm from '../../fragment/MasterForm';
-import FileApi from '../../api/FileApi';
+import UserApi from '../../api/UserApi';
 import ProfileApi from '../../api/ProfileApi';
 import { primary, secondary } from '../../config/Theme';
 import FormatManager from '../../util/FormatManager';
@@ -123,7 +123,7 @@ const Profile = (props) => {
             if (form.image && form.image.id) {
                 profile.profileImage = form.image;
             } else if (form.image && !form.image.id) {
-                const fileResponse = await FileApi.upload(form.image, true);
+                const fileResponse = await UserApi.fileUpload(form.image, null);
                 if (fileResponse) {
                     profile.profileImage = fileResponse;
                 }

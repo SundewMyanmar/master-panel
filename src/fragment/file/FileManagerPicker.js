@@ -8,6 +8,7 @@ import type { DialogProps } from '@material-ui/core';
 export interface FileManagerPickerProps extends DialogProps {
     show: boolean;
     title?: string;
+    guild:string;
     onClose: (result: object | Array<Object>) => void;
 }
 
@@ -29,7 +30,7 @@ const styles = makeStyles((theme) => ({
 
 const FileManagerPicker = (props: FileManagerPickerProps) => {
     const classes = styles();
-    const { title, show, onClose, ...rest } = props;
+    const { title, guild, show, onClose, ...rest } = props;
 
     const handleClick = (item) => {
         onClose(item);
@@ -66,7 +67,7 @@ const FileManagerPicker = (props: FileManagerPickerProps) => {
                     </Grid>
                 </DialogTitle>
                 <DialogContent className={classes.content}>
-                    <FileManager onClose={handleClick}></FileManager>
+                    <FileManager guild={guild} onClose={handleClick}></FileManager>
                 </DialogContent>
             </Dialog>
         </>
@@ -75,6 +76,7 @@ const FileManagerPicker = (props: FileManagerPickerProps) => {
 
 FileManagerPicker.defaultProps = {
     title: 'File Browser',
+    guild:''
 };
 
 export default FileManagerPicker;

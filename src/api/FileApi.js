@@ -5,7 +5,7 @@ class FileApi extends ApiManager {
         super('files');
     }
 
-    async getPagingByFolder(folder, page, size, sort, filter, isPublic, isHidden) {
+    async getPagingByFolder(folder, page, size, sort, filter, isPublic, isHidden, guild) {
         if (!folder) folder = 0;
 
         let url = '/' + folder + '/folder?page=' + page + '&size=' + size;
@@ -13,6 +13,7 @@ class FileApi extends ApiManager {
         if (filter && filter !== '') url += '&filter=' + filter;
         if (isPublic && isPublic !== '') url += '&public=' + isPublic;
         if (isHidden && isHidden !== '') url += '&hidden=' + isHidden;
+        if (isHidden && isHidden !== '') url += '&guild=' + guild;
 
         const response = await this.get(url, this.getHeaders(true));
         return response;
@@ -33,7 +34,7 @@ class FileApi extends ApiManager {
         return null;
     }
 
-    async upload(files, isPublic, isHidden, folder) {
+    async upload(files, isPublic, isHidden, folder, guild) {
         let headers = this.getHeaders(true);
         headers['Content-Type'] = 'multipart/form-data';
         const formData = new FormData();
@@ -48,6 +49,7 @@ class FileApi extends ApiManager {
         formData.append('isPublic', isPublic);
         if (isHidden) formData.append('isHidden', isHidden);
         if (folder) formData.append('folder', folder);
+        if (guild) formData.append('guild', guild);
 
         const response = await this.post('/upload', formData, headers);
         if (response.count === 1) {
