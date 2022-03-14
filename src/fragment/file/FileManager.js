@@ -32,8 +32,9 @@ import { MultiUpload } from './MultiUpload';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
+import {GUILD as USER_GUILD } from '../../page/admin/User';
 
-const GUILD_LIST=['USER'];
+const GUILD_LIST=[USER_GUILD];
 const styles = makeStyles((theme) => ({
     avatar: {
         padding: theme.spacing(3),
@@ -374,6 +375,7 @@ const FileManager = (props) => {
                 <Grid container item lg={3} md={4} sm={12} xs={12} >
                     {guild ? <></> : 
                         <ListInput
+                            variant="standard"
                             label="Group"
                             id="Group"
                             data={GUILD_LIST}
