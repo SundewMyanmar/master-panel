@@ -10,6 +10,18 @@ const URLS = {
 
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
 
+export const CORS_SETTING="cors-config.json";
+export const APPLE_SETTING="apple-auth-config.json";
+export const SECURITY_SETTING="security-config.json";
+export const AYAPAY_SETTING="aya-pay-config.json";
+export const CBPAY_SETTING="cb-pay-config.json";
+export const KBZPAY_SETTING="kbz-pay-config.json";
+export const MPUPAY_SETTING="mpu-config.json";
+export const ONEPAY_SETTING="one-pay-config.json";
+export const UABPAY_SETTING="uab-pay-config.json";
+export const WAVEPAY_SETTING="wave-money-config.json";
+export const TELENOR_SETTING="telenor-sms-token.json";
+
 export const SESSION_TIMEOUT = 1000 * 60 * 20; //20 Minutes
 
 export const GOOGLE_API_KEYS = '';

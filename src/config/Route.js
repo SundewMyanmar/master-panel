@@ -16,6 +16,7 @@ import Menu from '../page/admin/Menu';
 import ApiPermission from '../page/admin/ApiPermission';
 import File from '../page/file/File';
 import Developer from '../page/Developer';
+import SettingManager from '../page/admin/SettingManager';
 
 export const PrivateRoute = [
     { path: '/', page: Dashboard },
@@ -30,6 +31,7 @@ export const PrivateRoute = [
     { path: '/permission/:roleId?', page: ApiPermission },
     { path: '/file', page: File },
     { path: '/api-debug', page: Developer },
+    { path: '/setting', page: SettingManager },
 ];
 
 export const PublicRoute = [
