@@ -61,9 +61,9 @@ const styles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(1),
     },
-    root:{
-      width:'100%'
-    }
+    root: {
+        width: '100%',
+    },
 }));
 
 const SettingManager = () => {
@@ -82,21 +82,23 @@ const SettingManager = () => {
         });
     };
 
-    const [structure,setStructure]=useState(async()=>{
-      SettingApi.getStruct().then((result)=>{
+    const [structure, setStructure] = useState(async () => {
+        SettingApi.getStruct()
+            .then((result) => {
+                setStructure(result);
+            })
+            .catch(handleError);
+        return [];
+    });
 
-        setStructure(result);
-      }).catch(handleError);
-      return [];
-    })
-
-    React.useEffect(()=>{
-    },[structure])
-
-    const handleSubmit = (data, name) => {
+    const handleSubmit = (data, name, setData) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         SettingApi.saveSetting(data, name)
             .then((savedData) => {
+                console.log('saved',savedData,name,structure, setData);
+                if(setData)
+                  setData(savedData);
+
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 dispatch({ type: FLASH_REDUX_ACTIONS.SHOW, flash: { type: 'success', message: 'Save successful.' } });
             })
@@ -106,21 +108,31 @@ const SettingManager = () => {
     return (
         <>
             <Container maxWidth="md">
-              <Paper className={classes.paper} elevation={3}>
-                <Avatar className={classes.avatar}>
-                    <Icon>settings</Icon>
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Setting
-                </Typography>
-                <div className={classes.root}>
-                  {structure && structure.length && structure.map((struct) => {
-                      return (
-                        <SettingAccordion key={`acc-${struct.fullName}`} setting={struct} data={struct.data} onSubmit={handleSubmit} onError={handleError} expanded={expanded} onAccordionChange={handleChange}/>
-                      );
-                  })}
-              </div>
-              </Paper>
+                <Paper className={classes.paper} elevation={3}>
+                    <Avatar className={classes.avatar}>
+                        <Icon>settings</Icon>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Setting
+                    </Typography>
+                    <div className={classes.root}>
+                        {structure &&
+                            structure.length &&
+                            structure.map((struct) => {
+                                return (
+                                    <SettingAccordion
+                                        key={`acc-${struct.fullName}`}
+                                        setting={struct}
+                                        data={struct.data}
+                                        onSubmit={handleSubmit}
+                                        onError={handleError}
+                                        expanded={expanded}
+                                        onAccordionChange={handleChange}
+                                    />
+                                );
+                            })}
+                    </div>
+                </Paper>
             </Container>
         </>
     );

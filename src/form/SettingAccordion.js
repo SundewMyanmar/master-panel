@@ -79,9 +79,13 @@ const SettingAccordion=(props:SettingAccordionProps)=>{
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[settingData]);
 
+    const updateSettingData=(newData)=>{
+        console.log('saved new data',newData);
+        setSettingData(newData);
+    }
+
     const handleSubmit=()=>{
-      console.log('')
-      if(onSubmit)onSubmit(settingData,setting.fullName);
+      if(onSubmit)onSubmit(settingData,setting.fullName,updateSettingData);
     }
 
     const fieldOnChange=(event, data)=>{
