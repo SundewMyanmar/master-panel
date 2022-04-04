@@ -5,18 +5,18 @@ class UserApi extends ApiManager {
         super('system/config');
     }
 
-    async getStruct(){
-      const response = await this.get('/struct', this.getHeaders(true));
-      return response;
+    async getStruct() {
+        const response = await this.get('/all', this.getHeaders(true));
+        return response;
     }
 
     async loadSetting(name) {
-        const response = await this.get('?className='+name, this.getHeaders(true));
+        const response = await this.get('?className=' + name, this.getHeaders(true));
         return response;
     }
 
     async saveSetting(data, name) {
-        const response = await this.post('?className=' +name, data, this.getHeaders(true));
+        const response = await this.post('?className=' + name, data, this.getHeaders(true));
         return response;
     }
 }

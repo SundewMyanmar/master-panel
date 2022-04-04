@@ -91,13 +91,19 @@ const SettingManager = () => {
         return [];
     });
 
-    const handleSubmit = (data, name, setData) => {
+    const handleSubmit = (data, name, setData, structure) => {
+        for (let i = 0; i < structure.length; i++) {
+            if (structure[i].type == 'chip') {
+                if (data[structure[i].name] && typeof data[structure[i].name] == 'string')
+                    data[structure[i].name] = data[structure[i].name].split(',');
+            }
+        }
+
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         SettingApi.saveSetting(data, name)
             .then((savedData) => {
-                console.log('saved',savedData,name,structure, setData);
-                if(setData)
-                  setData(savedData);
+                if (setData)
+                    setData(savedData);
 
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 dispatch({ type: FLASH_REDUX_ACTIONS.SHOW, flash: { type: 'success', message: 'Save successful.' } });

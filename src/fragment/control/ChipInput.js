@@ -64,7 +64,7 @@ const ChipInput = (props: ChipInputProps) => {
     React.useEffect(() => {
         const inputData = FormatManager.defaultNull(value);
         if (inputData !== items) {
-            const splitData = inputData.split(',');
+            const splitData = inputData && inputData.split(',');
             if (splitData) {
                 setItems(splitData);
             }
@@ -86,7 +86,7 @@ const ChipInput = (props: ChipInputProps) => {
         if (['Enter', 'Tab', ','].includes(evt.key)) {
             evt.preventDefault();
             let chip = newChip;
-            console.log('chip', chip);
+
             if (chip) {
                 setItems([...items, chip]);
                 setNewChip('');
