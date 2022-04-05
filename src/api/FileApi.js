@@ -27,10 +27,7 @@ class FileApi extends ApiManager {
                 const user = this.getUserInfo();
                 return file.urls.private + '?accessToken=' + user.currentToken + (size ? '&size=' + size : '');
             }
-        } else if (file && file.name) {
-            return file.name;
         }
-
         return null;
     }
 

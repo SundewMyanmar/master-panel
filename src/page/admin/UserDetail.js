@@ -15,7 +15,8 @@ import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, Password
 import DataTable from '../../fragment/table';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
-import {GUILD} from './User'
+import { GUILD } from './User';
+
 const styles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(2),
@@ -86,11 +87,11 @@ const UserDetail = (props) => {
             !validateForm(
                 form,
                 [
-                    { fieldId: 'phoneNumber', require: true, rules: [{ type: 'phone' }] },
-                    { fieldId: 'displayName', require: true },
-                    { fieldId: 'email', require: true, rules: [{ type: 'email' }] },
-                    { fieldId: 'roles', require: true },
-                    isUpdate ? null : { fieldId: 'password', require: true, rules: [{ type: 'match', matchId: 'confirmPassword' }] },
+                    { fieldId: 'phoneNumber', required: true, rules: [{ type: 'phone' }] },
+                    { fieldId: 'displayName', required: true },
+                    { fieldId: 'email', required: true, rules: [{ type: 'email' }] },
+                    { fieldId: 'roles', required: true },
+                    isUpdate ? null : { fieldId: 'password', required: true, rules: [{ type: 'match', matchId: 'confirmPassword' }] },
                 ],
                 handleError,
             )
@@ -104,7 +105,7 @@ const UserDetail = (props) => {
         if (form.image && form.image.id) {
             user.profileImage = form.image;
         } else if (form.image && !form.image.id) {
-            const fileResponse = await UserApi.fileUpload(form.image, null);
+            const fileResponse = await UserApi.fileUpload(form.image, 'profileImage', null);
             if (fileResponse) {
                 user.profileImage = fileResponse;
             }
@@ -151,7 +152,7 @@ const UserDetail = (props) => {
                                 enableFilePicker={true}
                                 guild={GUILD}
                                 required={true}
-                                value={form?.profileImage}
+                                value={form?.image}
                                 onChange={(event) => setForm({ ...form, image: event.target.value })}
                             />
                             <CheckboxInput

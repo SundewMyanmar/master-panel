@@ -18,7 +18,7 @@ export interface ImageInputProps extends HTMLProps {
     disabledUpload?: boolean;
     disabledRemove?: boolean;
     value: object | string;
-    guild:string;
+    guild: string;
     onUpload?: () => void;
     onRemove?: () => void;
     onChange: (image: object | string) => void;
@@ -98,9 +98,10 @@ const ImageInput = (props: ImageInputProps) => {
 
     useEffect(() => {
         const imageURL = FileApi.downloadLink(value, 'small');
-
         if (imageURL && imageURL !== preview && inputUpload.current) {
             handleChange(value, imageURL);
+        } else if (value && value.name) {
+            loadLocalFile(value);
         } else {
             if (value && Object.entries(value).length === 0) {
                 setPreview(null);
@@ -134,6 +135,14 @@ const ImageInput = (props: ImageInputProps) => {
             };
             onChange(obj, index);
         }
+    };
+
+    const loadLocalFile = (file) => {
+        const fileReader = new FileReader();
+        fileReader.onloadend = (e) => {
+            handleChange(file, fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
     };
 
     const handleImageClick = () => {
@@ -179,11 +188,7 @@ const ImageInput = (props: ImageInputProps) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const file = files[0];
-            const fileReader = new FileReader();
-            fileReader.onloadend = (e) => {
-                handleChange(file, fileReader.result);
-            };
-            fileReader.readAsDataURL(file);
+            loadLocalFile(file);
         }
     };
 
@@ -242,7 +247,7 @@ ImageInput.defaultProps = {
     enableFilePicker: false,
     disabledUpload: false,
     disabledRemove: false,
-    guild:''
+    guild: '',
 };
 
 export default ImageInput;

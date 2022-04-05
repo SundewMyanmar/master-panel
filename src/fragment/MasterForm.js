@@ -120,7 +120,7 @@ const MasterForm = React.forwardRef((props: MasterFormProps, ref) => {
         }
 
         setForm(form);
-        
+
         if (onChange) {
             onChange(event, index);
         }

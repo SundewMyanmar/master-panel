@@ -68,7 +68,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
             target: {
                 id: id || name,
                 name: id || name,
-                value: date,
+                value: date.toJSDate(),
                 type: 'datetime',
             },
         };
@@ -97,12 +97,13 @@ const DateTimeInput = (props: DateTimeInputProps) => {
         if (type === 'time') {
             return (
                 <TimePicker
+                    id={id || name}
                     margin="normal"
                     autoOk
                     className={classes.picker}
                     variant="inline"
                     inputVariant="outlined"
-                    label={(label || 'Date Picker') + (required ? ' *' : '')}
+                    label={(label || 'Time Picker') + (required ? ' *' : '')}
                     placeholder={placeholder}
                     format="hh : mm a"
                     value={selectedDate}
@@ -125,12 +126,13 @@ const DateTimeInput = (props: DateTimeInputProps) => {
         } else if (type === 'datetime') {
             return (
                 <DateTimePicker
+                    id={id || name}
                     margin="normal"
                     autoOk
                     className={classes.picker}
                     variant="inline"
                     inputVariant="outlined"
-                    label={(label || 'Date Picker') + (required ? ' *' : '')}
+                    label={(label || 'Datetime Picker') + (required ? ' *' : '')}
                     placeholder={placeholder}
                     format="dd - MM - yyyy hh : mm a"
                     value={selectedDate}
@@ -153,6 +155,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
         } else {
             return (
                 <DatePicker
+                    id={id || name}
                     margin="normal"
                     autoOk
                     className={classes.picker}
@@ -163,7 +166,6 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     format="dd - MMM - yyyy"
                     value={selectedDate}
                     disabled={disabledLoad}
-                    style={{ color: theme.palette.error.main }}
                     invalidLabel={error}
                     // InputAdornmentProps={{ position: 'end' }}
                     // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}

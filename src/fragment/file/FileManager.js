@@ -32,9 +32,9 @@ import { MultiUpload } from './MultiUpload';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import {GUILD as USER_GUILD } from '../../page/admin/User';
+import { GUILD as USER_GUILD } from '../../page/admin/User';
 
-const GUILD_LIST=[USER_GUILD];
+const GUILD_LIST = [USER_GUILD];
 const styles = makeStyles((theme) => ({
     avatar: {
         padding: theme.spacing(3),
@@ -80,11 +80,17 @@ const styles = makeStyles((theme) => ({
 
 const ITEM_HEIGHT = 48;
 
-const FileManager = (props) => {
+export interface FileManagerProps {
+    readOnly: boolean;
+    guild: String;
+    onFileClick: (file: Object) => void;
+}
+
+const FileManager = (props: FileManagerProps) => {
     const classes = styles();
     const dispatch = useDispatch();
 
-    const { onClose,guild } = props;
+    const { readOnly, onFileClick, guild } = props;
     const [question, setQuestion] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [paging, setPaging] = React.useState(() => {
@@ -111,7 +117,7 @@ const FileManager = (props) => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const [fileGuild,setFileGuild]=React.useState('');
+    const [fileGuild, setFileGuild] = React.useState('');
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -124,7 +130,7 @@ const FileManager = (props) => {
     const loadFiles = async (folder, currentPage, pageSize, sort) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden,fileGuild);
+            const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden, fileGuild);
             const { data, ...paging } = result;
             setPaging(paging);
             setFiles(data);
@@ -137,7 +143,7 @@ const FileManager = (props) => {
     const loadFolders = async () => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
-            const result = await FolderApi.getTree('',fileGuild);
+            const result = await FolderApi.getTree('', fileGuild);
             let resultData = [];
             if (result && result.data) {
                 resultData = modifyFolders(result.data);
@@ -177,7 +183,7 @@ const FileManager = (props) => {
         loadFiles(folder.id, 0, paging.pageSize, paging.sort);
         loadFolders();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search,fileGuild]);
+    }, [search, fileGuild]);
 
     React.useEffect(() => {
         setFileGuild(guild);
@@ -197,7 +203,7 @@ const FileManager = (props) => {
             let data = {
                 ...folder,
                 name: form.name || folder.name,
-                guild:fileGuild,
+                guild: fileGuild,
                 color: form.color || folder.color,
                 icon: form.icon || folder.icon,
                 priority: form.priority || folder.priority,
@@ -219,7 +225,7 @@ const FileManager = (props) => {
             let data = {
                 ...folder,
                 name: form.name || 'New Folder',
-                guild:fileGuild,
+                guild: fileGuild,
                 color: form.color || '#000',
                 icon: form.icon || 'folder',
                 priority: form.priority || '0',
@@ -316,8 +322,8 @@ const FileManager = (props) => {
     };
 
     const handleFileClick = (file) => {
-        if (onClose) {
-            onClose(file);
+        if (onFileClick) {
+            onFileClick(file);
             return;
         }
 
@@ -357,8 +363,8 @@ const FileManager = (props) => {
     return (
         <>
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
-            <MultiUpload show={showUploadDialog} onClose={handleUpload} />
-            <FolderDialog data={folder} show={showFolder} onShow={setShowFolder} onSubmit={handleFolderSubmit}></FolderDialog>
+            {readOnly ? null : <MultiUpload show={showUploadDialog} onClose={handleUpload} />}
+            {readOnly ? null : <FolderDialog data={folder} show={showFolder} onShow={setShowFolder} onSubmit={handleFolderSubmit} />}
             {preview ? (
                 <ImagePreview
                     show={preview != null}
@@ -372,7 +378,7 @@ const FileManager = (props) => {
             ) : null}
 
             <Grid className={classes.innerBox} container>
-                <Grid container item lg={3} md={4} sm={12} xs={12} >
+                <Grid container item lg={3} md={4} sm={12} xs={12}>
                     {/* {guild ? <></> : 
                         <ListInput
                             variant="standard"
@@ -386,7 +392,7 @@ const FileManager = (props) => {
                     } */}
                     <div className={classes.treeBox}>
                         <TreeMenu
-                            allowCreate={true}
+                            allowCreate={!readOnly}
                             onCreate={handleTreeCreate}
                             onRemove={handleFolderRemove}
                             menus={folders}
@@ -396,12 +402,9 @@ const FileManager = (props) => {
                     </div>
                 </Grid>
                 <Grid className={classes.content} container item lg={9} md={8} sm={12} xs={12} justifyContent="flex-start" alignContent="flex-start">
-                    <Grid 
-                    // style={{marginTop:guild?0:10}} 
-                    container justifyContent="flex-start" alignContent="center" direction="row" item spacing={1}>
-                        <Grid item lg={9} md={7} sm={6} xs={12}>
+                    <Grid container justifyContent="flex-start" alignContent="center" direction="row" item spacing={3}>
+                        <Grid item lg={readOnly ? 11 : 9} md={readOnly ? 10 : 7} sm={readOnly ? 9 : 6} xs={12}>
                             <SearchInput onSearch={(value) => setSearch(value)} placeholder="Search" />
-                            
                         </Grid>
                         <Grid container item lg={1} md={2} sm={3} xs={12} justifyContent="center" alignContent="center">
                             <Tooltip title="permission">
@@ -450,13 +453,21 @@ const FileManager = (props) => {
                                 </MenuItem>
                             </Menu>
                         </Grid>
-                        <Grid container item lg={2} md={3} sm={3} xs={12} justifyContent="flex-end" alignContent="center">
-                            <Tooltip title="Upload">
-                                <Button fullWidth onClick={() => setShowUploadDialog(true)} variant="contained" color="primary" aria-label="Upload">
-                                    <Icon className={classes.icon}>cloud_upload</Icon>
-                                </Button>
-                            </Tooltip>
-                        </Grid>
+                        {readOnly ? null : (
+                            <Grid container item lg={2} md={3} sm={3} xs={12} justifyContent="flex-end" alignContent="center">
+                                <Tooltip title="Upload">
+                                    <Button
+                                        fullWidth
+                                        onClick={() => setShowUploadDialog(true)}
+                                        variant="contained"
+                                        color="primary"
+                                        aria-label="Upload"
+                                    >
+                                        <Icon className={classes.icon}>cloud_upload</Icon>
+                                    </Button>
+                                </Tooltip>
+                            </Grid>
+                        )}
                     </Grid>
                     <Grid container item>
                         <FileGrid className={classes.container} data={files} onClickItem={handleFileClick} />
@@ -479,6 +490,11 @@ const FileManager = (props) => {
             </Grid>
         </>
     );
+};
+
+FileManager.defaultProps = {
+    readOnly: false,
+    onFileClick: (file) => console.log('Clicked file => ', file),
 };
 
 export default withRouter(FileManager);

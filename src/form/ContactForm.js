@@ -109,9 +109,9 @@ const ContactForm = (props: ContactFormProps) => {
             !validateForm(
                 contact,
                 [
-                    { fieldId: 'type', require: true },
-                    { fieldId: 'label', require: true },
-                    { fieldId: 'value', require: true },
+                    { fieldId: 'type', required: true },
+                    { fieldId: 'label', required: true },
+                    { fieldId: 'value', required: true },
                 ],
                 (error) =>
                     dispatch({
