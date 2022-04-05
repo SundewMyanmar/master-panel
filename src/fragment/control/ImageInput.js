@@ -101,6 +101,7 @@ const ImageInput = (props: ImageInputProps) => {
         if (imageURL && imageURL !== preview && inputUpload.current) {
             handleChange(value, imageURL);
         } else if (value && value.name) {
+            console.log('Load Local file');
             loadLocalFile(value);
         } else {
             if (value && Object.entries(value).length === 0) {
@@ -137,12 +138,16 @@ const ImageInput = (props: ImageInputProps) => {
         }
     };
 
-    const loadLocalFile = (file) => {
-        const fileReader = new FileReader();
-        fileReader.onloadend = (e) => {
-            handleChange(file, fileReader.result);
-        };
-        fileReader.readAsDataURL(file);
+    const loadLocalFile = async (file) => {
+        try {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onloadend = (e) => {
+                handleChange(file, fileReader.result);
+            };
+        } catch (error) {
+            console.warn('File Load Error: ', error);
+        }
     };
 
     const handleImageClick = () => {

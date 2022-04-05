@@ -494,7 +494,6 @@ const FileManager = (props: FileManagerProps) => {
 
 FileManager.defaultProps = {
     readOnly: false,
-    onFileClick: (file) => console.log('Clicked file => ', file),
 };
 
 export default withRouter(FileManager);
