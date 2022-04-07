@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Avatar, Container, DialogProps, Divider, Icon, Paper, useTheme } from '@material-ui/core';
 import { Grid, Typography, withTheme, makeStyles } from '@material-ui/core';
-import ToothTable from '../fragment/tooth/ToothTable';
-import ToothPicker from '../fragment/tooth/ToothPicker';
 
 const styles = makeStyles((theme) => ({
     paper: {
