@@ -29,7 +29,7 @@ const styles = makeStyles((theme) => ({
         padding: theme.spacing(1),
     },
     container: {
-        minHeight: 120,
+        minHeight: 250,
         flex: 1,
         display: 'flex',
         alignItems: 'center',
@@ -73,7 +73,7 @@ const styles = makeStyles((theme) => ({
 export interface MultiUploadProps extends DialogProps {
     show: boolean;
     accept: string;
-    guild:string;
+    guild: string;
     onClose: (result: Array<Object>) => void;
 }
 
@@ -81,7 +81,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
     const { show, guild, accept, onClose, ...rest } = props;
     const classes = styles();
     const [files, setFiles] = React.useState([]);
-    const [isPublic, setIsPublic] = React.useState(true);
+    const [isPublic, setIsPublic] = React.useState(false);
     const [isHidden, setIsHidden] = React.useState(false);
 
     const handlePublicChange = (event) => {
@@ -93,11 +93,12 @@ export const MultiUpload = (props: MultiUploadProps) => {
     };
 
     const { getRootProps, getInputProps } = useDropzone({
-        accept: accept,
+        accept: accept === '*' ? null : accept,
         onDrop: (acceptedFiles) => {
+            console.log('Accepted Files => ', acceptedFiles);
             const newFiles = acceptedFiles.map((file, idx) =>
                 Object.assign(file, {
-                    preview: URL.createObjectURL(file),
+                    preview: file.type.startsWith('image') ? URL.createObjectURL(file) : null,
                     id: idx + '-' + file.name,
                 }),
             );
@@ -153,7 +154,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
                         return (
                             <Grid key={file.id} container item justifyContent="center" xs={4} sm={3} md={2} lg={2}>
                                 <div className={classes.thumbnailContainer}>
-                                    <img className={classes.thumbnail} src={file.preview} alt={file.name} />
+                                    <img className={classes.thumbnail} src={file.preview || '/images/upload-file.png'} alt={file.path} />
                                     <MuiThemeProvider theme={ErrorTheme}>
                                         <Tooltip title="Remove" aria-label="remove">
                                             <IconButton onClick={() => handleRemove(file)} className={classes.removeButton}>
@@ -162,6 +163,9 @@ export const MultiUpload = (props: MultiUploadProps) => {
                                         </Tooltip>
                                     </MuiThemeProvider>
                                 </div>
+                                <Typography variant="caption" color="inherit">
+                                    {file.path}
+                                </Typography>
                             </Grid>
                         );
                     })}
@@ -190,6 +194,6 @@ export const MultiUpload = (props: MultiUploadProps) => {
 
 MultiUpload.defaultProps = {
     accept: 'image/*',
-    guild:'',
+    guild: '',
     onClose: (result) => console.warn('Undefined onClose =>', result),
 };

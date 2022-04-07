@@ -83,6 +83,7 @@ const ITEM_HEIGHT = 48;
 export interface FileManagerProps {
     readOnly: boolean;
     guild: String;
+    accept: String;
     onFileClick: (file: Object) => void;
 }
 
@@ -90,7 +91,7 @@ const FileManager = (props: FileManagerProps) => {
     const classes = styles();
     const dispatch = useDispatch();
 
-    const { readOnly, onFileClick, guild } = props;
+    const { readOnly, onFileClick, guild, accept } = props;
     const [question, setQuestion] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [paging, setPaging] = React.useState(() => {
@@ -117,7 +118,7 @@ const FileManager = (props: FileManagerProps) => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const [fileGuild, setFileGuild] = React.useState('');
+    const [fileGuild, setFileGuild] = React.useState(guild);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -128,6 +129,7 @@ const FileManager = (props: FileManagerProps) => {
     };
 
     const loadFiles = async (folder, currentPage, pageSize, sort) => {
+        console.log('Load Files => ', fileGuild);
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         try {
             const result = await FileApi.getPagingByFolder(folder, currentPage, pageSize, sort, search, showPublic, showHidden, fileGuild);
@@ -176,17 +178,16 @@ const FileManager = (props: FileManagerProps) => {
 
     React.useEffect(() => {
         loadFiles(folder.id, 0, paging.pageSize, paging.sort);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showPublic, showHidden]);
-
-    React.useEffect(() => {
-        loadFiles(folder.id, 0, paging.pageSize, paging.sort);
         loadFolders();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search, fileGuild]);
+    }, [search, showHidden, showPublic]);
 
     React.useEffect(() => {
-        setFileGuild(guild);
+        if (guild !== fileGuild) {
+            setFileGuild(guild);
+            loadFiles(folder.id, 0, paging.pageSize, paging.sort);
+            loadFolders();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [guild]);
 
@@ -363,7 +364,7 @@ const FileManager = (props: FileManagerProps) => {
     return (
         <>
             <QuestionDialog show={question.length > 0} title="Confirm?" message={question} onClose={handleQuestionDialog} />
-            {readOnly ? null : <MultiUpload show={showUploadDialog} onClose={handleUpload} />}
+            {readOnly ? null : <MultiUpload show={showUploadDialog} accept={accept} onClose={handleUpload} />}
             {readOnly ? null : <FolderDialog data={folder} show={showFolder} onShow={setShowFolder} onSubmit={handleFolderSubmit} />}
             {preview ? (
                 <ImagePreview
@@ -494,6 +495,7 @@ const FileManager = (props: FileManagerProps) => {
 
 FileManager.defaultProps = {
     readOnly: false,
+    guild: '',
 };
 
 export default withRouter(FileManager);
