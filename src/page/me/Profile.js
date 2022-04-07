@@ -26,7 +26,7 @@ import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import ContactForm from '../../form/ContactForm';
 import { EmailInput, ImageInput, TextInput } from '../../fragment/control';
-import {GUILD} from '../admin/User';
+import { GUILD } from '../admin/User';
 const styles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'inherit',
@@ -123,7 +123,7 @@ const Profile = (props) => {
             if (form.image && form.image.id) {
                 profile.profileImage = form.image;
             } else if (form.image && !form.image.id) {
-                const fileResponse = await UserApi.fileUpload(form.image, null);
+                const fileResponse = await UserApi.fileUpload(form.image, 'profileImage', null);
                 if (fileResponse) {
                     profile.profileImage = fileResponse;
                 }

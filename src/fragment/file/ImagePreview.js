@@ -105,6 +105,12 @@ const ImagePreview = (props: ImagePreviewProps) => {
         setDimension(img.naturalWidth + ' x ' + img.naturalHeight);
     };
 
+    const handleDownload = () => {
+        console.log('Download file => ', data);
+        const downloadLink = FileApi.downloadLink(data, 'original');
+        window.open(downloadLink, '_blank');
+    };
+
     const classes = style();
 
     const handleSave = () => {
@@ -258,6 +264,9 @@ const ImagePreview = (props: ImagePreviewProps) => {
                     <Grid container item lg={6} md={6} sm={6} xs={12} justifyContent="flex-end" alignItems="center">
                         <Button onClick={handleSave} variant="contained">
                             <Icon>save</Icon> Save
+                        </Button>
+                        <Button onClick={handleDownload} variant="contained" color="primary" style={{ marginLeft: 10 }}>
+                            <Icon>download</Icon> Download
                         </Button>
 
                         {onRemove ? (
