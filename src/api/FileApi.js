@@ -28,7 +28,7 @@ class FileApi extends ApiManager {
                 return file.urls.private + '?accessToken=' + user.currentToken + (size ? '&size=' + size : '');
             }
         }
-        return '/images/default-image.png';
+        return null;
     }
 
     async upload(files, isPublic, isHidden, folder, guild) {
