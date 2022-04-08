@@ -66,7 +66,9 @@ const style = makeStyles((theme) => ({
         justifyContent: 'flex-end',
         borderTop: '1px solid ' + theme.palette.divider,
     },
-    image: {},
+    image: {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 export interface ImagePreviewProps extends DialogProps {
@@ -83,7 +85,7 @@ const ImagePreview = (props: ImagePreviewProps) => {
     const { show, data, folder, folders, onClose, onRemove, onUpdate, ...rest } = props;
     const [dimension, setDimension] = React.useState(data.size);
     const isImage = data.type.startsWith('image');
-    const url = FileApi.downloadLink(data, 'large') || '/res/default-image.png';
+    const url = data.type.startsWith('image') ? FileApi.downloadLink(data, 'large') : '/images/file.png';
     const [isPublic, setIsPublic] = React.useState(true);
     const [isHidden, setIsHidden] = React.useState(false);
     const [selectedFolder, setSelectedFolder] = React.useState(null);
@@ -198,7 +200,6 @@ const ImagePreview = (props: ImagePreviewProps) => {
 
     return (
         <Dialog
-            fullWidth
             open={show}
             TransitionComponent={Transition}
             onClose={onClose}
@@ -225,19 +226,21 @@ const ImagePreview = (props: ImagePreviewProps) => {
             </DialogTitle>
             <Divider />
             <DialogContent>
-                <img onLoad={handleImageLoading} width="100%" className={classes.image} src={url} alt={data.name} />
-                {data ? (
-                    <Grid container>
-                        <FileInfoField label="Name" value={data.name + '.' + data.extension} />
-                        <FileInfoField label="Type" value={data.type} />
-                        <FileInfoField label="Size" value={data.size} />
-                        {isImage ? <FileInfoField label="Dimensions" value={dimension} /> : null}
-                    </Grid>
-                ) : (
-                    <Typography variant="caption" align="center">
-                        There is no image.
-                    </Typography>
-                )}
+                <Grid container item alignItems="center" justifyContent="center">
+                    <img onLoad={handleImageLoading} className={classes.image} src={url} alt={data.name} />
+                    {data ? (
+                        <Grid container>
+                            <FileInfoField label="Name" value={data.name + '.' + data.extension} />
+                            <FileInfoField label="Type" value={data.type} />
+                            <FileInfoField label="Size" value={data.size} />
+                            {isImage ? <FileInfoField label="Dimensions" value={dimension} /> : null}
+                        </Grid>
+                    ) : (
+                        <Typography variant="caption" align="center">
+                            There is no image.
+                        </Typography>
+                    )}
+                </Grid>
             </DialogContent>
 
             <DialogActions className={classes.actionBar}>
