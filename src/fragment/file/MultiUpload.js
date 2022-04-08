@@ -154,7 +154,7 @@ export const MultiUpload = (props: MultiUploadProps) => {
                         return (
                             <Grid key={file.id} container item justifyContent="center" xs={4} sm={3} md={2} lg={2}>
                                 <div className={classes.thumbnailContainer}>
-                                    <img className={classes.thumbnail} src={file.preview || '/images/upload-file.png'} alt={file.path} />
+                                    <img className={classes.thumbnail} src={file.preview || '/images/file.png'} alt={file.path} />
                                     <MuiThemeProvider theme={ErrorTheme}>
                                         <Tooltip title="Remove" aria-label="remove">
                                             <IconButton onClick={() => handleRemove(file)} className={classes.removeButton}>
