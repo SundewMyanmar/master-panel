@@ -14,7 +14,7 @@ export interface Rule {
 }
 export interface Validator {
     fieldId: string;
-    require: boolean;
+    required: boolean;
     rules: Array<Rule>;
 }
 
@@ -27,8 +27,8 @@ export function validateForm(form, validators: Array<Validator>, onFailed: (erro
         }
 
         const value = form[validator.fieldId];
-        if (validator.require && (!value || value === null || value.length <= 0 || value === 0)) {
-            onFailed({ title: 'Required', message: `${FormatManager.camelToReadable(validator.fieldId)} is require.` });
+        if (validator.required && (!value || value === null || value.length <= 0 || value === 0)) {
+            onFailed({ title: 'Required', message: `${FormatManager.camelToReadable(validator.fieldId)} is required.` });
             return false;
         }
 

@@ -101,7 +101,6 @@ const ImageInput = (props: ImageInputProps) => {
         if (imageURL && imageURL !== preview && inputUpload.current) {
             handleChange(value, imageURL);
         } else if (value && value.name) {
-            console.log('Load Local file');
             loadLocalFile(value);
         } else {
             if (value && Object.entries(value).length === 0) {

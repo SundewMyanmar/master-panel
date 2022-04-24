@@ -215,7 +215,7 @@ const PdfReportViewer = (props: PdfReportViewerProps) => {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <Grid className={classes.ReportContainer} container alignItems="center" justify="center">
+                <Grid className={classes.ReportContainer} container alignItems="center" justifyContent="center">
                     <Grid item>
                         <div className={classes.ReportContent}>
                             <Document file={pdfUrl} onLoadSuccess={(pdfInfo) => onDocumentLoadSuccess(pdfInfo)} noData="" loading="Loading...">

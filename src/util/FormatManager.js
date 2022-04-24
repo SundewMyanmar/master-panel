@@ -50,6 +50,17 @@ export default class FormatManager {
         return ms.toLocaleString();
     };
 
+    static toDate = (input, format) => {
+        if (typeof input === 'string') {
+            return DateTime.fromFormat(input, format);
+        } else if (typeof input === 'number') {
+            return DateTime.fromMillis(input);
+        } else if (typeof input === 'object') {
+            return DateTime.fromObject(input);
+        }
+        return input;
+    };
+
     static validURL = (str) => {
         const pattern = new RegExp(
             '^(https?:\\/\\/)?' + // protocol

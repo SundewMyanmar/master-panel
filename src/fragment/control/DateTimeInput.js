@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LuxonUtils from '@date-io/luxon';
-import { DateTimePicker, MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import { InputAdornment, Icon, makeStyles, Grid, useTheme } from '@material-ui/core';
 import FormatManager from '../../util/FormatManager';
 import type { DateTimePickerProps } from '@material-ui/pickers';
@@ -10,7 +10,7 @@ export interface DateTimeInputProps extends DateTimePickerProps {
     icon?: string;
     required: boolean;
     label: string;
-    disabledLoad?: boolean;
+    disabled?: boolean;
     type: 'date' | 'time' | 'datetime';
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
 }
@@ -55,8 +55,14 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
+const DEFAULT_FORMAT = {
+    date: 'dd-MM-yyyy',
+    time: 'HH:mm',
+    datetime: 'dd-MM-yyyy HH:mm',
+};
+
 const DateTimeInput = (props: DateTimeInputProps) => {
-    const { id, hidePlaceHolder, name, value, type, required, icon, label, disabledLoad, onChange, onValidate } = props;
+    const { id, hidePlaceHolder, name, value, type, required, icon, label, disabled, onChange, onValidate } = props;
     const [selectedDate, setSelectedDate] = React.useState(null);
     const [error, setError] = React.useState('');
 
@@ -68,7 +74,7 @@ const DateTimeInput = (props: DateTimeInputProps) => {
             target: {
                 id: id || name,
                 name: id || name,
-                value: date.toJSDate(),
+                value: date?.toMillis(),
                 type: 'datetime',
             },
         };
@@ -86,101 +92,53 @@ const DateTimeInput = (props: DateTimeInputProps) => {
     };
 
     React.useEffect(() => {
-        if (value && selectedDate !== value) {
-            setSelectedDate(new Date(value));
+        if (selectedDate !== value) {
+            if (value) {
+                if (typeof value === 'number') {
+                    setSelectedDate(new Date(value));
+                } else if (typeof value === 'string' && type === 'time') {
+                    const luxonDate = FormatManager.toDate(value, 'HH:mm:ss');
+                    setSelectedDate(luxonDate.toJSDate());
+                }
+            } else {
+                setSelectedDate(null);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const renderDateControl = () => {
         const placeholder = hidePlaceHolder ? '' : 'Enter ' + label || FormatManager.camelToReadable(id || name);
+        const standard_props = {
+            id: id || name,
+            onChange: handleDateChange,
+            autoOk: true,
+            margin: 'normal',
+            className: classes.picker,
+            inputVariant: 'outlined',
+            placeholder: placeholder,
+            format: DEFAULT_FORMAT[type],
+            value: selectedDate,
+            disabled: disabled,
+            invalidLabel: error,
+            KeyboardButtonProps: {
+                style: { padding: 0 },
+            },
+            keyboardIcon: disabled ? null : <Icon>open_in_new</Icon>,
+            InputProps: {
+                startAdornment: (
+                    <InputAdornment position="start">
+                        <Icon>{icon || 'event'}</Icon>
+                    </InputAdornment>
+                ),
+            },
+        };
         if (type === 'time') {
-            return (
-                <TimePicker
-                    id={id || name}
-                    margin="normal"
-                    autoOk
-                    className={classes.picker}
-                    variant="inline"
-                    inputVariant="outlined"
-                    label={(label || 'Time Picker') + (required ? ' *' : '')}
-                    placeholder={placeholder}
-                    format="hh : mm a"
-                    value={selectedDate}
-                    disabled={disabledLoad}
-                    invalidLabel={error}
-                    // InputAdornmentProps={{ position: 'end' }}
-                    // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
-                    leftArrowIcon={<Icon>keyboard_arrow_left</Icon>}
-                    rightArrowIcon={<Icon>keyboard_arrow_right</Icon>}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Icon>{icon || 'event'}</Icon>
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={(date) => handleDateChange(date)}
-                />
-            );
+            return <KeyboardTimePicker label={(label || 'Time Picker') + (required ? ' *' : '')} {...standard_props} />;
         } else if (type === 'datetime') {
-            return (
-                <DateTimePicker
-                    id={id || name}
-                    margin="normal"
-                    autoOk
-                    className={classes.picker}
-                    variant="inline"
-                    inputVariant="outlined"
-                    label={(label || 'Datetime Picker') + (required ? ' *' : '')}
-                    placeholder={placeholder}
-                    format="dd - MM - yyyy hh : mm a"
-                    value={selectedDate}
-                    disabled={disabledLoad}
-                    invalidLabel={error}
-                    // InputAdornmentProps={{ position: 'end' }}
-                    // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
-                    leftArrowIcon={<Icon>keyboard_arrow_left</Icon>}
-                    rightArrowIcon={<Icon>keyboard_arrow_right</Icon>}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Icon>{icon || 'event'}</Icon>
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={(date) => handleDateChange(date)}
-                />
-            );
+            return <KeyboardDateTimePicker label={(label || 'Datetime Picker') + (required ? ' *' : '')} {...standard_props} />;
         } else {
-            return (
-                <DatePicker
-                    id={id || name}
-                    margin="normal"
-                    autoOk
-                    className={classes.picker}
-                    variant="inline"
-                    inputVariant="outlined"
-                    label={(label || 'Date Picker') + (required ? ' *' : '')}
-                    placeholder={placeholder}
-                    format="dd - MMM - yyyy"
-                    value={selectedDate}
-                    disabled={disabledLoad}
-                    invalidLabel={error}
-                    // InputAdornmentProps={{ position: 'end' }}
-                    // keyboardIcon={<Icon className={disabledLoad ? classes.disabledOpenIcon : classes.openIcon}>open_in_new</Icon>}
-                    leftArrowIcon={<Icon>keyboard_arrow_left</Icon>}
-                    rightArrowIcon={<Icon>keyboard_arrow_right</Icon>}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Icon>{icon || 'event'}</Icon>
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={(date) => handleDateChange(date)}
-                />
-            );
+            return <KeyboardDatePicker label={(label || 'Date Picker') + (required ? ' *' : '')} {...standard_props} />;
         }
     };
 

@@ -7,12 +7,15 @@ import FormatManager from '../../util/FormatManager';
 import type { TextFieldProps } from '@material-ui/core';
 
 export interface TextInputProps extends TextFieldProps {
-    icon?: string;
-    required: boolean;
-    label: string;
-    hidePlaceHolder: boolean;
+    icon?: String;
+    required: Boolean;
+    disabled: Boolean;
+    autoFocus: Boolean;
+    label: String;
+    hidePlaceHolder: Boolean;
     variant: 'filled' | 'outlined' | 'standard';
-    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => string;
+    multiline: Boolean;
+    onValidate?: (event: React.SyntheticEvent<HTMLInputElement>) => String;
     onChange?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
 }
 
