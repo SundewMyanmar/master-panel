@@ -74,8 +74,8 @@ export const BooleanCell = (field, data) => {
     }
 
     return (
-        <ThemeProvider theme={checked ? SuccessTheme : ErrorTheme}>
-            <Icon color="primary">{checked ? 'check' : 'close'}</Icon>
+        <ThemeProvider theme={SuccessTheme}>
+            <Icon color={checked ? 'primary' : 'disabled'}>{checked ? 'check_circle' : 'check_circle_outline'}</Icon>
         </ThemeProvider>
     );
 };

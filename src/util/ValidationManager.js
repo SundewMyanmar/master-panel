@@ -2,7 +2,7 @@ import FormatManager from './FormatManager';
 
 export const DEFAULT_VALIDATION_PATTERNS = {
     email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    phone: /^\+?(?![0][1-8]+)[0-9]{7,15}$/,
+    phone: /^\+?[0-9]{7,15}$/,
 };
 
 export interface Rule {
