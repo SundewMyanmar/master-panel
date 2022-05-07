@@ -78,6 +78,7 @@ export interface MasterTableProps {
     onItemAction: (item: object, data: object) => void;
     onImport?: (data: object | Any) => Promise<Any>;
     onRowClick?: () => void;
+    onRowColor?: (item: object, index: number) => string;
     type: 'TABLE' | 'INPUT';
     hideSearch?: boolean;
     hideDataActions?: boolean;
@@ -126,6 +127,7 @@ const MasterTable = (props: MasterTableProps) => {
         onRemove,
         onItemAction,
         onRowClick,
+        onRowColor,
         onImport,
         hideSearch,
         hideDataActions,
@@ -458,6 +460,7 @@ const MasterTable = (props: MasterTableProps) => {
                         onPageChange={handlePageChange}
                         onSelectionChange={handleSelectionChange}
                         onRowClick={onRowClick}
+                        onRowColor={onRowColor}
                     />
                 </Grid>
             </Paper>

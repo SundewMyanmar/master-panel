@@ -58,6 +58,7 @@ export interface DataTableProps extends TableProps {
     type: 'TABLE' | 'INPUT';
     onPageChange?: (page: number) => void;
     onRowClick?: (item: object, index: number) => void;
+    onRowColor?: (item: object, index: number) => string;
     onSelectionChange?: (result: object | Array<Object>) => void;
     onError?: (error: object | string) => void;
 }
@@ -123,6 +124,7 @@ const DataTable = (props: DataTableProps) => {
         onInputChange,
         onPageChange,
         onRowClick,
+        onRowColor,
         onSelectionChange,
         ...tableProps
     } = props;
@@ -325,9 +327,14 @@ const DataTable = (props: DataTableProps) => {
                     {renderTableInput()}
                     {items && items.length > 0 ? (
                         items.map((row, dataIdx) => {
-                            let pointerStyle = {
-                                cursor: 'pointer',
-                            };
+                            let defaultStyle = {};
+                            if (onRowColor) {
+                                defaultStyle.backgroundColor = onRowColor(row, dataIdx);
+                            }
+
+                            if (onRowClick) {
+                                defaultStyle.cursor = 'pointer';
+                            }
 
                             const marked = multi
                                 ? selectedData.findIndex((x) => x.id === row.id) >= 0
@@ -336,7 +343,7 @@ const DataTable = (props: DataTableProps) => {
                             return (
                                 <TableRow
                                     selected={marked}
-                                    style={onRowClick ? pointerStyle : null}
+                                    style={defaultStyle}
                                     key={row.id + '-' + dataIdx}
                                     index={dataIdx}
                                     onClick={() => {
@@ -345,7 +352,7 @@ const DataTable = (props: DataTableProps) => {
                                     onDoubleClick={() => {
                                         if (onEdit) onEdit(row, dataIdx);
                                     }}
-                                    hover={true}
+                                    hover={onRowColor ? false : true}
                                 >
                                     {multi ? (
                                         <TableCell align="center" style={{ maxWidth: 64 }}>
