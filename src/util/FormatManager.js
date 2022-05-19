@@ -3,6 +3,16 @@ import chroma from 'chroma-js';
 import print from 'print-js';
 
 export default class FormatManager {
+    static randomIcon = () => {
+        let category = this.randomInt(MATERIAL_ICONS.categories.length);
+        let icon = this.randomInt(MATERIAL_ICONS.categories[category].icons.length);
+        return MATERIAL_ICONS.categories[category].icons[icon].ligature;
+    }
+
+    static randomInt = value => {
+        return Math.floor(Math.random() * value);
+    }
+
     static printPdf = (url, onLoadingStart, onLoadingEnd, onError) => {
         print({
             printable: url,
@@ -64,11 +74,11 @@ export default class FormatManager {
     static validURL = (str) => {
         const pattern = new RegExp(
             '^(https?:\\/\\/)?' + // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-                '(\\#[-a-z\\d_]*)?$',
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$',
             'i',
         ); // fragment locator
         return !!pattern.test(str);
@@ -153,10 +163,10 @@ export default class FormatManager {
         let r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e);
         return r
             ? {
-                  r: parseInt(r[1], 16),
-                  g: parseInt(r[2], 16),
-                  b: parseInt(r[3], 16),
-              }
+                r: parseInt(r[1], 16),
+                g: parseInt(r[2], 16),
+                b: parseInt(r[3], 16),
+            }
             : null;
     };
 

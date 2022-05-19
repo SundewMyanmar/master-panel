@@ -18,6 +18,16 @@ import File from '../page/file/File';
 import Developer from '../page/Developer';
 import SettingManager from '../page/admin/SettingManager';
 
+//Inventory
+import Product from '../page/inventory/Product';
+import ProductDetail from '../page/inventory/ProductDetail';
+import Attribute from '../page/inventory/Attribute';
+import AttributeDetail from '../page/inventory/AttributeDetail';
+import Category from '../page/inventory/Category';
+import CategoryDetail from '../page/inventory/CategoryDetail';
+import UnitOfMeasurement from '../page/inventory/UnitOfMeasurement';
+import UnitOfMeasurementDetail from '../page/inventory/UnitOfMeasurementDetail';
+
 export const PrivateRoute = [
     { path: '/', page: Dashboard },
     { path: '/profile', page: Profile },
@@ -32,6 +42,15 @@ export const PrivateRoute = [
     { path: '/file', page: File },
     { path: '/api-debug', page: Developer },
     { path: '/setting', page: SettingManager },
+    /*Inventory */
+    { path: '/inventory/product', page: Product },
+    { path: '/inventory/product/detail/:id', page: ProductDetail },
+    { path: '/inventory/category', page: Category },
+    { path: '/inventory/category/detail/:id', page: CategoryDetail },
+    { path: '/inventory/uom', page: UnitOfMeasurement },
+    { path: '/inventory/uom/detail/:id', page: UnitOfMeasurementDetail },
+    { path: '/inventory/attribute', page: Attribute },
+    { path: '/inventory/attribute/detail/:id', page: AttributeDetail },
 ];
 
 export const PublicRoute = [

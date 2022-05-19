@@ -8,6 +8,10 @@ const URLS = {
     production: 'https://api.threeinlife.com/master-api/',
 };
 
+export const UOM = ['Length', 'Volume', 'Weight'];
+export const ATTRIBUTE = ['Product', 'Design', 'Configuration', 'Display', 'Location'];
+export const STATUS = ['AVAILABLE', 'UNAVAILABLE', 'OUT_OF_STOCK'];
+export const BARCODE_TYPES = ['UPC', 'EAN', 'CODE_39', 'CODE_128'];
 export const API = process.env.NODE_ENV === 'development' ? URLS.development : URLS.production;
 
 export const SESSION_TIMEOUT = 1000 * 60 * 20; //20 Minutes
@@ -127,6 +131,39 @@ export const ADMIN_MENU = {
     ],
 };
 
+export const INVENTORY_MENU = {
+    id: 'ivt-1',
+    label: 'Inventory',
+    icon: 'store',
+    open: true,
+    items: [
+        {
+            id: 'pro-1',
+            label: 'Product',
+            icon: 'widgets',
+            path: '/inventory/product',
+        },
+        {
+            id: 'cat-1',
+            label: 'Product Category',
+            icon: 'toc',
+            path: '/inventory/category',
+        },
+        {
+            id: 'uom-1',
+            label: 'Unit Of Measurement',
+            icon: 'perm_data_setting',
+            path: '/inventory/uom',
+        },
+        {
+            id: 'att-1',
+            label: 'Attribute',
+            icon: 'settings_applications',
+            path: '/inventory/attribute',
+        },
+    ]
+};
+
 export const USER_PROFILE_MENU = {
     id: 'sys-1',
     label: 'System',
@@ -147,11 +184,11 @@ export const USER_PROFILE_MENU = {
         },
         process.env.NODE_ENV === 'development'
             ? {
-                  id: 'profile-3',
-                  label: 'API Tools',
-                  icon: 'code',
-                  path: '/api-debug',
-              }
+                id: 'profile-3',
+                label: 'API Tools',
+                icon: 'code',
+                path: '/api-debug',
+            }
             : null,
     ],
 };
@@ -164,6 +201,7 @@ export const DEFAULT_SIDE_MENU = [
         path: '/',
         divider: true,
     },
+    INVENTORY_MENU,
     ADMIN_MENU,
     {
         id: 'sys-file',

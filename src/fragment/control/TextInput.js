@@ -72,8 +72,12 @@ const TextInput = (props: TextInputProps) => {
                 ...endAdornment,
                 ...props.InputProps,
             };
+        } else {
+            return {
+                ...endAdornment,
+                ...props.InputProps,
+            }
         }
-        return props.InputProps;
     };
 
     let placeholderText = hidePlaceHolder ? '' : placeholder;

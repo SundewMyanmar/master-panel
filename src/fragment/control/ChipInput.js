@@ -64,7 +64,11 @@ const ChipInput = (props: ChipInputProps) => {
     React.useEffect(() => {
         const inputData = FormatManager.defaultNull(value);
         if (inputData !== items) {
-            const splitData = inputData && inputData.split(',');
+            let splitData = [];
+            if (Array.isArray(inputData)) splitData = inputData;
+            else
+                splitData = inputData && inputData.split(',');
+
             if (splitData) {
                 setItems(splitData);
             }
