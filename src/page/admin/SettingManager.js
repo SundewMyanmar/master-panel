@@ -1,31 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import {
-    Typography,
-    Container,
-    Paper,
-    Avatar,
-    Icon,
-    makeStyles,
-    Grid,
-    Button,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    ListItemSecondaryAction,
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Checkbox,
-    Collapse,
-    List,
-    Divider,
-} from '@material-ui/core';
+import { Typography, Container, Paper, Avatar, Icon, makeStyles } from '@material-ui/core';
 import SettingAccordion from '../../form/SettingAccordion';
-import MasterForm from '../../fragment/MasterForm';
 import SettingApi from '../../api/SettingApi';
 
 const styles = makeStyles((theme) => ({
@@ -102,8 +81,7 @@ const SettingManager = () => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
         SettingApi.saveSetting(data, name)
             .then((savedData) => {
-                if (setData)
-                    setData(savedData);
+                if (setData) setData(savedData);
 
                 dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
                 dispatch({ type: FLASH_REDUX_ACTIONS.SHOW, flash: { type: 'success', message: 'Save successful.' } });

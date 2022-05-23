@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router';
 import {
-    InputAdornment,
     Typography,
     Container,
     makeStyles,
@@ -10,12 +9,10 @@ import {
     Icon,
     Button,
     Grid,
-    Divider,
     Accordion,
     AccordionSummary,
     AccordionDetails,
 } from '@material-ui/core';
-import MasterForm from '../../fragment/MasterForm';
 import UserApi from '../../api/UserApi';
 import ProfileApi from '../../api/ProfileApi';
 import { primary, secondary } from '../../config/Theme';

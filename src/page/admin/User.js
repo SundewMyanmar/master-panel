@@ -5,12 +5,11 @@ import UserApi from '../../api/UserApi';
 import FormDialog from '../../fragment/message/FormDialog';
 import LangManager from '../../util/LangManager';
 import { useTheme } from '@material-ui/core';
-import { STORAGE_KEYS } from '../../config/Constant';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 
-export const GUILD='USER';
+export const GUILD = 'USER';
 
 export const USER_TABLE_FIELDS = [
     {

@@ -11,28 +11,23 @@ import {
     Button,
     makeStyles,
     Chip,
-    RadioGroup,
-    Radio,
-    FormControl,
-    FormControlLabel,
     Grid,
     IconButton,
 } from '@material-ui/core';
 import { QuestionDialog } from '../../fragment/message';
-import { OTPDialog, TextInput } from '../../fragment/control';
+import { OTPDialog } from '../../fragment/control';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import MasterForm from '../../fragment/MasterForm';
 import ProfileApi from '../../api/ProfileApi';
-import { APP_NAME, STORAGE_KEYS } from '../../config/Constant';
 import { useDispatch, useSelector } from 'react-redux';
 import { USER_REDUX_ACTIONS } from '../../util/UserManager';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import MfaApi from '../../api/MfaApi';
 import DataTable from '../../fragment/table';
-import { ErrorTheme, WarningTheme } from '../../config/Theme';
+import { ErrorTheme } from '../../config/Theme';
 
 const styles = makeStyles((theme) => ({
     root: {

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Paper, Container, CssBaseline, Avatar, Icon, Grid, Button, Link, Box, makeStyles } from '@material-ui/core';
 
 import Copyright from '../../fragment/control/Copyright';
 import MasterForm from '../../fragment/MasterForm';
 import AuthApi from '../../api/AuthApi';
-import { STORAGE_KEYS } from '../../config/Constant';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';

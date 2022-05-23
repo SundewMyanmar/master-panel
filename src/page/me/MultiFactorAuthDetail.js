@@ -1,25 +1,9 @@
-import React, { useState } from 'react';
-import { withRouter, useHistory, useParams } from 'react-router-dom';
-import {
-    Typography,
-    Container,
-    Avatar,
-    Icon,
-    Grid,
-    Button,
-    Paper,
-    makeStyles,
-    ThemeProvider,
-    RadioGroup,
-    Radio,
-    FormControl,
-    FormControlLabel,
-} from '@material-ui/core';
+import React from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
+import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles, RadioGroup, Radio, FormControlLabel } from '@material-ui/core';
 
 import MfaApi from '../../api/MfaApi';
-import MasterForm from '../../fragment/MasterForm';
-import { APP_NAME, STORAGE_KEYS } from '../../config/Constant';
-import { InfoTheme, success } from '../../config/Theme';
+import { APP_NAME } from '../../config/Constant';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { useDispatch, useSelector } from 'react-redux';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';

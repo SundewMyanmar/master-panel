@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter, useHistory } from 'react-router';
 import MasterTable from '../../fragment/MasterTable';
 import RoleApi from '../../api/RoleApi';
-import { STORAGE_KEYS } from '../../config/Constant';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { useDispatch } from 'react-redux';
 
