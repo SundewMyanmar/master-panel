@@ -80,7 +80,7 @@ const TablePicker = (props: TablePickerProps) => {
             pageSize: 10,
             total: 0,
             data: [],
-            sort: 'id:DESC',
+            sort: 'modifiedAt:DESC',
         };
     });
 

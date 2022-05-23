@@ -100,15 +100,16 @@ const ObjectInput = (props: ObjectInputProps) => {
     //Set value if props.value changed.
     React.useEffect(() => {
         const inputData = FormatManager.defaultNull(multi ? values : value);
-
-        setSelectedData(inputData);
-        if (onChange) {
-            onChange({
-                target: {
-                    name: id || name,
-                    value: inputData,
-                },
-            });
+        if (selectedData !== inputData) {
+            setSelectedData(inputData);
+            if (onChange) {
+                onChange({
+                    target: {
+                        name: id || name,
+                        value: inputData,
+                    },
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values, value]);
