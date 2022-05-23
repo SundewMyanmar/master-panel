@@ -28,7 +28,7 @@ export function validateForm(form, validators: Array<Validator>, onFailed: (erro
 
         const value = form[validator.fieldId];
         if (validator.required && (!value || value === null || value.length <= 0 || value === 0)) {
-            onFailed({ title: 'Required', message: `${FormatManager.camelToReadable(validator.fieldId)} is required.` });
+            onFailed({ title: 'Required', message: validator.message ?? `${FormatManager.camelToReadable(validator.fieldId)} is required.` });
             return false;
         }
 
@@ -49,20 +49,22 @@ export function validateForm(form, validators: Array<Validator>, onFailed: (erro
                     onFailed({
                         title: 'Not match',
                         message:
-                            rule.message ||
+                            validator.message ??
+                            rule.message ??
                             `${FormatManager.camelToReadable(validator.fieldId)} and ${FormatManager.camelToReadable(rule.matchId)} must be same.`,
                     });
                     return false;
                 }
             }
 
-            if (Object.keys(DEFAULT_VALIDATION_PATTERNS).includes(rule.type) || rule.pattern.length > 0) {
+            if (Object.keys(DEFAULT_VALIDATION_PATTERNS).includes(rule.type) || rule.pattern?.length > 0) {
                 const pattern = DEFAULT_VALIDATION_PATTERNS[rule.type] || rule.pattern;
                 if (!pattern.test(value)) {
                     onFailed({
                         title: 'Invalid',
                         message:
-                            rule.message ||
+                            validator.message ??
+                            rule.message ??
                             FormatManager.camelToReadable(validator.fieldId) + ' is invalid ' + (rule.type ? ' ' + rule.type + ' format.' : '.'),
                     });
                     return false;
@@ -71,7 +73,7 @@ export function validateForm(form, validators: Array<Validator>, onFailed: (erro
 
             if (rule.onValidate) {
                 if (rule.onValidate(form)) {
-                    onFailed({ title: 'Invalid', message: rule.message });
+                    onFailed({ title: 'Invalid', message: validator.message ?? rule.message });
                 }
             }
         }

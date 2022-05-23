@@ -30,7 +30,7 @@ export const USER_TABLE_FIELDS = [
         label: 'Roles',
         onLoad: (item) => {
             if (item.roles && item.roles.length > 0) {
-                return item.roles.map((role) => LangManager.translateToUni(role.name)).join(', ');
+                return item.roles.map((role) => role.name).join(', ');
             }
             return 'No Role';
         },
