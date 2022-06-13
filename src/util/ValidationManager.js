@@ -26,7 +26,10 @@ export function validateForm(form, validators: Array<Validator>, onFailed: (erro
             continue;
         }
 
-        const value = form[validator.fieldId];
+        let value = form[validator.fieldId];
+        if (typeof value === 'string') {
+            value = value.trim();
+        }
         if (validator.required && (!value || value === null || value.length <= 0 || value === 0)) {
             onFailed({ title: 'Required', message: validator.message ?? `${FormatManager.camelToReadable(validator.fieldId)} is required.` });
             return false;
