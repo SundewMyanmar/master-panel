@@ -14,8 +14,6 @@ import { CheckboxInput, EmailInput, ImageInput, ObjectInput, PasswordInput, Text
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
 import { GUILD } from './User';
-import BranchApi from '../../api/BranchApi';
-import { BRANCH_TABLE_FIELDS } from '../setup/Branch';
 
 const styles = makeStyles((theme) => ({
     paper: {
@@ -76,10 +74,6 @@ const UserDetail = (props) => {
             });
         return {};
     });
-
-    const handleBranchData = async (currentPage, pageSize, sort, search) => {
-        return await BranchApi.getPaging(currentPage, pageSize, sort, search);
-    };
 
     const handleSubmit = async () => {
         if (!window.navigator.onLine) {
@@ -202,19 +196,6 @@ const UserDetail = (props) => {
                             />
                         </Grid>
                     </Grid>
-                </Grid>
-                <Grid item>
-                    <ObjectInput
-                        id="branch"
-                        label="Branch"
-                        icon="store"
-                        onLoadData={handleBranchData}
-                        onLoadItem={(item) => `${item.name} (${item.code})`}
-                        onChange={(event) => setForm({ ...form, branch: event.target.value })}
-                        value={form?.branch}
-                        fields={BRANCH_TABLE_FIELDS}
-                        required={true}
-                    />
                 </Grid>
                 <Grid item>
                     <ObjectInput

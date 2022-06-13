@@ -86,7 +86,6 @@ const Cell = (props: CellProps) => {
     if (field.hidden) {
         return null;
     }
-    console.log('Cell Value => ', props);
 
     let cellPadding = 'normal';
     switch (field.type) {

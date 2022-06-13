@@ -18,6 +18,10 @@ import File from '../page/file/File';
 import Developer from '../page/Developer';
 import SettingManager from '../page/admin/SettingManager';
 
+//Reporting
+import Report from '../page/reporting/Report';
+import ReportDetail from '../page/reporting/ReportDetail';
+
 //Inventory
 import Product from '../page/inventory/Product';
 import ProductDetail from '../page/inventory/ProductDetail';
@@ -40,6 +44,8 @@ export const PrivateRoute = [
     { path: '/menu', page: Menu },
     { path: '/permission/:roleId?', page: ApiPermission },
     { path: '/file', page: File },
+    { path: '/report', page: Report },
+    { path: '/report/detail/:id', page: ReportDetail },
     { path: '/api-debug', page: Developer },
     { path: '/setting', page: SettingManager },
     /*Inventory */

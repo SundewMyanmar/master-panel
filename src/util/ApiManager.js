@@ -65,6 +65,14 @@ export default class ApiManager {
         return (this.apiURL + url).replace(/([^:]\/)\/+/g, '$1');
     }
 
+    buildFormData(data) {
+        const formData = new FormData();
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+        return formData;
+    }
+
     customLink(url, isPublic) {
         let result = this.buildUrl(url);
         if (!isPublic) {
@@ -127,7 +135,7 @@ export default class ApiManager {
         }
     }
 
-    async getPaging(page, size, sort, filter) {
+    async getPaging(page, size = 10, sort = 'modifiedAt:DESC', filter = '') {
         let url = '?page=' + page + '&size=' + size;
         if (sort && sort !== '') url += '&sort=' + sort;
         if (filter && filter !== '') url += '&filter=' + filter;
