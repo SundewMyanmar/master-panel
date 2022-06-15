@@ -32,14 +32,26 @@ const TinyEditorInput = (props: TinyEditorInputProps) => {
             handleEditorChange(newValue, null);
         }
 
+        if (onChange)
+            onChange({
+                target: {
+                    type: 'html',
+                    id: id || name,
+                    name: id || name,
+                    value: newValue,
+                },
+            });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     const handleEditorChange = (content, editor) => {
         setEditorContent(content);
+        console.log('editor change', content);
         if (onChange)
             onChange({
                 target: {
+                    type: 'html',
                     id: id || name,
                     name: id || name,
                     value: content,
@@ -53,7 +65,6 @@ const TinyEditorInput = (props: TinyEditorInputProps) => {
                 id={id || name}
                 name={id || name}
                 {...rest}
-                initialValue={editorContent}
                 value={editorContent}
                 init={{
                     height: height,
