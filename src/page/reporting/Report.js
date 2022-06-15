@@ -1,17 +1,11 @@
 import React from 'react';
 import { withRouter, useHistory } from 'react-router';
 import MasterTable from '../../fragment/MasterTable';
-import RoleApi from '../../api/RoleApi';
+import ReportApi from '../../api/ReportApi';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { useDispatch } from 'react-redux';
 
-export const ROLE_TABLE_FIELDS = [
-    {
-        name: 'id',
-        align: 'center',
-        label: 'Id',
-        sortable: true,
-    },
+export const REPORT_TABLE_FIELDS = [
     {
         name: 'name',
         align: 'left',
@@ -19,14 +13,26 @@ export const ROLE_TABLE_FIELDS = [
         sortable: true,
     },
     {
-        name: 'description',
+        name: 'roles',
         align: 'left',
-        label: 'Description',
+        label: 'Roles',
+        onLoad: (item) => {
+            if (item.roles && item.roles.length > 0) {
+                return item.roles.map((role) => role.name).join(', ');
+            }
+            return 'No Role';
+        },
+    },
+    {
+        name: 'public',
+        align: 'center',
+        label: 'Is public?',
         sortable: true,
+        type: 'bool',
     },
 ];
 
-const Role = () => {
+const Report = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -39,7 +45,7 @@ const Role = () => {
 
     const handleLoadData = async (currentPage, pageSize, sort, search) => {
         try {
-            const result = await RoleApi.getPaging(currentPage, pageSize, sort, search);
+            const result = await ReportApi.getPaging(currentPage, pageSize, sort, search);
             return result;
         } catch (error) {
             handleError(error);
@@ -50,30 +56,30 @@ const Role = () => {
     const handleRemoveData = async (removeData) => {
         console.log('Remove IDs => ', typeof removeData === 'object');
         if (removeData && removeData.id) {
-            return RoleApi.removeById(removeData.id);
+            return ReportApi.removeById(removeData.id);
         } else if (Array.isArray(removeData) && removeData.length > 0) {
             console.log('Remove IDs => ', Array.isArray(removeData) && removeData.length > 0);
             const removeIds = removeData.map((item) => item.id);
-            return RoleApi.removeAll(removeIds);
+            return ReportApi.removeAll(removeIds);
         }
     };
 
     const handleDetail = (item) => {
-        let url = '/role/detail/';
+        let url = '/report/detail/';
         url += item ? item.id : 0;
         history.push(url);
     };
 
     const handleImport = async (result) => {
-        return RoleApi.importData(result);
+        return ReportApi.importData(result);
     };
 
     return (
         <>
             <MasterTable
-                title="Roles"
-                fields={ROLE_TABLE_FIELDS}
-                importFields={['id', 'name', 'description']}
+                title="Reports"
+                fields={REPORT_TABLE_FIELDS}
+                importFields={['id', 'name', 'roles', 'isPublic']}
                 onLoad={handleLoadData}
                 onEdit={handleDetail}
                 onAddNew={() => handleDetail(null)}
@@ -85,4 +91,4 @@ const Role = () => {
     );
 };
 
-export default withRouter(Role);
+export default withRouter(Report);

@@ -1,18 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { withRouter, useHistory, useParams } from 'react-router-dom';
-import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles, InputAdornment } from '@material-ui/core';
+import { Typography, Container, Avatar, Icon, Grid, Button, Paper, makeStyles } from '@material-ui/core';
 
 import RoleApi from '../../api/RoleApi';
 import MasterForm from '../../fragment/MasterForm';
 import UserApi from '../../api/UserApi';
 import { ROLE_TABLE_FIELDS } from './Role';
-import { STORAGE_KEYS } from '../../config/Constant';
 import FormatManager from '../../util/FormatManager';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
-import { CheckboxInput, EmailInput, ImageInput, ListInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
-import DataTable from '../../fragment/table';
+import { CheckboxInput, EmailInput, ImageInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
 import { GUILD } from './User';

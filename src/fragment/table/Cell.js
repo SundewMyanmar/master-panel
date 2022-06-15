@@ -83,7 +83,6 @@ export const BooleanCell = (field, data) => {
 const Cell = (props: CellProps) => {
     const { field, data, rowIndex, ...cellProps } = props;
     let cellValue = 'None';
-
     if (field.hidden) {
         return null;
     }
@@ -108,9 +107,7 @@ const Cell = (props: CellProps) => {
             cellPadding = 'none';
             break;
         default:
-            cellValue = field.onLoad
-                ? LangManager.translateToUni(field.onLoad(data, rowIndex))
-                : LangManager.translateToUni(data[field.name], rowIndex);
+            cellValue = field.onLoad ? field.onLoad(data, rowIndex) : Object.prototype.hasOwnProperty.call(data, field.name) ? data[field.name] : '-';
             break;
     }
 

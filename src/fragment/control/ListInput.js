@@ -17,11 +17,10 @@ export interface SelectListProps extends TextFieldProps {
 }
 
 const ListInput = (props: SelectListProps) => {
-    const { variant, multiple, disabled, hidePlaceHolder, id, name, icon, data, inputRef, value, values, onLoadItem, onChange, onValidate, ...rest } = props;
+    const { variant, disabled, hidePlaceHolder, id, name, icon, data, inputRef, value, onLoadItem, onChange, onValidate, ...rest } = props;
     const [error, setError] = React.useState('');
     const [invalid, setInvalid] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(value);
-    const [selectedItems, setSelectedItems] = React.useState(values ? values.split(',') : []);
 
     const currentInput = inputRef || React.createRef();
 
@@ -37,35 +36,12 @@ const ListInput = (props: SelectListProps) => {
                         id: id || name,
                         name: id || name,
                         value: newValue,
-                        multiple: multiple
                     },
                 });
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
-
-    React.useEffect(() => {
-        let newValue = FormatManager.defaultNull(values) || '';
-        if (values && !Array.isArray(values)) newValue = newValue.split(',');
-        else if (!values) newValue = [];
-
-        if (currentInput.current && newValue !== currentInput.current.value) {
-            currentInput.current.value = newValue;
-            setSelectedItems(newValue);
-            if (onChange) {
-                onChange({
-                    target: {
-                        id: id || name,
-                        name: id || name,
-                        values: newValue ? newValue.join(',') : newValue,
-                        multiple: multiple
-                    },
-                });
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [values]);
 
     const handleChange = (event, item) => {
         let errorText = '';
@@ -77,26 +53,13 @@ const ListInput = (props: SelectListProps) => {
         setError(errorText);
         currentInput.current.setCustomValidity(errorText);
         setInvalid(errorText.length > 0);
-
-        let onChangeValue = {
-            value: item
-        }
-        if (multiple) {
-            setSelectedItems(item);
-            onChangeValue = {
-                values: item ? item.join(',') : item,
-            }
-        }
-        else
-            setSelectedItem(item);
-        console.log('onchange', item);
+        setSelectedItem(item);
         if (onChange) {
             onChange({
                 target: {
                     id: id || name,
                     name: id || name,
-                    multiple: multiple,
-                    ...onChangeValue
+                    value: item,
                 },
             });
         }
@@ -137,13 +100,6 @@ const ListInput = (props: SelectListProps) => {
             />
         );
     };
-    let autocompleteValue = {
-        value: selectedItem || ''
-    }
-    if (multiple) autocompleteValue = {
-        value: selectedItems || [],
-        multiple: true
-    }
 
     return (
         <Autocomplete
@@ -156,7 +112,7 @@ const ListInput = (props: SelectListProps) => {
             onChange={handleChange}
             popupIcon={<Icon>arrow_drop_down</Icon>}
             renderInput={buildInputField}
-            {...autocompleteValue}
+            value={selectedItem || null}
         />
     );
 };
@@ -165,7 +121,6 @@ ListInput.defaultProps = {
     onLoadItem: (item) => item.toString(),
     hidePlaceHolder: false,
     variant: 'outlined',
-    multiple: false
 };
 
 export default ListInput;

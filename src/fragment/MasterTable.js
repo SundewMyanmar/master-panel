@@ -228,7 +228,7 @@ const MasterTable = (props: MasterTableProps) => {
             pageSize: 10,
             total: 0,
             data: [],
-            sort: 'id:DESC',
+            sort: 'modifiedAt:DESC',
         };
     });
 

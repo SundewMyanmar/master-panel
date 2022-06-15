@@ -8,7 +8,6 @@ import MasterForm from '../../fragment/MasterForm';
 import { ROLE_TABLE_FIELDS } from './Role';
 import RoleApi from '../../api/RoleApi';
 import ImportMenu from '../../fragment/table/ImportMenu';
-import ActionMenu from '../../fragment/table/ActionMenu';
 import { useDispatch } from 'react-redux';
 import { ALERT_REDUX_ACTIONS } from '../../util/AlertManager';
 import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';

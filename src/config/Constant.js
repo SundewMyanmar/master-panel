@@ -161,7 +161,7 @@ export const INVENTORY_MENU = {
             icon: 'settings_applications',
             path: '/inventory/attribute',
         },
-    ]
+    ],
 };
 
 export const USER_PROFILE_MENU = {
@@ -184,11 +184,11 @@ export const USER_PROFILE_MENU = {
         },
         process.env.NODE_ENV === 'development'
             ? {
-                id: 'profile-3',
-                label: 'API Tools',
-                icon: 'code',
-                path: '/api-debug',
-            }
+                  id: 'profile-3',
+                  label: 'API Tools',
+                  icon: 'code',
+                  path: '/api-debug',
+              }
             : null,
     ],
 };
@@ -208,6 +208,13 @@ export const DEFAULT_SIDE_MENU = [
         label: 'File Manager',
         icon: 'storage',
         path: '/file',
+        divider: true,
+    },
+    {
+        id: 'sys-report',
+        label: 'Report Manager',
+        icon: 'bar_chart',
+        path: '/report',
         divider: true,
     },
     USER_PROFILE_MENU,
