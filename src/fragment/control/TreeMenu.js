@@ -160,7 +160,7 @@ export const DefaultTreeItem = (props) => {
                           <DefaultTreeItem
                               onCollapseClick={onCollapseClick}
                               onClick={onClick}
-                              nodeId={menu.id}
+                              nodeId={menu.id.toString()}
                               key={menu.id + '-' + index}
                               data={menu}
                               {...menu}
@@ -198,17 +198,16 @@ const TreeMenu = (props: TreeMenuProps) => {
     const { onClickItem, menus, allowCreate, selected, onCreate, onRemove, showRoot } = props;
     const [expandedNodes, setExpandedNodes] = React.useState([]);
 
-    console.log('Expanded => ', expandedNodes);
-
     React.useEffect(() => {
-        let expNodes = menus.map((menu, index) => menu.id);
+        let expNodes = menus.map((menu, index) => menu.id.toString());
         if (selected?.id) {
-            expNodes.push(selected.id);
+            expNodes.push(selected.id.toString());
             if (selected?.parentId) {
-                expNodes.push(selected.parentId);
+                expNodes.push(selected.parentId.toString());
             }
         }
         setExpandedNodes(expNodes);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [menus]);
 
     const handleCollapseItemClick = (nodeId) => {
@@ -217,8 +216,7 @@ const TreeMenu = (props: TreeMenuProps) => {
         setExpandedNodes(updateNodes);
     };
 
-    console.log('Selected Menu => ', selected);
-    const selectedItems = selected.id ?? null;
+    const selectedItems = selected?.id?.toString() ?? null;
 
     return (
         <TreeView
@@ -244,7 +242,7 @@ const TreeMenu = (props: TreeMenuProps) => {
                     <DefaultTreeItem
                         onCollapseClick={handleCollapseItemClick}
                         onClick={onClickItem}
-                        nodeId={menu.id}
+                        nodeId={menu.id.toString()}
                         key={menu.id + '-' + index}
                         {...menu}
                         data={menu}
