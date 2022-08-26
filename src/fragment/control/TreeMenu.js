@@ -160,7 +160,7 @@ export const DefaultTreeItem = (props) => {
                           <DefaultTreeItem
                               onCollapseClick={onCollapseClick}
                               onClick={onClick}
-                              nodeId={menu.id + '-' + index}
+                              nodeId={menu.id}
                               key={menu.id + '-' + index}
                               data={menu}
                               {...menu}
@@ -180,6 +180,7 @@ export interface TreeMenuProps {
     onClickItem?: (item: object) => void;
     showRoot: boolean;
     allowCreate: boolean;
+    selected: object;
     onCreate: (item) => void;
     onRemove: (item) => void;
 }
@@ -194,20 +195,30 @@ const styles = makeStyles((theme) => ({
 
 const TreeMenu = (props: TreeMenuProps) => {
     const classes = styles();
-    const { onClickItem, menus, allowCreate, onCreate, onRemove, showRoot } = props;
+    const { onClickItem, menus, allowCreate, selected, onCreate, onRemove, showRoot } = props;
     const [expandedNodes, setExpandedNodes] = React.useState([]);
 
+    console.log('Expanded => ', expandedNodes);
+
     React.useEffect(() => {
-        const expNodes = menus.map((menu, index) => menu.id + '-' + index);
+        let expNodes = menus.map((menu, index) => menu.id);
+        if (selected?.id) {
+            expNodes.push(selected.id);
+            if (selected?.parentId) {
+                expNodes.push(selected.parentId);
+            }
+        }
         setExpandedNodes(expNodes);
     }, [menus]);
 
     const handleCollapseItemClick = (nodeId) => {
         const existIdx = expandedNodes.findIndex((x) => x === nodeId);
         const updateNodes = existIdx < 0 ? [...expandedNodes, nodeId] : expandedNodes.filter((x) => x !== nodeId);
-
         setExpandedNodes(updateNodes);
     };
+
+    console.log('Selected Menu => ', selected);
+    const selectedItems = selected.id ?? null;
 
     return (
         <TreeView
@@ -215,6 +226,7 @@ const TreeMenu = (props: TreeMenuProps) => {
             className={classes.root}
             defaultCollapseIcon={<Icon>arrow_drop_down</Icon>}
             defaultExpandIcon={<Icon>arrow_right</Icon>}
+            selected={selectedItems}
         >
             {showRoot && (
                 <DefaultTreeItem
@@ -232,7 +244,7 @@ const TreeMenu = (props: TreeMenuProps) => {
                     <DefaultTreeItem
                         onCollapseClick={handleCollapseItemClick}
                         onClick={onClickItem}
-                        nodeId={menu.id + '-' + index}
+                        nodeId={menu.id}
                         key={menu.id + '-' + index}
                         {...menu}
                         data={menu}
@@ -263,6 +275,7 @@ TreeMenu.defaultProps = {
     onCreate: (item) => console.warn('Undefined onCreateItem => ', item),
     onRemove: (item) => console.warn('Undefined onDeleteItem => ', item),
     showRoot: false,
+    selected: null,
 };
 
 export default TreeMenu;

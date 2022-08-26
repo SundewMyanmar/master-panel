@@ -15,6 +15,7 @@ import {
     FCM_CONFIG,
     VAPID_KEY,
     ADMIN_MENU,
+    DEVELOPER_MENU,
 } from '../../config/Constant';
 import { Copyright } from '../control';
 import SideMenu from './SideMenu';
@@ -205,7 +206,7 @@ const Layout = (props: LayoutProps) => {
                 type: ACTIONS.LOAD,
                 payload: {
                     ...state,
-                    menus: [...mainMenu, ADMIN_MENU, USER_PROFILE_MENU, logoutMenu],
+                    menus: [...mainMenu, ADMIN_MENU, DEVELOPER_MENU, USER_PROFILE_MENU, logoutMenu],
                 },
             });
         }

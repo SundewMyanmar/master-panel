@@ -147,32 +147,26 @@ const Menu = () => {
             menu.parentId = form.parent.id;
         }
 
-        if (selectedMenu && selectedMenu.id) {
-            menu.id = selectedMenu.id;
-            menu.version = selectedMenu.version;
-            MenuApi.modifyById(selectedMenu.id, menu)
-                .then((response) => {
-                    loadData();
-                    setSelectedMenu(INIT_MENU);
-                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
-                    dispatch({
-                        type: FLASH_REDUX_ACTIONS.SHOW,
-                        flash: { type: 'success', message: `Modified menu : ${response.id} .` },
-                    });
-                })
-                .catch(handleError);
-        } else {
-            MenuApi.addNew(menu)
-                .then((response) => {
-                    loadData();
-                    setSelectedMenu(INIT_MENU);
-                    dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
-                    dispatch({
-                        type: FLASH_REDUX_ACTIONS.SHOW,
-                        flash: { type: 'success', message: `Created new menu : ${response.id} .` },
-                    });
-                })
-                .catch(handleError);
+        try {
+            let message = '';
+            if (selectedMenu && selectedMenu.id) {
+                menu.id = selectedMenu.id;
+                menu.version = selectedMenu.version;
+                const response = await MenuApi.modifyById(selectedMenu.id, menu);
+                message = `Modified menu : ${response.id} .`;
+            } else {
+                const response = MenuApi.addNew(menu);
+                message = `Created new menu : ${response.id} .`;
+            }
+            await loadData();
+            setSelectedMenu(INIT_MENU);
+            dispatch({ type: ALERT_REDUX_ACTIONS.HIDE });
+            dispatch({
+                type: FLASH_REDUX_ACTIONS.SHOW,
+                flash: { type: 'success', message },
+            });
+        } catch (error) {
+            handleError(error);
         }
     };
 
@@ -236,21 +230,21 @@ const Menu = () => {
             required: true,
             type: 'text',
             autoFocus: true,
-            value: selectedMenu.label,
+            value: selectedMenu.label ?? '',
         },
         {
             id: 'icon',
             icon: 'eco',
-            label: 'Icon',
+            label: 'Material Icon',
             required: true,
-            type: 'icon',
-            value: selectedMenu.icon,
+            type: 'text',
+            value: selectedMenu.icon ?? '',
         },
         {
             id: 'divider',
             label: 'Has divider?',
             type: 'checkbox',
-            checked: selectedMenu.divider || false,
+            checked: selectedMenu.divider ?? false,
         },
         {
             id: 'priority',
@@ -313,7 +307,7 @@ const Menu = () => {
                     <Grid className={classes.innerBox} container>
                         <Grid container item md={5} sm={12} xs={12} alignContent="flex-start" alignItems="stretch" direction="column">
                             <Grid container item className={classes.treeBox}>
-                                <TreeMenu menus={data} onClickItem={handleClickMenu} />
+                                <TreeMenu menus={data} onClickItem={handleClickMenu} selected={selectedMenu} />
                             </Grid>
                             <Grid container item>
                                 <ImportMenu fields={fields.map((f) => f.id)} onImportItems={handleImport} className={classes.newButton} />

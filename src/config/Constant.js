@@ -128,6 +128,42 @@ export const ADMIN_MENU = {
             icon: 'router',
             path: '/permission',
         },
+        {
+            id: 'admin-setting',
+            label: 'Settings',
+            icon: 'settings',
+            path: '/setting',
+        },
+        {
+            id: 'sys-file',
+            label: 'File Manager',
+            icon: 'storage',
+            path: '/file',
+            divider: true,
+        },
+    ],
+};
+
+export const DEVELOPER_MENU = {
+    id: 'developer',
+    label: 'Developer',
+    icon: 'code',
+    items: [
+        {
+            id: 'sys-report',
+            label: 'Report Manager',
+            icon: 'bar_chart',
+            path: '/report',
+            divider: true,
+        },
+        process.env.NODE_ENV === 'development'
+            ? {
+                  id: 'profile-3',
+                  label: 'API Tools',
+                  icon: 'api',
+                  path: '/api-debug',
+              }
+            : null,
     ],
 };
 
@@ -165,9 +201,9 @@ export const INVENTORY_MENU = {
 };
 
 export const USER_PROFILE_MENU = {
-    id: 'sys-1',
-    label: 'System',
-    icon: 'settings',
+    id: 'me',
+    label: 'Me',
+    icon: 'face',
     open: true,
     items: [
         {
@@ -182,14 +218,6 @@ export const USER_PROFILE_MENU = {
             icon: 'security',
             path: '/security',
         },
-        process.env.NODE_ENV === 'development'
-            ? {
-                  id: 'profile-3',
-                  label: 'API Tools',
-                  icon: 'code',
-                  path: '/api-debug',
-              }
-            : null,
     ],
 };
 
@@ -203,20 +231,7 @@ export const DEFAULT_SIDE_MENU = [
     },
     INVENTORY_MENU,
     ADMIN_MENU,
-    {
-        id: 'sys-file',
-        label: 'File Manager',
-        icon: 'storage',
-        path: '/file',
-        divider: true,
-    },
-    {
-        id: 'sys-report',
-        label: 'Report Manager',
-        icon: 'bar_chart',
-        path: '/report',
-        divider: true,
-    },
+    DEVELOPER_MENU,
     USER_PROFILE_MENU,
 ];
 
