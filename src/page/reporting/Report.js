@@ -79,7 +79,7 @@ const Report = () => {
             <MasterTable
                 title="Reports"
                 fields={REPORT_TABLE_FIELDS}
-                importFields={['id', 'name', 'roles', 'isPublic']}
+                importFields={['id', 'name', 'roles', 'public']}
                 onLoad={handleLoadData}
                 onEdit={handleDetail}
                 onAddNew={() => handleDetail(null)}

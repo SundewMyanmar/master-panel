@@ -12,6 +12,8 @@ import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import { CheckboxInput, EmailInput, ImageInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
+import BranchApi from '../../api/BranchApi';
+import { BRANCH_TABLE_FIELDS } from '../setup/Branch';
 import { ROLE_TABLE_FIELDS } from '../admin/Role';
 import { useDropzone } from 'react-dropzone';
 
@@ -122,7 +124,6 @@ const ReportDetail = (props) => {
         dispatch({ type: ALERT_REDUX_ACTIONS.SHOW_LOADING });
 
         try {
-            console.log('Form Data => ', form);
             const report = {
                 name: form.name,
                 reportFile: form.reportFile,
@@ -151,8 +152,6 @@ const ReportDetail = (props) => {
             handleError(error);
         }
     };
-
-    console.log('Set Form Data => ', form);
 
     return (
         <>
@@ -204,7 +203,6 @@ const ReportDetail = (props) => {
                             <CheckboxInput
                                 id="public"
                                 label="Is public?"
-                                value={form?.public ?? false}
                                 onChange={(event) => {
                                     const checked = event.target.checked;
                                     const newForm = { ...form, public: checked };
