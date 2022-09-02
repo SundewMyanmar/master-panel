@@ -83,6 +83,19 @@ export default class ApiManager {
         return result;
     }
 
+    async getBase64(url, headers) {
+        try {
+            console.log('Headers =>', headers);
+            console.log('GET => ' + this.buildUrl(url));
+            const response = await Axios.get(this.buildUrl(url), { headers: headers, responseType: 'arraybuffer' });
+            console.log('Response => ', response);
+            const base64 = Buffer.from(response.data, 'binary').toString('base64');
+            return base64;
+        } catch (error) {
+            throw this.errorHandling(error);
+        }
+    }
+
     async get(url, headers) {
         try {
             console.log('Headers =>', headers);
