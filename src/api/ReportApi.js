@@ -13,12 +13,14 @@ class ReportApi extends ApiManager {
         return url;
     }
 
-    buildPrintUrl(id, params) {
-        let url = this.customLink(`/print/${id}`, false);
+    async printVoucher(id, params) {
+        let query = [];
         for (const key in params) {
-            url += `&${key}=${params[key]}`;
+            query.push(`${key}=${params[key]}`);
         }
-        return url;
+        const url = `/print/${id}?` + query.join('&');
+        const response = await this.getBase64(url, this.getHeaders(true));
+        return response;
     }
 
     async addNew(report) {
