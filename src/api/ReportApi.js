@@ -13,7 +13,7 @@ class ReportApi extends ApiManager {
         return url;
     }
 
-    async printVoucher(id, params) {
+    async print(id, params) {
         let query = [];
         for (const key in params) {
             query.push(`${key}=${params[key]}`);
