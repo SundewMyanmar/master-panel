@@ -12,8 +12,6 @@ import { FLASH_REDUX_ACTIONS } from '../../util/FlashManager';
 import { CheckboxInput, EmailInput, ImageInput, ObjectInput, PasswordInput, TextInput } from '../../fragment/control';
 import ContactForm from '../../form/ContactForm';
 import { validateForm } from '../../util/ValidationManager';
-import BranchApi from '../../api/BranchApi';
-import { BRANCH_TABLE_FIELDS } from '../setup/Branch';
 import { ROLE_TABLE_FIELDS } from '../admin/Role';
 import { useDropzone } from 'react-dropzone';
 
