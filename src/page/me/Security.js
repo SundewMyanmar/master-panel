@@ -113,7 +113,7 @@ export const MFA_TABLE_FIELDS = [
         sortable: true,
     },
     {
-        name: 'key',
+        name: 'mfaKey',
         label: 'Key',
         sortable: true,
     },

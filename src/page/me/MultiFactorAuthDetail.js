@@ -104,7 +104,7 @@ const MultiFactorAuthDetail = () => {
 
         setShowOtp(false);
         const mfa = buildMfa();
-        MfaApi.verify(code, mfa.type === 'APP' ? null : mfa.mfaKey)
+        MfaApi.verify(code, mfa.type === 'APP' ? null : mfa.key)
             .then((result) => {
                 dispatch({ type: USER_REDUX_ACTIONS.UPDATE, profile: { ...user, mfa: mfa } });
                 dispatch({
@@ -140,7 +140,7 @@ const MultiFactorAuthDetail = () => {
             return;
         }
         const data = {
-            key: mfa.type == 'APP' ? APP_NAME : key,
+            mfaKey: mfa.type == 'APP' ? APP_NAME : key,
             totp: true,
             main: true,
         };
